@@ -952,19 +952,27 @@ sub geneCoordstoCDSList
 	      if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'complement'} eq '1' )
 	      {
 		  # The transcript is on the complementary strand
-		  print "The transcript is on the complementary strand\n";
+
+		  # This sorts coordinate data in descending order based on startpos. Since the transcript is on 
+		  # the complementary strand, this puts the first exon in the first position.
 
 		  my @sorted_lref = sort { $b->{'startpos'} <=> $a->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
 
 		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
 		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
 
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
 		  my $cds = '';
 
 		  foreach my $exon ( @sorted_lref )
 		  {
 		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
 		  }
+
+		  # add the CDS to the return list.
 
 		  push( @{$seqList}, $cds );
 
@@ -973,7 +981,28 @@ sub geneCoordstoCDSList
 	      {
 		  # The transcript is not on the complementary strand.
 
-		  
+		  # This sorts coordinate data in ascending order based on startpos. Since the transcript is on 
+		  # the non-complementary strand, this puts the first exon in the first position.
+
+		  my @sorted_lref = sort { $a->{'startpos'} <=> $b->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
+
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  # add the CDS to the return list.
+
+		  push( @{$seqList}, $cds );
 	      }
 	      
 	  }
@@ -1007,7 +1036,91 @@ sub geneCoordstoGenomicSequence
 
 sub geneCoordstoTranscriptSequenceList
   {
-    #join the exon subsequences
+      my $self = shift;
+      my ($coords) = @_;
+      
+      my $seqList = [];
+      
+      my $seqId = $coords->[0]->{'ParentSeq'};
+      
+      foreach my $transcript (@{$coords})
+      {
+	  if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'} )
+	  {
+	      #Euk data join the exon subsequences with care around the CDS start and end
+	      
+	      # First check to see if the gene is on the complementary strand
+	      
+	      if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'complement'} eq '1' )
+	      {
+		  # The transcript is on the complementary strand
+		  
+		  # This sorts coordinate data in descending order based on startpos. Since the transcript is on 
+		  # the complementary strand, this puts the first exon in the first position.
+		  
+		  my @sorted_lref = sort { $b->{'startpos'} <=> $a->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
+		  
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'TRANSCRIPT_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'TRANSCRIPT_STOP'}->{'sitepos'};
+
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  # add the CDS to the return list.
+
+		  push( @{$seqList}, $cds );
+
+	      }
+	      else
+	      {
+		  # The transcript is not on the complementary strand.
+
+		  # This sorts coordinate data in ascending order based on startpos. Since the transcript is on 
+		  # the non-complementary strand, this puts the first exon in the first position.
+
+		  my @sorted_lref = sort { $a->{'startpos'} <=> $b->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
+
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'TRANSCRIPT_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'TRANSCRIPT_STOP'}->{'sitepos'};
+
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  # add the CDS to the return list.
+
+		  push( @{$seqList}, $cds );
+	      }
+	      
+	  }
+	else
+	  {
+	    #Prok Orf=Gene=CDS
+
+	    my $start = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+	    my $stop = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+	    my $complement = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'complement'};
+
+	    push( @{$seqList}, $self->subSequence( $seqId, $start, $stop, $complement ));
+	  }
+      }
+	
+    return $seqList;
   }
 
 sub subSequence

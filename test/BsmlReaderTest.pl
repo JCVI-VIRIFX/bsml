@@ -1,6 +1,6 @@
 #! /local/perl/bin/perl
 
-use lib "../src/";
+use lib "../src/BSML";
 use BsmlReader;
 use BsmlParserTwig;
 use Data::Dumper; 
