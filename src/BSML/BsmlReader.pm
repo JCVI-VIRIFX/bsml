@@ -53,8 +53,7 @@ sub returnAllSequences
   {
     my $self = shift;
 
-    if( ref($self) eq 'BSML::BsmlReader' ){
-      return $self->returnBsmlSequenceListR();}
+    return $self->returnBsmlSequenceListR();}
   }
 
 sub readSequenceDat
