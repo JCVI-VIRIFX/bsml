@@ -62,7 +62,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlFeatures' } = [];
     $self->{ 'BsmlReferences' } = [];
-
+    $self->{ 'BsmlLink' } = [];
   }
 
 =item $FTable->addBsmlFeature()
@@ -260,6 +260,12 @@ sub write
     foreach my $bsmlref (@{$self->{'BsmlReferences'}})
       {
 	$bsmlref->write( $writer );
+      }
+
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
       }
 
     $writer->endTag( "Feature-table" );

@@ -47,6 +47,7 @@ sub init
     $self->{ 'BsmlRefAuthors' } = '';
     $self->{ 'BsmlRefTitle' } = '';
     $self->{ 'BsmlRefJournal' } = '';
+    $self->{ 'BsmlLink' } = [];
   }
 
 sub addBsmlRefAuthors
@@ -169,6 +170,12 @@ sub write
 	$writer->endTag( "RefJournal" );
       }
 
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
+      }
+    
     $writer->endTag( "Reference" );
   }
 

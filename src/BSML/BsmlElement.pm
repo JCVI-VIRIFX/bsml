@@ -252,6 +252,55 @@ sub returnBsmlAttr
   return $self->{'BsmlAttr'}->{$key};
 }
 
+sub addBsmlLink
+  {
+    my $self = shift;
+    my ($title, $href) = @_;
+
+    push(@{$self->{'BsmlLink'}}, {title=>$title, href=>$href});
+    return @{$self->{'BsmlLink'}} - 1;
+  }
+
+sub setBsmlLink
+  {
+    my $self = shift;
+    my ($title, $href) = @_;
+    
+    return $self->addBsmlLink( $title, $href );
+  }
+
+sub dropBsmlLink
+  {
+    my $self = shift;
+    my ($index) = @_;
+
+    my $newlist;
+
+    for( my $i=0; $i< @{$self->{'BsmlLink'}}; $i++ )
+      {
+	if( $i != $index )
+	  {
+	    push( @{$newlist}, $self->{'BsmlLink'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlLink'} = $newlist;
+  }
+
+sub returnBsmlLinkListR
+  {
+    my $self = shift;
+    return $self->{'BsmlLink'};
+  }
+
+sub returnBsmlLinkR
+  {
+    my $self = shift;
+    my ($index) = @_;
+
+    return $self->{'BsmlLink'}[$index];
+  }
+
 sub write()
   {
     

@@ -59,6 +59,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlFeatureGroupMembers' } = [];
     $self->{ 'text' } = '';
+    $self->{ 'BsmlLink' } = [];
   }
 
 =item $FGroup->addBsmlFeatureGroupMember( $feature_id, $feature_type, $group_type, $cdata )
@@ -220,6 +221,12 @@ sub write
 	$writer->endTag( "Feature-group-member" );
       }
 
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
+      }
+    
     $writer->endTag( "Feature-group" );
 
   }

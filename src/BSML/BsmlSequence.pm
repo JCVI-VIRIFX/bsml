@@ -57,6 +57,7 @@ sub init
     $self->{ 'BsmlFeatureTables' } = [];
     $self->{ 'BsmlFeatureGroups' } = [];
     $self->{ 'BsmlSeqData' } = '';
+    $self->{ 'BsmlLink' };
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -344,6 +345,12 @@ sub write
 	$writer->endTag( "Seq-data" );
       }
 
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
+      }
+    
     $writer->endTag( "Sequence" );
     
   }

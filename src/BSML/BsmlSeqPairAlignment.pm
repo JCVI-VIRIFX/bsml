@@ -27,6 +27,7 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSeqPairRuns' } = [];
+    $self->{ 'BsmlLink' } = [];
   }
 
 sub addBsmlSeqPairRun
@@ -89,6 +90,12 @@ sub write
 	  {
 	    $run->write( $writer );
 	  }
+      }
+
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
       }
 
     $writer->endTag( "Seq-pair-alignment" );

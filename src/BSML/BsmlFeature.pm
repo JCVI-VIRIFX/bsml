@@ -61,6 +61,7 @@ sub init
     $self->{ 'BsmlSite-Loc' } = [];
     $self->{ 'BsmlInterval-Loc' } = [];
     $self->{ 'BsmlQual' } = {};
+    $self->{ 'BsmlLink' } = [];
   }
     
 =item $feature->addBsmlQualifier( $valuetype, $value )
@@ -404,6 +405,12 @@ sub write
 	$writer->endTag( "Interval-loc" );
       }
     
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
+      }
+
     $writer->endTag( "Feature" );
   }
 

@@ -24,6 +24,7 @@ sub init
 
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
+    $self->{ 'BsmlLink' } = [];
   }
 
 sub write
@@ -39,6 +40,12 @@ sub write
 	$writer->endTag( "Attribute" );
       }
 
+    foreach my $link (@{$self->{'BsmlLink'}})
+      {
+        $writer->startTag( "Link", %{$link} );
+        $writer->endTag( "Link" );
+      }
+    
     $writer->endTag( "Seq-pair-run" );
   }
 

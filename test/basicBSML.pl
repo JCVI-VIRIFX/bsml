@@ -146,6 +146,8 @@ foreach my $seq ( @{ $seqList } )
       foreach $feature ( @{$FeaturesList} )
 	{
 	  my $id = $feature->returnattr( 'id' );
+	  $feature->addBsmlLink( 'Tigr', 'http://www.tigr.org' );
+
 
 	  if( $id ){
 	    print "      Feature: $id\n";
@@ -162,8 +164,7 @@ foreach my $seq ( @{ $seqList } )
       $feature->addBsmlQualifier( "product", "TIGR Bsml Object" );
 
       # drop the first feature in the table
-
-      $Ftable->dropBsmlFeature( 0 );
+      #$Ftable->dropBsmlFeature( 0 );
 
       # add a new reference
 
