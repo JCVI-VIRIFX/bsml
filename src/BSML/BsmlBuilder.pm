@@ -618,12 +618,6 @@ sub createAndAddSeqDataImportN
     return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'} );
   }
 
-sub createAndAddFeatureGroup
-  {
-    my $self = shift;
-    my ( $sequence, $id, $title, $featureIdList ) = @_;    
-  }
-
 sub createAndAddBtabLine
   {
     my $self = shift;
@@ -744,6 +738,57 @@ sub createAndAddBtabLineN
     $seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
 
     return $alignment_pair;
+  }
+
+sub createAndAddFeatureGroup
+  {
+    my $self = shift;
+    my ($seq, $id, $groupset) = @_;
+
+    if( !($id) )
+      {
+	$id = "Bsml"."$elem_id";
+	$elem_id++;
+      }
+    
+    my $FeatureGroup = $seq->returnBsmlFeatureGroupR( $seq->addBsmlFeatureGroup() );
+    $FeatureGroup->setattr( 'id', $id );
+    
+    if( ($groupset) )
+      {
+	$FeatureGroup->setattr( 'group-set', $groupset );
+      }
+
+    
+    BsmlDoc::BsmlSetDocumentLookup( $id, $FeatureGroup );
+
+    return $FeatureGroup;
+  }
+
+sub createAndAddFeatureGroupN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddFeatureGroupN( $args{'seq'}, $args{'id'}, $args{'groupset'} );
+  }
+
+sub createAndAddFeatureGroupMember
+  {
+    my $self = shift;
+    my ($FeatureGroup, $featref, $feattype, $grouptype, $cdata) = @_;
+
+    $FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata ); 
+
+    return $FeatureGroup;
+  }
+
+sub createAndAddFeatureGroupMemberN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddFeatureGroupMember( $args{'featref'}, $args{'feattype'}, $args{'grouptype'}, $args{'cdata'} );
   }
 
 1;
