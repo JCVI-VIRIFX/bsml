@@ -6,7 +6,7 @@
 # The BsmlBuilder class mirrors the Java API defined in the LabBook Bsml Documentation
 # for building Bsml sequences.
 
-use lib "lib/";
+#use lib "../src/";
 
 use BSML::BsmlBuilder;
 use BSML::BsmlReader;
@@ -267,3 +267,4 @@ else
 }
 
 unlink $outfile;
+unlink 'chr001.fa';
