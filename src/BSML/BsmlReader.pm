@@ -433,8 +433,8 @@ sub readSeqPairAlignment
 		die "filter_count was:$filter_count";
 	    }
 	    
-	    my $i = 0;
-	    my $tmp_all_seq_pairs_hash = {};
+	
+	    my @tmp_array;
 	    my $runDat = {};
 	    
 	    
@@ -467,15 +467,16 @@ sub readSeqPairAlignment
 		# Store every runDat object in the the tmp_all_seq_pairs_hash
 		# along side with it's "score"
 		#		
-		$tmp_all_seq_pairs_hash->{$i}->{'score'}  = $runDat->{$filter};
-		$tmp_all_seq_pairs_hash->{$i}->{'rundat'} = $runDat;
-		$i++;
+		my $tmp_hash = {};
+		$tmp_hash->{'score'}  = $runDat->{$filter};
+		$tmp_hash->{'rundat'} = $runDat; 
+		push (@tmp_array, $tmp_hash);
 	    }
 	    
 	    #
 	    # Sort the runDat objects based on their "scores"
 	    #
-	    my @sorted_keys = sort ($tmp_all_seq_pairs_hash->{$a}->{'score'} <=> $tmp_all_seq_pairs_hash->{$b}->{'score'});
+	    my @sorted_keys = (sort {$a->{'score'} <=> $b->{'score'}} @tmp_array);
 	    
 	    
 	    #
@@ -485,7 +486,7 @@ sub readSeqPairAlignment
 	    my $sorted_key;
 	    foreach $sorted_key (@sorted_keys){
 		if ($loaded_seq_pair_run < $filter_count){
-		    push( @{$rhash->{'seqPairRuns'}}, $tmp_all_seq_pairs_hash->{$sorted_key});     
+		    push( @{$rhash->{'seqPairRuns'}}, $tmp_array[$sorted_key]->{'rundat'});     
 		    $loaded_seq_pair_run++;
 		}
 	    }
