@@ -10,50 +10,67 @@ use lib "../src/";
 use strict;
 use BsmlDoc;
 use BsmlParserTwig;
+use Getopt::Long;
 
 # $inputfile - BSML input
 # $outputfile - BSML output
 # $dtdfile - Local path to a BSML DTD, if ommitted a default, url based dtd will be provided
 
-my ( $inputfile, $outputfile, $dtdfile ) = @ARGV;
+my $dtdfile = '';
+my $logconf = '';
+
+GetOptions( 'dtd=s' => \$dtdfile, 'logconf=s' => \$logconf );
+
+my ( $inputfile, $outputfile ) = @ARGV;
 
 if( !( $inputfile ) || !( $outputfile ) )
   {
-    die "Usage appendSeqDat.pl [inputfile.xml] [outputfile.xml] [inputfile.dtd]\n";
+    die "Usage basicBSML.pl [inputfile.xml] [outputfile.xml] --dtd [local BSML dtd] --logconf [Log4Perl config file]\n";
   }
 
 # Create a new BsmlDocument object and Twig Parser
+# if a path to a Log4Perl configuration file is given to the BsmlDoc constructor, default logging will be overidden by the
+# user specified config
 
-my $doc = new BsmlDoc;
+my $doc = new BsmlDoc( $logconf );
+
+# This BSML parser uses the XML::Twig library
 my $parser = new BsmlParserTwig;
 
-# Use the Twig Parser to populate the BsmlDocument with data from the source file
+print "\nParsing Bsml Document: $inputfile\n";
 
+# Use the Twig Parser to populate the BsmlDocument with data from the source file
 $parser->parse( \$doc, $inputfile );
 
 # Get a reference to a list of sequence references from the BsmlDocument
 
 my $seqList = $doc->returnBsmlSequenceListR();
+my $seqcount = @{$seqList};
+
+print "Finished Parsing Bsml Document: $inputfile. ($seqcount sequences found)\n\n";
 
 # loop over all sequences in the document
 
 foreach my $seq ( @{ $seqList } )
 {
-  # retrieve a reference to a hash containing the key / value pairs for the Sequence elements attributes
+
+  print "\n";
+
+  # retrieve a reference to a hash containing the key / value pairs for the Sequence element's attributes
 
   my $attr = $seq->returnattrHashR();
 
   # check to see if there's an external database accession number
 
-  print "Sequence Name: ";
+  print "Sequence - ";
 
   if( $attr->{'ic-acckey'} )
     {
-      print "$attr->{'ic-acckey'}\n";
+      print "Accession: $attr->{'ic-acckey'}\n";
     }
   else
     {
-      print "No Accesssion Number Found...";
+      print "Accession: Not Defined\n";
     }
 
   # reset the 'ic-acckey attribute to 99999 or add the attribute if not already there
@@ -67,12 +84,16 @@ foreach my $seq ( @{ $seqList } )
 
   if( $seqdat )
     {
-      print "Seq-dat: ";
+      print "  Seq-dat: ";
 
       my $s = substr( $seqdat, 0, 30 );
       $s =~ s/\n//;
 
-      print "$s\n";
+      print "$s...\n";
+    }
+  else
+    {
+      print "  Seq-dat: Not defined\n";
     }
 
   # if $seqdat is present change its contents to all-caps else
@@ -90,6 +111,10 @@ foreach my $seq ( @{ $seqList } )
   # retrieve a list of references to the sequences feature tables
 
   my $FTableList = $seq->returnFeatureTableListR();
+  my $FTableCount = @{$FTableList};
+
+  print "  Feature Tables: $FTableCount Defined\n";
+  
 
   # print the number of features in each feature table
 
@@ -108,15 +133,31 @@ foreach my $seq ( @{ $seqList } )
       my $count = @{ $FeaturesList };
 
       if( $FeatureTableName ){
-	  print "$FeatureTableName - $count features\n";
+	  print "    Feature Table: $FeatureTableName ($count features)\n";
 	}
       else{
-	print "Unnamed Feature Table - $count features\n";
+	  print "    Feature Table: ID not defined ($count features)\n";
       }  
 
+      my $feature;
+
+      # Print the Feature ID for each feature
+
+      foreach $feature ( @{$FeaturesList} )
+	{
+	  my $id = $feature->returnattr( 'id' );
+
+	  if( $id ){
+	    print "      Feature: $id\n";
+	  }
+	  else{
+	    print "      Feature: ID Not Defined\n";
+	  } 
+	}
+      
       # add a new feature and qualifier
 
-      my $feature = $Ftable->returnBsmlFeatureR( $Ftable->addBsmlFeature() );
+      $feature = $Ftable->returnBsmlFeatureR( $Ftable->addBsmlFeature() );
 
       $feature->addBsmlQualifier( "product", "TIGR Bsml Object" );
 
@@ -137,13 +178,37 @@ foreach my $seq ( @{ $seqList } )
       
     }
 
-  
+  # Take a look for feature groups
 
- 
+  my $FGroupList = $seq->returnBsmlFeatureGroupListR();
+  my $FGroupCount = @{$FGroupList};
+
+  print "  Feature Groups: $FGroupCount Defined\n";
+  
+  foreach my $FGroup ( @{$FGroupList} )
+    {
+      my $id = $FGroup->returnattr( 'id' );
+      my $FGroupMembers = $FGroup->returnFeatureGroupMemberListR();
+      my $membercount = @{$FGroupMembers};
+  
+      if( $id ){
+	print "    Feature Group: $id ($membercount features)\n";
+      }
+      else{
+	print "    Feature Group: ID not defined ($membercount features)\n";
+      }
+
+      foreach my $FGroupMember ( @{$FGroupMembers} )
+	{
+	  print "      Feature: ".$FGroupMember->{'feature'}." - ".$FGroupMember->{'feature-type'}."\n";
+	}
+    }
 }
 
  # write the altered Bsml Document to a file
 
   $doc->write( $outputfile );
+
+  print "\nWrote Bsml Document: $outputfile\n";
 
 
