@@ -6,7 +6,7 @@
 # The BsmlBuilder class mirrors the Java API defined in the LabBook Bsml Documentation
 # for building Bsml sequences.
 
-use lib "../src/";
+use lib "lib/";
 
 use BSML::BsmlBuilder;
 use BSML::BsmlReader;
