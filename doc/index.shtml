@@ -42,12 +42,9 @@ Project site <a href='project_pages/'>[Local]</a>&nbsp;<a href='http://bsml.sour
 Data repository <a href='/ifx/devel/cas/papyrus/srs_repository.html'>[srs]</a><br>
     Perl CLI coding standards 
   <p> <b>Software Products</b><br>
-    See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
-href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
-</p>
-<p>
-<b>Command-line utilities:</b><br>
 <ul>
+<li>See <a href='/ifx/devel/cas/prism'>Prism</a> and <ahref='/ifx/devel/cas/papyrus'>Papyrus</a> 
+for software that utilizes BSML.</li>
 <li><em>check_repository</em><br>
 <a href='srs_check_repository.html'>[srs]</a> [use cases]</li>
 </ul>
