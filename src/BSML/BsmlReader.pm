@@ -787,44 +787,53 @@ sub get_all_protein_dna_extended
     my $self = shift;
     my ($assembly_id, $extension) = @_;
 
-    #loads the full assembly
-    my $seq_dat = $self->subSequence( $assembly_id, -1, 0, 0 );
-
+ 
     my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($assembly_id);
-    my $topo = $seq->returnattr( 'topology' );
+    if( ref($seq) eq 'BSML::BsmlSequence' )
+    {
+	my $topo = $seq->returnattr( 'topology' );
 
-    my $returnhash = {};
+	#loads the full assembly
+	my $seq_dat = $self->subSequence( $assembly_id, -1, 0, 0 );
 
-    foreach my $gene( $self->returnAllGeneIDs() )
-      {
-	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
-	  {
-	    my $coords = $self->geneIdtoGenomicCoords($gene);
-	    
-	    my $start = $coords->[0]->{'GeneSpan'}->{'startpos'};
-	    my $end = $coords->[0]->{'GeneSpan'}->{'endpos'};
-	    
-	    my $dnalist = $self->geneCoordstoCDSList( $coords );
-	    
-	    my $i = 0;
-	    foreach my $seq (@{$dnalist})
-	      {
-		my $key = $gene."_".$i;
 
-		if( !($seq_dat) || !($topo) || !($start) || !($end) )
+	my $returnhash = {};
+	
+	foreach my $gene( $self->returnAllGeneIDs() )
+	{
+	    if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
+	    {
+		my $coords = $self->geneIdtoGenomicCoords($gene);
+		
+		my $start = $coords->[0]->{'GeneSpan'}->{'startpos'};
+		my $end = $coords->[0]->{'GeneSpan'}->{'endpos'};
+	    
+		my $dnalist = $self->geneCoordstoCDSList( $coords );
+		
+		my $i = 0;
+		foreach my $seq (@{$dnalist})
 		{
-		    print STDERR "Error in call to extend_seq - Gene: $gene Topo: $topo Start: $start End: $end\n";
+		    my $key = $gene."_".$i;
+		    
+		    if( !($seq_dat) || !($topo) || !($start) || !($end) )
+		    {
+			print STDERR "BsmlReader::get_all_protein_dna_extended() - Error in call to extend_seq - Gene: $gene Topo: $topo Start: $start End: $end\n";
+		    }
+
+		    $returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
+		    $i++;
 		}
-
-		$returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
-		$i++;
-	      }
-	  }
-      }
-
-    return $returnhash;
-  }
-
+	    }
+	}
+	
+	return $returnhash;
+    }
+    else
+    {
+	print STDERR "BsmlReader::get_all_protein_dna_extended() - Error Invalid Sequence Id ($assembly_id) passed as assembly sequence\n";
+    }
+}
+    
 #return a list of hash references containing...
 #  ParentSeqID, TranscriptID, GeneSpan, CDS_START, CDS_END, Exon_Boundaries
 
