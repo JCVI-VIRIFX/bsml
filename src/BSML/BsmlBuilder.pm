@@ -651,7 +651,7 @@ sub createAndAddSequencePairAlignment
 
     #determine if a sequence pair alignment for the query and dbmatch already exists in the document
 
-    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}" );
+    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}" );
 
     if( $alignment_pair ){
 	return $alignment_pair;
@@ -661,28 +661,28 @@ sub createAndAddSequencePairAlignment
 
 	#check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
 
-	if( !( $self->returnBsmlSequenceByIDR( "$args{'query_name'}")) ){
-	    $self->createAndAddSequence( "$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, '' );}
+	if( !( $self->returnBsmlSequenceByIDR( "$args{'refseq'}")) ){
+	    $self->createAndAddSequence( "$args{'refseq'}", "$args{'refseq'}", $args{'reflength'}, '' );}
 	
-	if( !( $self->returnBsmlSequenceByIDR( "$args{'dbmatch_accession'}")) ){
-	    $self->createAndAddSequence( "$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', '' );}
+	if( !( $self->returnBsmlSequenceByIDR( "$args{'compseq'}")) ){
+	    $self->createAndAddSequence( "$args{'compseq'}", "$args{'compseq'}", $args{'complength'}, '' );}
 
 	$alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
 	
-	$alignment_pair->setattr( 'refseq', "$args{'query_name'}" );
-	$alignment_pair->setattr( 'compseq', "$args{'dbmatch_accession'}" );
+	$alignment_pair->setattr( 'refseq', "$args{'refseq'}" );
+	$alignment_pair->setattr( 'compseq', "$args{'compseq'}" );
 
-	BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}", $alignment_pair );
+	BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}", $alignment_pair );
 
 	$alignment_pair->setattr( 'refxref', $args{'refxref'});
 	$alignment_pair->setattr( 'refstart', $args{'refstart'} );
 	$alignment_pair->setattr( 'refend', $args{'refend'} );
-	$alignment_pair->setattr( 'reflength', $args{'query_length'} );
-	$alignment_pair->setattr( 'method', $args{'blast_program'} );
-
-	if( $args{'search_database'} && $args{'dbmatch_accession'} ){
-	    $alignment_pair->setattr( 'compxref', $args{'search_database'}.':'.$args{'dbmatch_accession'} );
-	}
+	$alignment_pair->setattr( 'reflength', $args{'reflength'} );
+	$alignment_pair->setattr( 'compxref', $args{'compxref'});
+	$alignment_pair->setattr( 'compstart', $args{'compstart'} );
+	$alignment_pair->setattr( 'compend', $args{'compend'} );
+	$alignment_pair->setattr( 'complength', $args{'complength'} );
+	$alignment_pair->setattr( 'method', $args{'method'} );
 
 	return $alignment_pair;
     }
@@ -700,11 +700,11 @@ sub createAndAddSequencePairRun
 	#add a new BsmlSeqPairRun to the alignment pair and return
 	my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
 	
-	$seq_run->setattr( 'refpos', $args{'start_query'} );
+	$seq_run->setattr( 'refpos', $args{'refpos'} );
 	$seq_run->setattr( 'runlength', $args{'runlength'} );
 	$seq_run->setattr( 'refcomplement', $args{'refcomplement'});
 	
-	$seq_run->setattr( 'comppos', $args{'start_hit'} );
+	$seq_run->setattr( 'comppos', $args{'comppos'} );
 	$seq_run->setattr( 'comprunlength', $args{'comprunlength'} );
 	$seq_run->setattr( 'compcomplement', $args{'compcomplement'} );
 	
@@ -717,9 +717,15 @@ sub createAndAddSequencePairRun
 	$seq_run->addBsmlAttr( 'segment_number', $args{'segment_number'} );
 	$seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
 
+	# The seq pair run object is returned these client specific attributes should be 
+	# appended by the client. Potential the first five above, as well...
+
 	$seq_run->addBsmlAttr( 'PEffect_Cluster_Id', $args{'PEffect_Cluster_Id'} );
 	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gap_Count', $args{'PEffect_Cluster_Gap_Count'} );
 	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gene_Count', $args{'PEffect_Cluster_Gene_Count'} );
+
+	$seq_run->addBsmlAttr( 'Mummer_percent_coverage_ref', $args{'Mummer_percent_coverge_ref'} );
+	$seq_run->addBsmlAttr( 'Mummer_percent_coverage_comp', $args{'Mummer_percent_coverage_comp'} );
 	
 	return $seq_run;
     }
