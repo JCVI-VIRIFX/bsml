@@ -430,23 +430,17 @@ sub readSeqPairAlignment
 	      $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
 	      $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
 	      $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-	      $runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
-	      $runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
-	      $runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
-	      $runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
-	      $runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
 
-	      # add additional PEffect attributes if present
+	      # add client defined Bsml Attributes to the return structure
 
-	      $runDat->{'PEffect_Cluster_Gene_Count'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Gene_Count' );
-	      $runDat->{'PEffect_Cluster_Gap_Count'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Gap_Count' );
-	      $runDat->{'PEffect_Cluster_Id'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Id' );
+	      my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
 
-	      # add additional Bit Score Attributes
+	      foreach my $qual (keys(%{$bsmlAttributeHashR}))
+	      {
+		  $runDat->{$qual} = $bsmlAttributeHashR->{$qual};
+	      }
 
-	      $runDat->{'percent_bit_score'} = $SeqPairRun->returnBsmlAttr( 'percent_bit_score' );
-
-	      push( @{$rhash->{'seqPairRuns'}}, $runDat );	
+	      push( @{$rhash->{'seqPairRuns'}}, $runDat );     
 	  }
     
 	return $rhash;

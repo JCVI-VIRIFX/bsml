@@ -25,6 +25,8 @@ print "Done.\n";
 for( my $i=0; $i<$aahash->{'count'}; $i++ )
 {
     my $href = $reader->readSeqPairAlignment( $aahash->{$i} );
+
+    print Dumper( $href );
 }
 
 print "Program end...\n";
