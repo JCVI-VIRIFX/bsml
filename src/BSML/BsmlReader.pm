@@ -395,57 +395,139 @@ sub returnAllSeqPairAlignmentsListR
 sub readSeqPairAlignment
   {
     my $self = shift;
-    my ($SeqPairAln) = @_;
+    my ($SeqPairAln, $filter, $filter_count) = @_;
     my $rhash = {};
 
+    #-----------------------------------------------------
+    # Verify whether arguments were defined
+    #
+    #-----------------------------------------------------
+    if (!defined($SeqPairAln)){
+	die "SeqPairAln was not defined";
+    }
+
     if( ref($SeqPairAln) eq 'BSML::BsmlSeqPairAlignment' )
-      {
-	  # Bsml Identifiers are not set for SeqPairAlignments so a "raw" reference to the SeqPairAlignment Object is returned 
-	  $rhash->{'bsmlRef'} = $SeqPairAln;  
-
-	  $rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
-	  $rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
-	  $rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
-	  $rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
-	  $rhash->{'refend'} = $SeqPairAln->returnattr('refend');
-	  $rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
-	  $rhash->{'method'} = $SeqPairAln->returnattr('method');
-	  $rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
-	  $rhash->{'seqPairRuns'} = [];
-
-	  foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
-	  {
-	      my $runDat = {};
-
-	      # Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
-	      # placed in the return structure.
-	      $runDat->{'bsmlRef'} = $SeqPairRun;
-                      
-	      # package the SeqPairRun data
-	      $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-	      $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-	      $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-	      $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-	      $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
-	      $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-	      $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-	      $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-
-	      # add client defined Bsml Attributes to the return structure
-
-	      my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
-
-	      foreach my $qual (keys(%{$bsmlAttributeHashR}))
-	      {
-		  $runDat->{$qual} = $bsmlAttributeHashR->{$qual};
-	      }
-
-	      push( @{$rhash->{'seqPairRuns'}}, $runDat );     
-	  }
-    
-	return $rhash;
-      }
-  }
+    {
+	# Bsml Identifiers are not set for SeqPairAlignments so a "raw" reference to the SeqPairAlignment Object is returned 
+	$rhash->{'bsmlRef'} = $SeqPairAln;  
+	
+	$rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
+	$rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
+	$rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
+	$rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
+	$rhash->{'refend'} = $SeqPairAln->returnattr('refend');
+	$rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
+	$rhash->{'method'} = $SeqPairAln->returnattr('method');
+	$rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
+	$rhash->{'seqPairRuns'} = [];
+	
+	#-----------------------------------------------------
+	# If filtering top x scores are to be implemented,
+	# verify the essential filter parameters
+	#-----------------------------------------------------
+	if ((defined($filter)) && (defined($filter_count))){
+	    if ($filter !~ /refpos|runlength|refcomplement|comppos|comprunlength|compcomplement|runscore|runprob/){
+		die "Un-recognized attribute: $filter";
+	    }
+	    if ($filter_count !~ /[\d]+/){
+		die "filter_count was:$filter_count";
+	    }
+	    
+	    my $i = 0;
+	    my $tmp_all_seq_pairs_hash = {};
+	    my $runDat = {};
+	    
+	    
+	    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+	    {
+		
+		# Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
+		# placed in the return structure.
+		$runDat->{'bsmlRef'} = $SeqPairRun;
+		
+		# package the SeqPairRun data
+		$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+		$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+		$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+		$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+		$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+		$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+		$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+		$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+		
+		# add client defined Bsml Attributes to the return structure
+		
+		my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
+		
+		foreach my $qual (keys(%{$bsmlAttributeHashR}))
+		{
+		    $runDat->{$qual} = $bsmlAttributeHashR->{$qual};
+		}
+		
+		# Store every runDat object in the the tmp_all_seq_pairs_hash
+		# along side with it's "score"
+		#		
+		$tmp_all_seq_pairs_hash->{$i}->{'score'}  = $runDat->{$filter};
+		$tmp_all_seq_pairs_hash->{$i}->{'rundat'} = $runDat;
+		$i++;
+	    }
+	    
+	    #
+	    # Sort the runDat objects based on their "scores"
+	    #
+	    my @sorted_keys = sort ($tmp_all_seq_pairs_hash->{$a}->{'score'} <=> $tmp_all_seq_pairs_hash->{$b}->{'score'});
+	    
+	    
+	    #
+	    # Only want to load the top X seq_pair_runs
+	    #
+	    my $loaded_seq_pair_run=0;
+	    my $sorted_key;
+	    foreach $sorted_key (@sorted_keys){
+		if ($loaded_seq_pair_run < $filter_count){
+		    push( @{$rhash->{'seqPairRuns'}}, $tmp_all_seq_pairs_hash->{$sorted_key});     
+		    $loaded_seq_pair_run++;
+		}
+	    }
+	}
+	else{
+	    #------------------------------------------------------------
+	    # No filtering of SeqPairRun's
+	    # Return everything
+	    #-----------------------------------------------------------
+	    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+	    {
+		my $runDat = {};
+		
+		# Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
+		# placed in the return structure.
+		$runDat->{'bsmlRef'} = $SeqPairRun;
+		
+		# package the SeqPairRun data
+		$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+		$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+		$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+		$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+		$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+		$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+		$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+		$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+		
+		# add client defined Bsml Attributes to the return structure
+		
+		my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
+		
+		foreach my $qual (keys(%{$bsmlAttributeHashR}))
+		{
+		    $runDat->{$qual} = $bsmlAttributeHashR->{$qual};
+		}
+		
+		push( @{$rhash->{'seqPairRuns'}}, $runDat );     
+	    }
+	}
+    	return $rhash;
+    }
+}
 
 sub readLinks
   {
