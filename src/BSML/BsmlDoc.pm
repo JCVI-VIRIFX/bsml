@@ -380,19 +380,26 @@ sub write
     my $bsml_logger = get_logger( "Bsml" );
 
     $bsml_logger->debug( "Attempting to write BsmlDoc" );
+    my $output;
 
-    my $output = new IO::File( ">$fname" );
+    if( !($fname eq 'STDOUT') )
+      {
+	$output = new IO::File( ">$fname" );
 
-    if( !( $output ) )
-    {
-      $bsml_logger->fatal( "Could not open output file - $fname" );
-      die "could not open output file - $fname\n";
-    }
+	if( !( $output ) )
+	  {
+	    $bsml_logger->fatal( "Could not open output file - $fname" );
+	    die "could not open output file - $fname\n";
+	  }
+      }
 
     # Setting DATA_MODE to 1 enables XML::Writer to insert newlines around XML elements for 
     # easier readability. DATA_INDENT specifies an indent of two spaces for child elements
 
-    my $writer = new XML::Writer(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2);  
+    my $writer;
+
+    if( $fname eq 'STDOUT' ){ $writer = new XML::Writer( DATA_MODE => 1, DATA_INDENT => 2);}
+    else{$writer = new XML::Writer(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2);}
 
     $writer->xmlDecl();
 
