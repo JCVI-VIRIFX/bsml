@@ -39,20 +39,10 @@
   </xs:restriction>
 </xs:simpleType>
 
-<xs:simpleType name="allvsall_bsml_attr_name">
-  <xs:restriction base="xs:NMTOKEN">
-    <xs:enumeration value="segment_number"/>
-    <xs:enumeration value="chain_number"/>
-    <xs:enumeration value="percent_identity"/>
-    <xs:enumeration value="percent_similarity"/>
-    <xs:enumeration value="p_value"/>
-  </xs:restriction>
-</xs:simpleType>
-
 <xs:element name="Sequence">
   <xs:complexType>
     <xs:all>
-      <xs:element name="Attribute" minOccurs="1" maxOccurs="1">
+      <xs:element name="Attribute" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:attribute name="name" type="seq_bsml_attr_name" use="required"/>
           <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
@@ -62,7 +52,7 @@
     <xs:attribute name="id" type="xs:ID" use="required" />
     <xs:attribute name="molecule" type="molecule_attr" use="optional" />
     <xs:attribute name="title" type="xs:NMTOKEN" use="optional" />
-    <xs:attribute name="length" type="xs:NMTOKEN" />
+    <xs:attribute name="length" type="xs:NMTOKEN" use="optional" />
   </xs:complexType>
 </xs:element>
 
@@ -70,38 +60,25 @@
   <xs:complexType>
     <xs:sequence>
       <xs:element name="Seq-pair-run" minOccurs="1" maxOccurs="unbounded" >
-              <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Attribute" minOccurs="5" maxOccurs="5">
-                    <xs:complexType>
-                      <xs:attribute name="name" type="allvsall_bsml_attr_name" use="required"/>
-                      <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
-                <xs:attribute name="refpos" type="xs:integer" use="required" />
-                <xs:attribute name="runlength" type="xs:integer" use="required" />
-                <xs:attribute name="refcomplement" type="xs:integer" use="required" />
-                <xs:attribute name="comppos" type="xs:integer" use="required" />
-                <xs:attribute name="comprunlength" type="xs:integer" use="required" />
-                <xs:attribute name="compcomplement" type="xs:integer" use="required" />
-                <xs:attribute name="runscore" type="xs:integer" use="required" />
-                <xs:attribute name="runprob" type="xs:integer" use="required" />
+            <xs:complexType>
+                <xs:attribute name="refpos" type="xs:decimal" use="required" />
+                <xs:attribute name="runlength" type="xs:decimal" use="required" />
+                <xs:attribute name="refcomplement" type="xs:integer" use="optional" />
+                <xs:attribute name="comppos" type="xs:decimal" use="required" />
+                <xs:attribute name="comprunlength" type="xs:decimal" use="required" />
+                <xs:attribute name="compcomplement" type="xs:integer" use="optional" />
              </xs:complexType>
-             <xs:key name="Attribute">
-               <xs:selector xpath="Attribute"/>
-               <xs:field xpath="@name"/>
-             </xs:key>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="refseq" type="xs:IDREF" use="required" />
-    <xs:attribute name="refxref" type="xs:string" use="required" />
-    <xs:attribute name="refstart" type="xs:integer" use="required" />
-    <xs:attribute name="refend" type="xs:integer" use="required" />
-    <xs:attribute name="reflength" type="xs:integer" use="required" />
+    <xs:attribute name="refxref" type="xs:string" use="optional" />
+    <xs:attribute name="refstart" type="xs:integer" use="optional" />
+    <xs:attribute name="refend" type="xs:integer" use="optional" />
+    <xs:attribute name="reflength" type="xs:integer" use="optional" />
     <xs:attribute name="compseq" type="xs:IDREF" use="required" />
-    <xs:attribute name="compxref" type="xs:string" use="required" />
-    <xs:attribute name="method" type="xs:string" use="required" />
+    <xs:attribute name="compxref" type="xs:string" use="optional" />
+    <xs:attribute name="method" type="xs:string" use="optional" />
+    <xs:attribute name="title" type="xs:string" use="optional" />
    </xs:complexType>
  </xs:element>
 
