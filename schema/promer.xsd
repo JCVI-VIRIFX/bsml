@@ -71,10 +71,10 @@
     <xs:sequence>
       <xs:element name="Seq-pair-run" minOccurs="1" maxOccurs="unbounded" >
               <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Attribute" minOccurs="5" maxOccurs="5">
+                <xs:sequence minOccurs="0">
+                  <xs:element name="Attribute" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
-                      <xs:attribute name="name" type="promer_bsml_attr_name" use="required"/>
+                      <xs:attribute name="name" type="xs:NMTOKEN" use="required"/>
                       <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
                     </xs:complexType>
                   </xs:element>
@@ -88,10 +88,6 @@
                 <xs:attribute name="runscore" type="xs:decimal" use="optional" />
                 <xs:attribute name="runprob" type="xs:integer" use="optional" />
              </xs:complexType>
-             <xs:key name="Attribute">
-               <xs:selector xpath="Attribute"/>
-               <xs:field xpath="@name"/>
-             </xs:key>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="refseq" type="xs:IDREF" use="required" />
@@ -145,13 +141,13 @@
                   <xs:element name="Analysis">
                     <xs:complexType>
                       <xs:sequence>
-                        <xs:element name="Attribute" minOccurs="1" maxOccurs="10">
+                        <xs:element name="Attribute" minOccurs="1" maxOccurs="unbounded">
                           <xs:complexType>
-                            <xs:attribute name="name" type="analysis_bsml_attr_name" use="required"/>
+                            <xs:attribute name="name" type="xs:string" use="required"/>
                             <xs:attribute name="content" type="xs:string" use="required"/>
                         </xs:complexType>
                       </xs:element>
-                      <xs:element name="Link">
+                      <xs:element name="Link" minOccurs="0" maxOccurs="1">
                         <xs:complexType>
                           <xs:attribute name="href" type="xs:string"/>
                           <xs:attribute name="rel" type="xs:string"/>
