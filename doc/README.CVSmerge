@@ -1,0 +1,21 @@
+
+mkdir merge
+cd merge
+
+#Tag trunk as premerge
+mkdir trunk
+cd trunk
+cvs co bsml
+cvs tag $RELEASE_TAG$-premerge-1
+
+#Tag branch as premerge
+cd ../
+mkdir branch
+cd branch
+cvs co -r $BRANCH_TAG$ bsml
+cvs tag $BRANCH_TAG$-premerge-1
+
+
+#Perform merge
+cd ../trunk
+cvs -q update -kk -j $BRANCH_TAG$
