@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.13 2004/01/19 16:16:07 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.14 2004/01/19 16:18:56 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.13 $. 
-Last modified on $Date: 2004/01/19 16:16:07 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.14 $. 
+Last modified on $Date: 2004/01/19 16:18:56 $
 
 =head1 SYNOPSIS
 
@@ -99,7 +99,7 @@ sub list_assemblies{
     $self->{_logger}->debug("Listing assemblies from directory $self->{_PATH}") if($self->{_logger}->is_debug());
     opendir BSMLDIR, "$self->{_PATH}" or $self->{_logger}->logdie("Can't read directory $self->{_PATH}");
     my @asmblfiles = readdir BSMLDIR;
-    foreach $asmblfile (@asmblfiles){
+    foreach my $asmblfile (@asmblfiles){
 	$self->{_logger}->debug("File $asmblfile") if($self->{_logger}->is_debug());
     }
     my @asmbllist;
