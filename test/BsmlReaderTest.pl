@@ -19,14 +19,9 @@ $parser = undef;
 print "Done.\n";
 
 print "Reading Alignments...\n";
-$aahash = $reader->get_all_alignment_references();
-print "Done.\n";
+my $analysis = $reader->readAnalysis( $reader->returnAllAnalysis->[0] );
 
-for( my $i=0; $i<$aahash->{'count'}; $i++ )
-{
-    my $href = $reader->readSeqPairAlignment( $aahash->{$i} );
 
-    print Dumper( $href );
-}
+print Dumper( %{$analysis} );
 
 print "Program end...\n";

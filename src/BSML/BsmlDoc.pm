@@ -54,7 +54,7 @@ use XML::Writer;
 use BSML::BsmlSequence;
 use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlAnalysis;
-use Log::Log4perl qw(get_logger :levels);
+use Log::Log4perl qw(get_logger :easy);
 use Data::Dumper;
 
 # The default links to the BSML dtd maintained by Labbook
@@ -500,8 +500,12 @@ sub write
 
     #clean up open fhs
     $writer->end();
-    $output->close();
-    $bsml_logger->info("Output handle $output closed for file $fname $!");
+    
+    if( !($fname eq 'STDOUT') )
+      {
+	  $output->close();
+	  $bsml_logger->info("Output handle $output closed for file $fname $!");
+      }
 
     $bsml_logger->debug( "BsmlDoc successfully written" );
   }
