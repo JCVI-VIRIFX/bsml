@@ -9,7 +9,10 @@ my $reader = new BsmlReader;
 my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
-foreach $gene (sort($reader->returnAllFeatureGroupSetIds()))
+
+my $aa_seqs = $reader->get_all_protein_aa( 'PNEUMO_19' );
+
+foreach my $id (keys %{$aa_seqs})
   {
-    print "$gene\n";
+    print ">$id\n".$aa_seqs->{$id}."\n";
   }

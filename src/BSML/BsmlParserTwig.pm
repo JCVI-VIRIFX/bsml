@@ -259,13 +259,13 @@ sub sequenceHandler
 		    my $attr = $BsmlSiteLoc->atts();
 
 		    if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
-		    $feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'} ); 
+		    $feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'}, $attr->{'class'} ); 
 		  }
 
 		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
 		  {
 		    my $attr = $BsmlLink->atts();
-		    $feat->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+		    $feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
 		  }
 	      }
 	  }

@@ -259,6 +259,13 @@ sub addBsmlFeatureGroup
     push( @{$self->{'BsmlFeatureGroups'}}, new BsmlFeatureGroup );
 
     my $index = @{$self->{'BsmlFeatureGroups'}} - 1;
+
+    #In order to retain the relationship of genes to the assembly on which they
+    #are contained in a memory efficient manner consistent with the document level
+    #lookups, the sequence id is embedded in each feature group. 
+
+    $self->{'BsmlFeatureGroups'}->[$index]->{'ParentSequenceId'} = $self->returnattr( 'id' );
+
     return $index;
 
   }

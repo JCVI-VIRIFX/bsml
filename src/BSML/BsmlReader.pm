@@ -460,12 +460,110 @@ sub returnAllFeatureGroupSetIds
     return BsmlDoc::BsmlReturnFeatureGroupLookupIds();
   }
 
+sub returnAllGeneIDs
+  {
+    my $self = shift;
+    return $self->returnAllFeatureGroupSetIds();
+  }
+
+sub geneIdtoAssemblyId
+  {
+    my $self = shift;
+    my ($geneId) = @_;
+    my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+
+    if($fgrouplist)
+      {
+	return $fgrouplist->[0]->returnParentSequenceId();
+      }
+    else
+      {
+	return '';
+      }
+  }
+
+sub geneIdtoAASeqList
+  {
+    my $self = shift;
+    my ($geneId) = @_;
+
+    my @returnAASequenceList;
+
+    my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+    
+    foreach my $fgroup (@{$fgrouplist})
+      {
+	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
+	  {
+	    if( $fmember->{'feature-type'} eq 'CDS' )
+	      {
+		my $feat = BsmlDoc::BsmlReturnDocumentLookup( $fmember->{'feature'} );
+		foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+		  {
+		    if( $link->{'rel'} eq 'SEQ' )
+		      {
+			my $sref = $link->{'href'};
+			$sref =~ s/#//;
+			my $seq = BsmlDoc::BsmlReturnDocumentLookup( $sref );
+			
+			if( my $seqdat = $seq->returnSeqData() ){
+			  push( @returnAASequenceList, $seqdat );}
+			else
+			  {
+			    #handle sequence data import tags
+			  }
+		      }
+		  }
+	      }
+	  }
+      }
+     
+    return \@returnAASequenceList;
+  }
+
+#return all the protein sequences associated with an assembly
+#returns a hash reference where the keys are sequence ids and
+#the values are the sequences. Note for data containing multiple
+#transcripts the ids will be set as genename_index where index
+#is incremented as sequences are encountered. Should BsmlFGroup ids
+#be used to store transcript identifiers???
+
+sub get_all_protein_aa
+  {
+    my $self = shift;
+    my ($assembly_id) = @_;
+
+    my $returnhash = {};
+
+    foreach my $gene( $self->returnAllGeneIDs() )
+      {
+	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
+	  {
+	    my $aalist = $self->geneIdtoAASeqList($gene);
+	    
+	    my $i = 0;
+	    foreach my $seq (@{$aalist})
+	      {
+		$key = $gene."_".$i;
+		$returnhash->{$key} = $seq;
+		$i++;
+	      }
+	  }
+      }
+
+    return $returnhash;
+  }
+
 sub geneIdtoNucSequence
   {
 
   }
 
 # this function still needs a lot of work
+
+# GeneID's are stored in the feature group lookup table
+# 
+
 sub geneIdtoAASequence
   {
     my $self = shift;

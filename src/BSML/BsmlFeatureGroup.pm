@@ -60,6 +60,13 @@ sub init
     $self->{ 'BsmlFeatureGroupMembers' } = [];
     $self->{ 'text' } = '';
     $self->{ 'BsmlLink' } = [];
+
+    #ParentSequenceId is set in BsmlSequence::addBsmlFeatureGroup()...
+    #In order to retain the relationship of genes to the assembly on which they
+    #are contained in a memory efficient manner consistent with the document level
+    #lookups, the sequence id is embedded in each feature group. 
+
+    $self->{ 'ParentSequenceId' } = ''; 
   }
 
 =item $FGroup->addBsmlFeatureGroupMember( $feature_id, $feature_type, $group_type, $cdata )
@@ -214,7 +221,7 @@ sub write
 
 	if( $bsmlfeaturemember->{'feature'} ){ $h->{'featref'} = $bsmlfeaturemember->{'feature'};}
 	if( $bsmlfeaturemember->{'feature-type'} ){$h->{'feature-type'} = $bsmlfeaturemember->{'feature-type'};}
-	if( $bsmlfeaturemember->{'group-type'} ){$h->{'group-type'} = $bsmlfeaturemember->{'feature-type'};}
+	if( $bsmlfeaturemember->{'group-type'} ){$h->{'group-type'} = $bsmlfeaturemember->{'group-type'};}
 
 	$writer->startTag( "Feature-group-member", %{ $h } );
 	if( $bsmlfeaturemember->{'text'} ){ $writer->characters( $bsmlfeaturemember->{'text'} ); }
@@ -229,6 +236,12 @@ sub write
     
     $writer->endTag( "Feature-group" );
 
+  }
+
+sub returnParentSequenceId
+  {
+    my $self = shift;
+    return $self->{'ParentSequenceId'};
   }
 
 1
