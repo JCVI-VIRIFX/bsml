@@ -823,6 +823,7 @@ sub geneIdtoGenomicCoords
 
     my $returnlist = [];
 
+    #loops 
     foreach my $fgroup( @{BsmlDoc::BsmlReturnFeatureGroupLookup($geneID)} )
       {
 	my $coordRecord = {};

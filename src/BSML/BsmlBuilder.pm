@@ -592,6 +592,12 @@ sub createAndAddSeqDataImport
     my $self = shift;
     my ( $seq, $format, $source, $id ) = @_;
 
+    if( !($id) )
+    {
+	$id = "Bsml"."$elem_id";
+	$elem_id++;
+    }
+    
     if( ref($seq) eq 'BsmlSequence' )
       {
 	$seq->addBsmlSeqDataImport( $format, $source, $id  );	
@@ -781,8 +787,10 @@ sub createAndAddFeatureGroupMember
     my $self = shift;
     my ($FeatureGroup, $featref, $feattype, $grouptype, $cdata) = @_;
 
-    $FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
-    
+    if( ref($featref) eq 'BsmlFeature' ){
+	$FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
+    }
+
     return $FeatureGroup;
   }
 
