@@ -935,6 +935,18 @@ sub cdsIdtoProteinSeqId
 		  }
 }
 
+# Returns the list of feature groups (transcripts) associated with a 
+# gene identifier.
+
+sub geneIdtoFeatureGroupList
+{
+    my $self = shift;
+    my ($geneId) = @_;
+
+    return BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+}
+
+
 # Returns a list of amino acid sequences given a gene identifier. Each sequence
 # represents a transcriptional varient of the query gene.
 
