@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence length="1353" title="ntsp01_NTORF0004_3454_cds" molecule="aa" id="ntsp01_NTORF0004_3454_cds">
+        <Attribute name="ASSEMBLY" content="ntsp01_1_assembly"></Attribute>
+      </Sequence>
+      <Sequence title="ntsp01_NTORF0004_3455_protein" molecule="aa" id="ntsp01_NTORF0004_3455_protein">
+        <Attribute name="ASSEMBLY" content="ntsp01_1_assembly"></Attribute>
+      </Sequence>
+    </Sequences>
+    <Tables>
+      <Seq-pair-alignment compxref="/tmp/ntsp01_NTORF0004_3455_protein.minidb.4083:ntsp01_NTORF0004_3455_protein" method="praze" refseq="ntsp01_NTORF0004_3454_cds" refxref=":ntsp01_NTORF0004_3454_cds" compseq="ntsp01_NTORF0004_3455_protein" refstart="0" refend="1352" reflength="1353">
+        <Seq-pair-run runprob="451" comprunlength="451" runlength="1353" compcomplement="0" comppos="1" refpos="1" runscore="99" refcomplement="0">
+          <Attribute name="segment_number" content="5187"></Attribute>
+          <Attribute name="chain_number" content="1254"></Attribute>
+          <Attribute name="percent_identity" content="100.000000"></Attribute>
+          <Attribute name="p_value" content="1.2e-234"></Attribute>
+          <Attribute name="percent_similarity" content="100.000000"></Attribute>
+        </Seq-pair-run>
+      </Seq-pair-alignment>
+    </Tables>
+  </Definitions>
+</Bsml>

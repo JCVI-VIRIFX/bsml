@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence length="447" title="gbs_ORF00003_23193_protein" molecule="aa" id="gbs_ORF00003_23193_protein">
+        <Attribute name="ASSEMBLY" content="gbs_799_assembly"></Attribute>
+      </Sequence>
+      <Sequence title="gbs18rs21_ORF00032_35101_protein" molecule="aa" id="gbs18rs21_ORF00032_35101_protein">
+        <Attribute name="ASSEMBLY" content="gbs18rs21_797_assembly"></Attribute>
+      </Sequence>
+ </Sequences>
+    <Tables>
+      <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/blastp/gbs_799/PNEUMO.pep:gbs18rs21_ORF00032_35101_protein" compseq="gbs18rs21_ORF00032_35101_protein" refstart="0" method="blastp 2.0mp-washu" refseq="gbs_ORF00003_23193_protein" refxref=":gbs_ORF00003_23193_protein" refend="446" reflength="447">
+        <Seq-pair-run runlength="447" runprob="447" comprunlength="447" comppos="1" compcomplement="0" refpos="1" runscore="2182" refcomplement="0">
+          <Attribute name="segment_number" content="43069"></Attribute>
+          <Attribute name="chain_number" content="41323"></Attribute>
+          <Attribute name="percent_bit_score" content="1.000"></Attribute>
+          <Attribute name="percent_identity" content="100.000000"></Attribute>
+          <Attribute name="percent_similarity" content="100.000000"></Attribute>
+          <Attribute name="p_value" content="3.9e-227"></Attribute>
+        </Seq-pair-run>
+      </Seq-pair-alignment>
+    </Tables>
+  </Definitions>
+</Bsml>

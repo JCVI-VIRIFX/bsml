@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence title="ntsa04_ORF00721_143664_protein" molecule="mol-not-set" id="ntsa04_ORF00721_143664_protein"></Sequence>
+      <Sequence title="gpa_ORF00743_131172_protein" molecule="mol-not-set" id="gpa_ORF00743_131172_protein"></Sequence>	
+    </Sequences>
+    <Tables>
+      <Seq-pair-alignment compseq="ntsa04_ORF00721_143664_protein" refseq="gpa_ORF00743_131172_protein">
+        <Seq-pair-run runlength="0" comppos="638" refpos="702" runscore="274.207">
+          <Attribute name="PEffect_Cluster_Gene_Count" content="5"></Attribute>
+          <Attribute name="PEffect_Cluster_Gap_Count" content="2"></Attribute>
+          <Attribute name="PEffect_Cluster_Id" content="gpa_ORF00737_130504_protein_ntsa04_ORF00717_143646_protein"></Attribute>
+        </Seq-pair-run>
+        <Seq-pair-run runlength="0" comppos="638" refpos="702" runscore="274.207">
+          <Attribute name="PEffect_Cluster_Gene_Count" content="5"></Attribute>
+          <Attribute name="PEffect_Cluster_Gap_Count" content="2"></Attribute>
+          <Attribute name="PEffect_Cluster_Id" content="gpa_ORF00740_130514_protein_ntsa04_ORF00717_143646_protein"></Attribute>
+        </Seq-pair-run>
+        <Seq-pair-run runlength="0" comppos="638" refpos="702" runscore="274.207">
+          <Attribute name="PEffect_Cluster_Gene_Count" content="5"></Attribute>
+          <Attribute name="PEffect_Cluster_Gap_Count" content="2"></Attribute>
+          <Attribute name="PEffect_Cluster_Id" content="gpa_ORF00738_130506_protein_ntsa04_ORF00718_143650_protein"></Attribute>
+        </Seq-pair-run>
+      </Seq-pair-alignment>
+     </Tables>
+  </Definitions>
+</Bsml>
