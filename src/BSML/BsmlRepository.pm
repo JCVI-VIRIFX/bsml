@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.16 2004/01/19 16:25:39 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.17 2004/02/11 23:27:33 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.16 $. 
-Last modified on $Date: 2004/01/19 16:25:39 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.17 $. 
+Last modified on $Date: 2004/02/11 23:27:33 $
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ sub new {
     $self->{_BSML_FILE_EXT} = "bsml";
     $self->{_BSML_SUBDIR} = "BSML_repository";
     $self->_init(@_);
-    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".uc($self->{"_NAME"})."/".$self->{_BSML_SUBDIR};
+    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{_BSML_SUBDIR};
     $self->{_logger}->debug("Setting repository path $self->{_PATH}") if($self->{_logger}->is_debug());
     return $self;
 }
@@ -74,13 +74,10 @@ sub _init {
     $self->{_logger}->debug(Dumper(@_)) if($self->{_logger}->is_debug());
     foreach my $key (keys %arg) {
 	$self->{_logger}->debug("Parsing argument $key=$arg{$key}") if($self->{_logger}->is_debug());
-        $self->{"_$key"} = $arg{$key}
+        $self->{"_$key"} = $arg{$key};
     }
     if(!($self->{"_REPOSITORY_ROOT"})){
 	$self->{_logger}->logdie("Required parameter REPOSITORY_ROOT not passed to object constructor");
-    }
-    if(!($self->{"_NAME"})){
-	$self->{_logger}->logdie("Required parameter NAME not passed to object constructor");
     }
 }
 
@@ -107,5 +104,18 @@ sub list_assemblies{
     }
     return \@asmbllist;    
 }
+
+#sub list_bsml_files{
+#    my ($self,$subdir) = shift;
+#    my $dir = "$self->{_PATH}/$subdir
+#    $self->{_logger}->debug("Listing bsml files from directory $dir") if($self->{_logger}->is_debug());
+#    opendir BSMLDIR, "$dir" or $self->{_logger}->logdie("Can't read directory $dir");
+#    my @bsmlfiles = grep /\.$self->{_BSML_FILE_EXT}$/, readdir BSMLDIR;
+#    my @bsmllist;
+#    foreach my $bsml (@bsmlfiles ){
+#	push @bsmllist, "$dir/$bsml";
+#    }
+#    return \@bsmllist;    
+#}
 
 1;
