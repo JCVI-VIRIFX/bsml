@@ -45,7 +45,7 @@ Data repository <a href='/ifx/devel/cas/papyrus/srs_repository.html'>[srs]</a><b
 <ul>
 <li>See <a href='/ifx/devel/cas/prism'>Prism</a> and <a href='/ifx/devel/cas/papyrus'>Papyrus</a> 
 for software that utilizes BSML.</li>
-<li>See <a href='/ifx/devel/cas/bsml/bsml-to-bioperl'>TIGR-BSML Bioperl adapter</a> for software that interfaces BSML to Bioperl.</li>
+<li>See <a href='/ifx/devel/cas/bsml/bsml-to-bioperl'>TIGR-BSML Bioperl adapter</a> for a Bioperl-BSML interface.</li>
 <li><em>check_repository</em><br>
 <a href='srs_check_repository.html'>[srs]</a> [use cases]</li>
 </ul>
