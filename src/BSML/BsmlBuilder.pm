@@ -746,17 +746,4 @@ sub createAndAddBtabLineN
     return $alignment_pair;
   }
 
-sub returnSequenceByID
-  {
-    my $self = shift;
-    my ($id) = @_;
-
-    #search for a sequence given its ID 
-
-    foreach my $seq ( @{$self->returnBsmlSequenceListR()} )
-      {
-	if( $seq->returnattr('id') eq $id ){return $seq;}
-      }
-  }
-
 1;
