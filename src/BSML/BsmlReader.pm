@@ -1946,4 +1946,153 @@ sub get_all_alignment_references
     return $rhash;
 }
 
+################################
+#
+#
+# Support for Multiple Alignment Tables
+#
+#
+#
+
+# return a reference to a list of MultipleAlignmentTable references
+
+sub returnMultipleAlignmentTables
+{
+    my $self = shift;
+    return $self->{'BsmlMultipleAlignmentTables'};
+}
+
+# return a reference to a list of AlignmentSummaries associated with
+# a MultipleAlignmentTable
+
+sub returnAlignmentSummaries
+{
+    my $self = shift;
+    my ($mtable) = @_;
+
+    return $mtable->{'BsmlAlignmentSummaries'};
+}
+
+# return a reference to a list of PairwiseAlignments associated with
+# a MultipleAlignmentTable
+
+sub returnPairwiseAlignments
+{
+    my $self = shift;
+    my ($mtable) = @_;
+
+    return $mtable->{'BsmlPairwiseAlignments'};
+}
+
+# return a reference to a list of SequenceAlignments associated with
+# a MultipleAlignmentTable
+
+sub returnSequenceAlignments
+{
+    my $self = shift;
+    my ($mtable) = @_;
+
+    return $mtable->{'BsmlSequenceAlignments'};
+}
+
+# return a structured hash containing the data associated with all the
+# elements of a MultipleAlignmentTable
+
+sub readMultipleAlignmentTable
+{
+    my $self = shift;
+    my $mTable = shift;
+
+    my $rhash = $self->readElement( $mTable );
+
+    $rhash->{'AlignmentSummaries'} = [];
+    foreach my $alnSum ( @{$self->returnAlignmentSummaries( $mTable )} )
+    {
+	push( @{$rhash->{'AlignmentSummaries'}}, $self->readAlignmentSummary( $alnSum ));
+    }
+
+    $rhash->{'PairwiseAlignments'} = [];
+    foreach my $pAln ( @{$self->returnPairwiseAlignments( $mTable )} )
+    {
+	push( @{$rhash->{'PairwiseAlignments'}}, $self->readPairwiseAlignment( $pAln ));
+    }
+
+    $rhash->{'SequenceAlignments'} = [];
+    foreach my $seqAln ( @{$self->returnSequenceAlignments( $mTable )} )
+    {
+	push( @{$rhash->{'SequenceAlignments'}}, $self->readSequenceAlignment( $seqAln ));
+    }
+
+    return $rhash;
+}
+
+sub readAlignmentSummary
+{
+    my $self = shift;
+    my $alnSum = shift;
+
+    my $rhash = $self->readElement( $alnSum );
+    $rhash->{'AlignedSequences'} = [];
+
+    foreach my $alnSeq ( @{$alnSum->returnBsmlAlignedSequenceListR()} )
+    {
+	push( @{$rhash->{'AlignedSequences'}}, $self->readElement($alnSeq) );
+    }
+
+    return $rhash;
+}
+
+sub readPairwiseAlignment
+{
+    my $self = shift;
+    my $pAln = shift;
+
+    my $rhash = $self->readElement( $pAln );
+    $rhash->{'AlignedPairs'} = [];
+
+    foreach my $alnPair ( @{$pAln->returnBsmlAlignedPairListR()} )
+    {
+	push( @{$rhash->{'AlignedPairs'}}, $self->readElement($alnPair) );
+    }
+
+    return $rhash;
+}
+
+sub readSequenceAlignment
+{
+    my $self = shift;
+    my $seqAln = shift;
+
+    my $rhash = $self->readElement( $seqAln );
+    $rhash->{'SequenceData'} = [];
+
+    foreach my $seqDat ( @{$seqAln->returnBsmlSequenceDataListR()} )
+    {
+	push( @{$rhash->{'SequenceData'}}, $self->readElement($seqDat) );
+    }
+
+    $rhash->{'ConsensusSequence'} = $seqAln->returnBsmlAlignmentConsensus();
+
+    return $rhash;
+}
+
+# A generic read function which flattens the attribute and Bsml Attribute
+# hashes of an element into a single return hash.
+
+sub readElement
+{
+    my $self = shift;
+    my $rhash = {};
+
+    foreach my $key (keys( %{$self->{'attr'}} ))
+    {
+	$rhash->{$key} = $self->{'attr'}->{$key};
+    }
+
+    foreach my $key (keys( %{$self->{'BsmlAttr'}}))
+    {
+	$rhash->{$key} = $self->{'BsmlAttr'}->{$key};
+    }	
+}
+
 1

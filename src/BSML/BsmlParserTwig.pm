@@ -86,7 +86,7 @@ sub parse
     # parsed
 
     my $twig = new XML::Twig( TwigHandlers => 
-			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler, Analysis => \&analysisHandler }
+			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler, Analysis => \&analysisHandler, 'Multiple-alignment-table' => \&multiAlignmentTableHandler }
 			  );
     
     # parsefile will die if an xml syntax error is encountered or if
@@ -424,4 +424,127 @@ sub analysisHandler
       }
 
   }
+
+sub multiAlignmentTableHandler
+{
+    my ($twig, $mTable) = @_;
+    my $bsml_mTable = $bsmlDoc->returnBsmlMultipleAlignmentTableR( $bsmlDoc->addBsmlMultipleAlignmentTable() );
+  
+    addBsmlAttrLinks( $twig, $mTable, $bsml_mTable );
+
+    foreach my $alnSum ( $mTable->children( 'Alignment-summary' ) )
+    {
+	alignmentSummaryHandler( $twig, $alnSum, $bsml_mTable );
+    }
+
+    foreach my $pAlns ( $mTable->children( 'Pairwise-alignments' ))
+    {
+	pairwiseAlignmentsHandler( $twig, $pAlns, $bsml_mTable );
+    }
+
+    foreach my $alnSeq ( $mTable->children( 'Sequence-alignment' ))
+    {
+	sequenceAlignmentHandler( $twig, $alnSeq, $bsml_mTable );
+    }
+}
+
+sub alignmentSummaryHandler
+{
+    my ($twig, $alnSum, $bsmlMTable ) = @_;
+    my $alignmentSummary = $bsmlMTable->returnBsmlAlignmentSummaryR( $bsmlMTable->addBsmlAlignmentSummary() );
+
+    addBsmlAttrLinks( $twig, $alnSum, $alignmentSummary );
+
+    foreach my $alnSeq ( $alnSum->children( 'Aligned-sequence' ) )
+    {
+	alignedSequenceHandler( $twig, $alnSeq, $alignmentSummary );
+    }    
+}
+
+sub alignedSequenceHandler
+{
+    my ($twig, $alnSeq, $bsmlAlnSum ) = @_;
+    my $alignedSequence = $bsmlAlnSum->returnBsmlAlignedSequenceR( $bsmlAlnSum->addBsmlAlignedSequence() );
+
+    addBsmlAttrLinks( $twig, $alnSeq, $alignedSequence );       
+}
+
+sub pairwiseAlignmentsHandler
+{
+    my ($twig, $pAlns, $bsmlMTable ) = @_;
+
+    my $bsmlpAlns = $bsmlMTable->returnBsmlPairwiseAlignmentsR( $bsmlMTable->addBsmlPairwiseAlignments() );
+    addBsmlAttrLinks( $twig, $pAlns, $bsmlpAlns );       
+
+    foreach my $alnPair ( $pAlns->children( 'Aligned-pair' ) )
+    {
+	alignedPairHandler( $twig, $alnPair, $bsmlpAlns );
+    }    
+}
+
+sub alignedPairHandler
+{
+    my ($twig, $alnP, $bsmlpAlns ) = @_;
+
+    my $bsmlAlnP = $bsmlpAlns->returnBsmlAlignedPairR( $bsmlpAlns->addBsmlAlignedPair() );
+    addBsmlAttrLinks( $twig, $alnP, $bsmlAlnP );  
+}
+
+sub sequenceAlignmentHandler
+{
+    my ($twig, $seqAln, $bsmlMTable) = @_;
+    my $bsmlSeqAln = $bsmlMTable->returnBsmlSequenceAlignmentR( $bsmlMTable->addBsmlSequenceAlignment() );
+
+    addBsmlAttrLinks( $twig, $seqAln, $bsmlSeqAln );
+
+    foreach my $seqDat ( $seqAln->children( 'Sequence-data' ))
+    {
+	sequenceDataHandler( $twig, $seqDat, $bsmlSeqAln );
+    }
+
+    foreach my $alnCon ( $seqAln->children( 'Alignment-consensus' ))
+    {
+	alignmentConsensusHandler( $twig, $alnCon, $bsmlSeqAln );
+    }
+}
+
+sub sequenceDataHandler
+{
+    my( $twig, $seqDat, $bsmlSeqAln ) = @_;
+    my $bsmlSeqDat = $bsmlSeqAln->returnBsmlSequenceDataR( $bsmlSeqAln->addBsmlSequenceData() );
+
+    addBsmlAttrLinks( $twig, $seqDat, $bsmlSeqDat );
+
+    $bsmlSeqDat->addSequenceAlignmentData( $seqDat->text() );
+}
+
+sub alignmentConsensusHandler
+{
+
+}
+
+sub addBsmlAttrLinks
+{
+    my ($twig, $elem, $bsmlObj ) = @_;
+
+    my $attr = $elem->atts();
+    
+    foreach my $key ( keys( %{$attr} ) )
+    {
+	$bsmlObj->addattr( $key, $attr->{$key} );
+    }
+
+    foreach my $BsmlAttr ( $elem->children( 'Attribute' ) )
+    {
+	my $attr = $BsmlAttr->atts();
+	$bsmlObj->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+    }
+
+    foreach my $BsmlLink ( $elem->children( 'Link' ) )
+    {
+	my $attr = $BsmlLink->atts();
+	$bsmlObj->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+    }    
+}
+
 1

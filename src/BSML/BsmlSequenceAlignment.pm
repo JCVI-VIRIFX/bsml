@@ -30,6 +30,20 @@ sub init
     $self->{'Alignment-consensus'} = '';
 }
 
+sub addBsmlAlignmentConsensus
+{
+    my $self = shift;
+    my $consensus = shift;
+
+    $self->{'Alignment-consensus'} = $consensus;
+}
+
+sub returnBsmlAlignmentConsensus
+{
+    my $self = shift;
+    return $self->{'Alignment-consensus'};
+}
+
 sub addBsmlSequenceData
 {
     my $self = shift;
