@@ -859,25 +859,21 @@ sub get_all_protein_dna_extended
 		
 		my $start = $coords->[0]->{'GeneSpan'}->{'startpos'};
 		my $end = $coords->[0]->{'GeneSpan'}->{'endpos'};
-	    
-		my $dnalist = $self->geneCoordstoCDSList( $coords );
 		
-		my $i = 0;
-		foreach my $seq (@{$dnalist})
-		{
-		    my $key = $gene."_".$i;
-		    
+		my $dnahash = $self->geneCoordstoCDSHash( $coords );
+		
+		foreach my $seqId (keys(%{$dnahash}))
+		{   
 		    if( !($seq_dat) || !($topo) || !($start) || !($end) )
 		    {
 			print STDERR "BsmlReader::get_all_protein_dna_extended() - Error in call to extend_seq - Gene: $gene Topo: $topo Start: $start End: $end\n";
 		    }
-
-		    $returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
-		    $i++;
+		    
+		    $returnhash->{$seqId} =  extend_seq300( $seq_dat, $topo, $start, $end );
 		}
 	    }
 	}
-	
+	    
 	return $returnhash;
     }
     else
