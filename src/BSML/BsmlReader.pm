@@ -494,6 +494,8 @@ sub assemblyIdtoSeqList
     return $rlist;
   }
 
+# returns all the alignments associated with a query sequence and optional match seq.
+
 sub fetch_all_alignmentPairs
   {
     my $self = shift;
@@ -507,15 +509,11 @@ sub fetch_all_alignmentPairs
       }
     else
       {
-	#This could be made faster using the lookups - I will implement when time permits...
+	my $href = BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId );
 
-	foreach my $align (@{$self->returnBsmlSeqPairAlignmentListR()})
+	foreach my $key ( keys(%{$href}))
 	  {
-	    if( ($align->returnattr( 'refseq') eq $querySeqId)) #||
-		#($align->returnattr( 'compseq') eq $querySeqId) )
-	      {
-		push( @{$alignments}, $align );
-	      }
+	    push( @{$alignments}, $href->{$key} )
 	  }
       }
     return $alignments;
@@ -1038,7 +1036,7 @@ sub fetchAlignmentScoresBetweenAssemblies {
 			$best_bit_score = $pair_run->{'runscore'} if($pair_run->{'runscore'} > $best_bit_score);  #store best bit_score
 		    }
 		    $bit_score_hash->{$seq_id}->{ $match_ref->{'compseq'} }->{'bit_score'} = $best_bit_score;
-		}
+		  }
 		#add the best bit score for a query gene against itself 
 		#to provide a baseline for bit score comparison
 		#-----------------------------------------------------

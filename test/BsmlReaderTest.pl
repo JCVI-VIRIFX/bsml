@@ -10,6 +10,6 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $href = $reader->fetchAlignmentScoresBetweenAssemblies( 'PNEUMO_19', 'PNEUMO_19' );
+my $href = $reader->fetchAlignmentScoresBetweenAssemblies( 'PNEUMO_19', 'PNEUMO_18' );
 
 print Dumper( %{$href} );

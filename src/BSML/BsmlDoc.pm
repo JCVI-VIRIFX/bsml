@@ -170,7 +170,16 @@ sub BsmlReturnAlignmentLookup
   {
     my ($Seq1, $Seq2) = @_;
 
-    return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2};
+    if( $Seq2 )
+      {
+	#returns a list of alignment objects
+	return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2};
+      }
+    else
+      {
+	#returns a hash reference where each key specifies a list of alignment objects
+	return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1};
+      }
   }
 
 sub BsmlReturnFeatureGroupLookup
