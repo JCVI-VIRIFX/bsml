@@ -196,52 +196,260 @@ sub createAndAddReference
     my $self = shift;
     my ( $FTable, $refID, $refAuthors, $refTitle, $refJournal, $dbxref );
 
-    #use ref() to determine if $FTable is a BsmlFeatureTable or a scalar containing the table's Bsml ID
+    if( !(defined($refID) || $refID eq '' ) )
+      {
+	$refID = "Bsml"."$elem_id";
+	$elem_id++;
+
+	#replace with log4perl
+	print "Warning: id not approriately defined. Using $refID\n";
+      }
+
+     if( ref($FTable) eq 'BsmlFeatureTable' )
+      {
+	my $rref = $FTable->returnBsmlReferenceR( $FTable->addBsmlReference() );
+	$rref->setattr( 'id', $refID );
+
+	if( defined($refAuthors) && !($refAuthors eq '') ){ $rref->addBsmlRefAuthors( $refAuthors ); }
+	if( defined($refTitle) && !($refTitle eq '')){ $rref->addBsmlRefTitle( $refTitle ); }
+	if( defined($refJournal) && !($refJournal eq '')){ $rref->addBsmlRefJournal( $refJournal ); }
+
+	if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
+
+	return $rref;
+      }
+    else
+      {
+	my $seqs =  $self->returnBsmlSequenceListR();
+
+	foreach my $seq ( @{$seqs} )
+	  {
+	    foreach my $FeatureTable ( @{$seq->returnBsmlFeatureTableListR()} )
+	      {
+		if( $FeatureTable->returnattr( 'id' ) eq $FTable )
+		  {
+		    my $rref = $FeatureTable->returnBsmlReferenceR( $FeatureTable->addBsmlReference() );
+		    
+		    $rref->setattr( 'id', $refID );
+
+		    if( defined($refAuthors) && !($refAuthors eq '') ){ $rref->addBsmlRefAuthors( $refAuthors ); }
+		    if( defined($refTitle) && !($refTitle eq '')){ $rref->addBsmlRefTitle( $refTitle ); }
+		    if( defined($refJournal) && !($refJournal eq '')){ $rref->addBsmlRefJournal( $refJournal ); }
+
+		    if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
+
+		    return $rref;
+		  }
+	      }
+	  }
+      }
+  }
+
+sub createAndAddReferenceN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddReferenceN( $args{'FTable'}, $args{'refID'}, $args{'refAuthors'}, $args{'refTitle'}, $args{'refJournal'}, $args{'dbxref'} );
   }
 
 sub createAndAddFeature
   {
     my $self = shift;
     my ( $FTable, $id, $title, $class, $comment, $displayAuto ) = @_;
+
+     if( !(defined($id) || $id eq '' ) )
+      {
+	$id = "Bsml"."$elem_id";
+	$elem_id++;
+
+	#replace with log4perl
+	print "Warning: id not appropriately defined. Using $id\n";
+      }
+
+      if( ref($FTable) eq 'BsmlFeatureTable' )
+      {
+	my $fref = $FTable->returnBsmlFeatureR( $FTable->addBsmlFeature() );
+	$fref->setattr( 'id', $id );
+
+	if( defined($title) && !($title eq '') ){ $fref->setattr( 'title', $title ); }
+	if( defined($class) && !($class eq '')){ $fref->setattr('class', $class); }
+	if( defined($comment) && !($comment eq '')){ $fref->setattr('comment', $comment); }
+
+	if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
+
+	return $fref;
+      }
+    else
+      {
+	my $seqs =  $self->returnBsmlSequenceListR();
+
+	foreach my $seq ( @{$seqs} )
+	  {
+	    foreach my $FeatureTable (@{$seq->returnBsmlFeatureTableListR()})
+	      {
+		if( $FeatureTable->returnattr( 'id' ) eq $FTable )
+		  {
+		    my $fref = $FeatureTable->returnBsmlFeatureR( $FeatureTable->addBsmlFeature() );
+		    $fref->setattr( 'id', $id );
+
+		    if( defined($title) && !($title eq '') ){ $fref->setattr( 'title', $title ); }
+		    if( defined($class) && !($class eq '')){ $fref->setattr('class', $class); }
+		    if( defined($comment) && !($comment eq '')){ $fref->setattr('comment', $comment); }
+
+		    if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
+
+		    return $fref;
+		  }
+	      }
+	  }
+	}
   }
 
 sub createAndAddFeatureWithLoc
   {
     my $self = shift;
     my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement ) = @_;
+
+    my $feature = $self->createAndAddFeature( $FTable, $id, $title, $class, $comment, $displayAuto );
+
+    if( $start == $end )
+      {
+	#add a site position to the feature
+	$feature->addBsmlSiteLoc( $start, $complement );
+      }
+    else
+      {
+	#add an interval location to the feature
+	$feature->addBsmlIntervalLoc( $start, $end, $complement );
+      }
+
+    return $feature;     
   }
 
 sub createAndAddIntervalLoc
   {
     my $self = shift;
-
     my ( $feature, $start, $end, $complement ) = @_;
+
+    if( ref($feature) eq 'BsmlFeature' )
+      {
+	$feature->addBsmlIntervalLoc( $start, $end, $complement );
+      }
+    else
+      {
+	my $seqs =  $self->returnBsmlSequenceListR();
+
+	foreach my $seq ( @{$seqs} )
+	  {
+	    foreach my $FeatureTable ( @{$seq->returnBsmlFeatureTableListR()} )
+	      {
+		foreach my $rFeature( @{$FeatureTable->returnBsmlFeatureListR()} )
+		  {
+		    if( $rFeature->returnattr( 'id' ) eq $feature )
+		      {
+			$rFeature->addBsmlIntervalLoc( $start, $end, $complement );
+		      }
+		  }
+	      }
+	  }
+      }
+
+    return $feature;
   }
 
 sub createAndAddSiteLoc
   {
     my $self = shift;
-
     my ( $feature, $site, $complement ) = @_;
+
+    if( ref($feature) eq 'BsmlFeature' )
+      {
+	$feature->addBsmlSiteLoc( $site, $complement );
+      }
+    else
+      {
+	my $seqs =  $self->returnBsmlSequenceListR();
+
+	foreach my $seq ( @{$seqs} )
+	  {
+	    foreach my $FeatureTable ( @{$seq->returnBsmlFeatureTableListR()} )
+	      {
+		foreach my $rFeature( @{$FeatureTable->returnBsmlFeatureListR()} )
+		  {
+		    if( $rFeature->returnattr( 'id' ) eq $feature )
+		      {
+			$rFeature->addBsmlSiteLoc( $site, $complement );
+		      }
+		  }
+	      }
+	  }
+      }
+
+    return $feature;
   }
 
 sub createAndAddQualifier
   {
     my $self = shift;
-
     my ( $feature, $valuetype, $value ) = @_;
+
+    if( ref($feature) eq 'BsmlFeature' )
+      {
+	$feature->addBsmlQualifier( $valuetype, $value );
+      }
+    else
+      {
+	my $seqs =  $self->returnBsmlSequenceListR();
+
+	foreach my $seq ( @{$seqs} )
+	  {
+	    foreach my $FeatureTable ( @{$seq->returnBsmlFeatureTableListR()} )
+	      {
+		foreach my $rFeature( @{$FeatureTable->returnBsmlFeatureListR()} )
+		  {
+		    if( $rFeature->returnattr( 'id' ) eq $feature )
+		      {
+			$rFeature->addBsmlQualifier( $valuetype, $value );
+		      }
+		  }
+	      }
+	  }
+      }
+
+    return $feature;
   }
 
 sub createAndAddSeqData
   {
     my $self = shift;
+    my ( $seq, $seqdat ) = @_;
 
-    my ( $sequence, $seqdat ) = @_;
+    if( ref($seq) eq 'BsmlSequence' )
+      {
+	$seq->addBsmlSeqData( $seqdat );	
+	return $seq;
+      }
+    else
+      {
+	my $sequences = $self->returnBsmlSequenceListR();
+	
+	foreach my $seqR ( @{$sequences} )
+	  {
+	    if( $seqR->returnattr('id') eq $seq )
+	      {
+		$seqR->addBsmlSeqData( $seqdat );
+		
+		return $seqR;
+	      }
+	  }
+      }
   }
 
 sub createAndAddFeatureGroup
   {
     my $self = shift;
-
     my ( $sequence, $id, $title, $featureIdList ) = @_;
+
+    
   }
