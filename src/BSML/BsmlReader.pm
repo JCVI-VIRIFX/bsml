@@ -521,9 +521,12 @@ sub readAnalysis
 	$rhash->{'description'} = $analysis->returnBsmlAttr('description');
 	$rhash->{'name'} = $analysis->returnBsmlAttr('name');
 	$rhash->{'program'} = $analysis->returnBsmlAttr('program');
-	$rhash->{'program_version'} = $analysis->returnBsmlAttr('program_version');
-	$rhash->{'source_name'} = $analysis->returnBsmlAttr('source_name');
-	$rhash->{'source_url'} = $analysis->returnBsmlAttr('source_version');
+	$rhash->{'programversion'} = $analysis->returnBsmlAttr('programversion');
+	$rhash->{'sourcename'} = $analysis->returnBsmlAttr('sourcename');
+	$rhash->{'sourceuri'} = $analysis->returnBsmlAttr('sourceuri');
+	$rhash->{'sourceversion'} = $analysis->returnBsmlAttr('sourceversion');
+	$rhash->{'queryfeature_id'} = $analysis->returnBsmlAttr('queryfeature_id');
+	$rhash->{'timeexecuted'} = $analysis->returnBsmlAttr('timeexecuted');
 
 	my $link = $analysis->returnBsmlLinkR( 0 );
 	$rhash->{'bsml_link_relation'} = $link->{'rel'};

@@ -921,10 +921,12 @@ sub createAndAddAnalysis
     $analysis->addBsmlAttr( 'description', $args{'description'} );
     $analysis->addBsmlAttr( 'name', $args{'name'} );
     $analysis->addBsmlAttr( 'program', $args{'program'} );
-    $analysis->addBsmlAttr( 'program_version', $args{'program_version'} );
-    $analysis->addBsmlAttr( 'source_name', $args{'source_name'} );
-    $analysis->addBsmlAttr( 'source_url', $args{'source_url'} );
-    $analysis->addBsmlAttr( 'source_version', $args{'source_version'} );
+    $analysis->addBsmlAttr( 'programversion', $args{'programversion'} );
+    $analysis->addBsmlAttr( 'sourcename', $args{'sourcename'} );
+    $analysis->addBsmlAttr( 'sourceuri', $args{'sourceuri'} );
+    $analysis->addBsmlAttr( 'sourceversion', $args{'sourceversion'} );
+    $analysis->addBsmlAttr( 'queryfeature_id', $args{'queryfeature_id'} );
+    $analysis->addBsmlAttr( 'timeexecuted', $args{'timeexecuted'} );
 
     $analysis->addBsmlLink( $args{'bsml_link_relation'}, $args{'bsml_link_url'} );
 
