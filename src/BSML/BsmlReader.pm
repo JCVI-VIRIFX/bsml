@@ -162,6 +162,13 @@ sub readFeatures
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
 
+		my $bsmllink = [];
+		foreach my $link (@{$Feature->returnBsmlLinkListR()})
+		{
+		    push( @{$bsmllink}, {rel => $link->{'rel'}, href => $link->{'href'}} );
+		}
+		$record->{'bsmllinks'} = $bsmllink;
+
 		push( @{$feat_list}, $record );
 	      }
 	  }
