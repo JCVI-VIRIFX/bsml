@@ -622,22 +622,6 @@ sub createAndAddSeqDataImportN
     return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'}, $args{'id'} );
   }
 
-sub createAndAddBtabLine
-  {
-    my $self = shift;
-    my ( $query_name, $date, $query_length, $blast_program, $search_database, $dbmatch_accession, $start_query, 
-	 $stop_query, $start_hit, $stop_hit, $percent_identity, $percent_similarity, $bit_score, $chain_number,
-	 $segment_number, $dbmatch_header, $unknown1, $unknown2, $e_value, $p_value ) = @_;
-
-    return $self->createAndAddBtabLineN( query_name => $query_name, date => $date, query_length => $query_length, 
-					 blast_program => $blast_program, search_database => $search_database, 
-					 dbmatch_accession => $dbmatch_accession, start_query => $start_query,
-					 stop_query => $stop_query, start_hit => $start_hit, stop_hit => $stop_hit, 
-					 percent_identity => $percent_identity,
-					 percent_similarity => $percent_similarity, bit_score => $bit_score, chain_number => $chain_number,
-					 segment_number => $segment_number, dbmatch_header => $dbmatch_header, unknown1 => $unknown1, 
-					 unknown2 => $unknown2, e_value => $e_value, p_value => $p_value );
-  }
 
 # Add a pairwise alignment object to the document.  
 
