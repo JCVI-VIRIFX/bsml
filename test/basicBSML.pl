@@ -110,7 +110,7 @@ foreach my $seq ( @{ $seqList } )
 
   # retrieve a list of references to the sequences feature tables
 
-  my $FTableList = $seq->returnFeatureTableListR();
+  my $FTableList = $seq->returnBsmlFeatureTableListR();
   my $FTableCount = @{$FTableList};
 
   print "  Feature Tables: $FTableCount Defined\n";

@@ -116,7 +116,7 @@ B<Returns:> a list of BsmlFeatureTable object references
 
 =cut 
 
-sub returnFeatureTableListR
+sub returnBsmlFeatureTableListR
   {
     my $self = shift;
 
@@ -133,7 +133,7 @@ B<Returns:> a BsmlFeatureTable object reference
 
 =cut
 
-sub returnFeatureTableR
+sub returnBsmlFeatureTableR
   {
     my $self = shift;
     my ($index) = @_;

@@ -12,7 +12,7 @@ package BsmlBuilder;
 
 =head1 SYNOPSIS
 
-  to be completed...
+  ...
 
 =cut
 
@@ -41,7 +41,7 @@ sub createAndAddSequence
   my $self = shift;
   my ( $id, $title, $length, $molecule ) = @_;
 
-  if( !(defined($id) || $id eq '' ) )
+  if( !($id) )
     {
       $id = "Bsml"."$elem_id";
       $elem_id++;
@@ -50,7 +50,7 @@ sub createAndAddSequence
       print "Warning: id not approriately defined. Using $id\n";
     }
 
-  if( !(defined($title) || $title eq '' ) )
+  if( !($title) )
     {
       $title = 'unspecified';
 
@@ -58,7 +58,7 @@ sub createAndAddSequence
       print "Warning: title not approriately defined. Using $title\n";
     }
 
-  if( !( defined($molecule) || $molecule eq '' ) )
+  if( !($molecule) )
     {
       $molecule = 'mol-not-set';
 
@@ -67,8 +67,9 @@ sub createAndAddSequence
     }
   else
     {
-      if( !($molecule eq 'mol-not-set') || !($molecule eq 'dna') || !($molecule eq 'rna') || !($molecule eq 'aa') || !($molecule eq 'na') || !($molecule eq 'other-mol') )
+      if( !(($molecule eq 'mol-not-set') || ($molecule eq 'dna') || ($molecule eq 'rna') || ($molecule eq 'aa') || ($molecule eq 'na') || ($molecule eq 'other-mol')) )
 	{
+	  print "molecule: $molecule\n";
 	  $molecule = 'mol-not-set';
 	  
 	  #replace with log4perl 
@@ -76,7 +77,7 @@ sub createAndAddSequence
 	}
     }
 
-  my $seq = returnBsmlSequenceR( addBsmlSequence() );
+  my $seq = $self->returnBsmlSequenceR( $self->addBsmlSequence() );
   $seq->setattr( 'id', $id );
   $seq->setattr( 'title', $title );
   $seq->setattr( 'molecule', $molecule );
@@ -99,11 +100,11 @@ sub createAndAddExtendedSequence
 
     my $seq = $self->createAndAddSequence( $id, $title, $length, $molecule );
 
-    if( defined($locus) && !($locus eq '') ){ $seq->setattr('locus', $locus);}
-    if( defined($dbsource) && !($dbsource eq '') ){ $seq->setattr('dbsource', $dbsource);}
-    if( defined($icAcckey) && !($icAcckey eq '') ){ $seq->setattr('ic-acckey', $icAcckey);}
-    
-    if( defined($topology) && !($topology eq '') ){ 
+    if( $locus    ){ $seq->setattr('locus', $locus);}
+    if( $dbsource ){ $seq->setattr('dbsource', $dbsource);}
+    if( $icAcckey ){ $seq->setattr('ic-acckey', $icAcckey);}
+
+    if( $topology ){ 
       if( $topology eq 'top-not-set' || $topology eq 'linear' || $topology eq 'circular' || $topology eq 'tandem' || $topology eq 'top-other' ){
 	$seq->setattr('topology', $topology);}
       else{
@@ -112,7 +113,7 @@ sub createAndAddExtendedSequence
 	$seq->setattr('topology', $topology);}
     }
 
-    if( defined($strand) && !($strand eq '') ){ 
+    if( $strand ){ 
       if( $strand eq 'std-not-set' || $strand eq 'ss' || $strand eq 'ds' || $strand eq 'mixed' || $strand eq 'std-other' ){
 	$seq->setattr('strand', $strand);}
       else{
@@ -145,7 +146,7 @@ sub createAndAddFeatureTable
     my $self = shift;
     my ( $seq, $id, $title, $class ) = @_;
 
-    if( !(defined($id) || $id eq '' ) )
+    if( !($id) )
       {
 	$id = "Bsml"."$elem_id";
 	$elem_id++;
@@ -158,8 +159,8 @@ sub createAndAddFeatureTable
       {
 	my $FTable = $seq->returnBsmlFeatureTableR( $seq->addBsmlFeatureTable() );
 	$FTable->setattr( 'id', $id );
-	if( defined($title) && !($title eq '') ){ $FTable->setattr('title', $title); }
-	if( defined($class) && !($class eq '') ){ $FTable->setattr('class', $class); }
+	if( $title ){ $FTable->setattr('title', $title); }
+	if( $class ){ $FTable->setattr('class', $class); }
 
 	return $FTable;
       }
@@ -173,8 +174,8 @@ sub createAndAddFeatureTable
 	      {
 		my $FTable = $seqR->returnBsmlFeatureTableR( $seqR->addBsmlFeatureTable() );
 		$FTable->setattr( 'id', $id );
-		if( defined($title) && !($title eq '') ){ $FTable->setattr('title', $title); }
-		if( defined($class) && !($class eq '') ){ $FTable->setattr('class', $class); }
+		if( $title ){ $FTable->setattr('title', $title); }
+		if( $class ){ $FTable->setattr('class', $class); }
 
 		return $FTable;
 	      }
@@ -194,9 +195,9 @@ sub createAndAddFeatureTableN
 sub createAndAddReference
   {
     my $self = shift;
-    my ( $FTable, $refID, $refAuthors, $refTitle, $refJournal, $dbxref );
+    my ( $FTable, $refID, $refAuthors, $refTitle, $refJournal, $dbxref ) = @_;
 
-    if( !(defined($refID) || $refID eq '' ) )
+    if( !($refID) )
       {
 	$refID = "Bsml"."$elem_id";
 	$elem_id++;
@@ -226,7 +227,8 @@ sub createAndAddReference
 	  {
 	    foreach my $FeatureTable ( @{$seq->returnBsmlFeatureTableListR()} )
 	      {
-		if( $FeatureTable->returnattr( 'id' ) eq $FTable )
+		if( $FeatureTable->returnattr( 'id' )){
+		  #if( $FeatureTable->returnattr('id') eq $FTable )
 		  {
 		    my $rref = $FeatureTable->returnBsmlReferenceR( $FeatureTable->addBsmlReference() );
 		    
@@ -240,6 +242,7 @@ sub createAndAddReference
 
 		    return $rref;
 		  }
+		}
 	      }
 	  }
       }
@@ -497,7 +500,7 @@ sub createAndAddSeqDataN
 sub createAndAddFeatureGroup
   {
     my $self = shift;
-    my ( $sequence, $id, $title, $featureIdList ) = @_;
-
-    
+    my ( $sequence, $id, $title, $featureIdList ) = @_;    
   }
+
+1
