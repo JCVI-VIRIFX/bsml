@@ -14,6 +14,4 @@ print "Started Parsing...\n";
 $parser->parse( \$reader, $ARGV[0] );
 print "Done.\n";
 
-print Dumper( $reader->readSubAssemblyMapping() );
-
-print "Program end...\n";
+# print "Program end...\n";

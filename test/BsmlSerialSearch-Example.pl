@@ -29,6 +29,7 @@ else{
 
 sub alignmentPrint
 {
+    return;
     my $alnref = shift;    
     print "ALN: ";
 
@@ -69,6 +70,7 @@ sub analysisPrint
 
 sub sequencePrint
 {
+    return;
     my $seqref = shift;
     print "SEQ: ";
     print $seqref->returnattr( 'id' );
@@ -79,6 +81,7 @@ sub sequencePrint
 
 sub genomePrint
 {
+    return;
     my $genome = shift;
     my $rhash = $reader->readGenome( $genome );
 

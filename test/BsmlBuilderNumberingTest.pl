@@ -74,27 +74,23 @@ while( my $line = <CONTIGMAP> )
 	$bsmlSuperSeqs->{$scaffoldId}->makeCurrentDocument();
 
 	$bsmlSeqRef->{$scaffoldId} = $bsmlSuperSeqs->{$scaffoldId}->createAndAddExtendedSequenceN( id => "aoa1_".$scaffoldId."_supercontig",
-							  title => "AOA1 Super Contig",
-							  length => -1 );
-
-	$bsmlSeqRef->{$scaffoldId}->addBsmlAttr( 'TYPE', 'SUPERCONTIG' );
+												   class => "SUPERCONTIG",
+												   molecule => "DNA",
+												   length => -1 );
 
     }
     
     $bsmlSuperSeqs->{$scaffoldId}->makeCurrentDocument();
 
     my $seq = $bsmlSuperSeqs->{$scaffoldId}->createAndAddExtendedSequenceN( id => "aoa1_".$AssembleId."_assembly",
-									    title => "$AssembleId ($ContigId)",
-							  length => $length );
-
-    $seq->addBsmlAttr( 'TYPE', 'CONTIG' );
+									    class => "CONTIG",
+									    length => $length );
 
     my $numbering = $bsmlSuperSeqs->{$scaffoldId}->createAndAddNumbering( seq => $seq,
 			         seqref => "aoa1_".$scaffoldId."_supercontig",
 				 refnum => (length(($superSeqs->{$scaffoldId}))),
 			         ascending => $orientation );
 
-    $numbering->addattr( 'a', $order-1 );
 
     $bsmlSuperSeqs->{$scaffoldId}->createAndAddSeqDataImportN( seq => $seq,
 				      format => "BSML",
