@@ -31041,7 +31041,7 @@
             <Link href="#ORFOA02214" rel="GENE"></Link>
           </Feature-group>
         </Feature-tables>
-        <Seq-data-import format="fasta" id="PNEUMO_asmbl_19" source="/usr/local/annotation/pneumo/all_vs_all/genomic_fasta"></Seq-data-import>
+        <Seq-data-import format="fasta" id="PNEUMO_asmbl_19" source="/usr/local/annotation/PNEUMO/all_vs_all/genomic_fasta"></Seq-data-import>
       </Sequence>
       <Sequence length="453" title="unspecified" molecule="aa" id="ORFO00001_aa">
         <Attribute name="ASSEMBLY" content="PNEUMO_19"></Attribute>
