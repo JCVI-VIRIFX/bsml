@@ -96,6 +96,11 @@ sub parse
     $twig->parsefile( $filename );
     $bsml_logger->info( "Successfully Parsed Bsml Document: $filename" );
 
+    # Twig documentation claims circular references in the twig class prevent garbage collection. Could
+    # this be the source of the file handle problem? It seems like the 'twig' will go out of scope reguardlessly.
+
+    $twig->dispose();
+
     # Don't want to keep the extra reference around in a class variable.
 
     $bsmlDoc = undef;
