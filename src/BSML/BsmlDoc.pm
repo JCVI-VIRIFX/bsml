@@ -50,7 +50,7 @@ logging will be over-ridden.
 use BsmlElement;
 use XML::Writer;
 use strict;
-use warnings;
+#use warnings;
 use BsmlSequence;
 use BsmlSeqPairAlignment;
 use BsmlAnalysis;
@@ -60,6 +60,13 @@ use Log::Log4perl qw(get_logger :levels);
 
 my $default_dtd_pID = '-//EBI//Labbook, Inc. BSML DTD//EN';
 my $default_dtd_sID = 'http://www.labbook.com/dtd/bsml3_1.dtd';
+
+# The document level id lookup tables
+
+my $BsmlIdLookups = [];
+my $BsmlSeqAlignmentLookups = [];
+my $BsmlTableIdCount = 0;
+my $BsmlCurrentTableId = 0;
 
 my $log4perl_defaults = 
 'log4perl.logger.Bsml=FATAL, A1
@@ -103,9 +110,61 @@ sub init
       Log::Log4perl->init( \$log4perl_defaults );
     }
 
+    # initialize a namespace table
+    $self->{ 'BsmlTableId' } = $BsmlTableIdCount;
+    @{$BsmlIdLookups}[$BsmlTableIdCount] = {};
+    @{$BsmlSeqAlignmentLookups}[$BsmlTableIdCount] = {};
+    $BsmlTableIdCount++;
+
     my $bsml_logger = get_logger( "Bsml" );
-        
     $bsml_logger->info( "Created new BsmlDoc" );
+  }
+
+sub DESTROY
+  {
+    my $self = shift;
+
+    #free the memory associated with the global lookup table
+
+    @{$BsmlIdLookups}[$self->{'BsmlTableId'}] = undef;
+    @{$BsmlSeqAlignmentLookups}[$self->{'BsmlTableId'}] = undef;
+  }
+
+sub BsmlSetDocumentLookup
+  {
+    my ($BsmlID, $BsmlRef) = @_;
+    $BsmlIdLookups->[$BsmlCurrentTableId]->{$BsmlID} = $BsmlRef;
+  }
+
+sub BsmlSetAlignmentLookup
+  {
+    my ($Seq1, $Seq2, $aln) = @_;
+    $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2} = $aln;
+  }
+
+sub BsmlReturnDocumentLookup
+  {
+    my ($BsmlID) = @_;
+    return $BsmlIdLookups->[$BsmlCurrentTableId]->{$BsmlID};
+  }
+
+sub BsmlReturnAlignmentLookup
+  {
+    my ($Seq1, $Seq2) = @_;
+
+    return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2};
+  }
+
+sub BsmlSetCurrentDocumentLookupTable
+  {
+    my ($index) = @_;
+    $BsmlCurrentTableId = $index;
+  }
+
+sub makeCurrentDocument
+  {
+    my $self = shift;
+    BsmlSetCurrentDocumentLookupTable( $self->{'BsmlTableId'} );
   }
 
 =item $doc->addBsmlSequence()
@@ -204,13 +263,7 @@ sub returnBsmlSequenceByIDR
     my $self = shift;
     my ($id) = @_;
 
-    foreach my $seq (@{$self->{'BsmlSequences'}})
-      {
-	if( $seq->returnattr( 'id' ) eq $id ){
-	  return $seq;}
-      }
-
-    return;
+    return $BsmlIdLookups->[$BsmlCurrentTableId]->{$id};
   }
 
 sub addBsmlSeqPairAlignment

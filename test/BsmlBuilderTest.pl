@@ -12,6 +12,10 @@ use BsmlBuilder;
 my $seqdat = 'agctagctagctagctagctagct';
 
 my $doc = new BsmlBuilder;
+
+
+BsmlDoc::BsmlSetCurrentDocumentLookupTable( 1 );
+
 my $seq = $doc->createAndAddSequence( '_bsml001', 'test_basic_sequence', length( $seqdat ), 'dna' );
 
 my $seq2 = $doc->createAndAddExtendedSequenceN( id => '_bsml002', title => 'test_extended_sequence', length => '24', molecule => 'dna', topology => 'linear' );

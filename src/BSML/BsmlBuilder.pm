@@ -77,7 +77,11 @@ sub createAndAddSequence
   $seq->setattr( 'molecule', $molecule );
 
   if( defined($length) && !($length eq '') ){ $seq->setattr( 'length', $length ); }
-  
+
+  #Put a reference to the new sequence in the document namespace
+
+  BsmlDoc::BsmlSetDocumentLookup( $id, $seq );
+
   #return a reference to the new sequence
 
   return $seq;
@@ -181,6 +185,9 @@ sub createAndAddFeatureTable
 	if( $title ){ $FTable->setattr('title', $title); }
 	if( $class ){ $FTable->setattr('class', $class); }
 
+	#Put a reference to the new feature table in the document namespace
+	BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
+
 	return $FTable;
       }
     else
@@ -195,6 +202,9 @@ sub createAndAddFeatureTable
 		$FTable->setattr( 'id', $id );
 		if( $title ){ $FTable->setattr('title', $title); }
 		if( $class ){ $FTable->setattr('class', $class); }
+		
+		#Put a reference to the new feature table in the document namespace
+		BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
 
 		return $FTable;
 	      }
@@ -233,6 +243,9 @@ sub createAndAddReference
 
 	if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
 
+	#Put a reference to the new Bsml reference in the document namespace
+	BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
+
 	return $rref;
       }
     else
@@ -255,6 +268,9 @@ sub createAndAddReference
 		    if( defined($refJournal) && !($refJournal eq '')){ $rref->addBsmlRefJournal( $refJournal ); }
 
 		    if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
+
+		    #Put a reference to the new Bsml reference in the document namespace
+		    BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
 
 		    return $rref;
 		  }
@@ -294,6 +310,9 @@ sub createAndAddFeature
 
 	if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
 
+	#Put a reference to the new Bsml feature in the document namespace
+	BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
+
 	return $fref;
       }
     else
@@ -314,6 +333,9 @@ sub createAndAddFeature
 		    if( defined($comment) && !($comment eq '')){ $fref->setattr('comment', $comment); }
 
 		    if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
+
+		    #Put a reference to the new Bsml feature in the document namespace
+		    BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
 
 		    return $fref;
 		  }
@@ -481,15 +503,10 @@ sub createAndAddBsmlAttribute
     my $self = shift;
     my ($elem, $key, $value ) = @_;
 
-    if( ref($elem) eq 'SCALAR' )
-      {
-	
-      }
-
     $elem->addBsmlAttr( $key, $value );
   }
 
-sub createAndAddBsmlAtributeN
+sub createAndAddBsmlAttributeN
   {
     my $self = shift;
     my %args = @_;
@@ -631,11 +648,10 @@ sub createAndAddBtabLineN
 
     #determine if the query name and the dbmatch name are a unique pair in the document
 
-    foreach my $alignment_pair ( @{$self->returnBsmlSeqPairAlignmentListR()} )
-      {
-	if( ( $alignment_pair->returnattr( 'refseq' ) eq "_$args{'query_name'}") && ($alignment_pair->returnattr( 'compseq' ) eq "_$args{'dbmatch_accession'}") )
-	  {
+    my $alignment_pair = BsmlDoc::BsmlReturnAlignmentLookup( "_$args{'query_name'}", "_$args{'dbmatch_accession'}" );
 
+    if( $alignment_pair )
+	  {
 	    #add a new BsmlSeqPairRun to the alignment pair and return
 	    my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
 
@@ -669,7 +685,6 @@ sub createAndAddBtabLineN
 
 	    return $alignment_pair;
 	  }
-      } 
 
     #no alignment pair matches, add a new alignment pair and sequence run
 
@@ -681,11 +696,13 @@ sub createAndAddBtabLineN
     if( !( $self->returnBsmlSequenceByIDR( "_$args{'dbmatch_accession'}")) ){
       $self->createAndAddSequence( "_$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', 'mol-not-set' );}
 
-    my $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
+    $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
     
 
     $alignment_pair->setattr( 'refseq', "_$args{'query_name'}" );
     $alignment_pair->setattr( 'compseq', "_$args{'dbmatch_accession'}" );
+
+    BsmlDoc::BsmlSetAlignmentLookup( "_$args{'query_name'}", "_$args{'dbmatch_accession'}", $alignment_pair );
 
     $alignment_pair->setattr( 'refxref', ':'.$args{'query_name'});
     $alignment_pair->setattr( 'refstart', 0 );
