@@ -48,10 +48,8 @@ sub addattr
   {
     my $self = shift;
     my ( $key, $value ) = @_;
-
-    if( $value ){
-	$self->{ 'attr' }->{ $key } = $value;
-    }
+    if( defined( $value ) ){
+	$self->{ 'attr' }->{ $key } = $value;}
   }
 
 =item $elem->setattr( $key, $value )
@@ -69,9 +67,7 @@ sub setattr
     my $self = shift;
     my ( $key, $value ) = @_;
 
-    if( $value ){
-	$self->addattr( $key, $value );
-    }
+    $self->addattr( $key, $value );
   }
 
 =item $elem->setattrh( $hashref )
@@ -162,8 +158,7 @@ sub addBsmlAttr
   {
     my $self = shift;
     my ( $key, $value ) = @_;
-
-    if( $value ){
+    if( defined( $value ) ){
 	$self->{ 'BsmlAttr' }->{ $key } = $value;
     }
   }
@@ -183,9 +178,7 @@ sub setBsmlAttr
     my $self = shift;
     my ( $key, $value ) = @_;
     
-    if( $value ){
-	$self->addBsmlAttr( $key, $value );
-    }
+    $self->addBsmlAttr( $key, $value );
   }
 
 =item $elem->setBsmlAttrh( $hashref )

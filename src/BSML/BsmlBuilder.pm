@@ -721,7 +721,7 @@ sub createAndAddSequencePairRun
 	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gap_Count', $args{'PEffect_Cluster_Gap_Count'} );
 	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gene_Count', $args{'PEffect_Cluster_Gene_Count'} );
 	
-	return $alignment_pair;
+	return $seq_run;
     }
 }
 
