@@ -19,16 +19,12 @@ $parser = undef;
 print "Done.\n";
 
 print "Reading Alignments...\n";
-$aahash = $reader->get_all_alignments();
+$aahash = $reader->get_all_alignment_references();
 print "Done.\n";
 
-print "Cleaning up Reader\n";
-$reader = undef;
-print "Done\n";
-
-print "Data Dumper...\n";
-print Dumper(%{$aahash}->{'1'});
-print "Done\n";
+for( my $i=0; $i<$aahash->{'count'}; $i++ )
+{
+    my $href = $reader->readSeqPairAlignment( $aahash->{$i} );
+}
 
 print "Program end...\n";
-exit(1);

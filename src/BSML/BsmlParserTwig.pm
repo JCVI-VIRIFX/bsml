@@ -320,7 +320,7 @@ sub sequenceHandler
 	
       }
       
-    #$twig->purge_up_to( $seq );
+    $twig->purge_up_to( $seq );
   }
 
 sub seqPairAlignmentHandler
@@ -386,6 +386,7 @@ sub seqPairAlignmentHandler
 	     $bsmlseqrun->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
 	   }
        }     
+     $twig->purge_up_to( $seq_aln );
   }
 
 sub analysisHandler

@@ -1888,6 +1888,29 @@ sub get_all_alignments
     return $rhash;
 }
 
+sub get_all_alignment_references
+{
+    my $self = shift;
+    my $rhash = {};
+    my $count = 1;
+    
+    my $seqList = $self->returnAllSequences();
 
+    foreach my $seq( @{$seqList} )
+    {
+	my $seqId = $seq->returnattr('id');
+	
+	foreach my $aln (@{$self->fetch_all_alignmentPairs( $seqId )})
+	{
+	    if(ref($aln)) 
+	    {
+		$rhash->{$count} = $aln;
+	        $count++;
+	    }
+	}
+    }
+    $rhash->{'count'} = $count;
+    return $rhash;
+}
 
 1
