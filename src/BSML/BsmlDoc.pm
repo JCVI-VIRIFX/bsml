@@ -71,7 +71,7 @@ $BsmlTableIdCount = 0;
 $BsmlCurrentTableId = 0;
 
 my $log4perl_defaults = 
-'log4perl.logger.Bsml=FATAL, A1
+'log4perl.logger.Bsml=INFO, A1
 log4perl.appender.A1=Log::Dispatch::File
 log4perl.appender.A1.filename=bsml.log
 log4perl.appender.A1.mode=append
@@ -422,12 +422,12 @@ sub write
 
     if( !($fname eq 'STDOUT') )
       {
-	$output = new IO::File( ">$fname" );
+	$output = new IO::File( ">$fname" ) or die "could not open output file - $fname $!\n";;
 
 	if( !( $output ) )
 	  {
-	    $bsml_logger->fatal( "Could not open output file - $fname" );
-	    die "could not open output file - $fname\n";
+	    $bsml_logger->fatal( "Could not open output file - $fname $!" );
+	    die "could not open output file - $fname $!\n";
 	  }
       }
 
@@ -514,7 +514,8 @@ sub write
     #clean up open fhs
     $writer->end();
     $output->close();
- 
+    $bsml_logger->info("Output handle $output closed for file $fname");
+
     $bsml_logger->debug( "BsmlDoc successfully written" );
   }
 
