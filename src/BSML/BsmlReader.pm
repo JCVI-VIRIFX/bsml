@@ -435,6 +435,8 @@ sub readSeqPairAlignment
 	# verify the essential filter parameters
 	#-----------------------------------------------------
 	if ((defined($filter)) && (defined($filter_count))){
+	    print ("filter:$filter\t filter_count:$filter_count\n");
+	    
 	    if ($filter !~ /refpos|runlength|refcomplement|comppos|comprunlength|compcomplement|runscore|runprob/){
 		die "Un-recognized attribute: $filter";
 	    }
