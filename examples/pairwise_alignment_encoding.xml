@@ -5,6 +5,7 @@
   <Definitions>
     <Sequences>
       <Sequence length="83" title="ORFO01980" molecule="aa" id="ORFO01980_aa">
+        <Attribute name="assembly" content="PNEUMO_19"></Attribute>
         <Attribute name="ASSEMBLY" content="PNEUMO_19"></Attribute>
       </Sequence>
       <Sequence title="ORFL01928" molecule="aa" id="ORFL01928_aa">
@@ -28,6 +29,8 @@
     </Sequences>
     <Tables>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFL01928" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFL01928_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_16"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="413" refcomplement="0">
           <Attribute name="segment_number" content="9604"></Attribute>
           <Attribute name="chain_number" content="9258"></Attribute>
@@ -37,6 +40,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFO01980" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFO01980_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_19"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="413" refcomplement="0">
           <Attribute name="segment_number" content="10108"></Attribute>
           <Attribute name="chain_number" content="9762"></Attribute>
@@ -46,6 +51,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFD01850" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFD01850_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_7"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="405" refcomplement="0">
           <Attribute name="segment_number" content="10609"></Attribute>
           <Attribute name="chain_number" content="10263"></Attribute>
@@ -55,6 +62,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFI01997" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFI01997_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_13"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="405" refcomplement="0">
           <Attribute name="segment_number" content="11111"></Attribute>
           <Attribute name="chain_number" content="10765"></Attribute>
@@ -64,6 +73,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFK01816" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFK01816_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_15"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="405" refcomplement="0">
           <Attribute name="segment_number" content="11613"></Attribute>
           <Attribute name="chain_number" content="11267"></Attribute>
@@ -73,6 +84,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFM01778" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFM01778_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_17"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="405" refcomplement="0">
           <Attribute name="segment_number" content="12115"></Attribute>
           <Attribute name="chain_number" content="11769"></Attribute>
@@ -82,6 +95,8 @@
         </Seq-pair-run>
       </Seq-pair-alignment>
       <Seq-pair-alignment compxref="/usr/local/annotation/PNEUMO/all_vs_all/PNEUMO.pep:ORFN01967" method="blastp 2.0mp-washu" refseq="ORFO01980_aa" refxref=":ORFO01980" compseq="ORFN01967_aa" refstart="0" refend="82" reflength="83">
+        <Attribute name="REF_ASSEMBLY" content="PNEUMO_19"></Attribute>
+        <Attribute name="COMP_ASSEMBLY" content="PNEUMO_18"></Attribute>
         <Seq-pair-run runprob="83" comprunlength="83" runlength="83" compcomplement="0" comppos="1" refpos="1" runscore="405" refcomplement="0">
           <Attribute name="segment_number" content="12617"></Attribute>
           <Attribute name="chain_number" content="12271"></Attribute>
