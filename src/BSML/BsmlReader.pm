@@ -532,10 +532,13 @@ sub returnAllIdentifiers
 
     my $rhash = {};
    
+    # loop over all feature group sets (gene ids)
     foreach my $geneId ( $self->returnAllFeatureGroupSetIds() )
     {
+	# loop over each feature group in the set
 	foreach my $fgroup ( @{BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId)} )
 	{
+	    #get the parent sequence (assembly)
 	    my $seqId = $fgroup->returnParentSequenceId();
 	    my $groupDat = $self->readFeatureGroup( $fgroup );
 
@@ -549,12 +552,19 @@ sub returnAllIdentifiers
 	    {
 		if( $featmember->{'feature-type'} eq 'CDS' )
 		{
+		    # retreive the CDS id and the Protein id
 		    $cdsId = $featmember->{'featref'};
 		    
+		    # protein id is stored in the SEQ link of the CDS object
+		    # get the CDS object from the lookups and retrieve its links
+
 		    my $cdsObj = BSML::BsmlDoc::BsmlReturnDocumentLookup( $cdsId );
 
 		    foreach my $link (@{$self->readLinks($cdsObj)})
 		    {
+
+			# a link of type 'SEQ' links to the protein sequence object
+
 			if( $link->{'rel'} eq 'SEQ' )
 			{
 			    $proteinId = $link->{'href'};
