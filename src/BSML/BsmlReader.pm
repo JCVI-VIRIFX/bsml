@@ -2068,7 +2068,9 @@ sub readSequenceAlignment
 
     foreach my $seqDat ( @{$seqAln->returnBsmlSequenceDataListR()} )
     {
-	push( @{$rhash->{'SequenceData'}}, $self->readElement($seqDat) );
+	my $dat = $self->readElement($seqDat);
+	$dat->{'alignment'} =  $seqDat->returnSequenceAlignmentData();
+	push( @{$rhash->{'SequenceData'}}, $dat );
     }
 
     $rhash->{'ConsensusSequence'} = $seqAln->returnBsmlAlignmentConsensus();

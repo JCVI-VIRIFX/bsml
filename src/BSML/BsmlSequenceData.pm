@@ -37,6 +37,14 @@ sub addSequenceAlignmentData
     $self->{'seqAlignmentDat'} = $seqDat;
 }
 
+# return the sequence alignment
+
+sub returnSequenceAlignmentData
+{
+    my $self = shift;
+    return $self->{'seqAlignmentDat'};
+}
+
 sub write
 {
     my $self = shift;
