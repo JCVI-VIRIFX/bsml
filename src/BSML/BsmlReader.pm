@@ -441,64 +441,40 @@ sub readSeqPairAlignment
 	    if ($filter_count !~ /[\d]+/){
 		die "filter_count was:$filter_count";
 	    }
-	    
-	
-	    my @tmp_array;
-	    my $runDat = {};
-	    
-	    
-	    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+
+	    my $loaded_seq_pair_run=0;	    
+	    foreach my $SeqPairRun (sort {$b->returnattr($filter) <=> $a->returnattr($filter) } @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
 	    {
-		
-		# Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
-		# placed in the return structure.
-		$runDat->{'bsmlRef'} = $SeqPairRun;
-		
-		# package the SeqPairRun data
-		$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-		$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-		$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-		$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-		$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
-		$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-		$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-		$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-		
-		# add client defined Bsml Attributes to the return structure
-		
-		my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
-		
-		foreach my $qual (keys(%{$bsmlAttributeHashR}))
-		{
-		    $runDat->{$qual} = $bsmlAttributeHashR->{$qual};
-		}
-		
-		# Store every runDat object in the the tmp_all_seq_pairs_hash
-		# along side with it's "score"
-		#		
-		my $tmp_hash = {};
-		$tmp_hash->{'score'}  = $runDat->{$filter};
-		$tmp_hash->{'rundat'} = $runDat; 
-		push (@tmp_array, $tmp_hash);
-	    }
-	    
-	    #
-	    # Sort the runDat objects based on their "scores"
-	    #
-	    my @sorted_keys = (sort {$a->{'score'} <=> $b->{'score'}} @tmp_array);
-	    
-
-	    print Dumper(@tmp_array);
-
-	    
-	    #
-	    # Only want to load the top X seq_pair_runs
-	    #
-	    my $loaded_seq_pair_run=0;
-	    my $sorted_key;
-	    foreach $sorted_key (@sorted_keys){
 		if ($loaded_seq_pair_run < $filter_count){
-		    push( @{$rhash->{'seqPairRuns'}}, $tmp_array[$sorted_key]->{'rundat'});     
+		    
+		    my $runDat = {};
+		    # Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
+		    # placed in the return structure.
+		    $runDat->{'bsmlRef'} = $SeqPairRun;
+		    
+		    # package the SeqPairRun data
+		    $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+		    $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+		    $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+		    $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+		    $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+		    $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+		    $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+		    $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+		    
+		    # add client defined Bsml Attributes to the return structure
+		    
+		    my $bsmlAttributeHashR = $SeqPairRun->returnBsmlAttrHashR();
+		    
+		    foreach my $qual (keys(%{$bsmlAttributeHashR}))
+		    {
+			$runDat->{$qual} = $bsmlAttributeHashR->{$qual};
+		    }
+		    
+		    # Store every runDat object in the the tmp_all_seq_pairs_hash
+		    # along side with it's "score"
+		    #		
+		    push( @{$rhash->{'seqPairRuns'}}, $runDat );     
 		    $loaded_seq_pair_run++;
 		}
 	    }
@@ -510,6 +486,7 @@ sub readSeqPairAlignment
 	    #-----------------------------------------------------------
 	    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
 	    {
+
 		my $runDat = {};
 		
 		# Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
@@ -537,6 +514,7 @@ sub readSeqPairAlignment
 		
 		push( @{$rhash->{'seqPairRuns'}}, $runDat );     
 	    }
+	    
 	}
     	return $rhash;
     }
