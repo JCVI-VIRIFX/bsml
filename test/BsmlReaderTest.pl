@@ -10,9 +10,7 @@ my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $TranscriptCoordList = $reader->geneIdtoGenomicCoords( '_68068.t00002' );
+$aahash = $reader->get_all_protein_dna( 'PNEUMO_19' );
 
-foreach $cds (@{$reader->geneCoordstoCDSList( $TranscriptCoordList )})
-{
-    print $cds."\n";
-}
+print $aahash->{'ORFO00198_0'};
+

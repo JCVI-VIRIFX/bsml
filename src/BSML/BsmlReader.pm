@@ -766,9 +766,11 @@ sub get_all_protein_dna
 	    my $dnalist = $self->geneCoordstoCDSList($self->geneIdtoGenomicCoords($gene));
 	    
 	    my $i = 0;
+
 	    foreach my $seq (@{$dnalist})
 	      {
 		my $key = $gene."_".$i;
+
 		$returnhash->{$key} = $seq;
 		$i++;
 	      }
@@ -941,7 +943,7 @@ sub geneCoordstoCDSList
 
     foreach my $transcript (@{$coords})
       {
-	if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'} )
+	if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0] )
 	  {
 	      #Euk data join the exon subsequences with care around the CDS start and end
 
@@ -1008,6 +1010,8 @@ sub geneCoordstoCDSList
 	  {
 	    #Prok Orf=Gene=CDS
 
+	     
+
 	    my $start = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
 	    my $stop = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
 	    my $complement = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'complement'};
@@ -1043,7 +1047,7 @@ sub geneCoordstoTranscriptSequenceList
       
       foreach my $transcript (@{$coords})
       {
-	  if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'} )
+	  if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0] )
 	  {
 	      #Euk data join the exon subsequences with care around the CDS start and end
 	      
@@ -1137,6 +1141,7 @@ sub subSequence
 
     if( !($seqdat) ){
 	my $seqimpt = $seq->returnBsmlSeqDataImport();
+
 	if( $seqimpt->{'format'} eq 'fasta' ){
 	  $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );}
 
@@ -1150,6 +1155,7 @@ sub subSequence
 	}
 
 	$seq->addBsmlSeqData( $seqdat );
+
       }
 
     #return the whole sequence if '-1' is passed as the start coordinate
@@ -1166,7 +1172,8 @@ sub subSequence
       {
 	if( $complement == 0 )
 	  {
-	    return substr( $seqdat, $start-1, ($stop-$start+1));
+	      my $rseq = substr( $seqdat, $start-1, ($stop-$start+1));
+	      return $rseq;
 	  }
 	else
 	  {
