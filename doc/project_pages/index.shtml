@@ -31,6 +31,18 @@ Institute for Genomic Research (TIGR)</P>
 <li>XML::Twig
 </ul>
 
+<h2>Install</h2>
+
+<ul>
+<pre>
+  cvs co bsml_install
+  cd bsml_install
+  perl Makefile.PL PREFIX=[install_dir]
+  make 
+  make install
+</pre>
+</ul>
+
 <h2>Development Mailing List</h2>
 
 <p>Get on the <a href="http://lists.sourceforge.net/lists/listinfo/bsml-devel">BSML Development List</a> to stay updated on development issues, bugs, new releases, and more!
