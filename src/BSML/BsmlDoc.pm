@@ -70,14 +70,6 @@ $BsmlFeatureGroupLookups = [];
 $BsmlTableIdCount = 0;
 $BsmlCurrentTableId = 0;
 
-my $log4perl_defaults = 
-'log4perl.logger.Bsml=INFO, A1
-log4perl.appender.A1=Log::Dispatch::File
-log4perl.appender.A1.filename=bsml.log
-log4perl.appender.A1.mode=append
-log4perl.appender.A1.layout=Log::Log4perl::Layout::PatternLayout
-log4perl.appender.A1.layout.ConversionPattern=%d %p> %F{1}:%L %M - %m%n';
-
 # a bsml document stores a list of annotated sequences, 
 # document level attributes, and Bsml Attribute Elements
 
@@ -106,12 +98,6 @@ sub init
 
     #initialize Log4perl
 
-    if( $logger_conf ){
-      Log::Log4perl->init( $logger_conf );
-    }else{
-      Log::Log4perl->init( \$log4perl_defaults );
-    }
-
     # initialize a namespace table
     $self->{ 'BsmlTableId' } = $BsmlTableIdCount;
     @{$BsmlIdLookups}[$BsmlTableIdCount] = {};
@@ -121,6 +107,7 @@ sub init
 
     my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Created new BsmlDoc" );
+    $bsml_logger->level($WARN);
   }
 
 sub DESTROY
@@ -514,7 +501,7 @@ sub write
     #clean up open fhs
     $writer->end();
     $output->close();
-    $bsml_logger->info("Output handle $output closed for file $fname");
+    $bsml_logger->info("Output handle $output closed for file $fname $!");
 
     $bsml_logger->debug( "BsmlDoc successfully written" );
   }
