@@ -109,8 +109,8 @@ sub init
     $BsmlTableIdCount++;
 
     my $bsml_logger = get_logger( "Bsml" );
-    $bsml_logger->info( "Created new BsmlDoc" );
-    $bsml_logger->level($WARN);
+    $bsml_logger->info( "Created new BsmlDoc - BsmlDocID: $self->{'BsmlTableId'}" );
+    $bsml_logger->level($DEBUG);
   }
 
 sub DESTROY
@@ -122,6 +122,10 @@ sub DESTROY
     @{$BsmlIdLookups}[$self->{'BsmlTableId'}] = undef;
     @{$BsmlSeqAlignmentLookups}[$self->{'BsmlTableId'}] = undef;
     @{$BsmlFeatureGroupLookups}[$self->{'BsmlTableId'}] = undef;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Destructor Called - BsmlDocID: $self->{'BsmlTableId'}" );
+    $bsml_logger->level($DEBUG);
   }
 
 sub BsmlSetDocumentLookup
