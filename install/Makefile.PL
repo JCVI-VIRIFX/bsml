@@ -52,7 +52,7 @@ LIBRARIES = -lxerces-c
 validation: Xerces-xsdValid validation_install
 
 Xerces-xsdValid:  $(VALIDATOR_SRC_DIR)/SAX2Print.cpp $(VALIDATOR_SRC_DIR)/SAX2Print.hpp SAX2PrintHandlers.o
-	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o Xerces-xsdValid $(VALIDATOR_SRC_DIR)/SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o $(VALIDATOR_SRC_DIR)/Xerces-xsdValid $(VALIDATOR_SRC_DIR)/SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
 
 SAX2PrintHandlers.o: $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp
