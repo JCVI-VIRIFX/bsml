@@ -671,6 +671,11 @@ sub geneIdtoAssemblyId
 # Returns a list of amino acid sequences given a gene identifier. Each sequence
 # represents a transcriptional varient of the query gene.
 
+# Looks up the gene by id in the Feature Group Lookups returning a list of transcript
+# groups. Examines the list of feature-group members for one referencing a CDS feature.
+# By following the CDS feature's SEQ link the sequence object containing AA seqdata is
+# obtained.
+
 sub geneIdtoAASeqList
   {
     my $self = shift;
@@ -703,7 +708,8 @@ sub geneIdtoAASeqList
 			  push( @returnAASequenceList, $seqdat );}
 			else
 			  {
-			    #handle sequence data import tags
+			      # handle sequence data import tags
+			      # The current document implementations inline the AA sequences...
 			  }
 		      }
 		  }
@@ -849,10 +855,12 @@ sub geneIdtoGenomicCoords
 	  }
 
 	$coordRecord->{'TranscriptDat'} = {};
+	my $group = {};
+	$group->{'EXON_COORDS'} = [];
 
 	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
 	  {
-	    my $group = {};
+	   
 	    my $featureRef = $fmember->{'feature'};
 	    my $featureType = $fmember->{'feature-type'};
 	    my $featureGroup = $fmember->{'group-type'};
@@ -882,12 +890,38 @@ sub geneIdtoGenomicCoords
 
 	    if( $featureType eq 'EXON' )
 	      {
-		
+		  my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+
+		  if($feat)
+		  {
+		      foreach my $interval (@{$feat->returnBsmlIntervalLocListR()})
+		      {
+			
+			  my $href = { startpos => $interval->{'startpos'}, endpos => $interval->{'endpos'}, complement => $interval->{'complement'} };
+			  push( @{$group->{'EXON_COORDS'}}, $href );
+		      }
+		  }
 	      }
 
 	    if( $featureType eq 'TRANSCRIPT' )
 	      {
-		
+		  my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+
+		  if($feat)
+		  {
+		      foreach my $site (@{$feat->returnBsmlSiteLocListR()})
+		      {
+			  if($site->{'class'} eq 'START' )
+			  {
+			      $group->{'TRANSCRIPT_START'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			  }
+			  
+			  if($site->{'class'} eq 'STOP' )
+			  {
+			      $group->{'TRANSCRIPT_STOP'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			  }
+		      }
+		  }
 	      }
 	    
 	    $coordRecord->{'TranscriptDat'} = $group;
@@ -909,9 +943,39 @@ sub geneCoordstoCDSList
 
     foreach my $transcript (@{$coords})
       {
-	if( $transcript->{'TranscriptDat'}->{'EXONS'} )
+	if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'} )
 	  {
-	    #Euk data join the exon subsequences with care around the CDS start and end
+	      #Euk data join the exon subsequences with care around the CDS start and end
+
+	      # First check to see if the gene is on the complementary strand
+
+	      if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'complement'} eq '1' )
+	      {
+		  # The transcript is on the complementary strand
+		  print "The transcript is on the complementary strand\n";
+
+		  my @sorted_lref = sort { $b->{'startpos'} <=> $a->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  push( @{$seqList}, $cds );
+
+	      }
+	      else
+	      {
+		  # The transcript is not on the complementary strand.
+
+		  
+	      }
+	      
 	  }
 	else
 	  {
@@ -951,12 +1015,10 @@ sub subSequence
     my $self = shift;
     my ($seqId, $start, $stop, $complement) = @_;
 
-    if( $start > $stop )
-      {
+    if( $complement == 1 && ($start > $stop) )
+    {
 	($start, $stop) = ($stop, $start);
-	if( $complement == 0 ){ $complement = 1; }
-	else{ $complement = 0; }
-      }
+    }
 
     my $seq = BsmlDoc::BsmlReturnDocumentLookup( $seqId );
     
@@ -973,9 +1035,14 @@ sub subSequence
 	$seq->addBsmlSeqData( $seqdat );
       }
 
+    #return the whole sequence if '-1' is passed as the start coordinate
+
     if( $start == -1 )
       {
-	return $seqdat;
+	  if( $complement == '0' ){
+	      return $seqdat;}
+	  else{
+	      return reverse_complement( $seqdat );}
       }
 
     if( $seqdat )
@@ -990,6 +1057,9 @@ sub subSequence
 	  }
       }
   }
+
+# By convention, the FASTA identifiers for genomic sequence have been set as follows.
+# Database_asmbl_asmblId (ATH1_asmbl_68068)
 
 sub parse_multi_fasta {
 

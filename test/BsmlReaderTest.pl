@@ -3,13 +3,16 @@
 use lib "../src/";
 use BsmlReader;
 use BsmlParserTwig;
-use Data::Dumper;
+use Data::Dumper; 
 
 my $reader = new BsmlReader;
 my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $href = $reader->fetch_genome_pairwise_matches( 'PNEUMO_19', 'PNEUMO_16' );
+my $TranscriptCoordList = $reader->geneIdtoGenomicCoords( '_68068.t00002' );
 
-print Dumper( %{$href->[0]} );
+foreach $cds (@{$reader->geneCoordstoCDSList( $TranscriptCoordList )})
+{
+    print $cds."\n";
+}
