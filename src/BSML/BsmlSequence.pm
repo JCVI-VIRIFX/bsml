@@ -216,7 +216,7 @@ sub addBsmlSeqDataImport
   {
     my $self = shift;
     my ($format, $source) = @_;
-    
+
     $self->{'BsmlSeqDataImport'}->{'format'} = $format;
     $self->{'BsmlSeqDataImport'}->{'source'} = $source;
   }
@@ -378,7 +378,7 @@ sub write
       }
     else
       {
-	if( $self->{'BsmlSeqDataImport'} )
+	if( $self->{'BsmlSeqDataImport'}->{'source'} )
 	  {
 	    $writer->startTag( 'Seq-data-import', %{$self->{'BsmlSeqDataImport'}} );
 	    $writer->endTag( 'Seq-data-import' );

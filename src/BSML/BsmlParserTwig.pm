@@ -129,6 +129,14 @@ sub sequenceHandler
 	$bsmlseq->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
       }
 
+    # add any Bsml Links
+
+    foreach my $BsmlLink ( $seq->children( 'Link' ) )
+      {
+	my $attr = $BsmlLink->atts();
+	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+      }
+
     # add raw sequence data if found 
 
     my $seqDat = $seq->first_child( 'Seq-data' );
@@ -164,6 +172,12 @@ sub sequenceHandler
 		$table->addattr( $key, $attr->{$key} );
 	      }
 
+	    foreach my $BsmlLink ( $BsmlFTable->children( 'Link' ) )
+	      {
+		my $attr = $BsmlLink->atts();
+		$table->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	      }
+
 	    foreach my $BsmlRef ($BsmlFTable->children( 'Reference' ) )
 	      {
 		my $ref = $table->{'BsmlReferences'}[$table->addBsmlReference()];
@@ -187,6 +201,12 @@ sub sequenceHandler
 		foreach my $BsmlRefJournal ($BsmlRef->children( 'RefJournal' ))
 		  {
 		    $ref->addBsmlRefJournal( $BsmlRefJournal->text() );
+		  }
+
+		foreach my $BsmlLink ( $BsmlRef->children( 'Link' ) )
+		  {
+		    my $attr = $BsmlLink->atts();
+		    $ref->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
 		  }
 	      }
 	  
@@ -222,6 +242,12 @@ sub sequenceHandler
 		    if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
 		    $feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'} ); 
 		  }
+
+		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
+		  {
+		    my $attr = $BsmlLink->atts();
+		    $feat->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+		  }
 	      }
 	  }
 	foreach my $BsmlFGroup  ($BsmlFTables->children( 'Feature-group' )) 
@@ -238,6 +264,12 @@ sub sequenceHandler
 	    if( $BsmlFGroup->text() ){
 	      $group->setText( $BsmlFGroup->text() ); 
 	    }
+
+	    foreach my $BsmlLink ( $BsmlFGroup->children( 'Link' ) )
+	      {
+		my $attr = $BsmlLink->atts();
+		$group->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	      }
 
 	    foreach my $BsmlFGroupMember ( $BsmlFGroup->children( 'Feature-group-member' ))
 	      {
@@ -278,6 +310,12 @@ sub seqPairAlignmentHandler
 	my $attr = $BsmlAttr->atts();
 	$bsmlaln->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
       }
+
+     foreach my $BsmlLink ( $seq_aln->children( 'Link' ) )
+       {
+	 my $attr = $BsmlLink->atts();
+	 $bsmlaln->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+       }
      
      foreach my $seq_run ( $seq_aln->children('Seq-pair-run') )
        {
@@ -292,6 +330,12 @@ sub seqPairAlignmentHandler
 	   my $attr = $BsmlAttr->atts();
 	   $bsmlseqrun->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
 	 }
+
+	 foreach my $BsmlLink ( $seq_run->children( 'Link' ) )
+	   {
+	     my $attr = $BsmlLink->atts();
+	     $bsmlseqrun->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	   }
        }     
   }
 
@@ -311,5 +355,12 @@ sub analysisHandler
 	my $attr = $BsmlAttr->atts();
 	$bsml_analysis->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
       }
+
+    foreach my $BsmlLink ( $analysis->children( 'Link' ) )
+      {
+	my $attr = $BsmlLink->atts();
+	$bsml_analysis->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+      }
+
   }
 1
