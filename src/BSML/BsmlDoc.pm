@@ -47,16 +47,18 @@ logging will be over-ridden.
 
 =cut
 
-use BSML::BsmlElement;
+
 use XML::Writer;
-# use strict;
 use warnings;
+use Log::Log4perl qw(get_logger :easy);
+
+use BSML::BsmlElement;
 use BSML::BsmlSequence;
 use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlMultipleAlignmentTable;
 use BSML::BsmlAnalysis;
-use Log::Log4perl qw(get_logger :easy);
-use Data::Dumper;
+use BSML::BsmlGenome;
+
 
 # The default links to the BSML dtd maintained by Labbook
 
@@ -95,10 +97,7 @@ sub init
     $self->{ 'BsmlSeqPairAlignments' } = [];
     $self->{ 'BsmlMultipleAlignmentTables' } = [];
     $self->{ 'BsmlAnalyses' } = [];
-    
-    # bsml Genomes will probably be needed in the future...
-
-    #initialize Log4perl
+    $self->{ 'BsmlGenomes' } = [];
 
     # initialize a namespace table
     $self->{ 'BsmlTableId' } = $BsmlTableIdCount;
@@ -431,6 +430,48 @@ sub returnBsmlAnalysisR
   return $self->{'BsmlAnalyses'}[$index];
 }
 
+sub addBsmlGenome
+{
+    my $self = shift;
+
+    push( @{$self->{'BsmlGenomes'}}, new BSML::BsmlGenome );
+
+    my $index = @{$self->{'BsmlGenomes'}} - 1;
+
+    return $index;    
+}
+
+sub returnBsmlGenomeListR
+{
+  my $self = shift;
+  return $self->{'BsmlGenomes'};
+}
+
+sub returnBsmlGenomeR
+{
+  my $self = shift;
+  my ($index) = @_;
+
+  return $self->{'BsmlGenomes'}[$index];
+}
+
+sub dropBsmlGenome
+{
+   my $self = shift;
+   my ($index) = @_;
+
+   my $newlist;
+   for(  my $i=0;  $i< @{$self->{'BsmlGenomes'}}; $i++ ) 
+      {
+	if( $i != $index )
+	  {
+	    push( @{$newlist}, $self->{'BsmlGenomes'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlGenomes'} = $newlist;
+}
+
 =item $doc->write()
 
 B<Description:> Writes the document to a file 
@@ -496,6 +537,18 @@ sub write
     # write the Defintions section, current API only supports Sequences
 
     $writer->startTag( "Definitions" );
+
+    if( @{$self->{'BsmlGenomes'}} )
+    {
+	$writer->startTag( "Genomes" );
+	
+	foreach my $genome ( @{$self->{'BsmlGenomes'}} )
+	{
+	    $genome->write( $writer );
+	}
+	
+	$writer->endTag( "Genomes" );
+    }
 
     # write the sequence elements
 

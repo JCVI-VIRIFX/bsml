@@ -40,6 +40,7 @@ use warnings;
 use XML::Twig;
 use Log::Log4perl qw(get_logger :levels);
 use BSML::BsmlDoc;
+use Data::Dumper;
 
 my $bsmlDoc;
 
@@ -86,7 +87,11 @@ sub parse
     # parsed
 
     my $twig = new XML::Twig( TwigHandlers => 
-			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler, Analysis => \&analysisHandler, 'Multiple-alignment-table' => \&multiAlignmentTableHandler }
+			  { 'Sequence' => \&sequenceHandler, 
+			    'Seq-pair-alignment' => \&seqPairAlignmentHandler, 
+			    'Analysis' => \&analysisHandler, 
+			    'Multiple-alignment-table' => \&multiAlignmentTableHandler, 
+			    'Genome' => \&genomeHandler }
 			  );
     
     # parsefile will die if an xml syntax error is encountered or if
@@ -446,6 +451,9 @@ sub multiAlignmentTableHandler
     {
 	sequenceAlignmentHandler( $twig, $alnSeq, $bsml_mTable );
     }
+
+    # Purge the twig rooted at the multi-alignment table
+    $twig->purge_up_to( $mTable );
 }
 
 sub alignmentSummaryHandler
@@ -522,6 +530,55 @@ sub alignmentConsensusHandler
 {
 
 }
+
+######################################################################
+##
+#  Support for import of data associated with Genome elements and
+#  children.
+
+
+sub genomeHandler
+{
+    my ($twig, $genome) = @_;
+    my $bsmlGenome = $bsmlDoc->returnBsmlGenomeR( $bsmlDoc->addBsmlGenome() );
+
+    addBsmlAttrLinks( $twig, $genome, $bsmlGenome );
+
+    foreach my $organism ( $genome->children( 'Organism' ))
+    {
+
+
+	organismHandler( $twig, $organism, $bsmlGenome );
+    }
+
+    $twig->purge_up_to( $genome );
+}
+
+sub organismHandler
+{
+    my ($twig, $organism, $bsmlGenome) = @_;
+
+    my $bsmlOrganism = $bsmlGenome->returnBsmlOrganismR( $bsmlGenome->addBsmlOrganism() );
+    
+    addBsmlAttrLinks( $twig, $organism, $bsmlOrganism );
+
+    foreach my $strain ($organism->children( 'Strain' ))
+    {
+	strainHandler( $twig, $strain, $bsmlOrganism );
+    }   
+}
+
+sub strainHandler
+{
+    my ($twig, $strain, $bsmlOrganism ) = @_;
+
+    my $bsmlStrain = $bsmlOrganism->returnBsmlStrainR( $bsmlOrganism->addBsmlStrain() );
+   
+    addBsmlAttrLinks( $twig, $strain, $bsmlStrain );
+}
+
+# Generic function to add attributes, Bsml Attributes, and 
+# Bsml links to generic objects
 
 sub addBsmlAttrLinks
 {

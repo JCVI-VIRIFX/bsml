@@ -942,6 +942,7 @@ sub createAndAddMultipleAlignmentTable
 
     my $multipleAlignmentTable = $self->returnBsmlMultipleAlignmentTableR( $self->addBsmlMultipleAlignmentTable() );
 
+    $multipleAlignmentTable->addattr( 'id', $args{'id'} );
     $multipleAlignmentTable->addattr( 'molecule-type', $args{'molecule-type'} );
     $multipleAlignmentTable->addattr( 'seq-format', $args{'seq-format'} );
     
@@ -1042,6 +1043,58 @@ sub createAndAddSequenceData
     return $seqDat;
 }
 
+sub createAndAddGenome
+{
+    my $self = shift;
+    my %args = @_;
 
+    my $genome = $self->returnBsmlGenomeR( $self->addBsmlGenome() );
+
+    $genome->addattr( 'id', $args{'id'} );
+
+    $genome->addattr( 'autosomal-chromosome-count', $args{'autosomal-chromosome-count'} );
+    $genome->addattr( 'sex-chromosome-count', $args{'sex-chromosome-count'} );
+    $genome->addattr( 'ploidy-count', $args{'ploidy-count'} );
+    $genome->addattr( 'distinct-chromosome-count', $args{'distinct-chromosome-count'} );
+    $genome->addattr( 'total-chromosome-count', $args{'total-chromosome-count'} );
+    
+    return $genome;
+}
+
+sub createAndAddOrganism
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $genome = $args{ 'genome' };
+
+    my $organism = $genome->returnBsmlOrganismR( $genome->addBsmlOrganism() );
+
+    $organism->addattr( 'id', $args{'id'} );
+    $organism->addattr( 'genus', $args{'genus'} );
+    $organism->addattr( 'species', $args{'species'} );
+    $organism->addattr( 'taxon-num', $args{'taxon-num'} );
+    $organism->addattr( 'taxonomy', $args{'taxonomy'} );
+    $organism->addattr( 'url', $args{'url'} );
+
+    return $organism;    
+}
+
+sub createAndAddStrain
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $organism = $args{'organism'};
+    my $strain_name = $args{'name'};
+    my $database = $args{'database'};
+    my $source_database = $args{'source_database'};
+
+    my $strain = $organism->returnBsmlStrainR( $organism->addBsmlStrain() );
+
+    $strain->addBsmlAttr( 'name', $strain_name );
+    $strain->addBsmlAttr( 'database', $database );
+    $strain->addBsmlAttr( 'source_database', $source_database );
+}
 
 1;

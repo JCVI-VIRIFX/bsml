@@ -6,7 +6,7 @@
 # The BsmlBuilder class mirrors the Java API defined in the LabBook Bsml Documentation
 # for building Bsml sequences.
 
-#use lib "../src/";
+use lib "../src/";
 use BSML::BsmlBuilder;
 
 $outfile = 'STDOUT';
@@ -67,6 +67,12 @@ KINIYNINLNNSNLNNINKNENNKIDSITSIAKKCHSSDIFLIRDNILNNLSNKEFKNIIARNVSLSHEFPLIHTNEELN
 TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKVTMENINMDCVVKNKTYDNMNKSNMKKIN
 FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
 KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK' ); 
+
+$doc->createAndAddOrganism( 'genome' => $doc->createAndAddGenome(),
+			    'genus' => 'test-genus',
+			    'species' => 'test-species',
+			    'strain' => 'test-strain',
+			    'dbName' => 'test-database' );
 
 $doc->write( $outfile );
 

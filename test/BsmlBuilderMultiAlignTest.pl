@@ -79,6 +79,14 @@ $doc->createAndAddSequenceData( 'sequenceAlignment' => $aln,
 				'seq-name' => 'pfa1 PF14_0394',
 				'seq-data' => 'AGCTAGCTAGCT------------------------------------------' );
 
+my $organism = $doc->createAndAddOrganism( 'genome' => $doc->createAndAddGenome(),
+					   'genus' => 'test-genus',
+					   'species' => 'test-species' );
+
+my $strain = $doc->createAndAddStrain( 'organism' => $organism,
+				       'name' => 'test-strain-name',
+				       'database' => 'chado_pmonas',
+				       'source_database' => 'gps' );
 
 $doc->write( $outfile );
 
@@ -87,9 +95,5 @@ my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $outfile );
 
-foreach my $mAln ( @{$reader->returnMultipleAlignmentTables()} )
-{
-    my $href = $reader->readMultipleAlignmentTable( $mAln );
-    print Dumper( %{$href} );
-}
+$reader->write( 'output_final.bsml' );
 
