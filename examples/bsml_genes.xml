@@ -1,5 +1,7 @@
-<?xml version="1.0?"?>
-<!DOCTYPE Bsml SYSTEM "BSML_3_1.DTD">
+<?xml version="1.0"?>
+
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+
 <!--Representing a gene and CDS feature as sequence features.  Each gene will be represented as a sequence f
 eature.
 The unspliced transcript sequence and protein translation are available in this representation.  
@@ -10,15 +12,13 @@ A feature-group is used to link a CDS and GENE. Alternatively, coding exons can 
 tures and linked through feature-groups. 
 This seems to follow conventions in the documentation where EXONS are linked to GENES in feature-groups 
 -->
-<bsml>
-  <definitions>
-    <sequences>
-      <sequence id="PF14_0392" molecule='dna'
-      title="pfa1 PF14_0392">
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence id="PF14_0392" molecule="dna" title="pfa1 PF14_0392">
         <Feature-tables>
           <Feature-table>
-            <Feature id="1396.m03861" class="GENE"
-            value-type="gene" title="PF14_0392">
+            <Feature id="M1396-03861" class="GENE" value-type="gene" title="PF14_0392">
               <!--Gene identifier pulled from idnet.locus-->
 <Qualifier value-type="gene" value="PF14_0392" />
               <!--Product name pulled from ident_xref where xref_type = 'product name'-->
@@ -49,7 +49,7 @@ DIPMHSDINLFNNKKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQS
  />
               <Interval-loc startpos="1" endpos="7366" />
             </Feature>
-            <Feature id="1396.m03861_cds" class="CDS"
+            <Feature id="M1396-03861CDS" class="CDS"
             value-type="cds" title="CDS for PF14_0392">
               <!--Gene identifier pulled from idnet.locus-->
 <Qualifier value-type="gene" value="PF14_0392" />
@@ -63,18 +63,17 @@ terval-loc specifies the span and subsequent interval-locs specify the exon boun
               <Interval-loc startpos="1256" endpos="7366" />
             </Feature>
           </Feature-table>
-        </Feature-tables>
         <Feature-group group-set="GENE_PF14_0392">
-          <Feature-group-member featref="1396.m03861"
+          <Feature-group-member featref="M1396-03861"
           feature-type="GENE"></Feature-group-member>
-          <Feature-group-member featref="1396.m03861_cds"
+          <Feature-group-member featref="M1396-03861CDS"
           feature-type="CDS"></Feature-group-member>
         </Feature-group>
-        <Seq-data>AGTC......</Seq-data>
-      </sequence>
-      <sequence id="protein 1" molecule="aa"
+       </Feature-tables>
+      </Sequence>
+      <Sequence id="Protein1" molecule="aa"
       title="PF14_0392 fatty acyl CoA synthetase 1">
-        <seq-data>
+        <Seq-data>
         MTTTDTWKVEWDNELRQLPNVESVTCFDLQLTENVFLIWQFLKLYLSTSPQVRSIIDFIAIKKAQSLQWGDHIDSVMSSGLRKGQELFHVFLSNGKKIQT
 TYSKKKLCDRLEYYHIKNYIILEKINTGSVGQVHVALDKSTDTFVAAKAIDKSTVQGDIGLFEKLKDEIKISCMMNHPVVKTLNILETKDKIIQIMEYCDAGDLISYV
 RNKLYLDEVSAQYFFRKIVEGLKYMHKNNIAHRDLKPENIFLCKIQISQKEKTLIRVGKLPSCIEYDLKIGDFGACCINEKNKLHHDIVGTLSYAAPEVLNCNNNNGY
@@ -95,11 +94,12 @@ KNKKERAKKKNILNNKKCILSNGSNIFIGKEYKKNQHMDYMNKIKKNENDVLYLNNSVSLKRSFSMLHFNRNIKNHVNYY
 KINIYNINLNNSNLNNINKNENNKIDSITSIAKKCHSSDIFLIRDNILNNLSNKEFKNIIARNVSLSHEFPLIHTNEELNKKTKKQIINNNIIYDKIGISNNKKCNIP
 TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKVTMENINMDCVVKNKTYDNMNKSNMKKIN
 FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
-KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK</seq-data>
-      </sequence>
-      <sequence id="protein 2" molecule="aa"
+KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK
+        </Seq-data>
+      </Sequence>
+      <Sequence id="Protein2" molecule="aa"
       title="PF14_0393 hypothetical protein">
-        <seq-data>
+        <Seq-data>
         MTTTDTWKVEWDNELRQLPNVESVTCFDLQLTENVFLIWQFLKLYLSTSPQVRSIIDFIAIKKAQSLQWGDHIDSVMSSGLRKGQELFHVFLSNGKKIQT
 TYSKKKLCDRLEYYHIKNYIILEKINTGSVGQVHVALDKSTDTFVAAKAIDKSTVQGDIGLFEKLKDEIKISCMMNHPVVKTLNILETKDKIIQIMEYCDAGDLISYV
 RNKLYLDEVSAQYFFRKIVEGLKYMHKNNIAHRDLKPENIFLCKIQISQKEKTLIRVGKLPSCIEYDLKIGDFGACCINEKNKLHHDIVGTLSYAAPEVLNCNNNNGY
@@ -120,11 +120,12 @@ KNKKERAKKKNILNNKKCILSNGSNIFIGKEYKKNQHMDYMNKIKKNENDVLYLNNSVSLKRSFSMLHFNRNIKNHVNYY
 KINIYNINLNNSNLNNINKNENNKIDSITSIAKKCHSSDIFLIRDNILNNLSNKEFKNIIARNVSLSHEFPLIHTNEELNKKTKKQIINNNIIYDKIGISNNKKCNIP
 TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKVTMENINMDCVVKNKTYDNMNKSNMKKIN
 FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
-KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK</seq-data>
-      </sequence>
-    </sequences>
-  </definitions>
-</bsml>
+KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK
+        </Seq-data>
+      </Sequence>
+    </Sequences>
+  </Definitions>
+</Bsml>
 <!--select f.feat_name,f.end5,f.end3,f.sequence,f.protein,i.com_name,i.locus,i.gene_sym 
 from asm_feature f, asm_feature f2, feat_link l, phys_ev p, ident i
 where f.feat_name = l.child_feat
