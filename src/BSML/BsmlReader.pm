@@ -1367,10 +1367,18 @@ sub geneCoordstoTranscriptSequenceList
     return $seqList;
   }
 
+# returns the sequence substring of the input object. Substrings are bounded by the input 
+# start and stop positions. Reverse complement is returned for inputs in which the 
+# start position is greater then the end position. 
+
 sub subSequence
   {
     my $self = shift;
     my ($seqId, $start, $stop, $complement) = @_;
+
+    # Check if the substring is on the reverse complement. 
+    # Note as of 4/21/03 some of the client builders are not setting
+    # the complement attributes correctly. 
 
     if( ($start > $stop) )
     {
@@ -1378,30 +1386,42 @@ sub subSequence
 	$complement = 1;
     }
 
+    # retrieve the sequence object from the lookup tables
+
     my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
     
     if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
     {
-	print STDERR "BsmlReader::subSequence - Error Sequence ID ($seqId) was not found in the document.\n";
+	print STDERR "BsmlReader::subSequence() - Error Sequence ID ($seqId) was not found in the document.\n";
 	return '';
     }
 
+    # get the sequence data if it is already in memory. (inline sequence objects)
+
     my $seqdat = $seq->returnSeqData();
 
-    if( !($seqdat) ){
+    # otherwise pull in the data from an external file
+
+    if( !($seqdat) )
+    {
 	my $seqimpt = $seq->returnBsmlSeqDataImport();
-
-	if( $seqimpt->{'format'} eq 'fasta' ){
-	  $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );}
-
-	#Store the imported sequence in the object layer so further file
-	#io is not necessary
+	
+	if( $seqimpt->{'format'} eq 'fasta' )
+	{
+	    $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );
+	}
+	
+	# Both interal and external lookups for sequence data failed. 
+	# Log and error and return the empty string.
 
 	if( !($seqdat) )
 	{
-	    print "File: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
-	    die "Could not read sequence data from file\n";
+	    print STDERR "BsmlReader::subSequence - Error Unable to retrieve sequence data. $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
+	    return '';
 	}
+	
+	#Store the imported sequence in the object layer so further file
+	#io is not necessary
 
 	$seq->addBsmlSeqData( $seqdat );
 
@@ -1417,26 +1437,30 @@ sub subSequence
 	      return reverse_complement( $seqdat );}
       }
 
+    # pull out the substring of interest and return it
+
     if( $seqdat )
       {
 	  if( ($start-1) > length($seqdat) )
 	  {
-	      #Log error condition
-	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access.\n";
+	      # Log error condition nd return the empty string
+	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access. SeqId($seqId) Start($start) Stop($stop) Complement($complement)\n";
 	      return '';
 	  }
-
-	if( $complement == 0 )
+	  
+	  # return 5' to 3' data
+	  if( $complement == 0 )
 	  {
 	      my $rseq = substr( $seqdat, $start-1, ($stop-$start+1));
 	      return $rseq;
 	  }
-	else
+	  # return 3' to 5' data
+	  else
 	  {
-	    return reverse_complement(substr( $seqdat, $start-1, ($stop-$start+1)));
+	      return reverse_complement(substr( $seqdat, $start-1, ($stop-$start+1)));
 	  }
       }
-  }
+}
 
 # By convention, the FASTA identifiers for genomic sequence have been set as follows.
 # Database_asmbl_asmblId (ATH1_asmbl_68068)
