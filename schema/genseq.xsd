@@ -17,12 +17,51 @@
   </xs:restriction>
 </xs:simpleType>
 
+<xs:simpleType name="strain_attr">
+  <xs:restriction base="xs:NMTOKEN">
+    <xs:enumeration value="name"/>
+    <xs:enumeration value="database"/>
+    <xs:enumeration value="source_database"/>
+  </xs:restriction>
+</xs:simpleType>
+
 <xs:simpleType name="link_class">
   <xs:restriction base="xs:NMTOKEN">
     <xs:enumeration value="GENE"/>
     <xs:enumeration value="SEQ"/>
   </xs:restriction>
 </xs:simpleType>
+
+<xs:element name="Genome">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element name="Organism" minOccurs="1" maxOccurs="1">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Strain" minOccurs="1" maxOccurs="1">
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="Attribute" minOccurs="3" maxOccurs="3">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="strain_attr" use="required"/>
+                    <xs:attribute name="content" type="xs:string" use="required"/>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+             </xs:complexType>
+             <xs:key name="Attribute">
+               <xs:selector xpath="Attribute"/>
+               <xs:field xpath="@name"/>
+             </xs:key>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="species" type="xs:string" use="required"/>
+          <xs:attribute name="genus" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
 
 <xs:element name="Sequence">
   <xs:complexType>
@@ -128,15 +167,22 @@
       </xs:element>
       <xs:element name="Definitions">
         <xs:complexType>
-          <xs:all>
-            <xs:element name="Sequences" >
+          <xs:sequence>
+            <xs:element name="Genomes" maxOccurs="1" minOccurs="0">
+               <xs:complexType>
+                 <xs:sequence>
+                   <xs:element ref="Genome" maxOccurs="1"/>
+                 </xs:sequence>
+               </xs:complexType>
+            </xs:element>
+            <xs:element name="Sequences" maxOccurs="1" minOccurs="1" >
                <xs:complexType>
                  <xs:sequence>
                    <xs:element ref="Sequence" maxOccurs="unbounded" />
                  </xs:sequence>
                </xs:complexType>
             </xs:element>
-          </xs:all>
+          </xs:sequence>
         </xs:complexType>
       </xs:element>
       </xs:sequence>
