@@ -4,6 +4,7 @@ package BSML::BsmlReader;
 use strict;
 use warnings;
 use BSML::BsmlDoc;
+use BSML::Indexer::Fasta;
 use Data::Dumper;
 use Log::Log4perl qw(get_logger);
 
@@ -1810,8 +1811,51 @@ sub parse_multi_fasta {
 
   my $fasta_file = shift;
   my $specified_header = shift;
+
+  # extract the directory from the filepath
+  my $pos = -1;
+  my $posMax = -1;
+
+  while (($pos = index( $fasta_file, "\/", $pos)) > -1 )
+  {
+      $posMax = $pos;
+      $pos++;
+  }
+
+  my $fasta_dir = substr( $fasta_file, 0, $posMax ); 
   
+  # try to load the sequence using a pregenerated index through. BSML::FastaIndex
+
+  my $indexer = BSML::Indexer::Fasta->new($fasta_file, $fasta_dir);
+  
+  # Check the health of the various indices for the data file.
+  my @check = $indexer->check_indices;
+
+  # Create the indices if necessary...
+  if ($check[0] == 1) { $indexer->index_entries };
+  if ($check[1] == 1) { $indexer->index_headers };
+
+  # Get the name of the header index file.
+  my $header_index = $indexer->header_index;
+  my $entry_index = $indexer->entry_index;
+ 
+  my (%h, %e);
+  my $c = tie %h, 'CDB_File', $header_index or die "tie failed: $!\n";
+  $c = tie %e, 'CDB_File', $entry_index or die "tie failed: $!\n";
+
+  my $entry = $h{$specified_header};
+  my ($offset, $length) = split( ',', $e{$entry} );
+
+  # if the sequence could not be loaded with an index, perform a grep operation on the
+  # FASTA file.
+
   open (IN, $fasta_file) or die "Unable to open $fasta_file due to $!";
+
+  if( $offset )
+  {
+      seek( IN, $offset, 0 );
+  }
+
   my $line = <IN>;
   my $seq_ref = [];
   while(defined($line)) {
@@ -1834,6 +1878,8 @@ sub parse_multi_fasta {
   
   my $final_seq = join("", @$seq_ref);
   
+
+  print $final_seq."\n";
   return $final_seq; 
 }
 
