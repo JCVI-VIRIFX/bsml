@@ -1,10 +1,19 @@
 #! /local/perl/bin/perl
 
+# useful for local CVS checkouts
 use lib "../src/";
+
 use BSML::BsmlBuilder;
 use BSML::BsmlReader;
 use BSML::BsmlParserTwig;
 use BSML::BsmlParserSerialSearch;
+
+# Test script validates the integrety of BSML search document encoding and
+# decoding. Specifically it tests that BsmlBuilder is able to create a document
+# containing pairwise sequence alignments having both element attributes and
+# client specified BSML attributes and read it back in using BsmlReader and
+# a parsing module. Parsing functionality is tested for BsmlParserTwig 
+# and BsmlParserSerialSearch. 
 
 print '1..8',"\n";
 
@@ -54,7 +63,8 @@ my $reader = new BSML::BsmlReader;
 my $parser = new BSML::BsmlParserTwig;
 $parser->parse( \$reader, "tmp.bsml" );
 
-# Check that four sequence stubs were written
+# Test one verifies that 4 sequences stubs were successfully written
+# and read.
 
 my $rlist = $reader->returnAllSequences();
 
@@ -64,6 +74,9 @@ else{
     print 'not ok 1',"\n";}
 
 my $foundIt = 0;
+
+# Test two verifies that the sequence 'Seq0004' is contained in the
+# document.
 
 foreach my $seq ( @{$rlist} )
 {
@@ -78,9 +91,8 @@ if( $foundIt ){
 else{
     print 'not ok 2',"\n";}
 
-# Verify SeqPair Alignment
-# -  Verify attributes have been written
-# -  Verify bsml attributes have been written
+# Test 3 verifies the integrity of the pairwise sequence alignments, insuring that
+# standard attributes as well as client specified attributes have been written. 
 
 my $rhash = $reader->get_all_alignments();
 
@@ -105,7 +117,7 @@ if( $foundIt ){
 else{
     print 'not ok 3',"\n";}
 
-# Verify Analysis Object
+# Test 4 requests the Analysis object and reads some attributes.
 
 my $analysisL = $reader->returnAllAnalysis();
 
@@ -125,7 +137,7 @@ if( $foundIt ){
 $reader = new BSML::BsmlReader;
 
 
-# test the serial parser
+# Tests 5,6, and 7 repeat the above tests using the serial parsing module. 
 
 my $parser = new BSML::BsmlParserSerialSearch( AlignmentCallBack => \&alignmentTest, AnalysisCallBack => \&analysisTest, SequenceCallBack => \&sequenceTest );
 my $AlnFoundIt = 0;
@@ -186,6 +198,8 @@ sub sequenceTest
     }
 }
 
+# Test 8 validates the temporary BSML document using a TIGR installation of XML-Valid
+# This test should not be included in outside releases.
 
 my $rvalue = system( "/usr/local/annotation/PNEUMO/chauser_dir/xmlvalid-1-0-0-Linux-i586/xmlvalid -q tmp.bsml" );
 
@@ -198,5 +212,7 @@ else
 {
     print 'not ok 8',"\n";
 }
+
+# deletes the temp file
 
 unlink 'tmp.bsml';
