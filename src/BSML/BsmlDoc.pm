@@ -510,7 +510,11 @@ sub write
 	
     
     $writer->endTag( "Bsml" );
-    
+
+    #clean up open fhs
+    $writer->end();
+    $output->close();
+ 
     $bsml_logger->debug( "BsmlDoc successfully written" );
   }
 
