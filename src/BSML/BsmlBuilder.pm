@@ -760,14 +760,10 @@ sub returnSequenceByID
 
     #search for a sequence given its ID 
 
-    if( ref($id) eq 'SCALAR' )
+    foreach my $seq ( @{$self->returnBsmlSequenceListR()} )
       {
-	foreach my $seq ( @{$self->returnBsmlSequenceListR()} )
-	  {
-	    if( $seq->returnattr('id') eq $id ){return $seq;}
-	  }
+	if( $seq->returnattr('id') eq $id ){return $seq;}
       }
-    
   }
 
 1
