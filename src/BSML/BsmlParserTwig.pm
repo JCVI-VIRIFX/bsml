@@ -388,7 +388,7 @@ sub seqPairAlignmentHandler
 	 foreach my $BsmlLink ( $seq_run->children( 'Link' ) )
 	   {
 	     my $attr = $BsmlLink->atts();
-	     $bsmlseqrun->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	     $bsmlseqrun->addBsmlLink( $attr->{'ref'}, $attr->{'href'} );
 	   }
        }     
      
@@ -420,7 +420,7 @@ sub analysisHandler
     foreach my $BsmlLink ( $analysis->children( 'Link' ) )
       {
 	my $attr = $BsmlLink->atts();
-	$bsml_analysis->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	$bsml_analysis->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
       }
 
   }
