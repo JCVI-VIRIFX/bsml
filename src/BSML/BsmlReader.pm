@@ -511,8 +511,8 @@ sub fetch_all_alignmentPairs
 
 	foreach my $align (@{$self->returnBsmlSeqPairAlignmentListR()})
 	  {
-	    if( ($align->returnattr( 'refseq') eq $querySeqId) ||
-		($align->returnattr( 'compseq') eq $querySeqId) )
+	    if( ($align->returnattr( 'refseq') eq $querySeqId)) #||
+		#($align->returnattr( 'compseq') eq $querySeqId) )
 	      {
 		push( @{$alignments}, $align );
 	      }
@@ -1015,5 +1015,36 @@ sub extend_seq300 {
     }
     return($EXseq);
 }
+
+
+
+sub fetchAlignmentScoresBetweenAssemblies {
+
+    my $query_asmbl_id = shift;
+    my $match_asmbl_id = shift;
+    #my $order = shift || '1';
+
+    my $bit_score_hash={};
+    foreach my $seq (@{$reader->assemblyIdtoSeqList($query_asmbl_id )}) {   #grab all seq obj given query_asmbl_id
+	my $seq_id = $seq->returnattr( 'id' );                              #return seq_id of an seq obj
+	foreach my $aln (@{$reader->fetch_all_alignmentPairs( $seq_id )}) { #return all alignment with query as $seq_id
+	    my $match_ref = $reader->readSeqPairAlignment($aln);            #return all pair_runs for an alignment_pair
+	    my $m_asmbl_id = $reader->seqIdtoAssemblyId($match_ref->{'compseq'});
+	    if($m_asmbl_id eq $match_asmbl_id) {                            #check to see if match gene belongs to match asmbl_id
+		my $best_bit_score=0;
+		foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+		    $best_bit_score = $pair_run->{'runscore'} if($pair_run->{'runscore'} > $best_bit_score);  #store best bit_score
+	        }
+		$bit_score_hash->{$seq_id}->{ $match_ref->{'compseq'} }->{'bit_score'} = $best_bit_score;
+	    }
+         }
+    }
+    
+    return $bit_score_hash;
+
+}
+
+
+
 
 1
