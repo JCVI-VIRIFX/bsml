@@ -1,0 +1,4 @@
+#
+#copy root area
+scp project_pages/* bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+

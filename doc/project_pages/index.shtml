@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>BSML Objects</title>
+<link REL="stylesheet" HREF="/bsml.css">
+
+<body>
+
+<h1>BSML Objects</h1>
+
+<P>Perl object layer for <a href='http://www.bsml.org'>BSML</a> (Bioinformatic Sequence Markup Language)</P>
+
+<h2>Description</h2>
+
+<P><a href='http://www.bsml.org'>BSML</a> is an XML format for encoding a
+wide variety of information attached to biological sequences.  This
+project provides a set modules for representing BSML adherent to v3.1
+of the BSML <a href='http://www.labbook.com/dtd/bsml3_1.dtd'>DTD</a>
+in Perl.  The Perl modules include the ability to parse and generate
+BSML documents.
+
+<h2>Background</h2> 
+
+<P>BSML is an open XML data standard developed by Labbook.  The Perl
+BSML Objects were developed by the Bioinformatics Department at The
+Institute for Genomic Research (TIGR)</P>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>Perl 5.6.0 or above
+<li>XML::Twig
+</ul>
+
+<h2>Development Mailing List</h2>
+
+<p>Get on the <a href="http://lists.sourceforge.net/lists/listinfo/bsml-devel">BSML Development List</a> to stay updated on development issues, bugs, new releases, and more!
+
+<hr>
+
+<ul>
+<li><a href='http://sourceforge.net/project/showfiles.php?group_id=79984'>Download BSML Objects</a>
+<li><a href='http://sourceforge.net/projects/bsml/'>Sourceforge Developer site</a>
+<li><a href='http://sourceforge.net/news/?group_id=79984'>News</a>
+<li><a href='http://sourceforge.net/tracker/?group_id=79984&atid=558370'>Submit bugs</a>
+<li><a href='license.html'>License Agreement: Artistic License</a>
+</ul>
+
+<hr>
+
+<!--#include file="footer.shtml"-->
+
+</body>
+</html>
+
+
+
+
+
