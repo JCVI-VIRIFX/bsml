@@ -1,7 +1,14 @@
 #! /local/perl/bin/perl
 
+use Getopt::Long qw(:config no_ignore_case no_auto_abbrev);
+
+my %options = ();
+
+my $results = GetOptions( \%options, 'schema|s=s' );
+
 my $file = $ARGV[0];
-my $schema = $ARGV[1];
+
+my $schema = $options{'schema'};
 
 $schema =~ s/\//\\\//g;
 
