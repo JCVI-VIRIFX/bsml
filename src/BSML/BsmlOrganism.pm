@@ -74,34 +74,6 @@ sub returnBsmlStrainR
     return $self->{'BsmlStrain'}[$index];
 }
 
-#----------------------------------------------------------------------
-# BsmlCrossReference support
-#
-#----------------------------------------------------------------------
-
-sub addBsmlCrossReference
-{
-    my $self = shift;
-
-    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
-    return $self->{'BsmlCrossReference'};
-}
-
-sub returnBsmlCrossReferenceR
-{
-    my $self = shift;
-
-    return $self->{'BsmlCrossReference'};
-}
-
-sub dropBsmlCrossReference
-{
-    my $self = shift;
-    $self->{'BsmlCrossReference'} = '';
-}
-
-
-
 sub write
 {
     my $self = shift;
