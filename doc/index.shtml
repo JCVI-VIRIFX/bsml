@@ -17,15 +17,30 @@
 <br>
 <br>
 <b>Description</b><br>
-BSML is an xml format
+BSML is an XML-based format for storing bioinformatic data.  The BSML 3.1 specification 
+includes encodings for "Information" (e.g., genomes, biological sequences, search hits, 
+and alignments), "Research" (e.g., the queries, analyses, and experiments used to 
+derive Information), and "Visualization" (e.g., content that specifies how the 
+Information and Research data should be rendered in a graphical display.)  The BSML 
+object layer being used at TIGR (see CVS links below) deals only with subsets of the 
+first two encodings, Information and Research.
+
+<p>
+<b>Etymology/History</b><br>
+BSML is an acronym that stands for "Bioinformatic Sequence Markup Language".  See 
+the <A HREF="http://www.bsml.org">BSML.org</A> and <A HREF="http://www.labbook.com">LabBook</A> 
+sites for more information on the history of BSML.
+</p>
 <p>
 <b>Documentation</b><br>
+BSML 3.1 reference manual from LabBook <a href='BSML3_1_Reference_Manual.pdf'>[pdf]</a><br>
 Project site <a href='project_pages/'>[Local]</a>&nbsp;<a href='http://bsml.sourceforge.net'>[Sourceforge]</a><br>
-<a href='/ifx/devel/cas/papyrus/srs_repository.html'>Data repository</a><br>
+Data repository <a href='/ifx/devel/cas/papyrus/srs_repository.html'>[srs]</a><br>
     Perl CLI coding standards 
   <p> <b>Software Products</b><br>
     See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
 href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
+Command-line utilities:<br>
 <ul>
 <li><em>check_repository</em><br>
 <a href='srs_check_repository.html'>[srs]</a> [use cases]</li>
