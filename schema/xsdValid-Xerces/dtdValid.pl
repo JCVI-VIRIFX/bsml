@@ -1,7 +1,12 @@
 #! /local/perl/bin/perl
 
+use Getopt::Long qw(:config no_ignore_case no_auto_abbrev);
+
+my %options = ();
+my $results = GetOptions( \%options, 'dtd|d=s' );
+
 my $file = $ARGV[0];
-my $dtd = $ARGV[1];
+my $dtd = $options{'dtd'};
 
 if( $dtd )
 {

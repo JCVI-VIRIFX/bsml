@@ -147,13 +147,13 @@
                         <xs:element name="Attribute" minOccurs="1" maxOccurs="10">
                           <xs:complexType>
                             <xs:attribute name="name" type="analysis_bsml_attr_name" use="required"/>
-                            <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
+                            <xs:attribute name="content" type="xs:string" use="required"/>
                         </xs:complexType>
                       </xs:element>
                       <xs:element name="Link">
                         <xs:complexType>
                           <xs:attribute name="href" type="xs:string"/>
-                          <xs:attribute name="rel" type="xs:NMTOKEN"/>
+                          <xs:attribute name="rel" type="xs:string"/>
                         </xs:complexType>
                       </xs:element>
                     </xs:sequence>

@@ -154,7 +154,7 @@
                       <xs:element name="Link">
                         <xs:complexType>
                           <xs:attribute name="href" type="xs:string"/>
-                          <xs:attribute name="rel" type="xs:NMTOKEN"/>
+                          <xs:attribute name="rel" type="xs:string"/>
                         </xs:complexType>
                       </xs:element>
                     </xs:sequence>
