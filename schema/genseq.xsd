@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+<xs:simpleType name="site_loc_class">
+  <xs:restriction base="xs:NMTOKEN">
+    <xs:enumeration value="START"/>
+    <xs:enumeration value="STOP"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="feature_class">
+  <xs:restriction base="xs:NMTOKEN">
+    <xs:enumeration value="GENE"/>
+    <xs:enumeration value="TRANSCRIPT"/>
+    <xs:enumeration value="EXON"/>
+    <xs:enumeration value="CDS"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:simpleType name="link_class">
+  <xs:restriction base="xs:NMTOKEN">
+    <xs:enumeration value="GENE"/>
+    <xs:enumeration value="SEQ"/>
+  </xs:restriction>
+</xs:simpleType>
 
 <xs:element name="Sequence">
   <xs:complexType>
@@ -14,7 +36,7 @@
       <xs:element name="Feature-tables" minOccurs="0" maxOccurs="1">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="Feature-table" minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Feature-table" minOccurs="1" maxOccurs="1">
               <xs:complexType>    
                 <xs:sequence>
                   <xs:element name="Feature" minOccurs="1" maxOccurs="unbounded">
@@ -30,12 +52,12 @@
                            <xs:complexType>
                              <xs:attribute name="endpos" type="xs:integer" use="required" />
                              <xs:attribute name="startpos" type="xs:integer" use="required" />
-                             <xs:attribute name="complement" type="xs:integer" use="required" />
+                             <xs:attribute name="complement" type="xs:boolean" use="required" />
                            </xs:complexType>
                         </xs:element>
                         <xs:element name="Site-loc" minOccurs="0" maxOccurs="unbounded" >
                            <xs:complexType>
-                             <xs:attribute name="class" type="xs:string" use="required" />
+                             <xs:attribute name="class" type="site_loc_class" use="required" />
                              <xs:attribute name="sitepos" type="xs:integer" use="required" />
                              <xs:attribute name="complement" type="xs:integer" use="required" />
                            </xs:complexType>
@@ -43,16 +65,16 @@
                         <xs:element name="Link" minOccurs="0" maxOccurs="unbounded" >
                            <xs:complexType>
                              <xs:attribute name="href" type="xs:string" use="required" />
-                             <xs:attribute name="rel" type="xs:string" use="required" />
+                             <xs:attribute name="rel" type="link_class" use="required" />
                            </xs:complexType>
                         </xs:element>
                       </xs:sequence>
-                      <xs:attribute name="class" type="xs:string" use="required" />
-                      <xs:attribute name="id" type="xs:NMTOKEN" use="required" />
+                      <xs:attribute name="class" type="feature_class" use="required" />
+                      <xs:attribute name="id" type="xs:ID" use="required" />
                     </xs:complexType>
                   </xs:element>
               </xs:sequence>
-              <xs:attribute name="id" type="xs:NMTOKEN" use="optional" />
+              <xs:attribute name="id" type="xs:ID" use="optional" />
             </xs:complexType>
       </xs:element>
       <xs:element name="Feature-group" minOccurs="0" maxOccurs="unbounded" >
@@ -60,19 +82,19 @@
                   <xs:sequence>
                     <xs:element name="Feature-group-member" minOccurs="1" maxOccurs="unbounded" >
                       <xs:complexType>
-                        <xs:attribute name="feature-type" type="xs:string" use="optional"/>
-                        <xs:attribute name="featref" type="xs:string" use="optional" />
+                        <xs:attribute name="feature-type" type="feature_class" use="required"/>
+                        <xs:attribute name="featref" type="xs:IDREF" use="required" />
                       </xs:complexType>
                     </xs:element>
                     <xs:element name="Link" minOccurs="1" maxOccurs="1">
                       <xs:complexType>
-                        <xs:attribute name="href" type="xs:string" use="optional" />
-                        <xs:attribute name="rel" type="xs:string" use="optional" />
+                        <xs:attribute name="href" type="xs:string" use="required" />
+                        <xs:attribute name="rel" type="link_class" use="required" />
                       </xs:complexType>
                     </xs:element>
                   </xs:sequence>
-                  <xs:attribute name="id" type="xs:string" use="required" />
-                  <xs:attribute name="group-set" type="xs:string" use="required" />
+                  <xs:attribute name="id" type="xs:ID" use="required" />
+                  <xs:attribute name="group-set" type="xs:IDREF" use="required" />
                 </xs:complexType>
               </xs:element>
       </xs:sequence>
@@ -82,16 +104,16 @@
       <xs:element name="Seq-data-import" minOccurs="0" maxOccurs="1" >
         <xs:complexType>
           <xs:attribute name="format" type="xs:string" use="required"/>
-          <xs:attribute name="id" type="xs:NMTOKEN" use="required"/>
+          <xs:attribute name="id" type="xs:ID" use="required"/>
           <xs:attribute name="source" type="xs:string" use="required" />
         </xs:complexType>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="id" type="xs:ID" use="required" />
     <xs:attribute name="molecule" type="xs:string" use="optional" />
-    <xs:attribute name="title" type="xs:NMTOKEN" use="optional" />
-    <xs:attribute name="length" type="xs:NMTOKEN" />
-    <xs:attribute name="topology" type="xs:string" />
+    <xs:attribute name="title" type="xs:string" use="optional" />
+    <xs:attribute name="length" type="xs:integer" use="optional"/>
+    <xs:attribute name="topology" type="xs:string" use="optional"/>
   </xs:complexType>
 </xs:element>
 
