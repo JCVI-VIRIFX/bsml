@@ -7,9 +7,9 @@
 # for building Bsml sequences.
 
 use lib "../src/";
-use BsmlBuilder;
+use BSML::BsmlBuilder;
 
-my $doc = new BsmlBuilder;
+my $doc = new BSML::BsmlBuilder;
 
 open( INFILE, $ARGV[0] ) or die "Could not open input file\n";
 
