@@ -37,16 +37,18 @@ sub readSequence
 
     my $returnhash = {};
     
-    $returnhash->{ 'id' } = $seq->returnattr( 'id' );
-    $returnhash->{ 'title'} = $seq->returnattr( 'title' );
-    $returnhash->{ 'molecule'} = $seq->returnattr( 'molecule' );
-    $returnhash->{ 'length' } = $seq->returnattr( 'length' );
-    $returnhash->{ 'locus' } = $seq->returnattr( 'locus' );
+    $returnhash->{ 'id' }       = $seq->returnattr( 'id' );
+    $returnhash->{ 'title'}     = $seq->returnattr( 'title' );
+    $returnhash->{ 'molecule'}  = $seq->returnattr( 'molecule' );
+    $returnhash->{ 'length' }   = $seq->returnattr( 'length' );
+    $returnhash->{ 'locus' }    = $seq->returnattr( 'locus' );
     $returnhash->{ 'dbsource' } = $seq->returnattr( 'dbsource' );
     $returnhash->{ 'icAcckey' } = $seq->returnattr( 'icAcckey' );
     $returnhash->{ 'topology' } = $seq->returnattr( 'topology' );
-    $returnhash->{ 'strand' } = $seq->returnattr( 'strand' );
-    
+    $returnhash->{ 'strand' }   = $seq->returnattr( 'strand' );
+    $returnhash->{ 'class' }    = $seq->returnattr( 'class' );
+
+
     return $returnhash;
 }
 
