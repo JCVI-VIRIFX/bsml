@@ -2213,6 +2213,8 @@ sub readSnps
 	    
 	    # there is only one site location in a SNP definition
 	    $snp_record->{'ref_pos'} = $record->{'locations'}->[0]->{'startpos'};
+	    $snp_record->{'ref_end'} = $record->{'locations'}->[0]->{'endpos'};
+
 	    $snp_record->{'ref_complement'} = $record->{'locations'}->[0]->{'complement'};
 
 	    my $refFeat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $snp_record->{'ref_id'} );
@@ -2232,6 +2234,7 @@ sub readSnps
 
 	    # there is only one site location in a SNP definition
 	    $snp_record->{'query_pos'} = $record->{'locations'}->[0]->{'startpos'};
+	    $snp_record->{'query_end'} = $record->{'locations'}->[0]->{'endpos'};
 	    $snp_record->{'query_complement'} = $record->{'locations'}->[0]->{'complement'};
 
 	    $rhash = $self->readElement( $queryFeat );
