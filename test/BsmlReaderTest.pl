@@ -10,7 +10,7 @@ my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-$aahash = $reader->get_all_protein_dna( 'PNEUMO_19' );
+#$aahash = $reader->get_all_protein_dna( $ARGV[1] );
 
-print $aahash->{'ORFO00198_0'};
+#print $aahash->{'ORFO00198_0'};
 

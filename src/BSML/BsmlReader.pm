@@ -759,6 +759,12 @@ sub get_all_protein_dna
 
     my $returnhash = {};
 
+    my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($assembly_id);
+    if(!(ref($seq) eq 'BSML::BsmlSequence'))
+    {
+	print STDERR "BsmlReader::get_all_protein_dna - Warning assembly id ($assembly_id) was not found.\n";
+    }
+
     foreach my $gene( $self->returnAllGeneIDs() )
       {
 	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
@@ -1152,6 +1158,12 @@ sub subSequence
 
     my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
     
+    if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
+    {
+	print STDERR "BsmlReader::subSequence - Error Sequence ID ($seqId) was not found in the document.\n";
+	return '';
+    }
+
     my $seqdat = $seq->returnSeqData();
 
     if( !($seqdat) ){
