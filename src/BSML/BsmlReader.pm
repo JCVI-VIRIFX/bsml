@@ -427,6 +427,30 @@ sub readLinks
     return $elem->returnBsmlLinkListR();
   }
 
+sub readFeatureGroup
+  {
+    my $self = shift;
+    my ($FeatureGroup) = @_;
+
+    my $returnhash = {};
+
+    $returnhash->{'id'} = $FeatureGroup->returnattr( 'id' );
+    $returnhash->{'group-set'} = $FeatureGroup->returnattr( 'group-set' );
+    $returnhash->{'cdata'} = $FeatureGroup->returnText();
+    $returnhash->{'feature-members'} = [];
+
+    foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()})
+      {
+	push( @{$returnhash->{'feature-members'}}, { 'featref' => $featmemb->{'feature'},
+		     'feature-type' => $featmemb->{'feature-type'},
+		     'group-type' => $featmemb->{'group-type'},
+		     'cdata' => $featmemb->{'text'}
+		   });
+      }
+
+    return $returnhash;
+  }
+
 
 
 1
