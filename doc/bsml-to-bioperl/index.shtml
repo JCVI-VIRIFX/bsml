@@ -6,26 +6,24 @@
 <!--#include virtual="/include/header_ifx.inc"-->
 
 <div align="center">
-  <p class="title">TIGR-BSML to Bioperl Adaptor</p>
+  <p class="title">TIGR-BSML to Bioperl Adapter</p>
 </div>
 	<div class="maintext">
 
 <!-- BEGIN MAIN BODY -->	
 
 <hr>
-
 <br>
 <br>
-<p>
 <b>Description</b><br>
-The TIGR-BSML to Bioperl adaptor is a set of <a href='http://www.bioperl.org'>Bioperl</a> 
+The TIGR-BSML to Bioperl adapter is a set of <a href='http://www.bioperl.org'>Bioperl</a> 
 modules that use the <a href='/ifx/devel/cas/bsml'>BSML object layer</a> to allow Bioperl 
 scripts to read and write BSML files that adhere to the BSML encoding conventions used 
 at TIGR.
-</p>
 
 <p>
 <b>Documentation</b><br>
+<a href='oct-01-2003-group-mtg/'>October 1, 2003 presentation</a> on feasibility of writing Bioperl adapter.
 </p>
 
 <p>
