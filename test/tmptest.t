@@ -15,7 +15,7 @@ use Data::Dumper;
 
 $outfile = 'euk.bsml';
 
-print '1..4',"\n";
+print '1..5',"\n";
 
 my $doc = new BSML::BsmlBuilder;
 $doc->makeCurrentDocument();
@@ -45,8 +45,11 @@ $Feat = $doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-TRANSCRIPT', '',
 $doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-TRANSCRIPT', 'TRANSCRIPT', '', '' );
 
 $Feat = $doc->createAndAddFeature( $FTable, 'M1396-03861-CDS', '', 'CDS', '', '' );
-$doc->createAndAddSiteLoc( $Feat, 70, 0 );
+$doc->createAndAddSiteLoc( $Feat, 70, 0, 'CDS_START' );
+$doc->createAndAddSiteLoc( $Feat, 7366, 0, 'CDS_STOP' );
 $doc->createAndAddLink( $Feat, 'SEQ', '#M1396-03861TranslatedSequence' );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-CDS', 'CDS', '', '' );
+
 
 $doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON1', '', 'EXON', '', '', 70, 110, 0 );
 $doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON1', 'EXON', '', '' );
@@ -173,3 +176,16 @@ my $rlist = $reader->geneIdtoGenomicCoords( 'M1396-03861' );
 	print 'not ok 4',"\n";
     }
 }
+
+my $rvalue = system( "/usr/local/annotation/PNEUMO/chauser_dir/xmlvalid-1-0-0-Linux-i586/xmlvalid -q $outfile" );
+
+if( $rvalue == 0 )
+{
+    print 'ok 5',"\n";
+}
+else
+{
+    print 'not ok 5',"\n";
+}
+
+
