@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
 <!--Representing a single exon gene feature with names and translation.  
 The unspliced transcript sequence and protein translation are available in this representation.  
 The CDS boundaries/sequence is not available-->
-<bsml>
-  <definitions>
-    <sequences>
-      <sequence id="tba1:92" ic-acckey="AC009259" molecule="dna"
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence id="tba1:92" ic-acckey="AC009259" molecule="dna"
       title="tba1 asmbl_id 92">
-        <attribute name="chromosome" content="6" />
+        <Attribute name="chromosome" content="6" />
         <Feature-tables>
           <Feature-table>
-            <Feature id="92.m00221" class="GENE" value-type="gene"
+            <Feature id="_92.m00221" class="GENE" value-type="gene"
             title="RFC4" display-auto="1">
               <!--Gene name pulled from ident_xref where xref_type = 'gene name'-->
 <Qualifier value-type="gene" value="RFC4" />
@@ -28,11 +29,10 @@ interval-loc specifies the span and subsequent interval-locs specify the exon bo
             </Feature>
           </Feature-table>
         </Feature-tables>
-        <Seq-data>AGTC......</Seq-data>
-      </sequence>
-    </sequences>
-  </definitions>
-</bsml>
+      </Sequence>
+    </Sequences>
+  </Definitions>
+</Bsml>
 <!--select f.feat_name,f.end5,f.end3,f.sequence,f.protein,i.com_name,i.locus,i.gene_sym 
 from asm_feature f, asm_feature f2, feat_link l, phys_ev p, ident i
 where f.feat_name = l.child_feat
