@@ -261,8 +261,11 @@ sub addBsmlLink
     my $self = shift;
     my ($rel, $href) = @_;
 
-    push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href});
-    return @{$self->{'BsmlLink'}} - 1;
+    if( defined($rel) && defined($href) )
+    {
+	push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href});
+	return @{$self->{'BsmlLink'}} - 1;
+    }
   }
 
 sub setBsmlLink
