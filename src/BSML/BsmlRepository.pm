@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.8 2004/01/19 15:48:26 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.9 2004/01/19 16:00:12 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.8 $. 
-Last modified on $Date: 2004/01/19 15:48:26 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.9 $. 
+Last modified on $Date: 2004/01/19 16:00:12 $
 
 =head1 SYNOPSIS
 
@@ -49,7 +49,7 @@ sub new {
     $self->{_BSML_FILE_EXT} = ".bsml";
     $self->{_BSML_SUBDIR} = "BSML_repository";
     $self->_init(@_);
-    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{"_NAME"}."/".$self->{_BSML_SUBDIR};
+    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".uc($self->{"_NAME"})."/".$self->{_BSML_SUBDIR};
     $self->{_logger}->debug("Setting repository path $self->{_PATH}") if($self->{_logger}->is_debug());
     return $self;
 }
