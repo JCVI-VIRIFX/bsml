@@ -1,0 +1,776 @@
+$VAR1 = bless( {
+                 'species' => bless( {}, 'Bio::Species' ),
+                 '_secondary_accession' => [],
+                 '_as_feat' => [
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       sub { "DUMMY" }
+                                                                     ],
+                                          '_gsf_seq' => bless( {
+                                                                 '_seq_length' => '15561',
+                                                                 'display_id' => 'unspecified',
+                                                                 '_root_verbose' => 0
+                                                               }, 'Bio::PrimarySeq' ),
+                                          '_location' => bless( {
+                                                                  '_start' => '6616',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '7017'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6616',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6616'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '7017',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '7017'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 6616,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 7017
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '6616',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '7017'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6616',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6616'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '7017',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '7017'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 6616,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 7017
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '10144',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '11487'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '10144',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '10144'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '11487',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '11487'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 10144,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 11487
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '10144',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '11487'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '10144',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '10144'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '11487',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '11487'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 10144,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 11487
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '14138',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '14989'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '14138',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '14138'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '14989',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '14989'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 14138,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 14989
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '14138',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '14989'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '14138',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '14138'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '14989',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '14989'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 14138,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 14989
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '1259',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '3565'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '1259',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '1259'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '3565',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '3565'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 1259,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 3565
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '1259',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '3565'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '1259',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '1259'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '3565',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '3565'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 1259,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 3565
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '4620',
+                                                                  '_strand' => -1,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '4438'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '4620',
+                                                                                                 '_strand' => -1,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '4620'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '4438',
+                                                                                                 '_strand' => -1,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '4438'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 4438,
+                                                                  '_strand' => -1,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 4620
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '4620',
+                                                                  '_strand' => -1,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '4438'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '4620',
+                                                                                                 '_strand' => -1,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '4620'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '4438',
+                                                                                                 '_strand' => -1,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '4438'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 4438,
+                                                                  '_strand' => -1,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 4620
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'GENE',
+                                          '_gsf_tag_hash' => {
+                                                               'name' => [
+                                                                           'lma2_98_assembly'
+                                                                         ]
+                                                             },
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '6546',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '6944'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6546',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6546'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6944',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6944'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'TRANSCRIPT',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 6546,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 6944
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_primary_tag' => 'EXON',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => '6546',
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => '6944'
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' ),
+                                 bless( {
+                                          '_gsf_sub_array' => [
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6546',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6546'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' ),
+                                                                bless( {
+                                                                         '_gsf_tag_hash' => {},
+                                                                         '_root_cleanup_methods' => [
+                                                                                                      $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                                                    ],
+                                                                         '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                                                         '_location' => bless( {
+                                                                                                 '_start' => '6944',
+                                                                                                 '_strand' => 0,
+                                                                                                 '_location_type' => 'EXACT',
+                                                                                                 '_end' => '6944'
+                                                                                               }, 'Bio::Location::Simple' ),
+                                                                         '_parse_h' => {}
+                                                                       }, 'Bio::SeqFeature::Generic' )
+                                                              ],
+                                          '_primary_tag' => 'CDS',
+                                          '_gsf_tag_hash' => {},
+                                          '_root_cleanup_methods' => [
+                                                                       $VAR1->{'_as_feat'}[0]{'_root_cleanup_methods'}[0]
+                                                                     ],
+                                          '_gsf_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                                          '_location' => bless( {
+                                                                  '_start' => 6546,
+                                                                  '_strand' => 0,
+                                                                  '_location_type' => 'EXACT',
+                                                                  '_end' => 6944
+                                                                }, 'Bio::Location::Simple' ),
+                                          '_parse_h' => {}
+                                        }, 'Bio::SeqFeature::Generic' )
+                               ],
+                 'primary_seq' => $VAR1->{'_as_feat'}[0]{'_gsf_seq'},
+                 '_annotation' => bless( {
+                                           '_typemap' => bless( {
+                                                                  '_type' => {
+                                                                               'comment' => 'Bio::Annotation::Comment',
+                                                                               'reference' => 'Bio::Annotation::Reference',
+                                                                               'assembly' => 'Bio::Annotation::SimpleValue',
+                                                                               'dblink' => 'Bio::Annotation::DBLink'
+                                                                             }
+                                                                }, 'Bio::Annotation::TypeManager' ),
+                                           '_annotation' => {
+                                                              'assembly' => [
+                                                                              bless( {
+                                                                                       'value' => 'lma2_98_assembly',
+                                                                                       '_root_verbose' => 0
+                                                                                     }, 'Bio::Annotation::SimpleValue' )
+                                                                            ]
+                                                            }
+                                         }, 'Bio::Annotation::Collection' ),
+                 '_molecule' => 'DNA',
+                 '_dates' => [],
+                 '_root_verbose' => 0
+               }, 'Bio::Seq::RichSeq' );
