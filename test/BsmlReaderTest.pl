@@ -10,7 +10,7 @@ my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-$aahash = $reader->get_all_alignments();
+$aahash = $reader->returnAllIdentifiers();
 
 print Dumper( %{$aahash} );
 

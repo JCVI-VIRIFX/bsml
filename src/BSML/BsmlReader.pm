@@ -471,7 +471,7 @@ sub readFeatureGroup
 						       });
 	  }
 
-	foreach my $featlink (@{$$FeatureGroup->returnBsmlLinkListR()})
+	foreach my $featlink (@{$FeatureGroup->returnBsmlLinkListR()})
 	{
 	    push( @{$returnhash->{'links'}}, { 'rel' => $featlink->{'rel'},
 					       'href' => $featlink->{'href'} });
@@ -515,6 +515,75 @@ sub returnAllGeneIDs
     
     return $self->returnAllFeatureGroupSetIds();
   }
+
+# Returns a hash structure containing clusters of identifiers. 
+#
+# {$seqId}
+#   {$geneId}
+#     {$transcriptId}
+#       {'exonIds'} -> [$exonId1, $exonId2, etc]
+#       {'cdsId'} -> $cdsId
+#       {'featureGroupId'} -> $featureGroupId
+#       {'proteinId'} -> $proteinId
+
+sub returnAllIdentifiers
+{
+    my $self = shift;
+
+    my $rhash = {};
+   
+    foreach my $geneId ( $self->returnAllFeatureGroupSetIds() )
+    {
+	foreach my $fgroup ( @{BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId)} )
+	{
+	    my $seqId = $fgroup->returnParentSequenceId();
+	    my $groupDat = $self->readFeatureGroup( $fgroup );
+
+	    my $transcriptId = '';
+	    my $exonIds = [];
+	    my $cdsId = '';
+	    my $featureGroupId = $groupDat->{'id'};
+	    my $proteinId = '';
+
+	    foreach my $featmember (@{$groupDat->{'feature-members'}})
+	    {
+		if( $featmember->{'feature-type'} eq 'CDS' )
+		{
+		    $cdsId = $featmember->{'featref'};
+		    
+		    my $cdsObj = BSML::BsmlDoc::BsmlReturnDocumentLookup( $cdsId );
+
+		    foreach my $link (@{$self->readLinks($cdsObj)})
+		    {
+			if( $link->{'rel'} eq 'SEQ' )
+			{
+			    $proteinId = $link->{'href'};
+			    $proteinId =~ s/#//;
+			}
+		    }
+
+		}
+
+		if( $featmember->{'feature-type'} eq 'TRANSCRIPT' )
+		{
+		    $transcriptId = $featmember->{'featref'};
+		}
+
+		if( $featmember->{'feature-type'} eq 'EXON' )
+		{
+		    push( @{$exonIds}, $featmember->{'featref'} );
+		}
+	    }
+
+	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'exonIds'} = $exonIds;
+	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'cdsId'} = $cdsId;
+	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'featureGroupId'} = $featureGroupId;
+	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'proteinId'} = $proteinId;
+	}
+    }
+
+    return $rhash;
+}
 
 #Return the assembly id (eg 'PNEUMO_19') from which a sequence is contained or derived.
 #Use the sequences id as input.
