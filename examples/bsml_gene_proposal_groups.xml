@@ -30,27 +30,69 @@
             </Feature>
             <Feature id="M1396-03861CDS" class="CDS" >
               <Qualifier value-type="name" value="PF14_0392" />
+
+<!-- Does anyone have a preference to identifying the CDS start and end site
+     as a single Interval-loc or two Site-locs? -->
+
               <Site-loc class="START" sitepos="70" complement="0" />
               <Site-loc class="STOP"  sitepos="7366" complement="0" />
+              
+<!-- Alternative Representation
               <Interval-loc startpos="70" endpos="7366" />
+-->
               <Link rel="SEQ" href="#M1396-03861TranslatedSequence" />
             </Feature>
           </Feature-table>
+  
+<!--Do the relationship types (eg. part-of, produced by) need to
+stated explicitly in the XML?  Scripts, objects, database can/will be
+aware of the proper relationship.  Is there any need for the
+group-type attribute of feature-group-member? -->
+
+          <Feature-group group-set="PF14_0392_relationships">
+            <Feature-group-member featref="M1396-03861Transcript" 
+               feature-type="TRANSCRIPT" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861CDS" 
+               feature-type="CDS" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861" 
+               feature-type="GENE" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon1" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon2" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon3" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon4" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon5" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+          </Feature-group>
+
+<!--Alternative representation of above.
           <Feature-group group-set="PF14_0392_GeneCDSTranscript">
-            <Feature-group-member featref="M1396-03861Transcript" feature-type="TRANSCRIPT"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861CDS" feature-type="CDS"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861" feature-type="GENE"></Feature-group-member>
-            <Link rel="GENE" href="#M1396-03861"></Link>
+            <Feature-group-member featref="M1396-03861Transcript" 
+               feature-type="TRANSCRIPT" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861CDS" 
+               feature-type="CDS" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861" 
+               feature-type="GENE" group-type = "??"></Feature-group-member>
           </Feature-group>
           <Feature-group group-set="PF14_0392_Exons">
-            <Feature-group-member featref="M1396-03861Exon1" feature-type="EXON"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861Exon2" feature-type="EXON"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861Exon3" feature-type="EXON"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861Exon4" feature-type="EXON"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861Exon5" feature-type="EXON"></Feature-group-member>
-            <Feature-group-member featref="M1396-03861" feature-type="GENE"></Feature-group-member>
-            <Link rel="GENE" href="#M1396-03861"></Link>
+            <Feature-group-member featref="M1396-03861Exon1" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon2" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon3" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon4" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon5" 
+               feature-type="EXON" group-type = "??"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Transcript" 
+               feature-type="TRANSCRIPT" group-type = "??"></Feature-group-member>
           </Feature-group>
+-->
+
        </Feature-tables>
        <Seq-data-import format="fasta" source="/usr/local/sequences/chr1.fa" id="CT1234" />
       </Sequence>
