@@ -660,7 +660,12 @@ sub seqIdtoAssemblyId
       }
   }
 
-#Returns a reference to a list of sequence objects given an assembly id.
+# Returns a reference to a list of sequence objects given an assembly id.
+# For Gene Model Bsml documents this will return references to the assembly's 
+# genomic sequence and associated amino acid sequences.
+#
+# Pairwise alignment documents do not set this attribute and will return an
+# empty list.
 
 sub assemblyIdtoSeqList
   {
@@ -669,8 +674,14 @@ sub assemblyIdtoSeqList
 
     my $rlist = [];
 
+    # loop through all the sequence objects referenced in the document
+
     foreach my $seq ( @{$self->returnAllSequences()} )
       {
+
+	  # Check if the sequence object has a BSML Attribute element with name ASSEMBLY and
+	  # value equal to the input assembly id
+
 	if( $seq->returnBsmlAttr( 'ASSEMBLY' ) eq $assemblyId )
 	  {
 	    push( @{$rlist}, $seq );
@@ -691,8 +702,8 @@ sub assemblyIdtoGeneList
 
     foreach my $geneId ($self->returnAllGeneIDs() )
       {
-	# This loops through all the featuregroup set ids (genes) in the document.
-	# ChecksG to see if the gene is on the assembly of interest
+	# This loops through all the featuregroup set ids (genes) in the document and 
+	# checks to see if the gene is on the assembly of interest
 
 	if( $self->geneIdtoAssemblyId($geneId) eq $assemblyId )
 	  {
