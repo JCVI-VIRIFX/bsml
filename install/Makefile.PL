@@ -19,7 +19,6 @@ if(!$isschemadocsdir){
     warn "You must specify a SCHEMA_DOCS_DIR if you want to install XML schemas and the BSML dtd.\n".
 	"XML schema and DTD files will be stored in this directory\n".
 	"Eg. \n\nperl Makefile.PL PREFIX=/usr/local/devel/ANNOTATION/shared SCHEMA_DOCS_DIR=/usr/local/devel/ANNOTATION/shared/docs\n\n".
-	"The default is SCHEMA_DOCS_DIR $schemadocsdir\n";
 }
 else{
     print "Ignore the following warning: ";
