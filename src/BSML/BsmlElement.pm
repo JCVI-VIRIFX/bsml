@@ -78,6 +78,8 @@ B<Parameters:> ($hashref) a reference pointing to a hash containing the key valu
 
 B<Returns:> None
 
+=cut
+
 sub setattrh
   {
     my $self = shift;
