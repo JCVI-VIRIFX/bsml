@@ -1,8 +1,39 @@
 package BsmlParserTwig;
 
-#
-# package to parse bsml input from file using XML::Twig
-#
+=head1 NAME
+
+  BsmlParserTwig.pm - Bsml Parsing Class built on XML::Twig
+
+=head1 VERSION
+
+This document refers to version 1.0 of the BSML Object Layer
+
+=head1 SYNOPSIS
+
+  Parsing a BSML Document into the BSML Object Layer
+
+  my $doc = new BsmlDoc;
+  my $parser = new BsmlParserTwig;
+
+  $parser->parse( $doc, $fname );
+
+=head1 DESCRIPTION
+
+=head2 Overview
+
+  This file provides a parsing class written on top of XML::Twig to populate 
+  a BsmlDoc with data provided in a BSML file. XML::Twig is used to process 
+  subtrees at the Sequence level. XML::Twig does not apply XML validation.
+
+=head2 Constructor and initialization
+
+  my $parser = new BsmlParserTwig;
+
+=head2 Class and object methods
+
+=over 4
+
+=cut
 
 use strict;
 use warnings;
@@ -16,16 +47,18 @@ sub new
     my $self = {};
     bless $self, $class;
     
-    $self->init();
     return $self;
   }
 
-sub init
-  {
-    my $self = shift;
-  }
+=item $parser->parse( $bsml_doc, $filename )
 
-# parse the contents of $filename into the BSML Document Object $bsml_doc
+B<Description:> parse the contents of $filename into the BSML Document Object $bsml_doc
+
+B<Parameters:> ($bsml_doc, $filename) - a BsmlDoc object, a filename pointing to a BSML document
+
+B<Returns:> None
+
+=cut
 
 sub parse
   {
@@ -47,6 +80,13 @@ sub parse
 
     $twig->parsefile( $filename );
   }
+
+# This is a private method implemented as an XML::Twig handler object. It is 
+# called each time XML::Twig successfully and completely parses the subtree
+# rooted at a Sequence element. The primary parse tree should be purged each time this
+# method completes to handle memory efficiently. This method will need to be extended 
+# to add support for additional BSML elements as they are chosen to be incorporated into
+# the api.
 
 sub sequenceHandler
   {
