@@ -56,6 +56,9 @@
 
 /*
  * $Log: SAX2PrintHandlers.cpp,v $
+ * Revision 1.2  2003/08/14 19:52:56  chauser
+ * revised output of xsdValid and dtdValid for db2bsml, added usage statements
+ *
  * Revision 1.1  2003/05/15 14:39:41  chauser
  * Xerces xsdValid added to schema directory
  *
@@ -144,7 +147,7 @@ SAX2PrintHandlers::SAX2PrintHandlers( const   char* const              encodingN
     //  is not the best answer, but its the best we can do until we
     //  have SAX2 support.
     //
-    fFormatter << gXMLDecl1 << fFormatter.getEncodingName() << gXMLDecl2;
+    //fFormatter << gXMLDecl1 << fFormatter.getEncodingName() << gXMLDecl2;
 }
 
 SAX2PrintHandlers::~SAX2PrintHandlers()

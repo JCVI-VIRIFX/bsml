@@ -56,6 +56,9 @@
 
 /*
  * $Log: SAX2Print.cpp,v $
+ * Revision 1.2  2003/08/14 19:52:56  chauser
+ * revised output of xsdValid and dtdValid for db2bsml, added usage statements
+ *
  * Revision 1.1  2003/05/15 14:39:40  chauser
  * Xerces xsdValid added to schema directory
  *
@@ -147,28 +150,10 @@ static bool                     namespacePrefixes = false;
 // ---------------------------------------------------------------------------
 static void usage()
 {
-    cout << "\nUsage:\n"
-            "    SAX2Print [options] <XML file>\n\n"
-            "This program invokes the SAX2XMLReader, and then prints the\n"
-            "data returned by the various SAX2 handlers for the specified\n"
-            "XML file.\n\n"
-            "Options:\n"
-             "    -u=xxx      Handle unrepresentable chars [fail | rep | ref*].\n"
-             "    -v=xxx      Validation scheme [always | never | auto*].\n"
-             "    -e          Expand Namespace Alias with URI's. Defaults to off.\n"
-             "    -x=XXX      Use a particular encoding for output (LATIN1*).\n"
-             "    -f          Enable full schema constraint checking processing. Defaults to off.\n"
-             "    -p          Enable namespace-prefixes feature. Defaults to off.\n"
-             "    -n          Disable namespace processing. Defaults to on.\n"
-             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
-             "    -s          Disable schema processing. Defaults to on.\n"
-             "                NOTE: THIS IS OPPOSITE FROM OTHER SAMPLES.\n"
-             "    -?          Show this help.\n\n"
-             "  * = Default if not provided explicitly.\n\n"
-             "The parser has intrinsic support for the following encodings:\n"
-             "    UTF-8, USASCII, ISO8859-1, UTF-16[BL]E, UCS-4[BL]E,\n"
-             "    WINDOWS-1252, IBM1140, IBM037.\n"
-         <<  endl;
+  cout << "./Xerces-xsdValid << file.xml\n";
+  cout << "Prints xml error codes if validation is not successful, nothing if it is.\n";
+
+  exit(0);
 }
 
 
@@ -178,6 +163,11 @@ static void usage()
 // ---------------------------------------------------------------------------
 int main(int argC, char* argV[])
 {
+  if( argC > 1)
+    {
+      usage();
+    }
+
     // Initialize the XML4C2 system
     try
     {
@@ -233,9 +223,9 @@ int main(int argC, char* argV[])
     int errorCount = 0;
     try
     {
-        SAX2PrintHandlers handler(encodingName, unRepFlags, expandNamespaces);
-        //parser->setContentHandler(&handler);
-        parser->setErrorHandler(&handler);
+      SAX2PrintHandlers handler(encodingName, unRepFlags, expandNamespaces);
+      parser->setErrorHandler(&handler);
+    
       
 	StdInInputSource::StdInInputSource *inputXML = new StdInInputSource::StdInInputSource();
 	parser->parse(*inputXML);
@@ -261,13 +251,12 @@ int main(int argC, char* argV[])
 
     if (errorCount > 0)
       {
-	cerr << "Invalid XML document\n";
+	cout << "Invalid XML document\n";
 	return 4;
       }
     else
       {
-	cerr << "Valid XML document\n";
-        return 0;
+	return 0;
       }
 }
 
