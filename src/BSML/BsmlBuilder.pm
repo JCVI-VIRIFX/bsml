@@ -793,4 +793,22 @@ sub createAndAddFeatureGroupMemberN
     return $self->createAndAddFeatureGroupMember( $args{'featref'}, $args{'feattype'}, $args{'grouptype'}, $args{'cdata'} );
   }
 
+sub createAndAddBsmlAttr
+  {
+    my $self = shift;
+    my ($elm, $key, $value) = @_;
+
+    $elm->addBsmlAttr( $key, $value );
+    return $elm;
+  }
+
+sub createAndAddAttr
+  {
+    my $self = shift;
+    my ($elm, $key, $value) = @_;
+
+    $elm->addattr( $key, $value );
+    return $elm;
+  }
+
 1;
