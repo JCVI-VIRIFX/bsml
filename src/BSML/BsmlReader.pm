@@ -723,8 +723,6 @@ sub geneIdtoAASeqHash
     my $self = shift;
     my ($geneId) = @_;
 
-    print "FLIP\n";
-
     my $returnAASequenceHash = {};
 
     my $fgrouplist = BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
