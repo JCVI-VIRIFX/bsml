@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.19 2004/05/20 21:47:06 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.20 2004/06/03 16:44:33 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.19 $. 
-Last modified on $Date: 2004/05/20 21:47:06 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.20 $. 
+Last modified on $Date: 2004/06/03 16:44:33 $
 
 =head1 SYNOPSIS
 
@@ -47,9 +47,8 @@ sub new {
     my $self = bless {}, ref($class) || $class;
     $self->{_logger} = Workflow::Logger::get_logger(__PACKAGE__);
     $self->{_BSML_FILE_EXT} = "bsml";
-    $self->{_BSML_SUBDIR} = "BSML_repository";
     $self->_init(@_);
-    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{_BSML_SUBDIR};
+    $self->{"_PATH"} = $self->{"_BSML_repository"};
     $self->{_logger}->debug("Setting repository path $self->{_PATH}") if($self->{_logger}->is_debug());
     return $self;
 }
@@ -76,8 +75,11 @@ sub _init {
 	$self->{_logger}->debug("Parsing argument $key=$arg{$key}") if($self->{_logger}->is_debug());
         $self->{"_$key"} = $arg{$key};
     }
-    if(!($self->{"_REPOSITORY_ROOT"})){
-	$self->{_logger}->logdie("Required parameter REPOSITORY_ROOT not passed to object constructor");
+    if(!($self->{"_BSML_repository"})){
+	$self->{_logger}->logdie("Required parameter BSML_repository not passed to object constructor");
+    }
+    if(!(-d $self->{"_BSML_repository"})){
+	$self->{_logger}->logdie("Required parameter BSML_repository is not a valid directory");
     }
 }
 
