@@ -99,15 +99,15 @@ sub readNumbering
     return $self->readElement( $numbering );
 }
 
-sub readCrossReference
-{
-    my $self = shift;
-    my ($seq) = @_;
-
-    my $xref = $seq->returnBsmlCrossReferenceR();
-
-    return $self->readElement( $xref );
-}
+#sub readCrossReference
+#{
+#    my $self = shift;
+#    my ($seq) = @_;
+#
+#    my $xref = $seq->returnBsmlCrossReferenceR();
+#
+#    return $self->readElement( $xref );
+#}
 
 
 sub readFeatures
