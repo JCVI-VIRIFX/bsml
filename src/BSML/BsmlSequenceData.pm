@@ -29,7 +29,7 @@ sub init
 }
 
 # Set the alignment sequence data
-sub addBsmlSequenceAlignmentData
+sub addSequenceAlignmentData
 {
     my $self = shift;
 

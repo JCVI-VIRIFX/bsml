@@ -1,5 +1,8 @@
 package BSML::BsmlElement;
 
+use warnings;
+use strict;
+
 =head1 NAME
 
 BsmlElement.pm - Base Class for Bsml Elements

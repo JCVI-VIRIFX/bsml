@@ -933,4 +933,114 @@ sub createAndAddAnalysis
     return $analysis;
 }
 
+# Support for multiple sequence alignments
+
+sub createAndAddMultipleAlignmentTable
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $multipleAlignmentTable = $self->returnBsmlMultipleAlignmentTableR( $self->addBsmlMultipleAlignmentTable() );
+
+    $multipleAlignmentTable->addattr( 'molecule-type', $args{'molecule-type'} );
+    
+    return $multipleAlignmentTable;
+}
+
+sub createAndAddAlignmentSummary
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $table = $args{'multipleAlignmentTable'};
+    my $seqType = $args{'seq-type'};
+    my $seqFormat = $args{'seq-format'};
+    
+    my $alignmentSummary = $table->returnBsmlAlignmentSummaryR( $table->addBsmlAlignmentSummary() );
+
+    $alignmentSummary->addattr( 'seq-type', $seqType );
+    $alignmentSummary->addattr( 'seq-format', $seqFormat );
+
+    return $alignmentSummary;
+}
+
+sub createAndAddAlignedSequence
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $alignmentSummary = $args{'alignmentSummary'};
+ 
+    my $alignedSequence = $alignmentSummary->returnBsmlAlignedSequenceR( $alignmentSummary->addBsmlAlignedSequence() );
+    $alignedSequence->addattr( 'seqref', $args{'seqref'} );
+    $alignedSequence->addattr( 'start', $args{'start'} );
+    $alignedSequence->addattr( 'on-complement', $args{'on-complement'} );
+    $alignedSequence->addattr( 'translated', $args{'translated'} );
+    $alignedSequence->addattr( 'frame', $args{'frame'} );
+    $alignedSequence->addattr( 'trans-table', $args{'trans-table'} );
+    $alignedSequence->addattr( 'seqnum', $args{'seqnum'} );
+    $alignedSequence->addattr( 'name', $args{'name'} );
+    $alignedSequence->addattr( 'length', $args{'length'} );
+
+    return $alignedSequence;    
+}
+
+sub createAndAddPairwiseAlignments
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $table = $args{'multipleAlignmentTable'};
+    
+    my $PairwiseAlns = $table->returnBsmlPairwiseAlignmentsR( $table->addBsmlPairwiseAlignments() );
+
+    return $PairwiseAlns;
+}
+
+sub createAndAddAlignedPair
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $PairwiseAlns = $args{'pairwiseAlignments'};
+    my $pair = $PairwiseAlns->returnBsmlAlignedPairR( $PairwiseAlns->addBsmlAlignedPair() );
+
+    $pair->addattr( 'seqnum1', $args{'seqnum1'} );
+    $pair->addattr( 'seqnum2', $args{'seqnum2'} );
+    $pair->addattr( 'score', $args{'score'} );
+
+    return $pair;
+}
+
+sub createAndAddSequenceAlignment
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $table = $args{'multipleAlignmentTable'};
+
+    my $seqAln = $table->returnBsmlSequenceAlignmentR( $table->addBsmlSequenceAlignment() );
+
+    $seqAln->addattr( 'sequences', $args{'sequences'} );
+
+    return $seqAln;
+}
+
+sub createAndAddSequenceData
+{
+    my $self = shift;
+    my %args = @_;
+    
+    my $seqAln = $args{'sequenceAlignment'};
+
+    my $seqDat = $seqAln->returnBsmlSequenceDataR( $seqAln->addBsmlSequenceData() );
+
+    $seqDat->addattr( 'seq-name', $args{'seq-name'} );
+    $seqDat->addSequenceAlignmentData( $args{'seq-data'} );
+
+    return $seqDat;
+}
+
+
+
 1;

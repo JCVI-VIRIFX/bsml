@@ -49,8 +49,8 @@ logging will be over-ridden.
 
 use BSML::BsmlElement;
 use XML::Writer;
-#use strict;
-#use warnings;
+# use strict;
+use warnings;
 use BSML::BsmlSequence;
 use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlMultipleAlignmentTable;
