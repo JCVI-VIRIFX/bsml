@@ -57,7 +57,8 @@ sub init
     $self->{ 'BsmlFeatureTables' } = [];
     $self->{ 'BsmlFeatureGroups' } = [];
     $self->{ 'BsmlSeqData' } = '';
-    $self->{ 'BsmlLink' };
+    $self->{ 'BsmlSeqDataImport' } = {};
+    $self->{ 'BsmlLink' } = [];
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -211,6 +212,35 @@ sub returnSeqData
     return $self->{'BsmlSeqData'};
   }
 
+sub addBsmlSeqDataImport
+  {
+    my $self = shift;
+    my ($format, $source) = @_;
+    
+    $self->{'BsmlSeqDataImport'}->{'format'} = $format;
+    $self->{'BsmlSeqDataImport'}->{'source'} = $source;
+  }
+
+sub setBsmlSeqDataImport
+  {
+    my $self = shift;
+    my ($format, $source) = @_;
+
+    $self->addBsmlSeqDataImport( $format, $source );
+  }
+
+sub dropBsmlSeqDataImport
+  {
+    my $self = shift;
+    $self->{'BsmlSeqDataImport'} = {};
+  }
+
+sub returnBsmlSeqDataImport
+  {
+    my $self = shift;
+    return $self->{'BsmlSeqDataImport'};
+  }
+
 =item $seq->addBsmlFeatureGroup()
 
 B<Description:> add a feature group to the sequence
@@ -338,11 +368,21 @@ sub write
 	$writer->endTag( "Feature-tables" );
       }
 
+    # either imbedded or linked sequence data is expected, not both
+
     if( $self->{'BsmlSeqData'} )
       {
 	$writer->startTag( "Seq-data" );
 	$writer->characters( $self->{'BsmlSeqData'} );
 	$writer->endTag( "Seq-data" );
+      }
+    else
+      {
+	if( $self->{'BsmlSeqDataImport'} )
+	  {
+	    $writer->startTag( 'Seq-data-import', %{$self->{'BsmlSeqDataImport'}} );
+	    $writer->endTag( 'Seq-data-import' );
+	  }
       }
 
     foreach my $link (@{$self->{'BsmlLink'}})

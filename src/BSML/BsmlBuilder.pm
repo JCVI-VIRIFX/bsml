@@ -576,12 +576,48 @@ sub createAndAddSeqData
       }
   }
 
+
+
 sub createAndAddSeqDataN
   {
     my $self = shift;
     my %args = @_;
     
-    return $self->createAndAddSeqDataN( $args{'seq'}, $args{'seqdat'} );
+    return $self->createAndAddSeqData( $args{'seq'}, $args{'seqdat'} );
+  }
+
+sub createAndAddSeqDataImport
+  {
+    my $self = shift;
+    my ( $seq, $format, $source ) = @_;
+
+    if( ref($seq) eq 'BsmlSequence' )
+      {
+	$seq->addBsmlSeqDataImport( $format, $source  );	
+	return $seq;
+      }
+    else
+      {
+	my $sequences = $self->returnBsmlSequenceListR();
+	
+	foreach my $seqR ( @{$sequences} )
+	  {
+	    if( $seqR->returnattr('id') eq $seq )
+	      {
+		$seqR->addBsmlSeqDataImport( $format, $source );
+		
+		return $seqR;
+	      }
+	  }
+      }
+  }
+
+sub createAndAddSeqDataImportN
+  {
+    my $self = shift;
+    my %args = @_;
+    
+    return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'} );
   }
 
 sub createAndAddFeatureGroup
