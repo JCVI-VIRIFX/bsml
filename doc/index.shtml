@@ -20,15 +20,18 @@
 BSML is an xml format
 <p>
 <b>Documentation</b><br>
-<a href='http://bsml.sourceforge.net'>Project site</a><br>
-
-<p>
-<b>Software Products</b><br> 
-
-See <a href='/ifx/devel/prism'>Prism</a> and <a
-href='/ifx/devel/papyrus'>Papyrus</a> for software that utilizes BSML.
-
-<p>
+Project site <a href='project_pages/'>[Local]</a>&nbsp;<a href='http://bsml.sourceforge.net'>[Sourceforge]</a><br>
+<a href='rfc_repository_structure'>RFC: Repository structure</a><br>
+    RFC: Perl CLI coding standards 
+  <p> <b>Software Products</b><br>
+    See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
+href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
+<ul>
+<li><em>check_repository</em><br>
+<a href='srs_check_repository.html'>[srs]</a> <a href='use_case_check_repository.html'>[use cases]</a></li>
+</ul>
+</p>
+  <p>
 <b>Code</b><br>
 Perl object layer <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/src'>[CVS]</a><br>
 XML schemas <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/schema/'>[CVS]</a>
