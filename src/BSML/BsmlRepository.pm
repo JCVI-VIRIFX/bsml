@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.2 2004/01/19 15:15:59 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.3 2004/01/19 15:33:04 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.2 $. 
-Last modified on $Date: 2004/01/19 15:15:59 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.3 $. 
+Last modified on $Date: 2004/01/19 15:33:04 $
 
 =head1 SYNOPSIS
 
@@ -65,15 +65,27 @@ sub _init {
     #Each subflow mush have a unique name.  This name is stored in the configuration hash with the following key.
     
     $self->{_BSML_FILE_EXT} = ".bsml";
+    $self->{_BSML_SUBDIR} = "BSML_repository";
 
     my %arg = @_;
     foreach my $key (keys %arg) {
         $self->{"_$key"} = $arg{$key}
     }
-    if(!($self->{"_PATH"})){
-	die "Required parameter PATH not passed to object constructor";
+    if(!($self->{"_REPOSITORY_ROOT"})){
+	die "Required parameter REPOSITORY_ROOT not passed to object constructor";
     }
+    if(!($self->{"_NAME"})){
+	die "Required parameter NAME not passed to object constructor";
+    }
+    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{"_NAME"}."/".$self->{_BSML_SUBDIR};
 }
+
+#return the name of the BSML repository
+sub get_dirname{
+    my $self = shift;
+    return $self->{"_PATH"};
+}
+
 
 #pull list of assemblies from a glob for now.
 #This will work for now because bsml files are named consistently based 
