@@ -53,7 +53,7 @@ sub returnAllSequences
   {
     my $self = shift;
 
-    return $self->returnBsmlSequenceListR();}
+    return $self->returnBsmlSequenceListR();
   }
 
 sub readSequenceDat
