@@ -1372,9 +1372,10 @@ sub subSequence
     my $self = shift;
     my ($seqId, $start, $stop, $complement) = @_;
 
-    if( $complement == 1 && ($start > $stop) )
+    if( ($start > $stop) )
     {
 	($start, $stop) = ($stop, $start);
+	$complement = 1;
     }
 
     my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
