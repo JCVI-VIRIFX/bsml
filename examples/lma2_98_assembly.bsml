@@ -7,166 +7,166 @@
       <Sequence length="15561" title="unspecified" topology="circular" molecule="dna" id="lma2_98_assembly">
         <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
         <Feature-tables>
-          <Feature-table id="Bsml4147">
-            <Feature class="GENE" id="lma2_98.t00001_feature_id_gene:22118">
-              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
-              <Interval-loc endpos="3565" startpos="1259" complement="0"></Interval-loc>
-            </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22117">
-              <Site-loc complement="0" class="START" sitepos="1259"></Site-loc>
-              <Site-loc complement="0" class="STOP" sitepos="3565"></Site-loc>
-            </Feature>
-            <Feature class="EXON" id="exon_22121">
-              <Interval-loc endpos="3565" startpos="1259" complement="0"></Interval-loc>
-            </Feature>
-            <Feature class="CDS" id="cds_22119">
-              <Site-loc complement="0" class="START" sitepos="1259"></Site-loc>
-              <Site-loc complement="0" class="STOP" sitepos="3565"></Site-loc>
-              <Link href="#protein_22120" rel="SEQ"></Link>
-            </Feature>
-            <Feature class="GENE" id="lma2_98.t00002_feature_id_gene:22123">
-              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
-              <Interval-loc endpos="4438" startpos="4620" complement="1"></Interval-loc>
-            </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22122">
-              <Site-loc complement="1" class="START" sitepos="4620"></Site-loc>
-              <Site-loc complement="1" class="STOP" sitepos="4438"></Site-loc>
-            </Feature>
-            <Feature class="EXON" id="exon_22126">
-              <Interval-loc endpos="4438" startpos="4620" complement="1"></Interval-loc>
-            </Feature>
-            <Feature class="CDS" id="cds_22124">
-              <Site-loc complement="1" class="START" sitepos="4620"></Site-loc>
-              <Site-loc complement="1" class="STOP" sitepos="4438"></Site-loc>
-              <Link href="#protein_22125" rel="SEQ"></Link>
-            </Feature>
-            <Feature class="GENE" id="lma2_98.t00003_feature_id_gene:22128">
-              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
-              <Interval-loc endpos="6944" startpos="6546" complement="0"></Interval-loc>
-            </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22127">
-              <Site-loc complement="0" class="START" sitepos="6546"></Site-loc>
-              <Site-loc complement="0" class="STOP" sitepos="6944"></Site-loc>
-            </Feature>
-            <Feature class="EXON" id="exon_22131">
-              <Interval-loc endpos="6944" startpos="6546" complement="0"></Interval-loc>
-            </Feature>
-            <Feature class="CDS" id="cds_22129">
-              <Site-loc complement="0" class="START" sitepos="6546"></Site-loc>
-              <Site-loc complement="0" class="STOP" sitepos="6944"></Site-loc>
-              <Link href="#protein_22130" rel="SEQ"></Link>
-            </Feature>
-            <Feature class="GENE" id="lma2_98.t00004_feature_id_gene:22133">
+          <Feature-table id="Bsml3175">
+            <Feature class="GENE" id="lma2.98.t00004_gene">
               <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
               <Interval-loc endpos="7017" startpos="6616" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22132">
+            <Feature class="TRANSCRIPT" id="lma2.98.t00004_transcript">
               <Site-loc complement="0" class="START" sitepos="6616"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="7017"></Site-loc>
             </Feature>
-            <Feature class="EXON" id="exon_22136">
+            <Feature class="EXON" id="lma2.98.e00010_exon">
               <Interval-loc endpos="7017" startpos="6616" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="CDS" id="cds_22134">
+            <Feature class="CDS" id="lma2.98.m00010_cds">
               <Site-loc complement="0" class="START" sitepos="6616"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="7017"></Site-loc>
-              <Link href="#protein_22135" rel="SEQ"></Link>
+              <Link href="#lma2.98.m00010_protein" rel="SEQ"></Link>
             </Feature>
-            <Feature class="GENE" id="lma2_98.t00005_feature_id_gene:22138">
+            <Feature class="GENE" id="lma2.98.t00005_gene">
               <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
               <Interval-loc endpos="11487" startpos="10144" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22137">
+            <Feature class="TRANSCRIPT" id="lma2.98.t00005_transcript">
               <Site-loc complement="0" class="START" sitepos="10144"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="11487"></Site-loc>
             </Feature>
-            <Feature class="EXON" id="exon_22141">
+            <Feature class="EXON" id="lma2.98.e00011_exon">
               <Interval-loc endpos="11487" startpos="10144" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="CDS" id="cds_22139">
+            <Feature class="CDS" id="lma2.98.m00011_cds">
               <Site-loc complement="0" class="START" sitepos="10144"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="11487"></Site-loc>
-              <Link href="#protein_22140" rel="SEQ"></Link>
+              <Link href="#lma2.98.m00011_protein" rel="SEQ"></Link>
             </Feature>
-            <Feature class="GENE" id="lma2_98.t00006_feature_id_gene:22143">
+            <Feature class="GENE" id="lma2.98.t00006_gene">
               <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
               <Interval-loc endpos="14989" startpos="14138" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="TRANSCRIPT" id="transcript_22142">
+            <Feature class="TRANSCRIPT" id="lma2.98.t00006_transcript">
               <Site-loc complement="0" class="START" sitepos="14138"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="14989"></Site-loc>
             </Feature>
-            <Feature class="EXON" id="exon_22146">
+            <Feature class="EXON" id="lma2.98.e00012_exon">
               <Interval-loc endpos="14989" startpos="14138" complement="0"></Interval-loc>
             </Feature>
-            <Feature class="CDS" id="cds_22144">
+            <Feature class="CDS" id="lma2.98.m00012_cds">
               <Site-loc complement="0" class="START" sitepos="14138"></Site-loc>
               <Site-loc complement="0" class="STOP" sitepos="14989"></Site-loc>
-              <Link href="#protein_22145" rel="SEQ"></Link>
+              <Link href="#lma2.98.m00012_protein" rel="SEQ"></Link>
+            </Feature>
+            <Feature class="GENE" id="lma2.98.t00001_gene">
+              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
+              <Interval-loc endpos="3565" startpos="1259" complement="0"></Interval-loc>
+            </Feature>
+            <Feature class="TRANSCRIPT" id="lma2.98.t00001_transcript">
+              <Site-loc complement="0" class="START" sitepos="1259"></Site-loc>
+              <Site-loc complement="0" class="STOP" sitepos="3565"></Site-loc>
+            </Feature>
+            <Feature class="EXON" id="lma2.98.e00007_exon">
+              <Interval-loc endpos="3565" startpos="1259" complement="0"></Interval-loc>
+            </Feature>
+            <Feature class="CDS" id="lma2.98.m00007_cds">
+              <Site-loc complement="0" class="START" sitepos="1259"></Site-loc>
+              <Site-loc complement="0" class="STOP" sitepos="3565"></Site-loc>
+              <Link href="#lma2.98.m00007_protein" rel="SEQ"></Link>
+            </Feature>
+            <Feature class="GENE" id="lma2.98.t00002_gene">
+              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
+              <Interval-loc endpos="4438" startpos="4620" complement="1"></Interval-loc>
+            </Feature>
+            <Feature class="TRANSCRIPT" id="lma2.98.t00002_transcript">
+              <Site-loc complement="1" class="START" sitepos="4620"></Site-loc>
+              <Site-loc complement="1" class="STOP" sitepos="4438"></Site-loc>
+            </Feature>
+            <Feature class="EXON" id="lma2.98.e00008_exon">
+              <Interval-loc endpos="4438" startpos="4620" complement="1"></Interval-loc>
+            </Feature>
+            <Feature class="CDS" id="lma2.98.m00008_cds">
+              <Site-loc complement="1" class="START" sitepos="4620"></Site-loc>
+              <Site-loc complement="1" class="STOP" sitepos="4438"></Site-loc>
+              <Link href="#lma2.98.m00008_protein" rel="SEQ"></Link>
+            </Feature>
+            <Feature class="GENE" id="lma2.98.t00003_gene">
+              <Qualifier value="lma2_98_assembly" value-type="name"></Qualifier>
+              <Interval-loc endpos="6944" startpos="6546" complement="0"></Interval-loc>
+            </Feature>
+            <Feature class="TRANSCRIPT" id="lma2.98.t00003_transcript">
+              <Site-loc complement="0" class="START" sitepos="6546"></Site-loc>
+              <Site-loc complement="0" class="STOP" sitepos="6944"></Site-loc>
+            </Feature>
+            <Feature class="EXON" id="lma2.98.e00009_exon">
+              <Interval-loc endpos="6944" startpos="6546" complement="0"></Interval-loc>
+            </Feature>
+            <Feature class="CDS" id="lma2.98.m00009_cds">
+              <Site-loc complement="0" class="START" sitepos="6546"></Site-loc>
+              <Site-loc complement="0" class="STOP" sitepos="6944"></Site-loc>
+              <Link href="#lma2.98.m00009_protein" rel="SEQ"></Link>
             </Feature>
           </Feature-table>
-          <Feature-group id="Bsml4148" group-set="lma2_98.t00001_feature_id_gene:22118">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22117"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22121"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22119"></Feature-group-member>
-            <Link href="#lma2_98.t00001_feature_id_gene:22118" rel="GENE"></Link>
+          <Feature-group id="Bsml3176" group-set="lma2.98.t00004_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00004_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00010_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00010_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00004_gene" rel="GENE"></Link>
           </Feature-group>
-          <Feature-group id="Bsml4149" group-set="lma2_98.t00002_feature_id_gene:22123">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22122"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22126"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22124"></Feature-group-member>
-            <Link href="#lma2_98.t00002_feature_id_gene:22123" rel="GENE"></Link>
+          <Feature-group id="Bsml3177" group-set="lma2.98.t00005_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00005_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00011_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00011_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00005_gene" rel="GENE"></Link>
           </Feature-group>
-          <Feature-group id="Bsml4150" group-set="lma2_98.t00003_feature_id_gene:22128">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22127"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22131"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22129"></Feature-group-member>
-            <Link href="#lma2_98.t00003_feature_id_gene:22128" rel="GENE"></Link>
+          <Feature-group id="Bsml3178" group-set="lma2.98.t00006_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00006_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00012_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00012_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00006_gene" rel="GENE"></Link>
           </Feature-group>
-          <Feature-group id="Bsml4151" group-set="lma2_98.t00004_feature_id_gene:22133">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22132"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22136"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22134"></Feature-group-member>
-            <Link href="#lma2_98.t00004_feature_id_gene:22133" rel="GENE"></Link>
+          <Feature-group id="Bsml3179" group-set="lma2.98.t00001_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00001_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00007_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00007_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00001_gene" rel="GENE"></Link>
           </Feature-group>
-          <Feature-group id="Bsml4152" group-set="lma2_98.t00005_feature_id_gene:22138">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22137"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22141"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22139"></Feature-group-member>
-            <Link href="#lma2_98.t00005_feature_id_gene:22138" rel="GENE"></Link>
+          <Feature-group id="Bsml3180" group-set="lma2.98.t00002_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00002_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00008_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00008_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00002_gene" rel="GENE"></Link>
           </Feature-group>
-          <Feature-group id="Bsml4153" group-set="lma2_98.t00006_feature_id_gene:22143">
-            <Feature-group-member feature-type="TRANSCRIPT" featref="transcript_22142"></Feature-group-member>
-            <Feature-group-member feature-type="EXON" featref="exon_22146"></Feature-group-member>
-            <Feature-group-member feature-type="CDS" featref="cds_22144"></Feature-group-member>
-            <Link href="#lma2_98.t00006_feature_id_gene:22143" rel="GENE"></Link>
+          <Feature-group id="Bsml3181" group-set="lma2.98.t00003_gene">
+            <Feature-group-member feature-type="TRANSCRIPT" featref="lma2.98.t00003_transcript"></Feature-group-member>
+            <Feature-group-member feature-type="EXON" featref="lma2.98.e00009_exon"></Feature-group-member>
+            <Feature-group-member feature-type="CDS" featref="lma2.98.m00009_cds"></Feature-group-member>
+            <Link href="#lma2.98.t00003_gene" rel="GENE"></Link>
           </Feature-group>
         </Feature-tables>
-        <Seq-data-import format="fasta" id="chado_tryp_lma2_98_assembly" source="/usr/local/scratch/BSML_REPOSITORY/chado_tryp.fsa"></Seq-data-import>
+        <Seq-data-import format="fasta" id="tryp_lma2_98_assembly" source="/usr/local/annotation/TRYP/BSML_repository/tryp.fsa"></Seq-data-import>
       </Sequence>
-      <Sequence length="769" title="unspecified" molecule="aa" id="protein_22120">
-        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
-        <Seq-data>MLNTDRSMTLNSHYSSSDSAAGMPAPGLAVSAAGQTGHKDMVSSPSISVDQAPTTPGSDAINFFAKAPSSYKSHFGDSAAGVVASSTMPVYSAPDTPLQKGINSGYSARAPSRISLSGSVGASASSCGLTGSPAFASGNGVIGAGAGLHSNSSSFGNSPQTVSITPLVKLGLPSSVCIVAQPTSPSAADGVACGGEAAVASDIVNAPEPMGSTCIPNLVDGVGAPLQAIYSSSSSSSTSSAPSPLAQTTSSPQCGGNTSCVSPSGTCSLLFEAEVNISSPNAETASAAQALDEDALGETHQCTFISPPENNAKVDDGRTRSPKTPSRGGPSKSCGSAPSAKSNPRADHAASPPKNSPSHSKQRQQRAGAASRRQNVSASNCSLSTGQMAPESLQKGCSSPASQGEFVSVYDSDFETLLSIPASQVLHRPNPALGVSRLVLCRKFNLENPQSCSKGEMCKFVHADIRKASRCSIHVNYAWRSLALCTYPRLPAGDEVTVLAPNERSPSEVIPSERILVTRGSTNWREHTAPLSHCAHYYFNRMCNRGKRCNFIHAVHVDPNVQGDFKHAPAPRAVAPIASKPSNSAASRAASGAQAASNEGHHQSSAHHGGAAARTAPLAKQPQLLPPVQQNSANNVANAGGGIAYAFAPSIFALPPHGCMAYPLLNPTSSSTAMGVPQSPGGVAGGAPYVMLMNSAGQQVGCSYVPATLMPSTPQQMGGSNGVFLIVPTANGSGGSLGGSGAPLGSPGVPVSPLGQSFSSLGNGPVNW*</Seq-data>
-      </Sequence>
-      <Sequence length="61" title="unspecified" molecule="aa" id="protein_22125">
-        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
-        <Seq-data>MTRCTEATVREPAAAVLEKTKTERRAETNTLMQKGDEEASIVCRLSFRFTDHPSLHRNHQ*</Seq-data>
-      </Sequence>
-      <Sequence length="133" title="unspecified" molecule="aa" id="protein_22130">
-        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
-        <Seq-data>MHAIYMYSSVLETDASACVCVRVYACVGRLTPSTNHCHLLPPSPKNASAACDAICLLPFLLGPVSALVSCLPLRTRSLAAHHSLFPLLQLLLLQRRPRRAQVYAPSPTHTHAHISDPHPSVRGIEGSGNLTM*</Seq-data>
-      </Sequence>
-      <Sequence length="134" title="unspecified" molecule="aa" id="protein_22135">
+      <Sequence length="134" title="unspecified" molecule="aa" id="lma2.98.m00010_protein">
         <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
         <Seq-data>MRALGDSPLQRITATSSPPPPRTPPRLVMLSVYCLSSSALSALSCHASHCAPAALPRTTPSFRFFNFYFCSVAHDVPRCMLPLPHTRMHTSPTPTPQCVVSKGPVTSPCEAKPSSSSSSSPLPPLPVPNHFWR*</Seq-data>
       </Sequence>
-      <Sequence length="448" title="unspecified" molecule="aa" id="protein_22140">
+      <Sequence length="448" title="unspecified" molecule="aa" id="lma2.98.m00011_protein">
         <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
         <Seq-data>MCFHLGASWVGDKLQPLLFRCARASPRVHILAPPPFRLLLLLSSFRFFGRCISLLPSSCALSAFPFLFYVSGRLVEFARGSEERKTKIRSVSSAKRDRKCTFTNPREPYAAPSSLSLLIRTHPITHARPRLRRTHATGLRVVYSSLFLYSSILCFIFPFLVSSCTVDLVSTSSPTSLLSPSYIYIYIYIYSDVRVDQRTFFVLESGRLASLTCFTSPHRRRRLSPLAHHLLPLHVFDSDVSGDTFAIFPPFLLTSPPFCLPIRGTHSVTATNQHKTTTTTNNTREGRRVRQKDSTQGFFFHTPRPFLPSPSSPLPFSSLSLCLVDCPSDTRPRPTPRSTDASAWLAAVETSICLSPTFSLCVFVCRYSRQFPSGCKACFFTLSPSPLPPTFCRLACSSGLSFRITSFFSRYLPTPFVLLSGLSCRFFCCCSIYIFSVSLIRYCEKLH*</Seq-data>
       </Sequence>
-      <Sequence length="284" title="unspecified" molecule="aa" id="protein_22145">
+      <Sequence length="284" title="unspecified" molecule="aa" id="lma2.98.m00012_protein">
         <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
         <Seq-data>MFSPVYEDVSGLFGHPMPISGFGPSTELQFPQTSYMTTTTNAPQTPTQQQQQQLAGRATVYSLVDASGVQLHRQAAPPQQIPMSSVPFGAFDGASIVPYEVFMQHQQQQQLAAAGKPTAVHAQDGVKYYLSSSTGAPVMASAGPAATTQANIMQMQQHGGTLYTLESNGTTTALTSTPPAGGLFSGAAAANGAPPSGEYPFYAAATGFLSSGPLGMAPATVGSASVTPYAIQGHMPSASPRARGAVNRSPAATIAGNQHHSNSGNNSSSASTRRENQATLHEM*</Seq-data>
+      </Sequence>
+      <Sequence length="769" title="unspecified" molecule="aa" id="lma2.98.m00007_protein">
+        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
+        <Seq-data>MLNTDRSMTLNSHYSSSDSAAGMPAPGLAVSAAGQTGHKDMVSSPSISVDQAPTTPGSDAINFFAKAPSSYKSHFGDSAAGVVASSTMPVYSAPDTPLQKGINSGYSARAPSRISLSGSVGASASSCGLTGSPAFASGNGVIGAGAGLHSNSSSFGNSPQTVSITPLVKLGLPSSVCIVAQPTSPSAADGVACGGEAAVASDIVNAPEPMGSTCIPNLVDGVGAPLQAIYSSSSSSSTSSAPSPLAQTTSSPQCGGNTSCVSPSGTCSLLFEAEVNISSPNAETASAAQALDEDALGETHQCTFISPPENNAKVDDGRTRSPKTPSRGGPSKSCGSAPSAKSNPRADHAASPPKNSPSHSKQRQQRAGAASRRQNVSASNCSLSTGQMAPESLQKGCSSPASQGEFVSVYDSDFETLLSIPASQVLHRPNPALGVSRLVLCRKFNLENPQSCSKGEMCKFVHADIRKASRCSIHVNYAWRSLALCTYPRLPAGDEVTVLAPNERSPSEVIPSERILVTRGSTNWREHTAPLSHCAHYYFNRMCNRGKRCNFIHAVHVDPNVQGDFKHAPAPRAVAPIASKPSNSAASRAASGAQAASNEGHHQSSAHHGGAAARTAPLAKQPQLLPPVQQNSANNVANAGGGIAYAFAPSIFALPPHGCMAYPLLNPTSSSTAMGVPQSPGGVAGGAPYVMLMNSAGQQVGCSYVPATLMPSTPQQMGGSNGVFLIVPTANGSGGSLGGSGAPLGSPGVPVSPLGQSFSSLGNGPVNW*</Seq-data>
+      </Sequence>
+      <Sequence length="61" title="unspecified" molecule="aa" id="lma2.98.m00008_protein">
+        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
+        <Seq-data>MTRCTEATVREPAAAVLEKTKTERRAETNTLMQKGDEEASIVCRLSFRFTDHPSLHRNHQ*</Seq-data>
+      </Sequence>
+      <Sequence length="133" title="unspecified" molecule="aa" id="lma2.98.m00009_protein">
+        <Attribute name="ASSEMBLY" content="lma2_98_assembly"></Attribute>
+        <Seq-data>MHAIYMYSSVLETDASACVCVRVYACVGRLTPSTNHCHLLPPSPKNASAACDAICLLPFLLGPVSALVSCLPLRTRSLAAHHSLFPLLQLLLLQRRPRRAQVYAPSPTHTHAHISDPHPSVRGIEGSGNLTM*</Seq-data>
       </Sequence>
     </Sequences>
   </Definitions>
