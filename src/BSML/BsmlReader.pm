@@ -666,6 +666,40 @@ sub geneIdtoAssemblyId
       }
   }
 
+sub cdsIdtoProteinSeqId
+{
+    my $self = shift;
+    my ($cdsID) = @_;
+
+    my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $cdsID );
+
+		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
+		  {
+		      print STDERR "BsmlReader::cdsIdtoProteinSeqId() - Error CDS Feature not found\n";
+		      return;
+		  }
+		 
+		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+		  {
+		      if( $link->{'rel'} eq 'SEQ' )
+		      {
+			  
+			  my $seqref = $link->{'href'};
+			  $seqref =~ s/#//;
+			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
+
+			  if( ref($seq) eq 'BSML::BsmlSequence' )
+			  {
+			      return $seq->returnattr('id');
+			  }
+			  else
+			  {
+			      print STDERR "BsmlReader::cdsIdtoProteinSeqId() - Error Amino Acid Sequence not found.\n";
+			  }
+		      }
+		  }
+}
+
 # Returns a list of amino acid sequences given a gene identifier. Each sequence
 # represents a transcriptional varient of the query gene.
 
@@ -832,7 +866,7 @@ sub get_all_protein_aa
     return $returnhash;
   }
 
-sub get_all_protein_dna
+sub get_all_cds_dna
   {
     my $self = shift;
     my ($assembly_id) = @_;
@@ -847,21 +881,21 @@ sub get_all_protein_dna
 
     foreach my $gene( $self->returnAllGeneIDs() )
       {
-	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
+	  if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
 	  {
-	    my $dnahash = $self->geneCoordstoCDSHash($self->geneIdtoGenomicCoords($gene));
-	    
-	    foreach my $seqId (keys( %{$dnahash} ))
-	    {
-		$returnhash->{$seqId} = $dnahash->{$seqId};
+	      my $dnahash = $self->geneCoordstoCDSHash($self->geneIdtoGenomicCoords($gene));
+	      
+	      foreach my $seqId (keys( %{$dnahash} ))
+	      {
+		  $returnhash->{$seqId} = $dnahash->{$seqId};
 	      }
 	  }
       }
-
+    
     return $returnhash;
-  }
+}
 
-sub get_all_protein_dna_extended
+sub get_all_cds_dna_extended
   {
     #This function is only designed for Prok data... I'm not sure how it will apply to Euk
 
@@ -1160,35 +1194,7 @@ sub geneCoordstoCDSHash
 		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
 		  }
 
-		  #get the protein id from the sequence object linked to the CDS object
-		  
-		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
-
-		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
-		  {
-		      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
-		      return;
-		  }
-		 
-		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
-		  {
-		      if( $link->{'rel'} eq 'SEQ' )
-		      {
-			  
-			  my $seqref = $link->{'href'};
-			  $seqref =~ s/#//;
-			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
-
-			  if( ref($seq) eq 'BSML::BsmlSequence' )
-			  {
-			      $seqHash->{$seq->returnattr('id')} = $cds;
-			  }
-			  else
-			  {
-			      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
-			  }
-		      }
-		  }
+		  $seqHash->{$transcript->{'TranscriptDat'}->{'CDS_ID'}} = $cds;
 	      }
 	      else
 	      {
@@ -1213,35 +1219,7 @@ sub geneCoordstoCDSHash
 		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
 		  }
 
-		  	  #get the protein id from the sequence object linked to the CDS object
-		  
-		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
-
-		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
-		  {
-		      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
-		      return;
-		  }
-		 
-		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
-		  {
-		      if( $link->{'rel'} eq 'SEQ' )
-		      {
-			  
-			  my $seqref = $link->{'href'};
-			  $seqref =~ s/#//;
-			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
-
-			  if( ref($seq) eq 'BSML::BsmlSequence' )
-			  {
-			      $seqHash->{$seq->returnattr('id')} = $cds;
-			  }
-			  else
-			  {
-			      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
-			  }
-		      }
-		  }
+		  $seqHash->{$transcript->{'TranscriptDat'}->{'CDS_ID'}} = $cds;
 	      }
 	      
 	  }
@@ -1255,35 +1233,7 @@ sub geneCoordstoCDSHash
 	      
 	      my $cds = $self->subSequence( $seqId, $start, $stop, $complement);
 	      
-	      #get the protein id from the sequence object linked to the CDS object
-		  
-	      my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
-
-	      if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
-	      {
-		  print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
-		  return;
-		  }
-	      
-	      foreach my $link ( @{$feat->returnBsmlLinkListR()} )
-	      {
-		  if( $link->{'rel'} eq 'SEQ' )
-		  {
-		      
-		      my $seqref = $link->{'href'};
-		      $seqref =~ s/#//;
-		      my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
-		      
-		      if( ref($seq) eq 'BSML::BsmlSequence' )
-		      {
-			  $seqHash->{$seq->returnattr('id')} = $cds;
-		      }
-		      else
-		      {
-			  print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
-		      }
-		  }
-	      }
+	      $seqHash->{$transcript->{'TranscriptDat'}->{'CDS_ID'}} = $cds;
 	  }
       }
 	
