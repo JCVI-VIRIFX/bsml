@@ -38,6 +38,7 @@ This document refers to version 1.0 of the BSML Object Layer
 use strict;
 use warnings;
 use XML::Twig;
+use Log::Log4perl qw(get_logger :levels);
 
 my $bsmlDoc;
 
@@ -64,8 +65,17 @@ sub parse
   {
     my $self = shift;
     my ( $bsml_doc, $filename ) = @_;
+    my $bsml_logger = get_logger( "Bsml" );
 
     $bsmlDoc = ${$bsml_doc}; 
+
+    if( !( $filename ) ){   
+      $bsml_logger->fatal( "Filename not provided for Bsml Parsing." );
+    }
+
+    if( !( $bsmlDoc ) ){
+      $bsml_logger->fatal( "No BsmlDoc object to populate" );
+    }
 
     # Set a Twig Handler on the BSML Sequence Object. The handler is called
     # each time an XML subtree rooted at a Sequence element is completely
@@ -78,7 +88,9 @@ sub parse
     # parsefile will die if an xml syntax error is encountered or if
     # there is an io problem
 
+    $bsml_logger->debug( "Attempting to Parse Bsml Document: $filename" );
     $twig->parsefile( $filename );
+    $bsml_logger->info( "Successfully Parsed Bsml Document: $filename" );
   }
 
 # This is a private method implemented as an XML::Twig handler object. It is 
@@ -90,6 +102,8 @@ sub parse
 
 sub sequenceHandler
   {
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Parsing Sequence Twig" );
 
     my ($twig, $seq) = @_;
 
@@ -202,6 +216,8 @@ sub sequenceHandler
 	      }
 	  }
       }
+
+    $twig->purge_up_to( $seq );
   }
 
 1

@@ -99,6 +99,26 @@ sub setBsmlQualifier
     $self->addBsmlQualifier( $valuetype, $value );
   }
 
+=item $feature->setBsmlQualifiersHash( $hashref )
+
+B<Description:> sets Qualifiers according to the key/value pairs (valuetype, value) defined in the hash pointed to by $hashref
+
+B<Parameters:> ($hashref) a reference pointing to a hash containing the key value pairs to be added as qualifiers
+
+B<Returns:> None
+
+sub setBsmlQualifiersHash
+  {
+    my $self = shift;
+
+    my ($href) = @_;
+
+    foreach my $key (keys(%{$href}))
+      {
+	$self->addBsmlQualifier( $key, $href->{$key} );
+      }
+  }
+
 =item $feature->dropBsmlQualifier( $valuetype )
 
 B<Description:> deletes a Qualifier element from a feature

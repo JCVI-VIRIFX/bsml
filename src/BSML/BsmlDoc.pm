@@ -49,11 +49,20 @@ use XML::Writer;
 use strict;
 use warnings;
 use BsmlSequence;
+use Log::Log4perl qw(get_logger :levels);
 
 # The default links to the BSML dtd maintained by Labbook
 
 my $default_dtd_pID = '-//EBI//Labbook, Inc. BSML DTD//EN';
 my $default_dtd_sID = 'http://www.labbook.com/dtd/bsml3_1.dtd';
+
+my $log4perl_defaults = 
+'log4perl.logger.Bsml=FATAL, A1
+log4perl.appender.A1=Log::Dispatch::File
+log4perl.appender.A1.filename=bsml.log
+log4perl.appender.A1.mode=append
+log4perl.appender.A1.layout=Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern=%d %p> %F{1}:%L %M - %m%n';
 
 # a bsml document stores a list of annotated sequences, 
 # document level attributes, and Bsml Attribute Elements
@@ -61,22 +70,36 @@ my $default_dtd_sID = 'http://www.labbook.com/dtd/bsml3_1.dtd';
 sub new
   {
     my $class = shift;
+    my ($logger_conf) = @_;
     my $self = {};
     bless $self, $class;
     
-    $self->init();
+    $self->init( $logger_conf );
     return $self;
   }
 
 sub init
   {
     my $self = shift;
+    my ($logger_conf) = @_;
 
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
     
     # bsml Genomes will probably be needed in the future...
+
+    #initialize Log4perl
+
+    if( $logger_conf ){
+      Log::Log4perl->init( $logger_conf );
+    }else{
+      Log::Log4perl->init( \$log4perl_defaults );
+    }
+
+    my $bsml_logger = get_logger( "Bsml" );
+        
+    $bsml_logger->info( "Created new BsmlDoc" );
   }
 
 =item $doc->addBsmlSequence()
@@ -96,6 +119,10 @@ sub addBsmlSequence
     push( @{$self->{'BsmlSequences'}}, new BsmlSequence );
 
     my $index = @{$self->{'BsmlSequences'}} - 1;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Added BsmlSequence: $index" );
+
     return $index;    
   }
 
@@ -126,6 +153,9 @@ sub dropBsmlSequence
       }
 
     $self->{'BsmlSequences'} = $newlist;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Dropped BsmlSequence: $index" );
   }
 
 =item $doc->returnBsmlSequenceListR()
@@ -178,7 +208,17 @@ sub write
     my $self = shift;
     my ($fname, $dtd) = @_;
 
-    my $output = new IO::File( ">$fname" ) or die "could not open output file - $fname\n";
+    my $bsml_logger = get_logger( "Bsml" );
+
+    $bsml_logger->debug( "Attempting to write BsmlDoc" );
+
+    my $output = new IO::File( ">$fname" );
+
+    if( !( $output ) )
+    {
+      $bsml_logger->fatal( "Could not open output file - $fname" );
+      die "could not open output file - $fname\n";
+    }
 
     # Setting DATA_MODE to 1 enables XML::Writer to insert newlines around XML elements for 
     # easier readability. DATA_INDENT specifies an indent of two spaces for child elements
@@ -193,6 +233,7 @@ sub write
     if( $dtd ){$writer->doctype( "Bsml", "", "file:$dtd" );}
     else{
       $writer->doctype( "Bsml", $default_dtd_pID, $default_dtd_sID );
+      $bsml_logger->debug( "DTD not specified - using $default_dtd_sID" );
       }
    
     # write the root node
@@ -223,6 +264,8 @@ sub write
     $writer->endTag( "Sequences" );
     $writer->endTag( "Definitions" );
     $writer->endTag( "Bsml" );
+
+    $bsml_logger->debug( "BsmlDoc successfully written" );
   }
 
 1

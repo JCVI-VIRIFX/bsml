@@ -70,6 +70,26 @@ sub setattr
     $self->addattr( $key, $value );
   }
 
+=item $elem->setattrh( $hashref )
+
+B<Description:> sets an elements attributes according to the key/value pairs defined in the hash pointed to by $hashref
+
+B<Parameters:> ($hashref) a reference pointing to a hash containing the key value pairs to be added as element attributes
+
+B<Returns:> None
+
+sub setattrh
+  {
+    my $self = shift;
+
+    my ($href) = @_;
+
+    foreach my $key (keys(%{$href}))
+      {
+	$self->addattr( $key, $href->{$key} );
+      }
+  }
+
 =item $elem->dropattr( $key )
 
 B<Description:> removes an attribute from a BSML element
@@ -157,6 +177,27 @@ sub setBsmlAttr
     
     $self->addBsmlAttr( $key, $value );
   }
+
+=item $elem->setBsmlAttrh( $hashref )
+
+B<Description:> sets BSML attributes according to the key/value pairs defined in the hash pointed to by $hashref
+
+B<Parameters:> ($hashref) a reference pointing to a hash containing the key value pairs to be added as Bsml attributes
+
+B<Returns:> None
+
+sub setBsmlAttrh
+  {
+    my $self = shift;
+
+    my ($href) = @_;
+
+    foreach my $key (keys(%{$href}))
+      {
+	$self->addBsmlAttr( $key, $href->{$key} );
+      }
+  }
+
 
 =item $elem->dropBsmlAttr( $key )
 
