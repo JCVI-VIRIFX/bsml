@@ -12,7 +12,14 @@ package BsmlBuilder;
 
 =head1 SYNOPSIS
 
-  ...
+use BsmlBuilder;
+
+my $seqdat = 'agctagctagctagctagctagct';
+my $doc = new BsmlBuilder;
+my $seq = $doc->createAndAddSequence( '_bsml001', 'test_basic_sequence', length( $seqdat ), 'dna' );
+my $seq2 = $doc->createAndAddExtendedSequenceN( id => '_bsml002', title => 'test_extended_sequence', length => '24', molecule => 'dna', topology => 'linear' );
+$doc->createAndAddSeqData( $seq, $seqdat );
+$doc->write( 'output_file.xml' );
 
 =cut
 
@@ -89,9 +96,25 @@ sub createAndAddSequence
   return $seq;
 }
 
-# The permisible values for the topology and strand parameters are controled
-# topology (top-not-set, linear, circular, tandem, top-other )
-# strand (std-not-set, ss, ds, mixed, std-other) 
+=item $builder->createAndAddExtendedSequence( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand )
+
+B<Description:> Add a new sequence to the document with extended attributes
+
+B<Parameters:> 
+  $id - document wide unique identifier for the sequence
+  $title - text description of sequence
+  $length - integer value representing the total length of the sequence
+  $molecule - type of molecule ( mol-not-set, dna, rna, aa, na, other-mol )
+  $locus - sequence name
+  $dbsource - database source of the sequence
+  $icAcckey - internationl collboration accession number
+  $topology - molecule shape (top-not-set, linear, circular, tandem, top-other )
+  $strand - (std-not-set, ss, ds, mixed, std-other)
+
+B<Returns:>
+  A reference to the created sequence
+
+=cut
 
 sub createAndAddExtendedSequence
   {
@@ -126,6 +149,20 @@ sub createAndAddExtendedSequence
 
     return $seq;
   }
+
+=item $builder->createAndAddExtendedSequenceN( key => value )
+
+B<Description:>
+  Add a new sequence to the document with named extended attributes
+
+B<Parameters:> 
+  Looks for the following keys corresponding to the descriptions given above.
+  {id, title, length, molecule, locus, dbsource, icAcckey, topology, strand}
+
+B<Returns:>
+  A reference to the created sequence
+
+=cut
 
 sub createAndAddExtendedSequenceN
   {
