@@ -18,18 +18,22 @@
 <br>
 <b>Description</b><br>
 BSML is an XML-based format for storing bioinformatic data.  The BSML 3.1 specification 
-includes encodings for "Information" (e.g., genomes, biological sequences, search hits, 
-and alignments), "Research" (e.g., the queries, analyses, and experiments used to 
-derive Information), and "Visualization" (e.g., content that specifies how the 
+includes encodings for <b>Information</b> (e.g., genomes, biological sequences, search hits, 
+and alignments), <b>Research</b> (e.g., the queries, analyses, and experiments used to 
+derive Information), and <b>Visualization</b> (e.g., content that specifies how the 
 Information and Research data should be rendered in a graphical display.)  The BSML 
 object layer being used at TIGR (see CVS links below) deals only with subsets of the 
-first two encodings, Information and Research.
+first two encodings, <b>Information</b> and <b>Research</b>.  <a href='http://www.w3.org/XML/Schema'>XML Schema</a> 
+specifications (see below) are used to ensure that the BSML documents used in our software 
+systems adhere to the specific subset of BSML with which we are working.
 
 <p>
 <b>Etymology/History</b><br>
-BSML is an acronym that stands for "Bioinformatic Sequence Markup Language".  See 
-the <A HREF="http://www.bsml.org">BSML.org</A> and <A HREF="http://www.labbook.com">LabBook</A> 
-sites for more information on the history of BSML.
+BSML is an acronym that stands for "<b>B</b>ioinformatic <b>S</b>equence <b>M</b>arkup <b>L</b>anguage".  
+See the <A HREF="http://www.bsml.org">BSML.org</A> and <A HREF="http://www.labbook.com">LabBook</A> 
+sites for more information on the history of BSML.  Note that LabBook distributes tools for displaying 
+and/or browsing BSML documents in a graphical context, hence the inclusion of BSML's <b>Visualization</b> 
+encoding.
 </p>
 <p>
 <b>Documentation</b><br>
@@ -40,7 +44,9 @@ Data repository <a href='/ifx/devel/cas/papyrus/srs_repository.html'>[srs]</a><b
   <p> <b>Software Products</b><br>
     See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
 href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
-Command-line utilities:<br>
+</p>
+<p>
+<b>Command-line utilities:</b><br>
 <ul>
 <li><em>check_repository</em><br>
 <a href='srs_check_repository.html'>[srs]</a> [use cases]</li>
