@@ -407,17 +407,30 @@ sub sequenceHandler
 	  
 
 	    foreach my $BsmlFeature ($BsmlFTable->children( 'Feature' ))
-	      {
+	{
 		my $feat = $table->{'BsmlFeatures'}[$table->addBsmlFeature()];
 		my $attr = $BsmlFeature->atts();
 
 		foreach my $key ( keys( %{$attr} ) )
-		  {
+	        {
 		    $feat->addattr( $key, $attr->{$key} );
-		  }
-
+		}
+		
+		foreach my $crossRef( $BsmlFeature->children( 'Cross-reference' ))
+         	{
+		
+		my $attr = $crossRef->atts();
+		
+		my $xref = $feat->returnBsmlCrossReferenceR( $feat->addBsmlCrossReference );
+		
+		foreach my $key ( keys( %{$attr} ) )
+                {
+		    $xref->addattr( $key, $attr->{$key});
+		}
+	    }
+		
 		 # add Feature level Bsml Attribute elements 
-
+		
 		foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
 		{
 		    my $attr = $BsmlAttr->atts();
@@ -652,10 +665,7 @@ sub featureHandler
 	}
     }
 
-
-
-
-    
+   
     $twig->purge;
 
     return $feat;

@@ -169,9 +169,21 @@ sub readFeatures
 		foreach my $qual (keys(%{$bsmlhash}))
 		{
 		    push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
-		  }
+		}
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
+
+
+		my $xref = [];
+
+		my $xrefhash = $Feature->returnBsmlCrossReferenceR();
+		
+		foreach my $qual (keys(%{$xrefhash->{'attr'}}))
+		{
+		    push( @{$xref}, { key => $qual, value => $xrefhash->{'attr'}->{$qual} } );
+		}
+		$record->{'cross-reference'} = $xref;
+
 
 		my $bsmllink = [];
 		foreach my $link (@{$Feature->returnBsmlLinkListR()})
@@ -182,6 +194,7 @@ sub readFeatures
 
 		push( @{$feat_list}, $record );
 	      }
+
 	  }
 	return $feat_list;
       }
@@ -300,6 +313,16 @@ sub readFeatures
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
 		
+		my $xref = [];
+
+		my $xrefhash = $Feature->returnBsmlCrossReferenceR();
+		
+		foreach my $qual (keys(%{$xrefhash->{'attr'}}))
+		{
+		    push( @{$xref}, { key => $qual, value => $xrefhash->{'attr'}->{$qual} } );
+		}
+		$record->{'cross-reference'} = $xref;
+
 		push( @{$feat_list}, $record );
 		return $feat_list;
 	      }
@@ -2261,9 +2284,9 @@ sub readGenome
 
     $rhash->{'species'} = $bsmlOrganism->returnattr( 'species' );
     $rhash->{'genus'} = $bsmlOrganism->returnattr( 'genus' );
-    $rhash->{'database'} = $bsmlStrain->returnBsmlAttr( 'database' );
-    $rhash->{'source_database'} = $bsmlStrain->returnBsmlAttr( 'source_database' );
-    $rhash->{'strain'} = $bsmlStrain->returnBsmlAttr( 'name' );
+#    $rhash->{'database'} = $bsmlStrain->returnBsmlAttr( 'database' );
+#    $rhash->{'source_database'} = $bsmlStrain->returnBsmlAttr( 'source_database' );
+#    $rhash->{'strain'} = $bsmlStrain->returnBsmlAttr( 'name' );
 
     return $rhash;
 }
