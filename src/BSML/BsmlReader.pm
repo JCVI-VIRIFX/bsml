@@ -466,6 +466,61 @@ sub returnAllGeneIDs
     return $self->returnAllFeatureGroupSetIds();
   }
 
+sub seqIdtoAssemblyId
+  {
+    my $self = shift;
+    my ($sequenceId) = @_;
+
+    my $seq = BsmlDoc::BsmlReturnDocumentLookup( $sequenceId );
+
+    return $seq->returnBsmlAttr( 'ASSEMBLY' );
+  }
+
+sub assemblyIdtoSeqList
+  {
+    my $self = shift;
+    my ($assemblyId) = @_;
+
+    my $rlist = [];
+
+    foreach my $seq ( @{$self->returnAllSequences()} )
+      {
+	if( $seq->returnBsmlAttr( 'ASSEMBLY' ) eq $assemblyId )
+	  {
+	    push( @{$rlist}, $seq );
+	  }
+      }
+
+    return $rlist;
+  }
+
+sub fetch_all_alignmentPairs
+  {
+    my $self = shift;
+    my ($querySeqId, $matchSeqId ) = @_;
+
+    my $alignments = [];
+
+    if( $matchSeqId )
+      {
+	push( @{$alignments}, BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
+      }
+    else
+      {
+	#This could be made faster using the lookups - I will implement when time permits...
+
+	foreach my $align (@{$self->returnBsmlSeqPairAlignmentListR()})
+	  {
+	    if( ($align->returnattr( 'refseq') eq $querySeqId) ||
+		($align->returnattr( 'compseq') eq $querySeqId) )
+	      {
+		push( @{$alignments}, $align );
+	      }
+	  }
+      }
+    return $alignments;
+  }
+
 sub geneIdtoAssemblyId
   {
     my $self = shift;
