@@ -210,6 +210,16 @@ sub returnSeqData
     return $self->{'BsmlSeqData'};
   }
 
+=item $seq->addBsmlFeatureGroup()
+
+B<Description:> add a feature group to the sequence
+
+B<Parameters:> None
+
+B<Returns:> the index of the added feature group
+
+=cut
+
 sub addBsmlFeatureGroup
   {
     my $self = shift;
@@ -220,6 +230,16 @@ sub addBsmlFeatureGroup
     return $index;
 
   }
+
+=item $seq->dropBsmlFeatureGroup( $index )
+
+B<Description:> drop a feature group from the sequence
+
+B<Parameters:> $index - the index of the feature group to be deleted
+
+B<Returns:> None
+
+=cut
 
 sub dropBsmlFeatureGroup
   {
@@ -239,11 +259,31 @@ sub dropBsmlFeatureGroup
     $self->{'BsmlFeatureGroups'} = \@newlist;    
   }
 
+=item $seq->returnBsmlFeatureGroupListR()
+
+B<Desciption:> returns the list of feature group references associated with the sequence
+
+B<Parameters:> None
+
+B<Returns:> a list of feature group references
+
+=cut
+
 sub returnBsmlFeatureGroupListR
   {
     my $self = shift;
     return $self->{'BsmlFeatureGroups'};
   }
+
+=item $seq->returnFeatureGroupR( $index )
+
+B<Description:> returns the feature group reference of index $index
+
+B<Parameters:> $index - the index of the feature group to be returned
+
+B<Returns:> a reference to a feature group
+
+=cut
 
 sub returnBsmlFeatureGroupR
   {
