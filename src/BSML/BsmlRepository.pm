@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.9 2004/01/19 16:00:12 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.10 2004/01/19 16:02:54 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.9 $. 
-Last modified on $Date: 2004/01/19 16:00:12 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.10 $. 
+Last modified on $Date: 2004/01/19 16:02:54 $
 
 =head1 SYNOPSIS
 
@@ -96,7 +96,7 @@ sub get_dirname{
 #on the assembly name
 sub list_assemblies{
     my $self = shift;
-    my $glob = "$self->{_PATH}/*.$self->{_BSML_FILE_EXT}";
+    my $glob = "$self->{_PATH}/*$self->{_BSML_FILE_EXT}";
     $self->{_logger}->debug("Listing assemblies matching glob $glob") if($self->{_logger}->is_debug());
     my @asmblfiles = <$glob>;
     my @asmbllist;
