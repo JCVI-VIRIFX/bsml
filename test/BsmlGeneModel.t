@@ -10,12 +10,13 @@ use lib "../src/";
 
 use BSML::BsmlBuilder;
 use BSML::BsmlReader;
+use BSML::BsmlDoc;
 use BSML::BsmlParserTwig;
 use Data::Dumper;
 
-$outfile = 'euk.bsml';
+$outfile = 'tmp.bsml';
 
-print '1..5',"\n";
+print '1..7',"\n";
 
 my $doc = new BSML::BsmlBuilder;
 $doc->makeCurrentDocument();
@@ -118,7 +119,6 @@ foreach my $seq ( @{$rlist} )
 
     if( $rhash->{'id'} eq 'PF14_0392' )
     {
-
 	my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( 'PF14_0392' );
 	my $seqdatImport = $reader->readSequenceDatImport( $seq, -1, 0, 0 );
 	my $seqdat = $seqdatImport->{'seqdat'};
@@ -132,6 +132,16 @@ foreach my $seq ( @{$rlist} )
 	{
 	    #print "Unable to read ASSEMBLY sequence from FASTA file.\n";
 	    print 'not ok 2',"\n";
+	}
+
+	if( $seq->returnBsmlAttr( 'ASSEMBLY' ) eq 'asmbl001' )
+	{
+	    #print "Successfully read BSML Attribute.\n";
+	    print 'ok 3',"\n";
+	}
+	else
+	{
+	    print 'not ok 3',"\n";
 	}
 
     }
@@ -162,13 +172,13 @@ TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKV
 FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
 KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK' )
 	{
-	    print "Successfully read inline sequence data from protein sequence.\n";
-	    print 'ok 3',"\n";
+	    #print "Successfully read inline sequence data from protein sequence.\n";
+	    print 'ok 4',"\n";
 	}
 	else
 	{
-	    print "Unable to read inline sequence data from protein sequence.\n";
-	    print 'not ok 3',"\n";
+	    #print "Unable to read inline sequence data from protein sequence.\n";
+	    print 'not ok 4',"\n";
 	}
     }
 }
@@ -180,25 +190,80 @@ my $rlist = $reader->geneIdtoGenomicCoords( 'M1396-03861' );
 	($rlist->[0]->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'endpos'} == 110))
     {
 	#print "Successfully extracted gene coordinates using feature group (gene) lookups\n";
-	print 'ok 4',"\n";
+	print 'ok 5',"\n";
     }
     else
     {
 	#print "Unable to extract gene coordinates using feature group (gene) lookups\n";
-	print 'not ok 4',"\n";
+	print 'not ok 5',"\n";
     }
 }
+
+my $featureGroupList = $reader->geneIdtoFeatureGroupList( 'M1396-03861' );
+
+FTEST: {foreach my $fgroup (@{$featureGroupList})
+{
+    my $rhash = $reader->readFeatureGroup( $fgroup );
+
+    if( $rhash->{'id'} eq 'FGroup1' && $rhash->{'group-set'} eq 'M1396-03861' )
+    {
+	foreach $fgroupMember (@{$rhash->{'feature-members'}})
+	{
+	    if( $fgroupMember->{'feature-type'} eq 'CDS' )
+	    {
+		my $cdsFeat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $fgroupMember->{'featref'} );
+		foreach my $link (@{$cdsFeat->returnBsmlLinkListR()})
+		{
+		    if( $link->{'rel'} eq 'SEQ' )
+		    {
+			my $seqId = $link->{'href'};
+			$seqId =~ s/#//;
+
+			my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
+			
+			if( $reader->readSequenceDat( $seq ) eq 'MTTTDTWKVEWDNELRQLPNVESVTCFDLQLTENVFLIWQFLKLYLSTSPQVRSIIDFIAIKKAQSLQWGDHIDSVMSSGLRKGQELFHVFLSNGKKIQT
+TYSKKKLCDRLEYYHIKNYIILEKINTGSVGQVHVALDKSTDTFVAAKAIDKSTVQGDIGLFEKLKDEIKISCMMNHPVVKTLNILETKDKIIQIMEYCDAGDLISYV
+RNKLYLDEVSAQYFFRKIVEGLKYMHKNNIAHRDLKPENIFLCKIQISQKEKTLIRVGKLPSCIEYDLKIGDFGACCINEKNKLHHDIVGTLSYAAPEVLNCNNNNGY
+NSEKADIWSLGIILYAMLFGLLPYDSEDKDVKEAYNEIIKKKIVFPKNRVNKFSTSVRSLLLAMLNINPQNRLSLDEVMKHEWLAGTAKNRLEMSNINKKINFPISST
+VGYPIYSNKNIMDYNIYKRLALIKNDHNSSTNSLYSNGNSTTISNSNTTNMNNNVNNNVNSNVNNNVNNNVNNNVNNNMHNNIMNNVYNNMSNNISAILKVNNLRDKN
+NIAENTYKLDSITNSLYGVHNNNVNSNNLKEVLYNHMKYYLKGDNKYNNTPGEHKNDYNLETLLKKKEDQVVGDLKVINKKVGHYLSSKNTKEININNKIANLVVGNK
+NGNNNIIAKKNIMINNNNNDNNNISSDNIPNKMCKVDNNIVSYNKFNVEHYEYNNKGCMQSKCNQNKKDEEVVHMNKLHSICSSNDHKLYEMYMYQKNDNNMNEHVNF
+INKSSNKEISRLENKYVEKIYYLKNNDMHINDDYIKDKAIKNVEKYNFINKDKNSSTYKIKDYINNNTLNRTKYNIRADKFNNIIALNNHIISNDTNRHLYINNKLSI
+NKQKYNNTPYYNYYYYYYDDDDDRKKEYNKYVYKKNKKCGTNNSELISYNSSVYEKGSTPSSYNINNVPISYIKHDSIYNGSLSQYVNNSSYDKKILSSSYIKDNESH
+VNKMNIEKSTIWYCSTNELPNDTIKKDSVHKKESLSQEFPVNNNDDVLDIKNDEQSKCAYNNSVVDEKENNNINVGEFKIISPNNLDSNNISSTKHITVRDTYNDNIN
+KTKEAYILIKKDVNNAKCDNIFELSKMNEHSENGNNSKHTNSDIEINDRAKNLNDFVSMHEMNNFNKVDDTQLYKKKISELSNNNEKCCNINEDKNKENKNIHMHVIK
+EDPNNNNNDNNNTNISADNNYSYKYVDGDIKRECVYSTDDINYVYVKPSVCSLNADGNENTEKIIKNMNFYGMDKIYSTIVQEKNEETKEDINMDHIKYNINGNIKED
+IINSNNVFNTHNEQPFIDNKIMMSNINSKDNTKMYGNIFQNRNSNSIYEIKRKEKIYIINVDTPDECNEVKCDFSYNDHKIEANKDGDNKEHNNKDKDGENDEHNNKD
+KDGDNDEHNNKDKYGDNNEHNYIDNNEDNYIDKDEYVNYYHDYNNPENIDHNKYEQISGLNIKEYDINEKGNYNNKKKKKQKNEHKKEANFTKHKMFILEDQKMLNTR
+RGNNHMKLMDKDYINEYIKIETSNYFNKEHIKKYSSLYGKNEKKNDIINIRNFNDCISDYKNSICDGFQDIKNNSVKNIFNQDKKIYHDLSNNCVLYNNIFTQTNLEH
+FSSNKLEYNKNCKYPYNNLMKNYSYSEYSFDIQNKTSTYTNKVDINKADLKEAYSDKKIKYKISNITKNEQINIYDDIKKCSSNNNNTFYIDDEASCLDITNLSDKEI
+KNKKERAKKKNILNNKKCILSNGSNIFIGKEYKKNQHMDYMNKIKKNENDVLYLNNSVSLKRSFSMLHFNRNIKNHVNYYYDDHNKDRREKDILLVDHMNNYVIEHKN
+KINIYNINLNNSNLNNINKNENNKIDSITSIAKKCHSSDIFLIRDNILNNLSNKEFKNIIARNVSLSHEFPLIHTNEELNKKTKKQIINNNIIYDKIGISNNKKCNIP
+TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKVTMENINMDCVVKNKTYDNMNKSNMKKIN
+FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
+KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK' )
+			{
+			    print 'ok 6',"\n";
+			    last FTEST;
+			}
+		    }
+		}
+	    }
+	}
+    }
+    print 'not ok 6', "\n";
+}}
 
 my $rvalue = system( "/usr/local/annotation/PNEUMO/chauser_dir/xmlvalid-1-0-0-Linux-i586/xmlvalid -q $outfile" );
 
 if( $rvalue == 0 )
 {
     #print "Successfully validated temporary gene-sequence BSML document\n"; 
-    print 'ok 5',"\n";
+    print 'ok 7',"\n";
 }
 else
 {
-    print 'not ok 5',"\n";
+    print 'not ok 7',"\n";
 }
 
-
+unlink $outfile;
