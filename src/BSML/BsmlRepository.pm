@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.6 2004/01/19 15:44:49 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.7 2004/01/19 15:45:21 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.6 $. 
-Last modified on $Date: 2004/01/19 15:44:49 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.7 $. 
+Last modified on $Date: 2004/01/19 15:45:21 $
 
 =head1 SYNOPSIS
 
@@ -73,7 +73,7 @@ sub _init {
     my %arg = @_;
     $self->{_logger}->debug(Dumper(@_)) if($self->{_logger}->isdebug());
     foreach my $key (keys %arg) {
-	$self->{_logger}->debug("Parsing argument $key=$arg{$key}") if($self->{_logger}->isdebug());
+	$self->{_logger}->debug("Parsing argument $key=$arg{$key}") if($self->{_logger}->is_debug());
         $self->{"_$key"} = $arg{$key}
     }
     if(!($self->{"_REPOSITORY_ROOT"})){
