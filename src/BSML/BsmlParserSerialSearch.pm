@@ -9,6 +9,8 @@ use Log::Log4perl qw(get_logger :levels);
 use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlAnalysis;
 use BSML::BsmlSequence;
+use BSML::BsmlFeature;
+
 
 # Clients must define callback routines which are called during parsing. Callbacks may be defined
 # for Sequence, SeqPairAlignment, and Analysis objects. These functions are called with an object 
@@ -44,10 +46,35 @@ sub new
     if( $args{'SequenceCallBack'} ){
 	$self->{'SequenceCallBack'} = $args{'SequenceCallBack'};
 	
-	$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
+	if( defined( $args{'ReadFeatureTables'} ) ){
+	    if( $args{'ReadFeatureTables'} == 1 ){
+			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
 					      my $bsml_sequence = sequenceHandler( $twig, $sequence );
 					      $self->{'SequenceCallBack'}( $bsml_sequence );
 					  };
+		    }
+	    else{
+			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
+					      my $bsml_sequence = minsequenceHandler( $twig, $sequence );
+					      $self->{'SequenceCallBack'}( $bsml_sequence );
+					  };
+		    }
+	}
+	else{
+	    $self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
+					      my $bsml_sequence = sequenceHandler( $twig, $sequence );
+					      $self->{'SequenceCallBack'}( $bsml_sequence );
+					  };
+	}
+    }
+
+    if( $args{'FeatureCallBack'} ){
+	$self->{'FeatureCallBack'} = $args{'FeatureCallBack'};
+	
+	$self->{'Roots'}->{'Feature'} = sub {my ($twig, $feature) = @_;
+					     my $bsml_feature = featureHandler( $twig, $feature );
+					     $self->{'FeatureCallBack'}( $bsml_feature );
+					 };
     }
 	
     return $self;
@@ -128,8 +155,7 @@ sub seqPairAlignmentHandler
 	   }
        }     
      
-     # Purge the twig rooted at the SeqPairAlignment Element
-     $twig->purge_up_to( $seq_aln );
+     $twig->purge();
 
      return $bsmlaln;
 
@@ -160,6 +186,7 @@ sub analysisHandler
 	$bsml_analysis->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
       }
 
+    $twig->purge();
     return $bsml_analysis;
   }
 
@@ -344,7 +371,109 @@ sub sequenceHandler
 	
       }
       
-    $twig->purge_up_to( $seq );
+    $twig->purge;
     return $bsmlseq;
   }
+
+sub minsequenceHandler
+  {
+    my ($twig, $seq) = @_;
+
+    # add a new Sequence object to the bsmlDoc
+
+    my $bsmlseq = new BSML::BsmlSequence;
+    
+    # add the sequence element's attributes
+
+    my $attr = $seq->atts();
+
+    foreach my $key ( keys( %{$attr} ) )
+      {
+	$bsmlseq->addattr( $key, $attr->{$key} );
+      }
+
+    # add Sequence level Bsml Attribute elements 
+
+    foreach my $BsmlAttr ( $seq->children( 'Attribute' ) )
+      {
+	my $attr = $BsmlAttr->atts();
+	$bsmlseq->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+      }
+
+    # add any Bsml Links
+
+    foreach my $BsmlLink ( $seq->children( 'Link' ) )
+      {
+	my $attr = $BsmlLink->atts();
+	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+      }
+
+    # add raw sequence data if found 
+
+    my $seqDat = $seq->first_child( 'Seq-data' );
+    
+    if( $seqDat ){
+      $bsmlseq->addBsmlSeqData( $seqDat->text() );
+    }
+
+    # add appended sequence data if found
+
+    my $seqDatImport = $seq->first_child( 'Seq-data-import' );
+    
+    if( $seqDatImport )
+      {
+	my $attr = $seqDatImport->atts();
+	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
+      }
+      
+    $twig->purge;
+    return $bsmlseq;
+}
+
+
+sub featureHandler
+{
+    my ($twig, $BsmlFeature) = @_;
+
+    my $feat = new BSML::BsmlFeature;
+    my $attr = $BsmlFeature->atts();
+
+    foreach my $key ( keys( %{$attr} ) )
+    {
+	$feat->addattr( $key, $attr->{$key} );
+    }
+
+    foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
+    {
+	my $attr = $BsmlQualifier->atts();
+	$feat->addBsmlQualifier( $attr->{'value-type'} , $attr->{'value'} ); 
+    }
+
+    foreach my $BsmlIntervalLoc ($BsmlFeature->children( 'Interval-loc' ))
+    {
+	my $attr = $BsmlIntervalLoc->atts();
+	if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
+	
+	$feat->addBsmlIntervalLoc( $attr->{'startpos'} , $attr->{'endpos'}, $attr->{'complement'} ); 
+    }
+
+    foreach my $BsmlSiteLoc ($BsmlFeature->children( 'Site-loc' ))
+    {
+	my $attr = $BsmlSiteLoc->atts();
+	
+	if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
+	$feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'}, $attr->{'class'} ); 
+    }
+    
+    foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
+    {
+	my $attr = $BsmlLink->atts();
+	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+    }
+    
+    $twig->purge;
+
+    return $feat;
+}
+
 1

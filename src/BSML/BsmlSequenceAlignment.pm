@@ -27,6 +27,7 @@ sub init
     $self->{'BsmlAttr'} = {};
     $self->{'BsmlLink'} = [];
     $self->{'BsmlSequenceData'} = [];
+    $self->{'Alignment-consensus'} = '';
 }
 
 sub addBsmlSequenceData
@@ -87,6 +88,12 @@ sub write
     {
 	$seqDat->write( $writer );
     }
+
+    $writer->startTag( "Alignment-consensus" );
+    $writer->characters( $self->{'Alignment-consensus'} );
+    $writer->endTag( "Alignment-consensus" );
+
+    
 
     foreach my $link (@{$self->{'BsmlLink'}})
     {

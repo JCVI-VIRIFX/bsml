@@ -943,6 +943,7 @@ sub createAndAddMultipleAlignmentTable
     my $multipleAlignmentTable = $self->returnBsmlMultipleAlignmentTableR( $self->addBsmlMultipleAlignmentTable() );
 
     $multipleAlignmentTable->addattr( 'molecule-type', $args{'molecule-type'} );
+    $multipleAlignmentTable->addattr( 'seq-format', $args{'seq-format'} );
     
     return $multipleAlignmentTable;
 }
