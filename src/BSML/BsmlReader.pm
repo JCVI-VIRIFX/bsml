@@ -80,7 +80,6 @@ sub readSequenceDatImport
 	$rhash->{'import'} = $seq->returnBsmlSeqDataImport();
 	$rhash->{'seqdat'} = $self->subSequence( $seq, -1, 0, 0 );
 	
-	print $rhash->{'import'};
 	return $rhash;
     }
   }
