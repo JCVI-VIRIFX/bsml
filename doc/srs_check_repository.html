@@ -1,0 +1,462 @@
+<HTML><HEAD><TITLE>Software Requirements Specification Document Template </TITLE>
+</HEAD>
+<BODY>
+<CENTER>
+  <H1><EM>check_repository</EM></H1>
+  <em><strong>SRS Document</strong></em><BR>
+  <EM>Sam Angiuoli, Chris Hauser</EM><BR>
+  <EM>TIGR</EM><BR>
+  <EM>10/6/2003</EM><BR>
+  <EM>DRAFT:v0.1</EM> 
+</CENTER> 
+<H2><a name="a1"></a>1. Introduction</H2>
+<UL>
+  <P> 
+  <LI><B><a name="a1b1"></a>1.1 Purpose of this document</B><BR>
+    This document provides the specification for the software utility <strong>check_repository</strong>. 
+    <P></P>
+  <LI><B><a name="a1b2"></a>1.2 Scope of this document</B><BR>
+    This document should provide the complete specification needed to engineer 
+    the <strong>check_repository</strong> utility. This document should be updated 
+    as needed to reflect the implementation of the software. 
+  <LI>
+  <LI><B><a name="a1b3"></a>1.3 Overview</B><BR>
+    <strong>check_repository</strong> is a utility for interrogating the status 
+    of data repositories associated with a workflow mediated BSML data generation 
+    pipeline<b>.</b> 
+    <P></P>
+  <LI><B><a name="a1b4"></a>1.4 Business Context</B><BR>
+    A simple and intuitive interface for detecting the functional status of the 
+    data repository.</LI>
+</UL>
+<H2><a name="a2"></a>2. General Description</H2>
+<UL>
+  <P> 
+  <LI><B>2.1 Product Functions</B><BR>
+    This utility performs a variety of quality control checks on the BSML repository. 
+    FASTA repository, workflow repository, and reports the functional status of 
+    each repository. 
+    <P></P>
+  <LI><B>2.2 Similar System Information</B><BR>
+    This utility is not currently part of a software package. A comparison with 
+    similar utitlities has not been done. 
+    <P></P>
+  <LI><B>2.3 User Characteristics</B><BR>
+    Users must include all TIGR informatics personnel, faculty, and scientific 
+    staff. 
+  <LI><B>2.4 User Problem Statement</B><BR>
+    -Users are currently unable to ascertain the validitiy of documents in the 
+    BSML repository.<br>
+    -Users are currently unable to detect documents that are 'out of sync'.<br>
+    -Users are currently unable to ascertain which documents exist in the repository.<br>
+    -Users are currently unable to ascertain which workflows have been run.
+</UL>
+<blockquote> 
+  <p>&nbsp;</p>
+</blockquote>
+<UL>
+  <LI><B>2.5 User Objectives</B><BR>
+    The user should receive &quot;ok/not&quot; status for the BSML repository, 
+    FASTA repository, and workflow repository. If the status is &quot;not ok&quot;, 
+    a list of error conditions and possible solutions should be provided to the 
+    user. 
+    <P></P>
+  <LI><B>2.6 General Constraints</B><BR>
+    This utility should run on linux platforms. The user will wait for output 
+    from the utility.</LI>
+</UL>
+<H2><a name="funcreqs"></a>3. Functional Requirements</H2>
+This section lists the functional requirements in ranked order. Functional requirements 
+describes the possible effects of a software system, in other words, <EM>what</EM> 
+the system must accomplish. Other kinds of requirements (such as interface requirements, 
+performance requirements, or reliability requirements) describe <EM>how</EM> the 
+system accomplishes its functional requirements. 
+<OL>
+  <P> 
+  <LI><B>Syntax/usage check</B><BR>
+    <OL>
+      <P> 
+      <LI><B>Description</B><BR>
+        -Files in the BSML_repository are checked against a DTD for validity.<br>
+        -Files in the BSML_repository are checked against an appropriate schema 
+        for correct usage.<br>
+        -Files in the WORKFLOW_repository are checked against a DTD/ (or schema) 
+        for validity.<br>
+        -Files in the FASTA_repository are checked with against the <strong>'cleanFasta' 
+        </strong>utility. 
+        <P></P>
+      <LI><B>Criticality</B><BR>
+        Critical. Part of default program execution. 
+        <P></P>
+      <LI><B>Technical issues</B><BR>
+        -The FASTA_repository check should be skipped if the <strong>cleanFasta 
+        </strong>utility is not available. This utility may not be available outside 
+        of TIGR. <br>
+        -The location of the DTD, schema, and validation executables should be 
+        configurable via a simple configuration file. The utility should read 
+        a default configuration file if no configuration is specified.<br>
+        <P></P>
+      <LI><B>Cost and schedule</B><BR>
+        This requirement should not require significant development time (&lt;8 
+        hrs). 
+        <P></P>
+      <LI><B>Risks</B><BR>
+        <P></P>
+      <LI><B>Dependencies with other requirements</B><BR>
+        The repository must be organized as outlined in the document <strong>'RFC: 
+        Repository Directory Structure'</strong> <BR>
+    </OL>
+    <P></P>
+  <LI><B>Repository structure</B><BR>
+    <OL>
+      <P> 
+      <LI><B>Description</B><BR>
+        -Check the name and permissions of directories and sub directories in 
+        BSML_repository, FASTA_repository, WORKFLOW_repository<br>
+        -Check the existence and permissions of the CHECKSUM and CHECKSUM.SUM 
+        files in the BSML_repository and FASTA_repository 
+        <P></P>
+      <LI><B>Criticality</B><BR>
+        Non-critical. Part of default program execution. 
+        <P></P>
+      <LI><B>Technical issues</B><BR>
+        <br>
+        <P></P>
+      <LI><B>Cost and schedule</B><BR>
+        This requirement should not require significant development time (&lt;8 
+        hrs). 
+        <P></P>
+      <LI><B>Risks</B><BR>
+        <P></P>
+      <LI><B>Dependencies with other requirements</B><BR>
+        The repository must be organized as outlined in the document <strong>'RFC: 
+        Repository Directory Structure'</strong> <BR>
+    </OL>
+  <LI><b>Referencial integrity</b><BR>
+    <OL>
+      <P> 
+      <LI><B>Description</B><BR>
+        -All BSML import statements are checked for valid references.<br>
+        -All ID references to external documents are checked for validity. 
+        <P></P>
+      <LI><B>Criticality</B><BR>
+        Critical. Part of default program execution. 
+        <P></P>
+      <LI><B>Technical issues</B><BR>
+        This check should only be used to check for constraint violations that 
+        will not be determined from DTD or schema validation.<br>
+        <P></P>
+      <LI><B>Cost and schedule</B><BR>
+        This requirement should not require significant development time (&lt;8 
+        hrs). 
+        <P></P>
+      <LI><B>Risks</B><BR>
+        <P></P>
+      <LI><B>Dependencies with other requirements</B><BR>
+        The repository must be organized as outlined in the document <strong>'RFC: 
+        Repository Directory Structure'<br>
+        </strong>The Perl BSML object library may be required to implement this 
+        requirement. <BR>
+    </OL>
+  <LI><b>Checksum validation</b><BR>
+    <OL>
+      <P> 
+      <LI><B>Description</B><BR>
+        -Files in the BSML_repository and FASTA_repository are checksumed and 
+        checked against the CHECKSUM file.<br>
+        -Files in the BSML_repository are parsed for &quot;checksum dependency&quot; 
+        attributes that are stored as part of the analysis object. This attribute 
+        should reference a file and provide a checksum value. The current checksum 
+        of the referenced file should be compared with stored checksum. <br>
+        <P></P>
+      <LI><B>Criticality</B><BR>
+        Non-critical. This should be part of 'verbose' program execution. 
+        <P></P>
+      <LI><B>Technical issues</B><BR>
+        -The CHECKSUM and CHECKSUM.SUM files for the BSML_repository and FASTA_repository 
+        should be generated during the <strong>chado2bsml</strong> workflow.<br>
+        <P></P>
+      <LI><B>Cost and schedule</B><BR>
+        This requirement should not require significant development time (&lt;8 
+        hrs). 
+        <P></P>
+      <LI><B>Risks</B><BR>
+        <P></P>
+      <LI><B>Dependencies with other requirements</B><BR>
+        The repository must be organized as outlined in the document <strong>'RFC: 
+        Repository Directory Structure'</strong> <BR>
+    </OL>
+  <LI><B>WF instance checks</B><BR>
+    <OL>
+      <P> 
+      <LI><B>Description</B><BR>
+        -Provide a summary of the last run time of a workflow instance of each 
+        workflow type in the WORKFLOW_Repository. This summary should include 
+        the execution date of the workflow and the path to the instance file.<br>
+        -Files in the BSML_repository are parsed for &quot;workflow instance&quot; 
+        attributes that are stored as part of the analysis object. This attribute 
+        should reference a valid workflow instance file. The utility should report 
+        missing an inconsistent state if there is a more recent workflow instance 
+        file of that type. The utility should report an error if the instance 
+        file is missing.<br>
+        <P></P>
+      <LI><B>Criticality</B><BR>
+        Non-critical. This should be part of 'verbose' program execution. 
+        <P></P>
+      <LI><B>Technical issues</B><BR>
+        -Storing the workflow instance file in the BSML document for analysis 
+        documents may be non-trivial. A workaround could be to store some other 
+        unique ID such as the process ID.<br>
+        -The execution time of the workflow may be derived from the file time-stamp. 
+        A more robust implementation in the future can parse the instance document 
+        and provide more information such as start time, stop time.<br>
+        <P></P>
+      <LI><B>Cost and schedule</B><BR>
+        This requirement should not require significant development time (&lt;8 
+        hrs). 
+        <P></P>
+      <LI><B>Risks</B><BR>
+        <P></P>
+      <LI><B>Dependencies with other requirements</B><BR>
+        The repository must be organized as outlined in the document <strong>'RFC: 
+        Repository Directory Structure'</strong> <BR>
+    </OL>
+</OL>
+<H2><a name="interfacereqs"></a>4. Interface Requirements</H2>
+This section describes how the software interfaces with other software products 
+or users for input or output. Examples of such interfaces include library routines, 
+token streams, shared memory, data streams, and so forth. 
+<UL>
+  <P> 
+  <LI><B>4.1 User Interfaces</B><BR>
+    Describes how this product interfaces with the user. 
+    <UL>
+      <P> 
+      <LI><B>4.1.1 GUI</B><BR>
+        N/A 
+        <P></P>
+      <LI><B>4.1.2 CLI</B><BR>
+        Describes the command-line interface if present. For each command, a description 
+        of all arguments and example values and invocations should be provided. 
+        <table width="75%" border="1">
+          <tr> 
+            <td colspan="2">Parameter</td>
+            <td width="31%">Description</td>
+            <td width="31%">Default</td>
+            <td width="10%">Required</td>
+          </tr>
+          <tr> 
+            <td width="6%">Short</td>
+            <td width="22%">Long</td>
+            <td colspan="3">&nbsp;</td>
+          </tr>
+          <tr> 
+            <td>-d</td>
+            <td>--directory [directory]</td>
+            <td>Root directory of the project</td>
+            <td>''</td>
+            <td>Yes</td>
+          </tr>
+          <tr> 
+            <td>&nbsp;</td>
+            <td>--skip-syntax</td>
+            <td>Skip the syntax/usage checks</td>
+            <td>0</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>&nbsp;</td>
+            <td>--skip-structure</td>
+            <td>Skip the directory structure checks</td>
+            <td>0</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>&nbsp;</td>
+            <td>--skip-references</td>
+            <td>Skip the referencial integrity checks</td>
+            <td>1</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>&nbsp;</td>
+            <td>--skip-checksums</td>
+            <td>Skip checksums tests</td>
+            <td>0</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>&nbsp;</td>
+            <td>--skip-workflows</td>
+            <td>Skip workflow integrity tests</td>
+            <td>0</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>-V</td>
+            <td>--version</td>
+            <td>Report version information</td>
+            <td>''</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>-v</td>
+            <td>--verbose</td>
+            <td>Run all tests</td>
+            <td>0</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>-l</td>
+            <td>--log [log file]</td>
+            <td>Log file name</td>
+            <td>''</td>
+            <td>No</td>
+          </tr>
+          <tr> 
+            <td>-h</td>
+            <td>--help</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr> 
+            <td>-c</td>
+            <td>--conf [conf file]</td>
+            <td>Override configuration settings. Eg. repository names</td>
+            <td>''</td>
+            <td>No</td>
+          </tr>
+        </table>
+        <br>
+      <LI><B>4.1.3 API</B><BR>
+        No resuable API needs to be developed as part of this utility 
+        <P></P>
+      <LI><B>4.1.4 Diagnostics or ROM</B><BR>
+        No debugging output is available.</LI>
+    </UL>
+    <P></P>
+  <LI><B>4.2 Hardware Interfaces</B><BR>
+    N/A 
+    <P></P>
+  <LI><B>4.3 Communications Interfaces</B><BR>
+    N/A 
+    <P></P>
+  <LI><B>4.4 Software Interfaces</B><BR>
+    N/A </LI>
+</UL>
+<H2><a name="perfreqs"></a>5. Performance Requirements</H2>
+This utility should perform as a user waits on a standard desktop hardware P4 
+&gt; 500MhZ with a minimum of 256MB of memory. 
+<H2><a name="designconstraints"></a>6. Design Constraints</H2>
+Specifies any constraints for the design team using this document. 
+<UL>
+  <P> 
+  <LI><B>6.1 Standards Compliance</B><BR>
+    <P>-This utility should assume output of Workflow v2.0<br>
+      -This utility should assume BSML v3.1<br>
+      -This utility should follow the directory structure outlined in <strong>'RFC: 
+      Repository Directory Structure'</strong> 
+  <LI><B>6.2 Hardware Limitations</B><BR>
+    <BR>
+</UL>
+<H2><a name="attributes"></a>7. Other non-functional attributes</H2>
+Specifies any other particular non-functional attributes required by the system. 
+Examples are provided below. 
+<UL>
+  <P> 
+  <LI><B>7.1 Security</B><BR>
+    <P></P>
+  <LI><B>7.2 Binary Compatibility</B><BR>
+    <P></P>
+  <LI><B>7.3 Reliability</B><BR>
+    <P></P>
+  <LI><B>7.4 Maintainability</B><BR>
+    <P></P>
+  <LI><B>7.5 Portability</B><BR>
+    <P></P>
+  <LI><B>7.6 Extensibility</B><BR>
+    <P></P>
+  <LI><B>7.7 Reusability</B><BR>
+    <P></P>
+  <LI><B>7.8 Application Affinity/Compatibility</B><BR>
+    <P></P>
+  <LI><B>7.9 Resource Utilization</B><BR>
+    <P></P>
+  <LI><B>7.10 Serviceability</B><BR>
+    <P></P>
+  <LI><b>7.11 Output format</b><BR>
+    Test results should be output in a simple parsable format. Possible output 
+    formats include <br>
+    <pre>Test_name1	ok
+Test_name2	not_ok
+		Failure1
+		Failure2
+</pre>
+    Test results should be summarized whenever possible. If X files pass a particular 
+    test, the output should summarize the results and not detail each success. </pre> 
+    <pre>Test_name1	ok	2345/2345 passed
+Test_name2	not_ok	2145/2345 passed
+		Failure1
+		Failure2</pre>
+    <br>
+    An ASCII status bar should be provided for long running tests when possible. 
+    This status bar should be written via backspace and should not appear in the 
+    final output.</LI>
+</UL>
+<H2>8. Preliminary Object-Oriented Domain Analysis</H2>
+<p>N/A</p>
+<p>&nbsp;</p>
+<h2>9. Operational Scenarios</h2>
+Links to use case documents here. 
+<BLOCKQUOTE><P>&nbsp;</P>
+</BLOCKQUOTE>
+<H2>10. Preliminary Schedule</H2>
+Link to chart here 
+<P>&nbsp;
+<H2>11. Testing plan</H2>
+<UL>
+  <LI><strong>11.1 Testable components</strong><br>
+    <br>
+    Each of the functional requirements will be tested manually by the developer 
+    and a user prior to production installation<br>
+  <LI><B>11.2 Untestable components</B><BR>
+    <P></P>
+    N/A 
+</UL>
+    
+<h2>12. Installation requirements</h2>
+    <UL>
+      <LI><strong>12.1 Platforms</strong><br>
+        
+    <ul>
+      <li>Linux</li>
+    </ul>
+        <br>
+      <LI><B>12.2 Hardware requirements</B><BR>
+        <P></P>
+        
+    <br>
+      <LI><B>12.3 Software requirements</B><BR>
+    <br>
+      <LI><b>12.4 Distribution strategy</b><BR>
+    <br>
+      <LI><b>12.5 Installation mechanism</b><BR>
+  <LI><b>12.6 Support strategy</b><BR>
+        <BR>
+</ul>
+    <H2>13. Documentation requirements</H2>
+    
+<p>Command line usage including example executions should be provided via perldoc 
+  and POD::Usage.</p>
+    <H2>14. Appendices</H2>
+    
+<UL>
+  <P> 
+  <LI><B>14.1 Definitions, Acronyms, Abbreviations</B><BR>
+    <P></P>
+  <LI><B>14.2 References</B><BR>
+  </LI>
+</UL>
+</UL>
+</BODY></HTML>
