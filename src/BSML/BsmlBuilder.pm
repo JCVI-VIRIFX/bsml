@@ -354,7 +354,7 @@ sub createAndAddFeatureWithLoc
 
     my $feature = $self->createAndAddFeature( $FTable, $id, $title, $class, $comment, $displayAuto );
 
-    if( $start && $end )
+    if( ($start ne "") && ($end ne "") )
       {
 	if( $start == $end )
 	  {
@@ -656,7 +656,7 @@ sub createAndAddSequencePairAlignment
 	# search for an alignment object having the same coordinates and return it if found. Otherwise a new alignment
 	# object will be created. This functionality is intended to facilitate Doug's blast use case.
 
-	if( $args{'refstart'} && $args{'refend'} )
+	if( ($args{'refstart'} ne "") && ($args{'refend'} ne "") )
 	{
 	    foreach my $aln ( @{$alignment_pair_list} )
 	    {
