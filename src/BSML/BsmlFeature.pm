@@ -147,7 +147,7 @@ B<Returns:> hash reference
 
 =cut
 
-sub returnBsmlQualifierHash
+sub returnBsmlQualifierHashR
   {
     my $self = shift;
     return $self->{'BsmlQual'};
@@ -259,7 +259,7 @@ B<Returns:> list reference
 
 =cut
 
-sub returnBsmlSiteLocList
+sub returnBsmlSiteLocListR
   {
     my $self = shift;
 
@@ -354,7 +354,7 @@ B<Returns:> reference to a list of hash references
 
 =cut
 
-sub returnBsmlIntervalLocList
+sub returnBsmlIntervalLocListR
   {
     my $self = shift;
     return $self->{'BsmlInterval-Loc'};

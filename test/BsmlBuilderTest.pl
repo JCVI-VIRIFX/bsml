@@ -28,7 +28,7 @@ my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', title=>'fea
 
 $doc->createAndAddQualifier( $feat, 'gene', 'ubiquitin' );
 
-$doc->write( 'output.txt' );
+$doc->write( 'output.xml' );
 
 
 
