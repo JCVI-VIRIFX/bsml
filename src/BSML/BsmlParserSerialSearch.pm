@@ -11,13 +11,36 @@ use BSML::BsmlAnalysis;
 use BSML::BsmlSequence;
 use BSML::BsmlFeature;
 use BSML::BsmlGenome;
+use BSML::BsmlMultipleAlignmentTable;
+
+use Log::Log4perl qw(get_logger);
+use Data::Dumper;
 
 
+my $logger = get_logger();
+
+#-------------------------------------------------------------------------------------------------------------------
+#
+#
 # Clients must define callback routines which are called during parsing. Callbacks may be defined
 # for Sequence, SeqPairAlignment, and Analysis objects. These functions are called with an object 
 # reference during the parse as each element is encountered. The objects may be used directly or
 # through the BsmlReader class. Twigs are rooted at Sequence, SeqPairAlignment, Feature, or Analysis elements
 # for maximum efficiency. 
+#
+# modification: Jay Sundaram 2003-12-07
+#               1) introduction of log4perl logging
+#               2) MultipleAlignmentCallBack function
+#
+#
+#
+#
+#
+#
+#
+#-------------------------------------------------------------------------------------------------------------------
+
+
 
 sub new
   {
@@ -28,12 +51,22 @@ sub new
     
     if( $args{'AlignmentCallBack'} ){
 	$self->{'AlignmentCallBack'} = $args{'AlignmentCallBack'};
-
+	
 	$self->{'Roots'}->{'Seq-pair-alignment'} = sub {my ($twig, $seq_aln ) = @_;
-									  my $bsml_aln = seqPairAlignmentHandler($twig,$seq_aln);
-									  $self->{'AlignmentCallBack'}( $bsml_aln );
+							my $bsml_aln = seqPairAlignmentHandler($twig,$seq_aln);
+							$self->{'AlignmentCallBack'}( $bsml_aln );
 						    };
     }
+
+    if( $args{'MultipleAlignmentCallBack'} ){
+	$self->{'MultipleAlignmentCallBack'} = $args{'MultipleAlignmentCallBack'};
+
+	$self->{'Roots'}->{'Multiple-alignment-table'} = sub {my ($twig, $seq_aln ) = @_;
+							      my $bsml_aln = multipleAlignmentHandler($twig,$seq_aln);
+							      $self->{'MultipleAlignmentCallBack'}( $bsml_aln );
+							  };
+    }
+
 
     if( $args{'AnalysisCallBack'} ){
 	$self->{'AnalysisCallBack'} = $args{'AnalysisCallBack'};
@@ -169,6 +202,7 @@ sub seqPairAlignmentHandler
 	   }
        }     
      
+
      $twig->purge();
 
      return $bsmlaln;
@@ -624,4 +658,326 @@ sub addBsmlAttrLinks
     }    
 }
 
+
+
+#------------------------------------------------------------------------------
+# multipleAlignmentHandler()
+#
+# Handler for multipleAlignment elements.
+# Returns a reference to a BSML::SeqPairAlignment object.
+#
+#
+#
+# <Multiple-alignment-table molecule-type="protein">
+#      <Alignment-summary seq-format="msf" seq-type="protein">
+#           <Aligned-sequence length="1096" seqnum="1" name="lma2.204.m00029_protein:1"></Aligned-sequence>
+#           <Aligned-sequence length="1096" seqnum="2" name="lma2.206.m00009_protein:2"></Aligned-sequence>
+#      </Alignment-summary>
+#      <Sequence-alignment sequences="1:2:">
+#           <Sequence-data seq-name="lma2.204.m00029_protein:1">lma2.204.m00029_protein      MHSQRPCAGY NARCEHDRSV LPSLMSQQDE FFTGSSPRTA SVHSEARPHL 
+#           </Sequence-data>
+#           <Sequence-data seq-name="lma2.206.m00009_protein:2">lma2.206.m00009_protein      .MSLMPGYPV PRDQWVESAE ACAACSKRFT FFAFKENCPC CGRLFCSSCL 
+#           </Sequence-data>
+#           <Alignment-consensus></Alignment-consensus>
+#      </Sequence-alignment>
+# </Multiple-alignment-table>
+#
+#
+#
+#
+#
+#
+#-------------------------------------------------------------------------------
+sub multipleAlignmentHandler {
+
+    $logger->debug("Entered multipleAlignmentHandler") if $logger->is_debug;
+
+
+    my ($twig, $seq_aln ) = @_;
+
+    $logger->logdie("twig was not defined")    if (!defined($twig));
+    $logger->logdie("seq_aln was not defined") if (!defined($seq_aln));
+
+    
+    #
+    # create a new BsmlMultipleAlignmentTable object
+    #
+    my $bsml_multi_aln = new BSML::BsmlMultipleAlignmentTable;
+    
+
+    #
+    # This will retrieve all of the XML attributes associated to the  <Multiple-alignment-table> element
+    #
+    # e.g. <Multiple-alignment-table molecule-type="protein">
+    # 
+    my $attr = $seq_aln->atts();
+
+    #
+    # add all of the <Multiple-alignment-table> attributes to the BsmlMultipleAlignmentTable object
+    #
+    foreach my $key (keys %{$attr}){
+	$bsml_multi_aln->addattr( $key, $attr->{$key} );
+    }
+
+    #
+    # Process the <Alignment-summary> section:
+    # e.g.
+    #
+    #    <Alignment-summary seq-format="msf" seq-type="protein">
+    #         <Aligned-sequence length="1096" seqnum="1" name="lma2.204.m00029_protein:1"></Aligned-sequence>
+    #         <Aligned-sequence length="1096" seqnum="2" name="lma2.206.m00009_protein:2"></Aligned-sequence>
+    #    </Alignment-summary>
+    #
+
+
+    #
+    # This will retrieve all of the <Alignment-summary> elements
+    # 
+    foreach my $alignment_summary ($seq_aln->children('Alignment-summary')){
+
+	#
+	# Creates and adds to BsmlAlignmentSummary object
+	#
+	my $bsml_alignment_summary = $bsml_multi_aln->returnBsmlAlignmentSummaryR( $bsml_multi_aln->addBsmlAlignmentSummary() ); 
+	
+	#
+	# this will retrieve all of the XML attributes associated to the <Alignment-summary> element
+	# e.g.  "seq-format" and "seq-type"
+	my $attr = $alignment_summary->atts();
+
+
+	#
+	# this will add <Alignment-summary> XML attributes to the  BsmlAlignmentSummary object
+	#
+	foreach my $key (keys %{$attr}){
+	    $bsml_alignment_summary->addattr( $key, $attr->{$key} );
+	}
+
+	#
+	# this will retrieve all <Attribute> elements and add them to the BsmlAlignmentSummary object
+	#
+	foreach my $BsmlAttr ( ($alignment_summary->children('Attribute') )){
+	    my $attr  = $BsmlAttr->atts();
+	    $bsml_alignment_summary->addBsmlAttr($attr->{'name'}, $attr->{'content'});
+	}
+
+	#
+	# this will retrieve all <Link> elements and add them to the BsmlAlignmentSummary object
+	#
+	foreach my $BsmlLink ($alignment_summary->children('Link')){
+	    my $attr = $BsmlLink->atts();
+	    $bsml_alignment_summary->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	}
+
+
+	#
+	# this will retrieve all the <Aligned-sequence> elements
+	#
+	foreach my $aligned_sequence ($alignment_summary->children('Aligned-sequence')){
+
+	    #
+	    # Creates and adds to BsmlAlignedSequence object
+	    #
+	    my $bsml_aligned_sequence = $bsml_alignment_summary->returnBsmlAlignedSequenceR($bsml_alignment_summary->addBsmlAlignedSequence());
+
+	    #
+	    # this will retrieve the all of the XML attributes associated to the <Aligned-sequence> element
+	    # e.g.  "length", "seqnum", and "name" 
+	    my $attr = $aligned_sequence->atts();	
+
+	    #
+	    # this will add <Aligned-sequence> XML attributes to the BsmlAlignedSequence object
+	    #
+	    foreach my $key (keys %{$attr}){
+		$bsml_aligned_sequence->addattr( $key, $attr->{$key} );
+	    }
+	    
+	    #
+	    # this will retrieve all <Attribute> elements and add them to the BsmlAlignedSequence object
+	    #
+	    foreach my $BsmlAttr ( ($aligned_sequence->children('Attribute') )){
+		my $attr  = $BsmlAttr->atts();
+		$bsml_aligned_sequence->addBsmlAttr($attr->{'name'}, $attr->{'content'});
+	    }
+
+	    #
+	    # this will retrieve all <Link> elements and add them to the BsmlAlignedSequence object
+	    #	    
+	    foreach my $BsmlLink ($aligned_sequence->children('Link')){
+		my $attr = $BsmlLink->atts();
+		$bsml_aligned_sequence->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	    }
+	}
+    }
+
+    #
+    # Parsing the <Sequence-alignment> section e.g.:
+    #
+    # <Sequence-alignment sequences="1:2:">
+    #      <Sequence-data seq-name="lma2.204.m00029_protein:1">lma2.204.m00029_protein      MHSQRPCAGY NARCEHDRSV LPSLMSQQDE FFTGSSPRTA SVHSEARPHL 
+    #                                                          lma2.204.m00029_protein      QERFPFATAA SSLPEHSDGA NLYSGAGATN TRGNFKVAVR VRPPLHRELH 
+    #                                                          lma2.204.m00029_protein      GYRPFVDVVQ IVPEHPNSIT LCDALDTEDG RGAVYSRQSY TFDRVYAADA 
+    #      </Sequence-data>
+    #      <Sequence-data seq-name="lma2.206.m00009_protein:2">lma2.206.m00009_protein      .MSLMPGYPV PRDQWVESAE ACAACSKRFT FFAFKENCPC CGRLFCSSCL 
+    #                                                          lma2.206.m00009_protein      SAQCTLFPTA PPKAVCLDCF RKAQDWRLSQ LEQQQQQQAT TQADVG...A 
+    #                                                          lma2.206.m00009_protein      AAAPLSTSME VLESKLSALE EEFDRAKANA R.HLREENDS LIDLLAAKDS 
+    #      </Sequence-data>
+    #      <Alignment-consensus></Alignment-consensus>
+    # </Sequence-alignment>
+    #
+    #
+    #
+
+    #
+    # this will retrieve all the <Sequence-alignment> elements
+    #
+    foreach my $sequence_alignment ($seq_aln->children('Sequence-alignment')){
+
+
+	#
+	# Creates and adds to BsmlSequenceAlignment object
+	#
+	my $bsml_sequence_alignment = $bsml_multi_aln->returnBsmlSequenceAlignmentR( $bsml_multi_aln->addBsmlSequenceAlignment() ); 
+	
+	
+	#
+	# this will retrieve the "sequences" XML attribute of the <Sequence-alignment> element
+	#
+	my $attr = $sequence_alignment->atts();
+
+	#
+	# this will add <Sequence-alignment> XML attributes to the BsmlSequenceAlignment object
+	#
+	foreach my $key (keys %{$attr}){
+	    $bsml_sequence_alignment->addattr( $key, $attr->{$key} );
+	}
+		
+	#
+	# this will retrieve <Attribute> elements and add them to the BsmlSequenceAlignment object
+	#
+	foreach my $BsmlAttr ( ($sequence_alignment->children('Attribute') )){
+	    my $attr  = $BsmlAttr->atts();
+	    $bsml_sequence_alignment->addBsmlAttr($attr->{'name'}, $attr->{'content'});
+	}
+	
+	#
+	# this will retrieve <Link> elements and add them to the BsmlSequenceAlignemnt object
+	#
+	foreach my $BsmlLink ($sequence_alignment->children('Link')){
+	    my $attr = $BsmlLink->atts();
+	    $bsml_sequence_alignment->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	}
+	
+
+	
+	#
+	# this will retrieve all the <Sequence-data> elements
+	#
+	foreach my $sequence_data ($sequence_alignment->children('Sequence-data')){
+	 
+	    
+	    #
+	    # Creates and adds to BsmlSequenceData object
+	    #
+	    my $bsml_sequence_data = $bsml_sequence_alignment->returnBsmlSequenceDataR($bsml_sequence_alignment->addBsmlSequenceData());
+
+	
+	    #
+	    # this will retrieve all of the XML attributes associated to the <Sequence-data> element
+	    # e.g. "seq-name"
+	    #
+	    my $attr = $sequence_data->atts();	
+
+	    # add raw sequence data if found 
+	    
+	    my $seqDat = $sequence_data->text();
+	    if( $seqDat ){
+		$bsml_sequence_data->addSequenceAlignmentData( $seqDat );
+	    }
+
+	    #
+	    # this will add <Sequence-data> XML attributes to the BsmlSequenceData object
+	    #
+	    foreach my $key (keys %{$attr}){
+		$bsml_sequence_data->addattr( $key, $attr->{$key} );
+	    }
+	    
+	    #
+	    # this will retrieve all <Attribute> elements and add them to the BsmlSequenceData object
+	    #
+	    foreach my $BsmlAttr ( ($sequence_data->children('Attribute') )){
+		my $attr  = $BsmlAttr->atts();
+		$bsml_sequence_data->addBsmlAttr($attr->{'name'}, $attr->{'content'});
+	    }
+	    
+	    #
+	    # this will retrieve all <Link> elements and add them to the BsmlSequenceData object
+	    #
+	    foreach my $BsmlLink ($sequence_data->children('Link')){
+		my $attr = $BsmlLink->atts();
+		$bsml_sequence_data->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	    }
+
+#	    my $sequence_data_pcdata = $bsml_sequence_data->returnSequenceAlignmentData($bsml_sequence_data->addSequenceAlignmentData());
+
+	}
+	
+	if (0){
+	    #
+	    # for the time being we are not using the <Alignment-consensus> since is derivable
+	    #
+
+
+
+	    #
+	    # this will retrieve all the <Alignment-consensus> elements
+	    #
+	    foreach my $alignment_consensus ($sequence_alignment->children('alignment-consensus')){
+		
+		
+		#
+		# Creates and adds to BsmlAlignmentConsensus object
+		#
+		my $bsml_alignment_consensus = $bsml_multi_aln->returnBsmlAlignmentConsensusR($bsml_multi_aln->addBsmlAlignmentConsensus());
+		
+		
+		#
+		# this will retrieve the XML attributes associated to the <Alignment-consensus> element
+		#
+		my $attr = $alignment_consensus->atts();	
+		
+		#
+		# this will add <Alignment-consensus> XML attributes to the BsmlAlignmentConsensus object
+		#
+		foreach my $key (keys %{$attr}){
+		    $bsml_alignment_consensus->addattr( $key, $attr->{$key} );
+		}
+		
+		
+		#
+		# this will retrieve all <Attribute> elements and add them to the BsmlAlignmentConsensus object
+		#
+		foreach my $BsmlAttr ( ($alignment_consensus->children('Attribute') )){
+		    my $attr  = $BsmlAttr->atts();
+		    $bsml_alignment_consensus->addBsmlAttr($attr->{'name'}, $attr->{'content'});
+		}
+		
+		#
+		# this will retrieve all <Link> elements and add  them to the BsmlAlignmentConsensus object
+		#
+		foreach my $BsmlLink ($alignment_consensus->children('Link')){
+		    my $attr = $BsmlLink->atts();
+		    $bsml_alignment_consensus->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+		}
+	    }
+	}
+    }
+
+
+     
+    $twig->purge();
+
+    return $bsml_multi_aln;
+    
+}
 1
