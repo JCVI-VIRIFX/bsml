@@ -440,7 +440,13 @@ sub readLinks
     my $self = shift;
     my ($elem) = @_;
 
-    return $elem->returnBsmlLinkListR();
+    #it would be good to check if $elem pointed to a valid Bsml Object.
+    #Can I use SUPER to do this???
+
+    if( $elem )
+      {
+	return $elem->returnBsmlLinkListR();
+      }
   }
 
 sub readFeatureGroup
@@ -448,48 +454,89 @@ sub readFeatureGroup
     my $self = shift;
     my ($FeatureGroup) = @_;
 
-    my $returnhash = {};
-
-    $returnhash->{'id'} = $FeatureGroup->returnattr( 'id' );
-    $returnhash->{'group-set'} = $FeatureGroup->returnattr( 'group-set' );
-    $returnhash->{'cdata'} = $FeatureGroup->returnText();
-    $returnhash->{'feature-members'} = [];
-
-    foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()})
+    if( ref( $FeatureGroup ) eq 'BsmlFeatureGroup' )
       {
-	push( @{$returnhash->{'feature-members'}}, { 'featref' => $featmemb->{'feature'},
-		     'feature-type' => $featmemb->{'feature-type'},
-		     'group-type' => $featmemb->{'group-type'},
-		     'cdata' => $featmemb->{'text'}
-		   });
-      }
+	my $returnhash = {};
+	
+	$returnhash->{'id'} = $FeatureGroup->returnattr( 'id' );
+	$returnhash->{'group-set'} = $FeatureGroup->returnattr( 'group-set' );
+	$returnhash->{'cdata'} = $FeatureGroup->returnText();
+	$returnhash->{'feature-members'} = [];
 
-    return $returnhash;
+	foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()})
+	  {
+	    push( @{$returnhash->{'feature-members'}}, { 'featref' => $featmemb->{'feature'},
+							 'feature-type' => $featmemb->{'feature-type'},
+							 'group-type' => $featmemb->{'group-type'},
+							 'cdata' => $featmemb->{'text'}
+						       });
+	  }
+
+	return $returnhash;
+      }
   }
 
 ############################################################
 
+# The following set of functions were implemented as helper routines
+# for the scripts generating workflows from Bsml documents. 
+
+# Returns the keys in the Feature Group lookup table. By convention.
+# These keys are set to be the gene identifiers whose transcripts are
+# represented as feature groups. See the Bsml Gene model for further
+# information.
+
 sub returnAllFeatureGroupSetIds
   {
     my $self = shift;
+
+    #this returns a list of strings, probably should be made to return a reference
+    #to a list for consistency.
+
     return BsmlDoc::BsmlReturnFeatureGroupLookupIds();
   }
+
+# This uses the convention of our Bsml gene encoding. Each gene is represented
+# as a set of feature groups. Where each feature group is a unique transcriptional
+# form. Returning all the identifiers to the feature group lookups retrieves all
+# the gene ids in the document. 
 
 sub returnAllGeneIDs
   {
     my $self = shift;
+
+    #this returns a list of strings, probably should be made to return a reference
+    #to a list for consistency.
+    
     return $self->returnAllFeatureGroupSetIds();
   }
+
+
+#Return the assembly id (eg 'PNEUMO_19') from which a sequence is contained or derived.
+#Use the sequences id as input.
 
 sub seqIdtoAssemblyId
   {
     my $self = shift;
     my ($sequenceId) = @_;
 
+    #grab a reference to a sequence object from the lookup tables
+
     my $seq = BsmlDoc::BsmlReturnDocumentLookup( $sequenceId );
 
-    return $seq->returnBsmlAttr( 'ASSEMBLY' );
+    #check to verify that a reference to a sequence object was returned
+
+    if( ref($seq) eq 'BsmlSequence' )
+      {
+	  #return the Bsml ASSEMBLY Attribute
+	  #Note, this is a custom attribute and is TIGR specific based on our
+	  #gene proposal document. 
+	  
+	  return $seq->returnBsmlAttr( 'ASSEMBLY' );
+      }
   }
+
+#Returns a reference to a list of sequence objects given an assembly id.
 
 sub assemblyIdtoSeqList
   {
@@ -520,8 +567,8 @@ sub assemblyIdtoGeneList
 
     foreach my $geneId ($self->returnAllGeneIDs() )
       {
-	#This loops through all the featuregroup set ids (genes) in the document.
-	#Check to see if the gene is on the assembly of interest
+	# This loops through all the featuregroup set ids (genes) in the document.
+	# ChecksG to see if the gene is on the assembly of interest
 
 	if( $self->geneIdtoAssemblyId($geneId) eq $assemblyId )
 	  {
@@ -531,6 +578,13 @@ sub assemblyIdtoGeneList
 
     return $rlist;
   }
+
+# This workflow "helper" function may better serve in the client layer as it is really just
+# a summary of the coordinates produced by geneIdtoGenomicCoords.
+
+# For each gene on the input assembly, returns the coordinates of the gene, 
+# namely the genomic positions that span the gene's largest transcript. Results
+# are returned as a reference to anonymous hashes.  
 
 sub fetch_gene_positions
   {
@@ -554,7 +608,10 @@ sub fetch_gene_positions
     return $rlist;
   }
 
-# returns all the alignments associated with a query sequence and optional match seq.
+# Returns all the alignments associated with a query sequence and optional match seq.
+# If a matching sequence is not provided, all the matching sequences to the query will
+# be returned. The output of this function is a reference to a list of Bsml alignment
+# objects. 
 
 sub fetch_all_alignmentPairs
   {
@@ -565,11 +622,18 @@ sub fetch_all_alignmentPairs
 
     if( $matchSeqId )
       {
-	push( @{$alignments}, BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
+	  #pushes a reference to an alignment object onto the return list using the lookup tables
+
+	  push( @{$alignments}, BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
       }
     else
       {
+	  # this returns a reference to an anonymous hash. The hash is keyed with match query ids
+	  # which point to references to alignment objects. 
+
 	my $href = BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId );
+
+	# push the alignment objects onto the return list.
 
 	foreach my $key ( keys(%{$href}))
 	  {
@@ -579,14 +643,23 @@ sub fetch_all_alignmentPairs
     return $alignments;
   }
 
+# Returns an assembly id (parental sequence object) given a valid gene (feature group-set) identifier
+
 sub geneIdtoAssemblyId
   {
     my $self = shift;
     my ($geneId) = @_;
     my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
 
+    # Genes are referenced by ID through the feature group lookup tables. 
+    # A feature group stores a refernce to the parent sequence it belongs to.
+
     if($fgrouplist)
       {
+	  # Return the parent sequence ID of the first feature group corresponding
+	  # to the gene. Note all transcripts will reference the same parental 
+	  # genomic sequence. 
+
 	return $fgrouplist->[0]->returnParentSequenceId();
       }
     else
@@ -595,7 +668,8 @@ sub geneIdtoAssemblyId
       }
   }
 
-#returns a list of amino acid sequences given a gene identifier
+# Returns a list of amino acid sequences given a gene identifier. Each sequence
+# represents a transcriptional varient of the query gene.
 
 sub geneIdtoAASeqList
   {
@@ -606,6 +680,10 @@ sub geneIdtoAASeqList
 
     my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
     
+    # This series of loops essentially retrieves the CDS feaature and its associated
+    # amino acid sequence from a feature group representing a single transcript. Note
+    # in Prok data - Gene=Transcript=CDS.
+
     foreach my $fgroup (@{$fgrouplist})
       {
 	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
@@ -859,8 +937,6 @@ sub geneCoordstoGenomicSequence
     my $stop = $coords->[0]->{'GeneSpan'}->{'endpos'};
     my $complement = $coords->[0]->{'GeneSpan'}->{'complement'};
 
-    print "$seqId, $start, $stop, $complement )";
-
     return $self->subSequence( $seqId, $start, $stop, $complement );
   }
 
@@ -912,21 +988,6 @@ sub subSequence
 	    return reverse_complement(substr( $seqdat, $start-1, ($stop-$start+1)));
 	  }
       }
-  }
-
-sub seqIdtoSequence
-  {
-
-  }
-
-sub seqIdtoSequenceRef
-  {
-
-  }
-
-sub seqReftoGeneCoord
-  {
-
   }
 
 sub parse_multi_fasta {
