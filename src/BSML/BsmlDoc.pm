@@ -199,6 +199,20 @@ sub returnBsmlSequenceR
     return $self->{'BsmlSequences'}[$index];  
   }
 
+sub returnBsmlSequenceByIDR
+  {
+    my $self = shift;
+    my ($id) = @_;
+
+    foreach my $seq (@{$self->{'BsmlSequences'}})
+      {
+	if( $seq->returnattr( 'id' ) eq $id ){
+	  return $seq;}
+      }
+
+    return;
+  }
+
 sub addBsmlSeqPairAlignment
   {
     my $self = shift;

@@ -540,4 +540,125 @@ sub createAndAddFeatureGroup
     my ( $sequence, $id, $title, $featureIdList ) = @_;    
   }
 
+sub createAndAddBtabLine
+  {
+    my $self = shift;
+    my ( $query_name, $date, $query_length, $blast_program, $search_database, $dbmatch_accession, $start_query, 
+	 $stop_query, $start_hit, $stop_hit, $percent_identity, $percent_similarity, $bit_score, $chain_number,
+	 $segment_number, $dbmatch_header, $unknown1, $unknown2, $e_value, $p_value );
+
+    return $self->createAndAddBtabLineN( query_name => $query_name, date => $date, query_length => $query_length, 
+				 blast_program => $blast_program, search_database => $search_database, 
+				 dbmatch_accession => $dbmatch_accession, start_query => $start_query,
+				 stop_query => $stop_query, start_hit => $start_hit, percent_identity => $percent_identity,
+				 percent_similarity => $percent_similarity, bit_score => $bit_score, chain_number => $chain_number,
+				 segment_number => $segment_number, dbmatch_header => $dbmatch_header, unknown1 => $unknown1, 
+				 unknown2 => $unknown2, e_value => $e_value, p_value => $p_value );
+  }
+
+sub createAndAddBtabLineN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    #determine if the query name and the dbmatch name are a unique pair in the document
+
+    foreach my $alignment_pair ( @{$self->returnBsmlSeqPairAlignmentListR()} )
+      {
+	if( ( $alignment_pair->returnattr( 'refseq' ) eq "_$args{'query_name'}") && ($alignment_pair->returnattr( 'compseq' ) eq "_$args{'dbmatch_accession'}") )
+	  {
+
+	    #add a new BsmlSeqPairRun to the alignment pair and return
+	    my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
+
+	    if( $args{'start_query'} > $args{'stop_query'} )
+	      {
+		$seq_run->setattr( 'refpos', $args{'stop_query'} );
+		$seq_run->setattr( 'runlength', $args{'start_query'} - $args{'stop_query'} + 1 );
+		$seq_run->setattr( 'refcomplement', 1 );
+	      }
+	    else
+	      {
+		$seq_run->setattr( 'refpos', $args{'start_query'} );
+		$seq_run->setattr( 'runlength', $args{'stop_query'} - $args{'start_query'} + 1 );
+		$seq_run->setattr( 'refcomplement', 0 );
+	      }
+
+	    #the database sequence is always 5' to 3'
+
+	    $seq_run->setattr( 'comppos', $args{'start_hit'} );
+	    $seq_run->setattr( 'comprunlength', $args{'stop_hit'} - $args{'start_hit'} + 1 );
+	    $seq_run->setattr( 'compcomplement', 0 );
+
+	    $seq_run->setattr( 'runscore', $args{'bit_score'} );
+	    $seq_run->setattr( 'runprob', $args{'e_value'} );
+
+	    $seq_run->addBsmlAttr( 'percent_identity', $args{'percent_identity'} );
+	    $seq_run->addBsmlAttr( 'percent_similarity', $args{'percent_similarity'} );
+	    $seq_run->addBsmlAttr( 'chain_number', $args{'chain_number'} );
+	    $seq_run->addBsmlAttr( 'segment_number', $args{'segment_number'} );
+	    $seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
+
+	    return $alignment_pair;
+	  }
+      } 
+
+    #no alignment pair matches, add a new alignment pair and sequence run
+
+    #check to see if sequences exist in the BsmlDoc
+
+    if( !( $self->returnBsmlSequenceByIDR( "_$args{'query_name'}")) ){
+      $self->createAndAddSequence( "_$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, 'mol-not-set' );}
+
+    if( !( $self->returnBsmlSequenceByIDR( "_$args{'dbmatch_accession'}")) ){
+      $self->createAndAddSequence( "_$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', 'mol-not-set' );}
+
+    my $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
+    
+
+    $alignment_pair->setattr( 'refseq', "_$args{'query_name'}" );
+    $alignment_pair->setattr( 'compseq', "_$args{'dbmatch_accession'}" );
+
+    $alignment_pair->setattr( 'refxref', ':'.$args{'query_name'});
+    $alignment_pair->setattr( 'refstart', 0 );
+    $alignment_pair->setattr( 'refend', $args{'query_length'} - 1 );
+    $alignment_pair->setattr( 'reflength', $args{'query_length'} );
+
+    $alignment_pair->setattr( 'method', $args{'blast_program'} );
+
+    $alignment_pair->setattr( 'compxref', $args{'search_database'}.':'.$args{'dbmatch_accession'} );
+
+    my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
+
+    if( $args{'start_query'} > $args{'stop_query'} )
+      {
+	$seq_run->setattr( 'refpos', $args{'stop_query'} );
+	$seq_run->setattr( 'runlength', $args{'start_query'} - $args{'stop_query'} + 1 );
+	$seq_run->setattr( 'refcomplement', 1 );
+      }
+    else
+      {
+	$seq_run->setattr( 'refpos', $args{'start_query'} );
+	$seq_run->setattr( 'runlength', $args{'stop_query'} - $args{'start_query'} + 1 );
+	$seq_run->setattr( 'refcomplement', 0 );
+      }
+
+    #the database sequence is always 5' to 3'
+    
+    $seq_run->setattr( 'comppos', $args{'start_hit'} );
+    $seq_run->setattr( 'comprunlength', $args{'stop_hit'} - $args{'start_hit'} + 1 );
+    $seq_run->setattr( 'compcomplement', 0 );
+    
+    $seq_run->setattr( 'runscore', $args{'bit_score'} );
+    $seq_run->setattr( 'runprob', $args{'e_value'} );
+
+    $seq_run->addBsmlAttr( 'percent_identity', $args{'percent_identity'} );
+    $seq_run->addBsmlAttr( 'percent_similarity', $args{'percent_similarity'} );
+    $seq_run->addBsmlAttr( 'chain_number', $args{'chain_number'} );
+    $seq_run->addBsmlAttr( 'segment_number', $args{'segment_number'} );
+    $seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
+
+    return $alignment_pair;
+  }
+
 1
