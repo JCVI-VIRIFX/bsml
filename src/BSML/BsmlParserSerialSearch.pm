@@ -695,8 +695,8 @@ sub genomeHandler
 
 	my $attr = $crossRef->atts();
 
-	my $xref = $bsmlGenome->returnBsmlCrossReferenceR( $bsmlGenome->addBsmlCrossReference );
-	
+	my $xref = $bsmlGenome->returnBsmlCrossReferenceR( $bsmlGenome->addBsmlCrossReference() );
+
 	foreach my $key ( keys( %{$attr} ) )
         {
 	    $xref->addattr( $key, $attr->{$key});

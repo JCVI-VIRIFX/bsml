@@ -59,11 +59,11 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlFeatureTables' } = [];
     $self->{ 'BsmlFeatureGroups' } = [];
-    $self->{ 'BsmlSeqData' } = '';
+    $self->{ 'BsmlSeqData' } = undef;
     $self->{ 'BsmlSeqDataImport' } = {};
     $self->{ 'BsmlLink' } = [];
-    $self->{ 'BsmlNumbering' } = '';
-    $self->{ 'BsmlCrossReference' } = undef;
+    $self->{ 'BsmlNumbering' } = undef;
+    $self->{ 'BsmlCrossReference' } = [];
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -197,7 +197,7 @@ sub dropBsmlSeqData
   {
     my $self = shift;
    
-    $self->{'BsmlSeqData'} = '';
+    $self->{'BsmlSeqData'} = undef;
   }
 
 =item $seq->returnSeqData
@@ -365,7 +365,7 @@ sub returnBsmlNumberingR
 sub dropBsmlNumbering
 {
     my $self = shift;
-    $self->{'BsmlNumbering'} = '';
+    $self->{'BsmlNumbering'} = undef;
 }
 
 
@@ -425,8 +425,7 @@ sub write
 	$self->{'BsmlNumbering'}->write( $writer );
     }
 
-    if ( my $xref = $self->{'BsmlCrossReference'})
-    {
+    foreach my $xref (@{$self->{'BsmlCrossReference'}}){
 	$xref->write( $writer );
     }
 

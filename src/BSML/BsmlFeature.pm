@@ -63,7 +63,7 @@ sub init
     $self->{ 'BsmlInterval-Loc' } = [];
     $self->{ 'BsmlQual' } = {};
     $self->{ 'BsmlLink' } = [];
-    $self->{ 'BsmlCrossReference' } = undef;
+    $self->{ 'BsmlCrossReference' } = [];
   }
     
 =item $feature->addBsmlQualifier( $valuetype, $value )
@@ -413,8 +413,7 @@ sub write
       }
 
 
-    if ( my $xref = $self->{'BsmlCrossReference'})
-    {
+    foreach my $xref (@{$self->{'BsmlCrossReference'}}){
 	$xref->write( $writer );
     }
     

@@ -2,6 +2,7 @@ package BSML::BsmlElement;
 
 use warnings;
 use strict;
+use Data::Dumper;
 
 =head1 NAME
 
@@ -317,21 +318,45 @@ sub addBsmlCrossReference
 {
     my $self = shift;
 
-    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
-    return $self->{'BsmlCrossReference'};
+    push (@{$self->{'BsmlCrossReference'}}, new BSML::BsmlCrossReference);
+    my $index = @{$self->{'BsmlCrossReference'}} - 1;
+
+    #print Dumper $self->{'BsmlCrossReference'}[$index];
+    #print $index;
+    return $index;
 }
 
 sub returnBsmlCrossReferenceR
 {
     my $self = shift;
+    my ($index) = @_;
 
+
+#    print Dumper $self;
+#    die "index " . $index;
+
+    return $self->{'BsmlCrossReference'}[$index];
+    #print $index;
+
+    #die;
+
+    #my $val=  $self->{'BsmlCrossReference'}[$index];
+    #return $val;
+}
+
+sub returnBsmlCrossReferenceListR {
+
+    my $self = shift;
     return $self->{'BsmlCrossReference'};
+    
 }
 
 sub dropBsmlCrossReference
 {
     my $self = shift;
-    $self->{'BsmlCrossReference'} = '';
+    my $index = shift;
+
+    delete($self->{'BsmlCrossReference'}->[$index]);
 }
 
 sub write()

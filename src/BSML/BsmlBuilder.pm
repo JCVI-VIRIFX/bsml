@@ -46,7 +46,7 @@ B<Returns:> a sequence object reference
 sub createAndAddSequence
 {
   my $self = shift;
-  my ( $id, $title, $length, $molecule ) = @_;
+  my ( $id, $title, $length, $molecule, $class ) = @_;
 
   if( !($id) )
     {
@@ -72,6 +72,7 @@ sub createAndAddSequence
   $seq->setattr( 'molecule', $molecule );
 
   if( defined($length) && !($length eq '') ){ $seq->setattr( 'length', $length ); }
+  if( defined($class)  && !($class eq '') ){ $seq->setattr( 'class', $class ); }
 
   #Put a reference to the new sequence in the document namespace
 
@@ -663,10 +664,10 @@ sub createAndAddSequencePairAlignment
     #check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
     
     if( !( $self->returnBsmlSequenceByIDR( "$args{'refseq'}")) ){
-	$self->createAndAddSequence( "$args{'refseq'}", "$args{'refseq'}", $args{'reflength'}, '' );}
+	$self->createAndAddSequence( "$args{'refseq'}", "$args{'refseq'}", $args{'reflength'}, '',"$args{'class'}");}
     
     if( !( $self->returnBsmlSequenceByIDR( "$args{'compseq'}")) ){
-	$self->createAndAddSequence( "$args{'compseq'}", "$args{'compseq'}", $args{'complength'}, '' );}
+	$self->createAndAddSequence( "$args{'compseq'}", "$args{'compseq'}", $args{'complength'}, '', "$args{'class'}" );}
     
     my $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
     
@@ -790,10 +791,10 @@ sub createAndAddBtabLineN
     #check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
 
     if( !( $self->returnBsmlSequenceByIDR( "$args{'query_name'}")) ){
-      $self->createAndAddSequence( "$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, 'aa' );}
+      $self->createAndAddSequence( "$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, 'aa', "$args{'class'}" );}
 
     if( !( $self->returnBsmlSequenceByIDR( "$args{'dbmatch_accession'}")) ){
-      $self->createAndAddSequence( "$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', 'aa' );}
+      $self->createAndAddSequence( "$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', 'aa', "$args{'class'}" );}
 
     $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
     

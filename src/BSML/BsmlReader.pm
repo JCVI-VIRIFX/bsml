@@ -104,9 +104,31 @@ sub readCrossReference
     my $self = shift;
     my ($ref) = @_;
 
-    my $xref = $ref->returnBsmlCrossReferenceR();
 
-    return $self->readElement( $xref );
+    my $arr = [];
+
+    foreach my $xref (@{$ref->returnBsmlCrossReferenceListR()}){
+
+	my $rhash = {};
+	
+	$rhash->{'id'}              = $xref->returnattr('id');
+	$rhash->{'context'}         = $xref->returnattr('context');
+	$rhash->{'database'}        = $xref->returnattr('database');
+	$rhash->{'identifier'}      = $xref->returnattr('identifier');
+	$rhash->{'identifier-type'} = $xref->returnattr('identifier-type');
+	$rhash->{'title'}           = $xref->returnattr('title');
+	$rhash->{'behavior'}        = $xref->returnattr('behavior');
+	$rhash->{'href'}            = $xref->returnattr('href');
+	$rhash->{'role'}            = $xref->returnattr('role');
+	
+	push (@{$arr}, $rhash);
+    }
+
+
+
+
+    return $arr;
+
 }
 
 
@@ -173,16 +195,32 @@ sub readFeatures
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
 
+		#
+		# Multiple Cross-reference support
+		#
 
+		
 		my $xref = [];
 
-		my $xrefhash = $Feature->returnBsmlCrossReferenceR();
-		
-		foreach my $qual (keys(%{$xrefhash->{'attr'}}))
-		{
-		    push( @{$xref}, { key => $qual, value => $xrefhash->{'attr'}->{$qual} } );
+		foreach my $xrefhash (@{$Feature->returnBsmlCrossReferenceListR()}){
+
+		    my $tmphash = {};
+
+		    foreach my $qual (keys(%{$xrefhash->{'attr'}})){
+			$tmphash->{$qual} = $xrefhash->{'attr'}->{$qual};
+		    }
+
+		    push (@{$xref}, $tmphash);
 		}
 		$record->{'cross-reference'} = $xref;
+
+
+
+
+		#
+		# Bsmllink
+		#
+
 
 
 		my $bsmllink = [];
@@ -609,39 +647,59 @@ sub readLinks
       }
   }
 
-sub readFeatureGroup
-  {
+sub readFeatureGroup {
     my $self = shift;
     my ($FeatureGroup) = @_;
-
-    if( ref( $FeatureGroup ) eq 'BSML::BsmlFeatureGroup' )
-      {
-	my $returnhash = {};
+    my $returnhash = {};
+    
+    if( ref( $FeatureGroup ) eq 'BSML::BsmlFeatureGroup' ){
 	
-	$returnhash->{'id'} = $FeatureGroup->returnattr( 'id' );
-	$returnhash->{'group-set'} = $FeatureGroup->returnattr( 'group-set' );
-	$returnhash->{'cdata'} = $FeatureGroup->returnText();
+	$returnhash->{'id'}              = $FeatureGroup->returnattr( 'id' );
+	$returnhash->{'group-set'}       = $FeatureGroup->returnattr( 'group-set' );
+	$returnhash->{'cdata'}           = $FeatureGroup->returnText();
 	$returnhash->{'feature-members'} = [];
-	$returnhash->{'links'} = [];
-
-	foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()})
-	  {
-	    push( @{$returnhash->{'feature-members'}}, { 'featref' => $featmemb->{'feature'},
+	$returnhash->{'links'}           = [];
+	
+	foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()}) {
+	    push( @{$returnhash->{'feature-members'}}, { 'featref'      => $featmemb->{'feature'},
 							 'feature-type' => $featmemb->{'feature-type'},
-							 'group-type' => $featmemb->{'group-type'},
-							 'cdata' => $featmemb->{'text'}
-						       });
-	  }
-
-	foreach my $featlink (@{$FeatureGroup->returnBsmlLinkListR()})
-	{
+							 'group-type'   => $featmemb->{'group-type'},
+							 'cdata'        => $featmemb->{'text'}
+						     });
+	}
+	
+	foreach my $featlink (@{$FeatureGroup->returnBsmlLinkListR()}){
 	    push( @{$returnhash->{'links'}}, { 'rel' => $featlink->{'rel'},
 					       'href' => $featlink->{'href'} });
 	}
+	
+	return $returnhash;
+    }
+
+    elsif( ref( $FeatureGroup ) eq 'BSML::BsmlSequence' ){
+
+	my $featuregrouplist = $FeatureGroup->returnBsmlFeatureGroupListR;
+
+	foreach my $featuregroup (@{$featuregrouplist}){
+	    
+	    my $groupid = $featuregroup->{'attr'}->{'group-set'};
+
+	    foreach my $featmemb (@{$featuregroup->returnFeatureGroupMemberListR()}) {
+				
+		my $tmphash;
+		
+		$tmphash->{'featref'}      = $featmemb->{'feature'};
+		$tmphash->{'feature-type'} = $featmemb->{'feature-type'};
+		$tmphash->{'group-type'}   = $featmemb->{'group-type'};
+		$tmphash->{'cdata'}        = $featmemb->{'text'};
+	    
+	    push (@{$returnhash->{$groupid}}, $tmphash);
+	    }
+	}
 
 	return $returnhash;
-      }
-  }
+    }
+}
 
 sub returnAllAnalysis
 {
@@ -659,16 +717,16 @@ sub readAnalysis
     {
 	my $rhash = {};
 
-	$rhash->{'algorithm'} = $analysis->returnBsmlAttr('algorithm');
-	$rhash->{'description'} = $analysis->returnBsmlAttr('description');
-	$rhash->{'name'} = $analysis->returnBsmlAttr('name');
-	$rhash->{'program'} = $analysis->returnBsmlAttr('program');
-	$rhash->{'programversion'} = $analysis->returnBsmlAttr('programversion');
-	$rhash->{'sourcename'} = $analysis->returnBsmlAttr('sourcename');
-	$rhash->{'sourceuri'} = $analysis->returnBsmlAttr('sourceuri');
-	$rhash->{'sourceversion'} = $analysis->returnBsmlAttr('sourceversion');
+	$rhash->{'algorithm'}       = $analysis->returnBsmlAttr('algorithm');
+	$rhash->{'description'}     = $analysis->returnBsmlAttr('description');
+	$rhash->{'name'}            = $analysis->returnBsmlAttr('name');
+	$rhash->{'program'}         = $analysis->returnBsmlAttr('program');
+	$rhash->{'programversion'}  = $analysis->returnBsmlAttr('programversion');
+	$rhash->{'sourcename'}      = $analysis->returnBsmlAttr('sourcename');
+	$rhash->{'sourceuri'}       = $analysis->returnBsmlAttr('sourceuri');
+	$rhash->{'sourceversion'}   = $analysis->returnBsmlAttr('sourceversion');
 	$rhash->{'queryfeature_id'} = $analysis->returnBsmlAttr('queryfeature_id');
-	$rhash->{'timeexecuted'} = $analysis->returnBsmlAttr('timeexecuted');
+	$rhash->{'timeexecuted'}    = $analysis->returnBsmlAttr('timeexecuted');
 
 	my $link = $analysis->returnBsmlLinkR( 0 );
 	$rhash->{'bsml_link_relation'} = $link->{'rel'};
@@ -1760,8 +1818,13 @@ sub seqHasSeqDataOrImport
 
 sub subSequence
   {
-    my $self = shift;
-    my ($seqInput, $start, $stop, $complement) = @_;
+      my $self = shift; 
+      my ($seqInput, $start, $stop, $complement) = @_;
+      
+      my $logger = get_logger();
+
+    $logger->debug("Entered subSequence") if $logger->is_debug;
+
 
     # Check if the substring is on the reverse complement. 
     # Note as of 4/21/03 some of the client builders are not setting
@@ -1800,9 +1863,10 @@ sub subSequence
 
 	if ( (!($seqimpt->{'format'})) )
 	{
-	    print STDERR "BsmlReader::subSequence - Error: The specified sequence (ID=", $seq->returnattr('id'), 
-	    ") has no Seq-data or Seq-data-import.\n";
-	    return '';
+#	    print STDERR "BsmlReader::subSequence - Error: The specified sequence (ID=", $seq->returnattr('id'), ") has no Seq-data or Seq-data-import.\n";
+#	    return '';
+	    $logger->warn("The specified sequence (ID=\", $seq->returnattr('id'), \") has no Seq-data or Seq-data-import");
+	    return undef;
 	}
 
 	if( $seqimpt->{'format'} eq 'fasta' )
@@ -1815,8 +1879,10 @@ sub subSequence
 
 	if( !($seqdat) )
 	{
-	    print STDERR "BsmlReader::subSequence - Error: Unable to retrieve sequence data. Source: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
-	    return '';
+#	    print STDERR "BsmlReader::subSequence - Error: Unable to retrieve sequence data. Source: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
+#	    return '';
+	    $logger->warn("No sequence to retrieve for ource: $seqimpt->{'source'} Id: $seqimpt->{'id'}");
+	    return undef;
 	}
 	
 	#Store the imported sequence in the object layer so further file

@@ -5,6 +5,8 @@ use BSML::BsmlElement;
 use BSML::BsmlOrganism;
 use BSML::BsmlCrossReference;
 use XML::Writer;
+use Data::Dumper;
+
 
 use strict;
 use warnings;
@@ -29,7 +31,7 @@ sub init
     $self->{'BsmlLink'} = [];
     $self->{'BsmlOrganism'} = undef;
     $self->{'BsmlChromosomes'} = [];
-    $self->{'BsmlCrossReference'} = undef;
+    $self->{'BsmlCrossReference'} = [];
 }
 
 sub addBsmlOrganism
@@ -92,8 +94,11 @@ sub write
 	$org->write( $writer );
     }
 
-    if ( my $xref = $self->{'BsmlCrossReference'})
-    {
+#    print Dumper $self;
+
+    foreach my $xref (@{$self->{'BsmlCrossReference'}}){
+
+
 	$xref->write( $writer );
     }
 
