@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.4 2004/01/19 15:34:27 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.5 2004/01/19 15:41:27 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.4 $. 
-Last modified on $Date: 2004/01/19 15:34:27 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.5 $. 
+Last modified on $Date: 2004/01/19 15:41:27 $
 
 =head1 SYNOPSIS
 
@@ -26,6 +26,7 @@ my $bsmlrepository = new BSML::BsmlRepository('PATH'=>$repositorypath);
 
 use strict;
 use Data::Dumper;
+use BSML::Logger;
 
 =item new
 
@@ -44,7 +45,12 @@ B<Returns:> $self (A BSML::BsmlRepository object).
 sub new {
     my ($class) = shift;
     my $self = bless {}, ref($class) || $class;
-    $self->_init();
+    $self->{_logger} = Workflow::Logger::get_logger(__PACKAGE__);
+    $self->{_BSML_FILE_EXT} = ".bsml";
+    $self->{_BSML_SUBDIR} = "BSML_repository";
+    $self->_init(@_);
+    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{"_NAME"}."/".$self->{_BSML_SUBDIR};
+    $self->{_logger}->debug("Setting repository path $self->{_PATH}") if($self->{_logger}->is_debug());
     return $self;
 }
 
@@ -63,22 +69,17 @@ B<Returns:> None.
 
 sub _init {
     my $self = shift;
-    #Each subflow mush have a unique name.  This name is stored in the configuration hash with the following key.
     
-    $self->{_BSML_FILE_EXT} = ".bsml";
-    $self->{_BSML_SUBDIR} = "BSML_repository";
-
     my %arg = @_;
     foreach my $key (keys %arg) {
         $self->{"_$key"} = $arg{$key}
     }
     if(!($self->{"_REPOSITORY_ROOT"})){
-	die "Required parameter REPOSITORY_ROOT not passed to object constructor";
+	$self->{_logger}->logdie("Required parameter REPOSITORY_ROOT not passed to object constructor");
     }
     if(!($self->{"_NAME"})){
-	die "Required parameter NAME not passed to object constructor";
+	$self->{_logger}->logdie("Required parameter NAME not passed to object constructor");
     }
-    $self->{"_PATH"} = $self->{"_REPOSITORY_ROOT"}."/".$self->{"_NAME"}."/".$self->{_BSML_SUBDIR};
 }
 
 #return the name of the BSML repository
@@ -94,11 +95,13 @@ sub get_dirname{
 sub list_assemblies{
     my $self = shift;
     my $glob = "$self->{_PATH}/*.$self->{_BSML_FILE_EXT}";
+    $self->{_logger}->debug("Listing assemblies matching glob $glob") if($self->{_logger}->is_debug());
     my @asmblfiles = <$glob>;
     my @asmbllist;
     foreach my $asmbl (@asmbllist ){
 	$asmbl =~ s/$self->{_PATH}\///;
 	$asmbl =~ s/\.$self->{_BSML_FILE_EXT}//;
+	$self->{_logger}->debug("Parsed assembly, $asmbl, from filename") if($self->{_logger}->is_debug());
 	push @asmbllist, $asmbl;
     }
     return \@asmbllist;    
