@@ -413,11 +413,11 @@ sub readSeqPairAlignment
 	$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
 	$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
 	$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-	$runDat->{'percent_identity'} = $SeqPairRun->returnattr( 'percent_identity' );
-	$runDat->{'percent_similarity'} = $SeqPairRun->returnattr( 'percent_similarity' );
-	$runDat->{'chain_number'} = $SeqPairRun->returnattr( 'chain_number' );
-	$runDat->{'segment_number'} = $SeqPairRun->returnattr( 'segment_number' );
-	$runDat->{'p_value'} = $SeqPairRun->returnattr( 'p_value' );
+	$runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
+	$runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
+	$runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
+	$runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
+	$runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
 
 	push( @{$rhash->{'seqPairRuns'}}, $runDat );	
       }
@@ -1134,6 +1134,8 @@ sub fetch_genome_pairwise_matches
 		    my $best_percent_identity = 0.0;
 		    
 		    foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+
+
 			$best_percent_identity = $pair_run->{'percent_identity'} if($pair_run->{'percent_identity'} > $best_percent_identity);
 		      }
 

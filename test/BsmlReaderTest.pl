@@ -10,6 +10,6 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $href = $reader->fetchAlignmentScoresBetweenAssemblies( 'PNEUMO_19', 'PNEUMO_18' );
+my $href = $reader->fetch_genome_pairwise_matches( 'PNEUMO_19', 'PNEUMO_16' );
 
-print Dumper( %{$href} );
+print Dumper( %{$href->[0]} );
