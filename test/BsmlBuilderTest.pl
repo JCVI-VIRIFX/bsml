@@ -24,9 +24,10 @@ my $FTable3 = $doc->createAndAddFeatureTableN( seq => $seq2, id => '' );
 
 $doc->createAndAddReference( $FTable3, '', 'Chris Hauser', 'Bsml Object Layer', '' );
 
-my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', title=>'feature-001', class=>'feature', comment=>'test', start=>'10', end=>'10', complement=>'0' );
+my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', id=>'_feat001', title=>'feature-001', class=>'feature', comment=>'test', start=>'10', end=>'10', complement=>'0' );
 
 $doc->createAndAddLink( $feat, 'otherSequence', '_bsml001' );
+$doc->createAndAddLink( $seq2, 'featurelink', '_feat001' );
 
 $doc->createAndAddQualifier( $feat, 'gene', 'ubiquitin' );
 

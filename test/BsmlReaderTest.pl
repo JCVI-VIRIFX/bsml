@@ -10,11 +10,6 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-print "Done Parsing!\n";
-
-exit();
-
-
 my $seqs = $reader->returnAllSequences();
 
 foreach my $seq ( @{$seqs} )
@@ -24,4 +19,7 @@ foreach my $seq ( @{$seqs} )
 
     my $fr = $reader->readFeatures( $seq );
     print Dumper($fr);
+
+    my $lk = $reader->readLinks( $seq );
+    print Dumper($lk);
   }
