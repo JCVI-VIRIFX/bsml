@@ -419,7 +419,13 @@ sub readSeqPairAlignment
     return $rhash;
   }
 
+sub readLinks
+  {
+    my $self = shift;
+    my ($elem) = @_;
 
+    return $elem->returnBsmlLinkListR();
+  }
 
 
 
