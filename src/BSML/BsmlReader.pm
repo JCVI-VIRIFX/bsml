@@ -443,6 +443,10 @@ sub readSeqPairAlignment
 	      $runDat->{'PEffect_Cluster_Gap_Count'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Gap_Count' );
 	      $runDat->{'PEffect_Cluster_Id'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Id' );
 
+	      # add additional Bit Score Attributes
+
+	      $runDat->{'percent_bit_score'} = $SeqPairRun->returnBsmlAttr( 'percent_bit_score' );
+
 	      push( @{$rhash->{'seqPairRuns'}}, $runDat );	
 	  }
     

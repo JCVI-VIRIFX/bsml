@@ -386,6 +386,8 @@ sub seqPairAlignmentHandler
 	     $bsmlseqrun->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
 	   }
        }     
+     
+     # Purge the twig rooted at the SeqPairAlignment Element
      $twig->purge_up_to( $seq_aln );
   }
 
