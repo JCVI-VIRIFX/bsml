@@ -1033,25 +1033,6 @@ sub get_all_protein_aa
   }
 
 
-sub get_all_protein_aa2
-  {
-    my $self = shift;
-    my ($assembly_id) = @_;
-
-    my $returnhash = {};
-
-    foreach my $seq (@{$self->returnAllSequences()})
-      {
-	  my $seq_hash = $reader->readSequence($seq);
-          if($seq_hash->{'id'}  =~ /\.m\d+\_protein/){ ## if this molecule is a model
-	      my $seq_data = $seq->returnSeqData($seq_hash->{'id'});
-	      print "$seq_data\n";
-              $returnhash{$seq_hash->{'id'}} = $seq_data;
-      } 
-    return $returnhash;
-}
-
-
 
 # Return the sequence data associated with all the CDS features on the input assembly.
 # Data is returned in a hash structure keyed by CDS id. 
