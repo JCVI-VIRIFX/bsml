@@ -10,6 +10,11 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
+print "Done Parsing!\n";
+
+exit();
+
+
 my $seqs = $reader->returnAllSequences();
 
 foreach my $seq ( @{$seqs} )
