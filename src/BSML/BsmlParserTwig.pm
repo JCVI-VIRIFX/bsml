@@ -82,7 +82,7 @@ sub parse
     # parsed
 
     my $twig = new XML::Twig( TwigHandlers => 
-			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler }
+			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler, Analysis => \&analysisHandler }
 			  );
     
     # parsefile will die if an xml syntax error is encountered or if
@@ -283,5 +283,23 @@ sub seqPairAlignmentHandler
 	   $bsmlseqrun->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
 	 }
        }     
+  }
+
+sub analysisHandler
+  {
+    my ($twig, $analysis) = @_;
+    my $bsml_analysis = $bsmlDoc->{'BsmlAnalyses'}[$bsmlDoc->addBsmlAnalysis()];
+    my $attr = $analysis->atts();
+    
+    foreach my $key ( keys( %{$attr} ) )
+      {
+	$bsml_analysis->addattr( $key, $attr->{$key} );
+      }
+
+    foreach my $BsmlAttr ( $analysis->children( 'Attribute' ) )
+      {
+	my $attr = $BsmlAttr->atts();
+	$bsml_analysis->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+      }
   }
 1

@@ -53,6 +53,7 @@ use strict;
 use warnings;
 use BsmlSequence;
 use BsmlSeqPairAlignment;
+use BsmlAnalysis;
 use Log::Log4perl qw(get_logger :levels);
 
 # The default links to the BSML dtd maintained by Labbook
@@ -90,6 +91,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
     $self->{ 'BsmlSeqPairAlignments' } = [];
+    $self->{ 'BsmlAnalyses' } = [];
     
     # bsml Genomes will probably be needed in the future...
 
@@ -245,12 +247,59 @@ sub returnBsmlSeqPairAlignmentR
   return $self->{'BsmlSeqPairAlignments'}[$index];
 }
 
+sub addBsmlAnalysis
+  {
+    my $self = shift;
+     
+    push( @{$self->{'BsmlAnalyses'}}, new BsmlAnalysis );
+
+    my $index = @{$self->{'BsmlAnalyses'}} - 1;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Added BsmlAnalysis: $index" );
+
+    return $index;    
+  }
+
+sub dropBsmlAnalysis
+{
+   my $self = shift;
+   my ($index) = @_;
+
+   my $newlist;
+   for(  my $i=0;  $i< @{$self->{'BsmlAnalyses'}}; $i++ ) 
+      {
+	if( $i != $index )
+	  {
+	    push( @{$newlist}, $self->{'BsmlAnalyses'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlAnalyses'} = $newlist;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Dropped BsmlAnalyses: $index" );
+}
+
+sub returnBsmlAnalysisListR
+{
+  my $self = shift;
+  return $self->{'BsmlAnalyses'};
+}
+
+sub returnBsmlAnalysisR
+{
+  my $self = shift;
+  my ($index) = @_;
+
+  return $self->{'BsmlAnalyses'}[$index];
+}
 
 =item $doc->write()
 
 B<Description:> Writes the document to a file 
 
-B<Parameters:> ($fname, $dtd) - output file name, optional user specified dtd which will override the library's default
+B<Parameters:> ($fname, $dtd) - output file name, optional user specified dtd which will override the librarys default
 
 B<Returns:> None
 
@@ -332,8 +381,24 @@ sub write
     }
 
     $writer->endTag( "Definitions" );
-    $writer->endTag( "Bsml" );
 
+    if( @{$self->{'BsmlAnalyses'}} )
+      {
+	$writer->startTag( 'Research' );
+	$writer->startTag( 'Analyses' );
+	
+	foreach my $analysis ( @{$self->{'BsmlAnalyses'}} )
+	  {
+	    $analysis->write( $writer );
+	  }
+
+	$writer->endTag( 'Analyses' );
+	$writer->endTag( 'Research' );
+      }
+	
+    
+    $writer->endTag( "Bsml" );
+    
     $bsml_logger->debug( "BsmlDoc successfully written" );
   }
 
