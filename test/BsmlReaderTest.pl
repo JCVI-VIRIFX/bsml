@@ -10,9 +10,16 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $rhash = $reader->get_all_protein_dna_extended( 'PNEUMO_19', 300 );
-
-foreach $key (sort(keys(%{$rhash})) )
+foreach my $seq (@{$reader->assemblyIdtoSeqList( 'PNEUMO_19' )})
   {
-    print ">$key\n".$rhash->{$key}."\n";
+    print $seq->returnattr( 'id' );
+    print " : ";
+    print $reader->seqIdtoAssemblyId( $seq->returnattr( 'id' ));
+
+    print "\n";
+  }
+
+foreach my $aln (@{$reader->fetch_all_alignmentPairs( 'ORFO01980_aa', 'ORFD01850_aa' )})
+  {
+    print Dumper( %{$aln} );
   }
