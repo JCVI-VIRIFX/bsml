@@ -1,6 +1,6 @@
-package Bsml::BsmlRepository;
+package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.1 2004/01/19 15:12:49 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.2 2004/01/19 15:15:59 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.1 $. 
-Last modified on $Date: 2004/01/19 15:12:49 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.2 $. 
+Last modified on $Date: 2004/01/19 15:15:59 $
 
 =head1 SYNOPSIS
 
