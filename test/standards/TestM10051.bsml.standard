@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence title="HUMINSR" length="4723" topology="linear" molecule="rna" ic-acckey="M10051" strand="ds" comment="Human insulin receptor mRNA, complete cds." id="G:186439" representation="raw">
+        <Attribute name="version" content="M10051.1  GI:186439"></Attribute>
+        <Attribute name="organism" content="Homo sapiens"></Attribute>
+        <Attribute name="source" content="Human placenta, cDNA to mRNA, clones lambda-IR[1-15]."></Attribute>
+        <Feature-tables>
+          <Feature-table>
+            <Feature title="source" class="SOURCE" id="FTR1" value-type="source" display-auto="0">
+              <Qualifier value="19p13.3-p13.2" value-type="map"></Qualifier>
+              <Qualifier value="Homo sapiens" value-type="organism"></Qualifier>
+              <Qualifier value="taxon:9606" value-type="db_xref"></Qualifier>
+              <Interval-loc endpos="4723" startpos="1" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="insulin receptor signal peptide" class="SIG_PEPTIDE" id="FTR2" value-type="sig_peptide" display-auto="1">
+              <Qualifier value="insulin receptor signal peptide" value-type="note"></Qualifier>
+              <Interval-loc endpos="219" startpos="137" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="INSR" class="GENE" id="FTR3" value-type="gene" display-auto="1">
+              <Qualifier value="INSR" value-type="gene"></Qualifier>
+              <Interval-loc endpos="4287" startpos="139" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="INSR" class="CDS" id="FTR4" value-type="cds" display-auto="1">
+              <Qualifier value="INSR" value-type="gene"></Qualifier>
+              <Qualifier value="AAA59174.1" value-type="protein_id"></Qualifier>
+              <Qualifier value="1" value-type="codon_start"></Qualifier>
+              <Qualifier value="MGTGGRRGAAAAPLLVAVAALLLGAAGHLYPGEVCPGMDIRNNLTRLHELENCSVIEGHLQILLMFKTRPEDFRDLSFPKLIMITDYLLLFRVYGLESLKDLFPNLTVIRGSRLFFNYALVIFEMVHLKELGLYNLMNITRGSVRIEKNNELCYLATIDWSRILDSVEDNHIVLNKDDNEECGDICPGTAKGKTNCPATVINGQFVERCWTHSHCQKVCPTICKSHGCTAEGLCCHSECLGNCSQPDDPTKCVACRNFYLDGRCVETCPPPYYHFQDWRCVNFSFCQDLHHKCKNSRRQGCHQYVIHNNKCIPECPSGYTMNSSNLLCTPCLGPCPKVCHLLEGEKTIDSVTSAQELRGCTVINGSLIINIRGGNNLAAELEANLGLIEEISGYLKIRRSYALVSLSFFRKLRLIRGETLEIGNYSFYALDNQNLRQLWDWSKHNLTTTQGKLFFHYNPKLCLSEIHKMEEVSGTKGRQERNDIALKTNGDKASCENELLKFSYIRTSFDKILLRWEPYWPPDFRDLLGFMLFYKEAPYQNVTEFDGQDACGSNSWTVVDIDPPLRSNDPKSQNHPGWLMRGLKPWTQYAIFVKTLVTFSDERRTYGAKSDIIYVQTDATNPSVPLDPISVSNSSSQIILKWKPPSDPNGNITHYLVFWERQAEDSELFELDYCLKGLKLPSRTWSPPFESEDSQKHNQSEYEDSAGECCSCPKTDSQILKELEESSFRKTFEDYLHNVVFVPRKTSSGTGAEDPRPSRKRRSLGDVGNVTVAVPTVAAFPNTSSTSVPTSPEEHRPFEKVVNKESLVISGLRHFTGYRIELQACNQDTPEERCSVAAYVSARTMPEAKADDIVGPVTHEIFENNVVHLMWQEPKEPNGLIVLYEVSYRRYGDEELHLCVSRKHFALERGCRLRGLSPGNYSVRIRATSLAGNGSWTEPTYFYVTDYLDVPSNIAKIIIGPLIFVFLFSVVIGSIYLFLRKRQPDGPLGPLYASSNPEYLSASDVFPCSVYVPDEWEVSREKITLLRELGQGSFGMVYEGNARDIIKGEAETRVAVKTVNESASLRERIEFLNEASVMKGFTCHHVVRLLGVVSKGQPTLVVMELMAHGDLKSYLRSLRPEAENNPGRPPPTLQEMIQMAAEIADGMAYLNAKKFVHRDLAARNCMVAHDFTVKIGDFGMTRDIYETDYYRKGGKGLLPVRWMAPESLKDGVFTTSSDMWSFGVVLWEITSLAEQPYQGLSNEQVLKFVMDGGYLDQPDNCPERVTDLMRMCWQFNPKMRPTFLEIVNLLKDDLHPSFPEVSFFHSEENKAPESEELEMEFEDMENVPLDRSSHCQREEAGGRDGGSSLGFKRSYEEHIPYTHMNGGKKNGRILTLPRSNPS" value-type="translation"></Qualifier>
+              <Qualifier value="GDB:G00-119-352" value-type="db_xref"></Qualifier>
+              <Qualifier value="insulin receptor precursor" value-type="note"></Qualifier>
+              <Interval-loc endpos="4287" startpos="139" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="INSR" class="MAT_PEPTIDE" id="FTR5" value-type="mat_peptide" display-auto="1">
+              <Qualifier value="INSR" value-type="gene"></Qualifier>
+              <Qualifier value="insulin receptor alpha subunit" value-type="note"></Qualifier>
+              <Interval-loc endpos="2424" startpos="220" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="INSR" class="MAT_PEPTIDE" id="FTR6" value-type="mat_peptide" display-auto="1">
+              <Qualifier value="INSR" value-type="gene"></Qualifier>
+              <Qualifier value="insulin receptor beta subunit" value-type="note"></Qualifier>
+              <Interval-loc endpos="4284" startpos="2425" complement="0"></Interval-loc>
+            </Feature>
+            <Feature title="INSR" class="MAT_PEPTIDE" id="FTR7" value-type="mat_peptide" display-auto="1">
+              <Qualifier value="INSR" value-type="gene"></Qualifier>
+              <Qualifier value="" value-type="partial"></Qualifier>
+              <Qualifier value="insulin receptor beta-prime subunit" value-type="note"></Qualifier>
+              <Interval-loc endpos="2469" startpos="2425" complement="0"></Interval-loc>
+            </Feature>
+            <Reference title="1  (bases 1 to 4723)" dbxref="85176928">
+              <RefAuthors>
+     Ebina,Y., Ellis,L., Jarnagin,K., Edery,M., Graf,L., Clauser,E.,
+     Ou,J.-H., Masiarz,F., Kan,Y.W., Goldfine,I.D., Roth,R.A. and
+     Rutter,W.J.
+     </RefAuthors>
+              <RefTitle>
+     The human insulin receptor cDNA: the structural basis for
+     hormone-activated transmembrane signalling
+     </RefTitle>
+              <RefJournal>
+     Cell 40 (4), 747-758 (1985)
+     </RefJournal>
+            </Reference>
+          </Feature-table>
+        </Feature-tables>
+        <Seq-data>
+   ggggggctgcgcggccgggtcggtgcgcacacgagaaggacgcgcggccc
+   ccagcgctcttgggggccgcctcggagcatgacccccgcgggccagcgcc
+   gcgcgcctgatccgaggagaccccgcgctcccgcagccatgggcaccggg
+   ggccggcggggggcggcggccgcgccgctgctggtggcggtggccgcgct
+   gctactgggcgccgcgggccacctgtaccccggagaggtgtgtcccggca
+   tggatatccggaacaacctcactaggttgcatgagctggagaattgctct
+   gtcatcgaaggacacttgcagatactcttgatgttcaaaacgaggcccga
+   agatttccgagacctcagtttccccaaactcatcatgatcactgattact
+   tgctgctcttccgggtctatgggctcgagagcctgaaggacctgttcccc
+   aacctcacggtcatccggggatcacgactgttctttaactacgcgctggt
+   catcttcgagatggttcacctcaaggaactcggcctctacaacctgatga
+   acatcacccggggttctgtccgcatcgagaagaacaatgagctctgttac
+   ttggccactatcgactggtcccgtatcctggattccgtggaggataatca
+   catcgtgttgaacaaagatgacaacgaggagtgtggagacatctgtccgg
+   gtaccgcgaagggcaagaccaactgccccgccaccgtcatcaacgggcag
+   tttgtcgaacgatgttggactcatagtcactgccagaaagtttgcccgac
+   catctgtaagtcacacggctgcaccgccgaaggcctctgttgccacagcg
+   agtgcctgggcaactgttctcagcccgacgaccccaccaagtgcgtggcc
+   tgccgcaacttctacctggacggcaggtgtgtggagacctgcccgccccc
+   gtactaccacttccaggactggcgctgtgtgaacttcagcttctgccagg
+   acctgcaccacaaatgcaagaactcgcggaggcagggctgccaccaatac
+   gtcattcacaacaacaagtgcatccctgagtgtccctccgggtacacgat
+   gaattccagcaacttgctgtgcaccccatgcctgggtccctgtcccaagg
+   tgtgccacctcctagaaggcgagaagaccatcgactcggtgacgtctgcc
+   caggagctccgaggatgcaccgtcatcaacgggagtctgatcatcaacat
+   tcgaggaggcaacaatctggcagctgagctagaagccaacctcggcctca
+   ttgaagaaatttcagggtatctaaaaatccgccgatcctacgctctggtg
+   tcactttccttcttccggaagttacgtctgattcgaggagagaccttgga
+   aattgggaactactccttctatgccttggacaaccagaacctaaggcagc
+   tctgggactggagcaaacacaacctcaccaccactcaggggaaactcttc
+   ttccactataaccccaaactctgcttgtcagaaatccacaagatggaaga
+   agtttcaggaaccaaggggcgccaggagagaaacgacattgccctgaaga
+   ccaatggggacaaggcatcctgtgaaaatgagttacttaaattttcttac
+   attcggacatcttttgacaagatcttgctgagatgggagccgtactggcc
+   ccccgacttccgagacctcttggggttcatgctgttctacaaagaggccc
+   cttatcagaatgtgacggagttcgatgggcaggatgcgtgtggttccaac
+   agttggacggtggtagacattgacccacccctgaggtccaacgaccccaa
+   atcacagaaccacccagggtggctgatgcggggtctcaagccctggaccc
+   agtatgccatctttgtgaagaccctggtcaccttttcggatgaacgccgg
+   acctatggggccaagagtgacatcatttatgtccagacagatgccaccaa
+   cccctctgtgcccctggatccaatctcagtgtctaactcatcatcccaga
+   ttattctgaagtggaaaccaccctccgaccccaatggcaacatcacccac
+   tacctggttttctgggagaggcaggcggaagacagtgagctgttcgagct
+   ggattattgcctcaaagggctgaagctgccctcgaggacctggtctccac
+   cattcgagtctgaagattctcagaagcacaaccagagtgagtatgaggat
+   tcggccggcgaatgctgctcctgtccaaagacagactctcagatcctgaa
+   ggagctggaggagtcctcgtttaggaagacgtttgaggattacctgcaca
+   acgtggttttcgtccccagaaaaacctcttcaggcactggtgccgaggac
+   cctaggccatctcggaaacgcaggtcccttggcgatgttgggaatgtgac
+   ggtggccgtgcccacggtggcagctttccccaacacttcctcgaccagcg
+   tgcccacgagtccggaggagcacaggccttttgagaaggtggtgaacaag
+   gagtcgctggtcatctccggcttgcgacacttcacgggctatcgcatcga
+   gctgcaggcttgcaaccaggacacccctgaggaacggtgcagtgtggcag
+   cctacgtcagtgcgaggaccatgcctgaagccaaggctgatgacattgtt
+   ggccctgtgacgcatgaaatctttgagaacaacgtcgtccacttgatgtg
+   gcaggagccgaaggagcccaatggtctgatcgtgctgtatgaagtgagtt
+   atcggcgatatggtgatgaggagctgcatctctgcgtctcccgcaagcac
+   ttcgctctggaacggggctgcaggctgcgtgggctgtcaccggggaacta
+   cagcgtgcgaatccgggccacctcccttgcgggcaacggctcttggacgg
+   aacccacctatttctacgtgacagactatttagacgtcccgtcaaatatt
+   gcaaaaattatcatcggccccctcatctttgtctttctcttcagtgttgt
+   gattggaagtatttatctattcctgagaaagaggcagccagatgggccgc
+   tgggaccgctttacgcttcttcaaaccctgagtatctcagtgccagtgat
+   gtgtttccatgctctgtgtacgtgccggacgagtgggaggtgtctcgaga
+   gaagatcaccctccttcgagagctggggcagggctccttcggcatggtgt
+   atgagggcaatgccagggacatcatcaagggtgaggcagagacccgcgtg
+   gcggtgaagacggtcaacgagtcagccagtctccgagagcggattgagtt
+   cctcaatgaggcctcggtcatgaagggcttcacctgccatcacgtggtgc
+   gcctcctgggagtggtgtccaagggccagcccacgctggtggtgatggag
+   ctgatggctcacggagacctgaagagctacctccgttctctgcggccaga
+   ggctgagaataatcctggccgccctccccctacccttcaagagatgattc
+   agatggcggcagagattgctgacgggatggcctacctgaacgccaagaag
+   tttgtgcatcgggacctggcagcgagaaactgcatggtcgcccatgattt
+   tactgtcaaaattggagactttggaatgaccagagacatctatgaaacgg
+   attactaccggaaagggggcaagggtctgctccctgtacggtggatggca
+   ccggagtccctgaaggatggggtcttcaccacttcttctgacatgtggtc
+   ctttggcgtggtcctttgggaaatcaccagcttggcagaacagccttacc
+   aaggcctgtctaatgaacaggtgttgaaatttgtcatggatggagggtat
+   ctggatcaacccgacaactgtccagagagagtcactgacctcatgcgcat
+   gtgctggcaattcaaccccaagatgaggccaaccttcctggagattgtca
+   acctgctcaaggacgacctgcaccccagctttccagaggtgtcgttcttc
+   cacagcgaggagaacaaggctcccgagagtgaggagctggagatggagtt
+   tgaggacatggagaatgtgcccctggaccgttcctcgcactgtcagaggg
+   aggaggcggggggccgggatggagggtcctcgctgggtttcaagcggagc
+   tacgaggaacacatcccttacacacacatgaacggaggcaagaaaaacgg
+   gcggattctgaccttgcctcggtccaatccttcctaacagtgcctaccgt
+   ggcgggggcgggcaggggttcccattttcgctttcctctggtttgaaagc
+   ctctggaaaactcaggattctcacgactctaccatgtccagtggagttca
+   gagatcgttcctatacatttctgttcatcttaaggtggactcgtttggtt
+   accaatttaactagtcctgcagaggatttaactgtgaacctggagggcaa
+   ggggtttccacagttgctgctcctttggggcaacgacggtttcaaaccag
+   gattttgtgttttttcgttccccccacccgcccccagcagatggaaagaa
+   agcacctgtttttacaaattcttttttttttttttttttttttttttttg
+   ctggtgtctgagcttcagtataaaagacaaaacttcctgtttgtggaaca
+   aaatttcgaaagaaaaaaccaaa
+ </Seq-data>
+      </Sequence>
+    </Sequences>
+  </Definitions>
+</Bsml>

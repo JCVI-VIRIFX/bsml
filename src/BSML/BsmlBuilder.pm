@@ -182,6 +182,15 @@ sub createAndAddFeatureTable
       }
   }
 
+sub createAndAddFeatureTableN
+  {
+    my $self = shift;
+
+    my %args = @_;
+
+    return $self->createAndAddFeatureTable( $args{'seq'}, $args{'id'}, $args{'title'}, $args{'class'} );
+  }
+
 sub createAndAddReference
   {
     my $self = shift;

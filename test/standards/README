@@ -1,0 +1,6 @@
+TestBsmlSequence.bsml.standard - the test standard for the output 
+of CreateBsmlSequence.pl. 
+
+TestM10051.bsml.standard - the test standard for the output of
+BsmlFileParse.pl on the input M10051.xml with default dtd
+settings.
