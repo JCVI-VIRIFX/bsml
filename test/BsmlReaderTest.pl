@@ -10,16 +10,6 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-foreach my $seq (@{$reader->assemblyIdtoSeqList( 'PNEUMO_19' )})
-  {
-    print $seq->returnattr( 'id' );
-    print " : ";
-    print $reader->seqIdtoAssemblyId( $seq->returnattr( 'id' ));
+my $href = $reader->fetchAlignmentScoresBetweenAssemblies( 'PNEUMO_19', 'PNEUMO_19' );
 
-    print "\n";
-  }
-
-foreach my $aln (@{$reader->fetch_all_alignmentPairs( 'ORFO01980_aa', 'ORFD01850_aa' )})
-  {
-    print Dumper( %{$aln} );
-  }
+print Dumper( %{$href} );
