@@ -497,8 +497,6 @@ sub featureHandler
 
 sub genomeHandler
 {
-    print "GENOME HANDLER...\n";
-
     my ($twig, $genome) = @_;
     my $bsmlGenome = new BSML::BsmlGenome;
 
@@ -531,8 +529,6 @@ sub organismHandler
 sub strainHandler
 {
     my ($twig, $strain, $bsmlOrganism ) = @_;
-
-    print "STRAIN Handler...\n";
 
     my $bsmlStrain = $bsmlOrganism->returnBsmlStrainR( $bsmlOrganism->addBsmlStrain() );
    

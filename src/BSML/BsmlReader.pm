@@ -2086,7 +2086,7 @@ sub readSequenceAlignment
 #          {'strain'}                    strain name
 
 # This function expects one organism per genome with a single strain associated 
-# with it.
+# with it. As enforced by the genseq schema. 
 
 sub readGenome
 {
