@@ -1,9 +1,10 @@
 package BsmlReader;
 @ISA = qw( BsmlDoc );
 
-use strict;
-use warnings;
+#use strict;
+#use warnings;
 use BsmlDoc;
+use Data::Dumper;
 
 sub readSequence
   {
@@ -452,6 +453,12 @@ sub readFeatureGroup
   }
 
 ############################################################
+
+sub returnAllFeatureGroupSetIds
+  {
+    my $self = shift;
+    return BsmlDoc::BsmlReturnFeatureGroupLookupIds();
+  }
 
 sub geneIdtoNucSequence
   {

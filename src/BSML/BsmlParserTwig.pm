@@ -301,6 +301,15 @@ sub sequenceHandler
 
 		$group->addBsmlFeatureGroupMember( $attr->{'featref'}, $attr->{'feature-type'}, $attr->{'group-type'}, $text );
 	      }
+
+	    #if the feature group is part of a group-set, put it into the lookup tables
+	    #this is the basis for returning all the transcripts (feature-groups) associated 
+	    #with a gene
+
+	    if( my $groupset = $group->returnattr('group-set'))
+		{
+		  BsmlDoc::BsmlSetFeatureGroupLookup( $groupset, $group );
+		}
 	    
 	  }
 	

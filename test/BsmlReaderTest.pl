@@ -9,17 +9,7 @@ my $reader = new BsmlReader;
 my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
-
-my $seqs = $reader->returnAllSequences();
-
-foreach my $seq ( @{$seqs} )
+foreach $gene (sort($reader->returnAllFeatureGroupSetIds()))
   {
-    my $hr = $reader->readSequence( $seq );
-    print Dumper($hr);
-
-    my $fr = $reader->readFeatures( $seq );
-    print Dumper($fr);
-
-    my $lk = $reader->readLinks( $seq );
-    print Dumper($lk);
+    print "$gene\n";
   }

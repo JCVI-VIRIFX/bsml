@@ -760,6 +760,7 @@ sub createAndAddFeatureGroup
     if( ($groupset) )
       {
 	$FeatureGroup->setattr( 'group-set', $groupset );
+	BsmlDoc::BsmlSetFeatureGroupLookup( $groupset, $FeatureGroup );
       }
 
     BsmlDoc::BsmlSetDocumentLookup( $id, $FeatureGroup );
@@ -780,8 +781,8 @@ sub createAndAddFeatureGroupMember
     my $self = shift;
     my ($FeatureGroup, $featref, $feattype, $grouptype, $cdata) = @_;
 
-    $FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata ); 
-
+    $FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
+    
     return $FeatureGroup;
   }
 

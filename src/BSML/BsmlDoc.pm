@@ -49,12 +49,13 @@ logging will be over-ridden.
 
 use BsmlElement;
 use XML::Writer;
-use strict;
+#use strict;
 #use warnings;
 use BsmlSequence;
 use BsmlSeqPairAlignment;
 use BsmlAnalysis;
 use Log::Log4perl qw(get_logger :levels);
+use Data::Dumper;
 
 # The default links to the BSML dtd maintained by Labbook
 
@@ -63,10 +64,11 @@ my $default_dtd_sID = 'http://www.labbook.com/dtd/bsml3_1.dtd';
 
 # The document level id lookup tables
 
-my $BsmlIdLookups = [];
-my $BsmlSeqAlignmentLookups = [];
-my $BsmlTableIdCount = 0;
-my $BsmlCurrentTableId = 0;
+$BsmlIdLookups = [];
+$BsmlSeqAlignmentLookups = [];
+$BsmlFeatureGroupLookups = [];
+$BsmlTableIdCount = 0;
+$BsmlCurrentTableId = 0;
 
 my $log4perl_defaults = 
 'log4perl.logger.Bsml=FATAL, A1
@@ -114,6 +116,7 @@ sub init
     $self->{ 'BsmlTableId' } = $BsmlTableIdCount;
     @{$BsmlIdLookups}[$BsmlTableIdCount] = {};
     @{$BsmlSeqAlignmentLookups}[$BsmlTableIdCount] = {};
+    @{$BsmlFeatureGroupLookups}[$BsmlTableIdCount] = {};
     $BsmlTableIdCount++;
 
     my $bsml_logger = get_logger( "Bsml" );
@@ -128,6 +131,7 @@ sub DESTROY
 
     @{$BsmlIdLookups}[$self->{'BsmlTableId'}] = undef;
     @{$BsmlSeqAlignmentLookups}[$self->{'BsmlTableId'}] = undef;
+    @{$BsmlFeatureGroupLookups}[$self->{'BsmlTableId'}] = undef;
   }
 
 sub BsmlSetDocumentLookup
@@ -142,6 +146,20 @@ sub BsmlSetAlignmentLookup
     $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2} = $aln;
   }
 
+sub BsmlSetFeatureGroupLookup
+  {
+    my ($id, $fgroupid) = @_;
+    
+    if( (my $listref = $BsmlFeatureGroupLookups->[$BsmlCurrentTableId]->{$id}) )
+      {
+	push( @{$listref}, $fgroupid );
+      }
+    else
+      {
+	$BsmlFeatureGroupLookups->[$BsmlCurrentTableId]->{$id} = [$fgroupid];
+      }
+  }
+
 sub BsmlReturnDocumentLookup
   {
     my ($BsmlID) = @_;
@@ -153,6 +171,17 @@ sub BsmlReturnAlignmentLookup
     my ($Seq1, $Seq2) = @_;
 
     return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2};
+  }
+
+sub BsmlReturnFeatureGroupLookup
+  {
+    my ($BsmlId) = @_;
+    return $BsmlFeatureGroupLookups->[$BsmlCurrentTableId]->{$BsmlId};
+  }
+
+sub BsmlReturnFeatureGroupLookupIds
+  {
+    return keys( %{$BsmlFeatureGroupLookups->[$BsmlCurrentTableId]} );
   }
 
 sub BsmlSetCurrentDocumentLookupTable
