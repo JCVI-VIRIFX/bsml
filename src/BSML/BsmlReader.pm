@@ -65,13 +65,24 @@ sub readSequenceDat
       return $seq->returnSeqData();}
   }
 
+# Given a sequence object reference return it's sequence import child
+# and the raw sequence it references...
+
 sub readSequenceDatImport
   {
     my $self = shift;
     my ($seq) = @_;
 
-    if( ref($seq) eq 'BSML::BsmlSequence' ){
-      return $seq->returnBsmlSeqDataImport();}
+    my $rhash = {};
+
+    if( ref($seq) eq 'BSML::BsmlSequence' )
+    {
+	$rhash->{'import'} = $seq->returnBsmlSeqDataImport();
+	$rhash->{'seqdat'} = $self->subSequence( $seq, -1, 0, 0 );
+	
+	print $rhash->{'import'};
+	return $rhash;
+    }
   }
 
 sub readFeatures
@@ -1633,7 +1644,7 @@ sub geneCoordstoTranscriptSequenceList
 sub subSequence
   {
     my $self = shift;
-    my ($seqId, $start, $stop, $complement) = @_;
+    my ($seqInput, $start, $stop, $complement) = @_;
 
     # Check if the substring is on the reverse complement. 
     # Note as of 4/21/03 some of the client builders are not setting
@@ -1645,14 +1656,17 @@ sub subSequence
 	$complement = 1;
     }
 
-    # retrieve the sequence object from the lookup tables
-
-    my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
+    my $seq = $seqInput;
     
     if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
     {
-	print STDERR "BsmlReader::subSequence() - Error Sequence ID ($seqId) was not found in the document.\n";
-	return '';
+	# try and pull the sequence from the lookup tables
+	$seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqInput );
+
+	if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
+	{
+	    die "Could not find $seqInput in the lookup tables\n";
+	}
     }
 
     # get the sequence data if it is already in memory. (inline sequence objects)
@@ -1702,8 +1716,8 @@ sub subSequence
       {
 	  if( ($start-1) > length($seqdat) )
 	  {
-	      # Log error condition nd return the empty string
-	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access. SeqId($seqId) Start($start) Stop($stop) Complement($complement)\n";
+	      # Log error condition and return the empty string
+	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access. SeqId($seqInput) Start($start) Stop($stop) Complement($complement)\n";
 	      return '';
 	  }
 	  
