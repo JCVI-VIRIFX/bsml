@@ -914,6 +914,10 @@ sub geneIdtoAASeqList
     return \@returnAASequenceList;
   }
 
+# Retrieves the CDS features within the feature groups associated with the input gene. Follows the 
+# SEQ link in each of these features to obtain the amino acid sequence object. Returns a hash keyed
+# by the Bsml ID of the sequence associated with its raw sequence data. 
+
 sub geneIdtoAASeqHash
   {
     my $self = shift;
