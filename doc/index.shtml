@@ -56,6 +56,23 @@ Perl object layer <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/src'
 XML schemas <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/schema/'>[CVS]</a>
 <p>
 
+<b>BSML:: Perl Module Install</b><br>
+
+The BSML:: Perl modules are installed using the standard Perl module
+install syntax.  In addition, you must specify a SCHEMA_DOCS_DIR.
+This directory will contain the v3.1 DTD and XML schemas that are
+distributed with the package.
+
+<pre>
+  cvs co bsml_install
+  cd bsml_install
+  perl Makefile.PL PREFIX=[install_dir] SCHEMA_DOCS_DIR
+  make 
+  make install
+</pre>
+
+
+
 <b>Last modified:</b><!--#config timefmt="%Y-%m-%d" --> <!--#echo var="LAST_MODIFIED" -->
 </table>	
 
