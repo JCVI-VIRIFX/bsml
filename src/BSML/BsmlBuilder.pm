@@ -692,7 +692,7 @@ sub createAndAddBtabLineN
 
     #no alignment pair matches, add a new alignment pair and sequence run
 
-    #check to see if sequences exist in the BsmlDoc
+    #check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
 
     if( !( $self->returnBsmlSequenceByIDR( "_$args{'query_name'}")) ){
       $self->createAndAddSequence( "_$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, 'mol-not-set' );}

@@ -62,6 +62,15 @@ sub readSequenceDat
       return $seq->returnSeqData();}
   }
 
+sub readSequenceDatImport
+  {
+    my $self = shift;
+    my ($seq) = @_;
+
+    if( ref($seq) eq 'BsmlSequence' ){
+      return $seq->returnBsmlSeqDataImport();}
+  }
+
 sub readFeatures
   {
     my $self = shift;
@@ -363,6 +372,51 @@ sub returnAllFeatureTables
 
 	return $list;
       }
+  }
+
+sub returnAllSeqPairAlignmentsListR
+  {
+    my $self = shift;
+    return $self->returnBsmlSeqPairAlignmentListR();
+  }
+
+sub readSeqPairAlignment
+  {
+    my $self = shift;
+    my ($SeqPairAln) = @_;
+    my $rhash = {};
+
+    $rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
+    $rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
+    $rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
+    $rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
+    $rhash->{'refend'} = $SeqPairAln->returnattr('refend');
+    $rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
+    $rhash->{'method'} = $SeqPairAln->returnattr('method');
+    $rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
+    $rhash->{'seqPairRuns'} = [];
+
+    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+      {
+	my $runDat = {};
+	$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+	$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+	$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+	$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+	$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+	$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+	$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+	$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+	$runDat->{'percent_identity'} = $SeqPairRun->returnattr( 'percent_identity' );
+	$runDat->{'percent_similarity'} = $SeqPairRun->returnattr( 'percent_similarity' );
+	$runDat->{'chain_number'} = $SeqPairRun->returnattr( 'chain_number' );
+	$runDat->{'segment_number'} = $SeqPairRun->returnattr( 'segment_number' );
+	$runDat->{'p_value'} = $SeqPairRun->returnattr( 'p_value' );
+
+	push( @{$rhash->{'seqPairRuns'}}, $runDat );	
+      }
+    
+    return $rhash;
   }
 
 
