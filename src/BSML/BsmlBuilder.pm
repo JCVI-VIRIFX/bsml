@@ -306,6 +306,14 @@ sub createAndAddFeature
 	}
   }
 
+sub createAndAddFeatureN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddFeature( $args{'FTable'}, $args{'id'}, $args{'$title'}, $args{'class'}, $args{'comment'}, $args{'displayAuto'} );
+  }
+
 sub createAndAddFeatureWithLoc
   {
     my $self = shift;
@@ -325,6 +333,14 @@ sub createAndAddFeatureWithLoc
       }
 
     return $feature;     
+  }
+
+sub createAndAddFeatureWithLocN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddFeatureWithLoc( $args{'FTable'}, $args{'id'}, $args{'title'}, $args{'class'}, $args{'comment'}, $args{'displayAuto'}, $args{'start'}, $args{'end'}, $args{'complement'} )
   }
 
 sub createAndAddIntervalLoc
@@ -358,6 +374,14 @@ sub createAndAddIntervalLoc
     return $feature;
   }
 
+sub createAndAddIntervalLocN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddIntervalLoc( $args{'feature'}, $args{'start'}, $args{'end'}, $args{'complement'});
+  }
+
 sub createAndAddSiteLoc
   {
     my $self = shift;
@@ -387,6 +411,14 @@ sub createAndAddSiteLoc
       }
 
     return $feature;
+  }
+
+sub createAndAddSiteLocN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddSiteLoc( $args{'feature'}, $args{'site'}, $args{'complement'} );
   }
 
 sub createAndAddQualifier
@@ -420,6 +452,14 @@ sub createAndAddQualifier
     return $feature;
   }
 
+sub createAndAddQualifierN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddQualifier( $args{'feature'}, $args{'valuetype'}, $args{'value'} )
+  }
+
 sub createAndAddSeqData
   {
     my $self = shift;
@@ -444,6 +484,14 @@ sub createAndAddSeqData
 	      }
 	  }
       }
+  }
+
+sub createAndAddSeqDataN
+  {
+    my $self = shift;
+    my %args = @_;
+    
+    return $self->createAndAddSeqDataN( $args{'seq'}, $args{'seqdat'} );
   }
 
 sub createAndAddFeatureGroup
