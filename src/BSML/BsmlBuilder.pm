@@ -20,20 +20,124 @@ use strict;
 use warnings;
 use BsmlDoc;
 
+# class variable used to create unique element identifiers
+my $elem_id = 0;
+
+=item $builder->createAndAddSequence( $id, $title, $length, $molecule )
+
+B<Description:> Creates a simple Bsml sequence containing minimum attributes
+
+B<Parameters:> $id - the identifier of the Bsml element (unique at the document level)
+  $title - the title of the sequence
+  $length - the sequence length
+  $molecule - the type of molecule from the controled vocabulary ( mol-not-set, dna, rna, aa, na, other-mol ) the default is mol-net-set
+
+B<Returns:> a sequence object reference
+
+=cut 
+
 sub createAndAddSequence
 {
   my $self = shift;
-  my ( $id, $title, $molecule, $length ) = @_;
+  my ( $id, $title, $length, $molecule ) = @_;
 
-  #return a reference to the created sequence
+  if( !(defined($id) || $id eq '' ) )
+    {
+      $id = "Bsml"."$elem_id";
+      $elem_id++;
+
+      #replace with log4perl
+      print "Warning: id not approriately defined. Using $id\n";
+    }
+
+  if( !(defined($title) || $title eq '' ) )
+    {
+      $title = 'unspecified';
+
+      #replace with log4perl
+      print "Warning: title not approriately defined. Using $title\n";
+    }
+
+  if( !( defined($molecule) || $molecule eq '' ) )
+    {
+      $molecule = 'mol-not-set';
+
+      #replace with log4perl
+      print "Warning: molecule not appropriately defined. Using $molecule.\n";
+    }
+  else
+    {
+      if( !($molecule eq 'mol-not-set') || !($molecule eq 'dna') || !($molecule eq 'rna') || !($molecule eq 'aa') || !($molecule eq 'na') || !($molecule eq 'other-mol') )
+	{
+	  $molecule = 'mol-not-set';
+	  
+	  #replace with log4perl 
+	  print "Warning: molecule type not with controlled vocabulary. Using $molecule.\n";
+	}
+    }
+
+  my $seq = returnBsmlSequenceR( addBsmlSequence() );
+  $seq->setattr( 'id', $id );
+  $seq->setattr( 'title', $title );
+  $seq->setattr( 'molecule', $molecule );
+
+  if( defined($length) && !($length eq '') ){ $seq->setattr( 'length', $length ); }
+  
+  #return a reference to the new sequence
+
+  return $seq;
 }
+
+# The permisible values for the topology and strand parameters are controled
+# topology (top-not-set, linear, circular, tandem, top-other )
+# strand (std-not-set, ss, ds, mixed, std-other) 
 
 sub createAndAddExtendedSequence
   {
     my $self = shift;
     my ( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand ) = @_;
 
+    my $seq = $self->createAndAddSequence( $id, $title, $length, $molecule );
+
+    if( defined($locus) && !($locus eq '') ){ $seq->setattr('locus', $locus);}
+    if( defined($dbsource) && !($dbsource eq '') ){ $seq->setattr('dbsource', $dbsource);}
+    if( defined($icAcckey) && !($icAcckey eq '') ){ $seq->setattr('ic-acckey', $icAcckey);}
+    
+    if( defined($topology) && !($topology eq '') ){ 
+      if( $topology eq 'top-not-set' || $topology eq 'linear' || $topology eq 'circular' || $topology eq 'tandem' || $topology eq 'top-other' ){
+	$seq->setattr('topology', $topology);}
+      else{
+	$topology = 'top-not-set';
+	print "Warning: topology not in controled vocabulary. Using $topology\n";
+	$seq->setattr('topology', $topology);}
+    }
+
+    if( defined($strand) && !($strand eq '') ){ 
+      if( $strand eq 'std-not-set' || $strand eq 'ss' || $strand eq 'ds' || $strand eq 'mixed' || $strand eq 'std-other' ){
+	$seq->setattr('strand', $strand);}
+      else{
+	$strand = 'std-not-set';
+	print "Warning: strand not in controled vocabulary. Using $strand\n";
+	$seq->setattr('strand', $strand);}
+    }
+		
     #return a reference to the created sequence
+
+    return $seq;
+  }
+
+sub createAndAddExtendedSequenceN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    return $self->createAndAddExtendedSequence( $args{'id'}, $args{'title'}, $args{'length'}, $args{'molecule'}, $args{'locus'}, $args{'dbsource'}, $args{'icAcckey'}, $args{'topology'}, $args{'strand'});
+
+  }
+
+sub createAndAddFeatureTables
+  {
+    #not used in the Bsml API
   }
 
 sub createAndAddFeatureTable
@@ -41,9 +145,41 @@ sub createAndAddFeatureTable
     my $self = shift;
     my ( $seq, $id, $title, $class ) = @_;
 
-    #use ref() to determine if $seq is a BsmlSequence object or a scalar containing the sequences Bsml ID
-    
-    #return a reference to the created Feature Table
+    if( !(defined($id) || $id eq '' ) )
+      {
+	$id = "Bsml"."$elem_id";
+	$elem_id++;
+
+	#replace with log4perl
+	print "Warning: id not approriately defined. Using $id\n";
+      }
+
+    if( ref($seq) eq 'BsmlSequence' )
+      {
+	my $FTable = $seq->returnBsmlFeatureTableR( $seq->addBsmlFeatureTable() );
+	$FTable->setattr( 'id', $id );
+	if( defined($title) && !($title eq '') ){ $FTable->setattr('title', $title); }
+	if( defined($class) && !($class eq '') ){ $FTable->setattr('class', $class); }
+
+	return $FTable;
+      }
+    else
+      {
+	my $sequences = $self->returnBsmlSequenceListR();
+
+	foreach my $seqR ( @{$sequences} )
+	  {
+	    if( $seqR->returnattr('id') eq $seq )
+	      {
+		my $FTable = $seqR->returnBsmlFeatureTableR( $seqR->addBsmlFeatureTable() );
+		$FTable->setattr( 'id', $id );
+		if( defined($title) && !($title eq '') ){ $FTable->setattr('title', $title); }
+		if( defined($class) && !($class eq '') ){ $FTable->setattr('class', $class); }
+
+		return $FTable;
+	      }
+	  }
+      }
   }
 
 sub createAndAddReference
@@ -63,8 +199,40 @@ sub createAndAddFeature
 sub createAndAddFeatureWithLoc
   {
     my $self = shift;
-    my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement );
+    my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement ) = @_;
   }
 
+sub createAndAddIntervalLoc
+  {
+    my $self = shift;
 
+    my ( $feature, $start, $end, $complement ) = @_;
+  }
 
+sub createAndAddSiteLoc
+  {
+    my $self = shift;
+
+    my ( $feature, $site, $complement ) = @_;
+  }
+
+sub createAndAddQualifier
+  {
+    my $self = shift;
+
+    my ( $feature, $valuetype, $value ) = @_;
+  }
+
+sub createAndAddSeqData
+  {
+    my $self = shift;
+
+    my ( $sequence, $seqdat ) = @_;
+  }
+
+sub createAndAddFeatureGroup
+  {
+    my $self = shift;
+
+    my ( $sequence, $id, $title, $featureIdList ) = @_;
+  }
