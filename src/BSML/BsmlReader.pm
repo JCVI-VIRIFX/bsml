@@ -460,6 +460,7 @@ sub readFeatureGroup
 	$returnhash->{'group-set'} = $FeatureGroup->returnattr( 'group-set' );
 	$returnhash->{'cdata'} = $FeatureGroup->returnText();
 	$returnhash->{'feature-members'} = [];
+	$returnhash->{'links'} = [];
 
 	foreach my $featmemb (@{$FeatureGroup->returnFeatureGroupMemberListR()})
 	  {
@@ -469,6 +470,12 @@ sub readFeatureGroup
 							 'cdata' => $featmemb->{'text'}
 						       });
 	  }
+
+	foreach my $featlink (@{$$FeatureGroup->returnBsmlLinkListR()})
+	{
+	    push( @{$returnhash->{'links'}}, { 'rel' => $featlink->{'rel'},
+					       'href' => $featlink->{'href'} });
+	}
 
 	return $returnhash;
       }
@@ -666,26 +673,37 @@ sub geneIdtoAssemblyId
       }
   }
 
+# return the protein sequence id associated with a CDS feature
+
 sub cdsIdtoProteinSeqId
 {
     my $self = shift;
     my ($cdsID) = @_;
 
+    # get the CDS feature object with id - $cdsID
+
     my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $cdsID );
 
-		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
-		  {
-		      print STDERR "BsmlReader::cdsIdtoProteinSeqId() - Error CDS Feature not found\n";
-		      return;
-		  }
+    if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
+    {
+	print STDERR "BsmlReader::cdsIdtoProteinSeqId() - Error CDS Feature not found\n";
+	return;
+    }
 		 
+    # look for a sequence object link 
+
 		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
 		  {
 		      if( $link->{'rel'} eq 'SEQ' )
 		      {
 			  
+			  # hrefs are encoded using the convention #BsmlId, so the '#' needs to be stripped
+
 			  my $seqref = $link->{'href'};
 			  $seqref =~ s/#//;
+
+			  # look up the sequence object and return its id
+
 			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
 
 			  if( ref($seq) eq 'BSML::BsmlSequence' )
@@ -866,6 +884,9 @@ sub get_all_protein_aa
     return $returnhash;
   }
 
+# Return the sequence data associated with all the CDS features on the input assembly.
+# Data is returned in a hash structure keyed by CDS id. 
+
 sub get_all_cds_dna
   {
     my $self = shift;
@@ -894,6 +915,9 @@ sub get_all_cds_dna
     
     return $returnhash;
 }
+
+# Returns the sequence data associated with all the CDS features in the input assembly.
+# Sequences are extended by 300 bp in each direction.
 
 sub get_all_cds_dna_extended
   {
@@ -932,6 +956,8 @@ sub get_all_cds_dna_extended
 			print STDERR "BsmlReader::get_all_protein_dna_extended() - Error in call to extend_seq - Gene: $gene Topo: $topo Start: $start End: $end\n";
 		    }
 		    
+		    # This function is not peforming approriately for data on the complementary strand
+
 		    $returnhash->{$seqId} =  extend_seq300( $seq_dat, $topo, $start, $end );
 		}
 	    }
