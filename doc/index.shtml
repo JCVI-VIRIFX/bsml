@@ -21,8 +21,8 @@ BSML is an xml format
 <p>
 <b>Documentation</b><br>
 Project site <a href='project_pages/'>[Local]</a>&nbsp;<a href='http://bsml.sourceforge.net'>[Sourceforge]</a><br>
-<a href='rfc_repository_structure'>RFC: Repository structure</a><br>
-    RFC: Perl CLI coding standards 
+<a href='/ifx/devel/papyrus/srs_repository.html'>Data repository</a><br>
+    Perl CLI coding standards 
   <p> <b>Software Products</b><br>
     See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
 href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
