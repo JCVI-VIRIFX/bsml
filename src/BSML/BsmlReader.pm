@@ -1704,5 +1704,44 @@ sub fetch_genome_pairwise_matches
     return $rlist;
   }
 
+######################################################################################################3
+# Helper functions for database search result imports.
+# I expect these functions will eventually be migrated to their own
+# derived class.
+
+# Return the identifiers associated with query sequences (refseq) in sequence pair alignments
+# 
+# $queryObj = {'1'}->{'refseq'}->"ORF00001"
+#             {'2'}->{'refseq'}->"ORF00002"
+#             ...
+#             {'count'}->"$ctr"
+
+sub get_all_alignments
+{
+    my $self = shift;
+    my $rhash = {};
+    my $count = 1;
+
+    my $seqList = $self->returnAllSequences();
+
+    foreach my $seq( @{$seqList} )
+    {
+	my $seqId = $seq->returnattr('id');
+	
+	foreach my $aln (@{$self->fetch_all_alignmentPairs( $seqId )})
+	{
+	    if(ref($aln)) 
+	    {
+		my $match_ref = $self->readSeqPairAlignment($aln);
+		$rhash->{$count} = $match_ref;
+	        $count++;
+	    }
+	}
+    }
+    $rhash->{'count'} = $count;
+    return $rhash;
+}
+
+
 
 1
