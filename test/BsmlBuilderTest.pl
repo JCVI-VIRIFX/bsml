@@ -22,9 +22,9 @@ my $FTable = $doc->createAndAddFeatureTable( '_bsml001', '_FeatT001', 'feature_t
 my $FTable2 = $doc->createAndAddFeatureTable( $seq2, '_FeatT002', 'feature_table_2', 'feature-table' );
 my $FTable3 = $doc->createAndAddFeatureTableN( seq => $seq2, id => '' );
 
-$doc->createAndAddReference( $FTable3, '_bsmlRef001', 'Chris Hauser', 'Bsml Object Layer', '' );
+$doc->createAndAddReference( $FTable3, '', 'Chris Hauser', 'Bsml Object Layer', '' );
 
-my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', id=>'_Feat001', title=>'feature-001', class=>'feature', comment=>'test', start=>'10', end=>'10', complement=>'0' );
+my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', title=>'feature-001', class=>'feature', comment=>'test', start=>'10', end=>'10', complement=>'0' );
 
 $doc->createAndAddQualifier( $feat, 'gene', 'ubiquitin' );
 
