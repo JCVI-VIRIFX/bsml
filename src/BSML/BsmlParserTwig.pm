@@ -320,7 +320,7 @@ sub sequenceHandler
 	
       }
       
-    $twig->purge_up_to( $seq );
+    #$twig->purge_up_to( $seq );
   }
 
 sub seqPairAlignmentHandler

@@ -418,9 +418,11 @@ sub readSeqPairAlignment
 	  {
 	      my $runDat = {};
 
-	      # Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object is returned.
+	      # Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object must be 
+	      # placed in the return structure.
 	      $runDat->{'bsmlRef'} = $SeqPairRun;
                       
+	      # package the SeqPairRun data
 	      $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
 	      $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
 	      $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
@@ -434,6 +436,12 @@ sub readSeqPairAlignment
 	      $runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
 	      $runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
 	      $runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
+
+	      # add additional PEffect attributes if present
+
+	      $runDat->{'PEffect_Cluster_Gene_Count'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Gene_Count' );
+	      $runDat->{'PEffect_Cluster_Gap_Count'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Gap_Count' );
+	      $runDat->{'PEffect_Cluster_Id'} = $SeqPairRun->returnBsmlAttr( 'PEffect_Cluster_Id' );
 
 	      push( @{$rhash->{'seqPairRuns'}}, $runDat );	
 	  }
