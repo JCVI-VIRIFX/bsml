@@ -99,15 +99,15 @@ sub readNumbering
     return $self->readElement( $numbering );
 }
 
-#sub readCrossReference
-#{
-#    my $self = shift;
-#    my ($seq) = @_;
-#
-#    my $xref = $seq->returnBsmlCrossReferenceR();
-#
-#    return $self->readElement( $xref );
-#}
+sub readCrossReference
+{
+    my $self = shift;
+    my ($ref) = @_;
+
+    my $xref = $ref->returnBsmlCrossReferenceR();
+
+    return $self->readElement( $xref );
+}
 
 
 sub readFeatures
@@ -664,42 +664,6 @@ sub readAnalysis
 	return $rhash;
     }
 }
-
-
-sub readCrossReference {
-
-    my $self = shift;
-    
-    $self->{_logger}->debug("Reading <Cross-reference> element") if $self->{_logger}->is_debug;
-
-    my ($CrossReference) = @_;
-    
-    if( ref( $CrossReference ) eq 'BSML::BsmlCrossReference' ){
-
-	my $returnhash = {};
-	
-	$returnhash->{'id'}               = $CrossReference->returnattr( 'id' );
-	$returnhash->{'context'}          = $CrossReference->returnattr( 'context' );
-	$returnhash->{'database'}         = $CrossReference->returnattr( 'database' );
-	$returnhash->{'identifier'}       = $CrossReference->returnattr( 'identifier' );
-	$returnhash->{'identifier-type'}  = $CrossReference->returnattr( 'identifier-type' );
-	$returnhash->{'title'}            = $CrossReference->returnattr( 'title' );
-	$returnhash->{'behavior'}         = $CrossReference->returnattr( 'behavior' );
-	$returnhash->{'href'}             = $CrossReference->returnattr( 'href' );
-	$returnhash->{'role'}             = $CrossReference->returnattr( 'role' );
-	$returnhash->{'links'}            = [];
-
-
-	foreach my $featlink (@{$CrossReference->returnBsmlLinkListR()}){
-	
-	    push( @{$returnhash->{'links'}}, { 'rel'  => $featlink->{'rel'},
-					       'href' => $featlink->{'href'} });
-	}
-
-	return $returnhash;
-    }
-}
-
 
 
 ############################################################

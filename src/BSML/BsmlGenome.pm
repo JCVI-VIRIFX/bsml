@@ -47,31 +47,7 @@ sub returnBsmlOrganismR
     return $self->{'BsmlOrganism'};
 }
 
-#----------------------------------------------------------------------
-# BsmlCrossReference support
-#
-#----------------------------------------------------------------------
 
-sub addBsmlCrossReference
-{
-    my $self = shift;
-
-    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
-    return $self->{'BsmlCrossReference'};
-}
-
-sub returnBsmlCrossReferenceR
-{
-    my $self = shift;
-
-    return $self->{'BsmlCrossReference'};
-}
-
-sub dropBsmlCrossReference
-{
-    my $self = shift;
-    $self->{'BsmlCrossReference'} = '';
-}
 
 sub addBsmlChromosome
 {
@@ -120,7 +96,6 @@ sub write
     {
 	$xref->write( $writer );
     }
-
 
 
     foreach my $link (@{$self->{'BsmlLink'}})

@@ -5,6 +5,7 @@ use BSML::BsmlElement;
 use BSML::BsmlAlignmentSummary;
 use BSML::BsmlPairwiseAlignments;
 use BSML::BsmlSequenceAlignment;
+use BSML::BsmlCrossReference;
 use XML::Writer;
 
 use strict;
@@ -31,6 +32,7 @@ sub init
     $self->{'BsmlAlignmentSummaries'} = [];
     $self->{'BsmlPairwiseAlignments'} = [];
     $self->{'BsmlSequenceAlignments'} = [];
+    $self->{'BsmlCrossReference'} = undef;
 }
 
 sub addBsmlAlignmentSummary
@@ -188,6 +190,11 @@ sub write
     {
         $writer->startTag( "Link", %{$link} );
         $writer->endTag( "Link" );
+    }
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
     }
 
     $writer->endTag( "Multiple-alignment-table" );

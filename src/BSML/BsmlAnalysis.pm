@@ -2,6 +2,7 @@ package BSML::BsmlAnalysis;
 @ISA = qw( BSML::BsmlElement );
 
 use BSML::BsmlElement;
+use BSML::BsmlCrossReference;
 use XML::Writer;
 use strict;
 use warnings;
@@ -25,6 +26,8 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlLink' } = [];
+    $self->{'BsmlCrossReference'} = undef;
+
   }
 
 sub write
@@ -45,7 +48,13 @@ sub write
         $writer->startTag( "Link", %{$link} );
         $writer->endTag( "Link" );
       }
-    
+
+     if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
+    } 
+
+
     $writer->endTag( "Analysis" );
   }
 

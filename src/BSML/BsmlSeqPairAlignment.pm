@@ -3,7 +3,7 @@ package BSML::BsmlSeqPairAlignment;
 
 use BSML::BsmlElement;
 use BSML::BsmlSeqPairRun;
-
+use BSML::BsmlCrossReference;
 use XML::Writer;
 use strict;
 use warnings;
@@ -28,6 +28,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSeqPairRuns' } = [];
     $self->{ 'BsmlLink' } = [];
+    $self=>{ 'BsmlCrossReference ' } = undef;
   }
 
 sub addBsmlSeqPairRun
@@ -91,6 +92,12 @@ sub write
 	    $run->write( $writer );
 	  }
       }
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
+    }
+
 
     foreach my $link (@{$self->{'BsmlLink'}})
       {

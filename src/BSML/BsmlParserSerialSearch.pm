@@ -206,6 +206,18 @@ sub seqPairAlignmentHandler
        }     
      
 
+    foreach my $crossRef( $seqaln->children( 'Cross-reference' ))
+    {
+
+	my $attr = $crossRef->atts();
+
+	my $xref = $bsmlaln->returnBsmlCrossReferenceR( $bsmlaln->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) )
+        {
+	    $xref->addattr( $key, $attr->{$key});
+        }
+    }
      $twig->purge();
 
      return $bsmlaln;
@@ -236,6 +248,20 @@ sub analysisHandler
 	my $attr = $BsmlLink->atts();
 	$bsml_analysis->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
       }
+
+
+    foreach my $crossRef( $analysis->children( 'Cross-reference' )){
+	
+	my $attr = $crossRef->atts();
+	
+	my $xref = $bsml_analysis->returnBsmlCrossReferenceR( $bsml_analysis->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) ) {
+	    $xref->addattr( $key, $attr->{$key});
+	}
+    }
+
+
 
     $twig->purge();
     return $bsml_analysis;
@@ -459,6 +485,21 @@ sub sequenceHandler
 	  }
 	
       }
+
+
+    foreach my $crossRef( $seq->children( 'Cross-reference' ))
+    {
+
+	my $attr = $crossRef->atts();
+
+	my $xref = $bsmlseq->returnBsmlCrossReferenceR( $bsmlseq->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) )
+        {
+	    $xref->addattr( $key, $attr->{$key});
+        }
+    }
+
       
     $twig->purge;
     return $bsmlseq;
@@ -598,6 +639,22 @@ sub featureHandler
 	my $attr = $BsmlLink->atts();
 	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
     }
+
+
+    foreach my $crossRef( $BsmlFeature->children( 'Cross-reference' )){
+	
+	my $attr = $crossRef->atts();
+	
+	my $xref = $feat->returnBsmlCrossReferenceR( $feat->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) ) {
+	    $xref->addattr( $key, $attr->{$key});
+	}
+    }
+
+
+
+
     
     $twig->purge;
 
@@ -619,7 +676,21 @@ sub genomeHandler
 
     foreach my $organism ( $genome->children( 'Organism' ))
     {
+
 	organismHandler( $twig, $organism, $bsmlGenome );
+    }
+
+    foreach my $crossRef( $genome->children( 'Cross-reference' ))
+    {
+
+	my $attr = $crossRef->atts();
+
+	my $xref = $bsmlGenome->returnBsmlCrossReferenceR( $bsmlGenome->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) )
+        {
+	    $xref->addattr( $key, $attr->{$key});
+        }
     }
 
     $twig->purge_up_to( $genome );
@@ -639,7 +710,9 @@ sub organismHandler
     {
 	strainHandler( $twig, $strain, $bsmlOrganism );
     }   
+
 }
+
 
 sub strainHandler
 {
@@ -648,6 +721,7 @@ sub strainHandler
     my $bsmlStrain = $bsmlOrganism->returnBsmlStrainR( $bsmlOrganism->addBsmlStrain() );
    
     addBsmlAttrLinks( $twig, $strain, $bsmlStrain );
+
 }
 
 # Generic function to add attributes, Bsml Attributes, and 
@@ -993,7 +1067,18 @@ sub multipleAlignmentHandler {
     }
 
 
-     
+    foreach my $crossRef( $seq_aln->children( 'Cross-reference' ))
+    {
+
+	my $attr = $crossRef->atts();
+
+	my $xref = $bsml_multi_aln->returnBsmlCrossReferenceR( $bsml_multi_aln->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) )
+        {
+	    $xref->addattr( $key, $attr->{$key});
+        }
+    }     
     $twig->purge();
 
     return $bsml_multi_aln;
