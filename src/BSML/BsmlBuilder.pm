@@ -505,6 +505,11 @@ sub createAndAddBsmlAttribute
     my $self = shift;
     my ($elem, $key, $value ) = @_;
 
+    if( ref($elem) eq 'SCALAR' )
+      {
+	
+      }
+
     $elem->addBsmlAttr( $key, $value );
   }
 
@@ -746,6 +751,23 @@ sub createAndAddBtabLineN
     $seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
 
     return $alignment_pair;
+  }
+
+sub returnSequenceByID
+  {
+    my $self = shift;
+    my ($id) = @_;
+
+    #search for a sequence given its ID 
+
+    if( ref($id) eq 'SCALAR' )
+      {
+	foreach my $seq ( @{$self->returnBsmlSequenceListR()} )
+	  {
+	    if( $seq->returnattr('id') eq $id ){return $seq;}
+	  }
+      }
+    
   }
 
 1
