@@ -6,8 +6,8 @@ LINK = g++
 CXXFLAGS = -O2
 LIBRARIES = -lxerces-c
 
-SCHEMA_DIR = /tmp/bsml/schema
-BIN_DIR =/tmp/bsml/bin
+SCHEMA_DIR = /tmp/schema
+BIN_DIR =/tmp/bin
 
 Xerces-xsdValid:  SAX2Print.cpp SAX2Print.hpp SAX2PrintHandlers.o
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o Xerces-xsdValid SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
@@ -25,3 +25,4 @@ install : Xerces-xsdValid
 	@install xsdValid.pl $(BIN_DIR)
 	@install dtdValid.pl $(BIN_DIR)
 	@install ../*.xsd $(SCHEMA_DIR)
+	@install ../*.dtd $(SCHEMA_DIR)

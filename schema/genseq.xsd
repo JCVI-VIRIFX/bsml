@@ -78,7 +78,7 @@
             <xs:element name="Feature-table" minOccurs="1" maxOccurs="1">
               <xs:complexType>    
                 <xs:sequence>
-                  <xs:element name="Feature" minOccurs="1" maxOccurs="unbounded">
+                  <xs:element name="Feature" minOccurs="0" maxOccurs="unbounded">
                      <xs:complexType>
                        <xs:sequence>
                          <xs:element name="Qualifier" minOccurs="0" maxOccurs="unbounded">
