@@ -206,7 +206,7 @@ sub seqPairAlignmentHandler
        }     
      
 
-    foreach my $crossRef( $seqaln->children( 'Cross-reference' ))
+    foreach my $crossRef( $seq_aln->children( 'Cross-reference' ))
     {
 
 	my $attr = $crossRef->atts();

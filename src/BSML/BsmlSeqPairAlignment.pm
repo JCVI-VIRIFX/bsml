@@ -28,7 +28,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSeqPairRuns' } = [];
     $self->{ 'BsmlLink' } = [];
-    $self=>{ 'BsmlCrossReference ' } = undef;
+    $self->{ 'BsmlCrossReference ' } = undef;
   }
 
 sub addBsmlSeqPairRun
