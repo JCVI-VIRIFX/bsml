@@ -644,6 +644,87 @@ sub createAndAddBtabLine
 					 unknown2 => $unknown2, e_value => $e_value, p_value => $p_value );
   }
 
+sub createAndAddSequencePairAlignment
+{
+    my $self = shift;
+    my %args = @_;
+
+    #determine if a sequence pair alignment for the query and dbmatch already exists in the document
+
+    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}" );
+
+    if( $alignment_pair ){
+	return $alignment_pair;
+    }
+    else{
+	#no alignment pair matches, add a new alignment pair and sequence run
+
+	#check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
+
+	if( !( $self->returnBsmlSequenceByIDR( "$args{'query_name'}")) ){
+	    $self->createAndAddSequence( "$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, '' );}
+	
+	if( !( $self->returnBsmlSequenceByIDR( "$args{'dbmatch_accession'}")) ){
+	    $self->createAndAddSequence( "$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', '' );}
+
+	$alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
+	
+	$alignment_pair->setattr( 'refseq', "$args{'query_name'}" );
+	$alignment_pair->setattr( 'compseq', "$args{'dbmatch_accession'}" );
+
+	BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}", $alignment_pair );
+
+	$alignment_pair->setattr( 'refxref', $args{'refxref'});
+	$alignment_pair->setattr( 'refstart', $args{'refstart'} );
+	$alignment_pair->setattr( 'refend', $args{'refend'} );
+	$alignment_pair->setattr( 'reflength', $args{'query_length'} );
+	$alignment_pair->setattr( 'method', $args{'blast_program'} );
+
+	if( $args{'search_database'} && $args{'dbmatch_accession'} ){
+	    $alignment_pair->setattr( 'compxref', $args{'search_database'}.':'.$args{'dbmatch_accession'} );
+	}
+
+	return $alignment_pair;
+    }
+}
+
+sub createAndAddSequencePairRun
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $alignment_pair = $args{'alignment_pair'};
+
+    if( ref( $alignment_pair) eq 'BSML::BsmlSeqPairAlignment' ) 
+    {
+	#add a new BsmlSeqPairRun to the alignment pair and return
+	my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
+	
+	$seq_run->setattr( 'refpos', $args{'start_query'} );
+	$seq_run->setattr( 'runlength', $args{'runlength'} );
+	$seq_run->setattr( 'refcomplement', $args{'refcomplement'});
+	
+	$seq_run->setattr( 'comppos', $args{'start_hit'} );
+	$seq_run->setattr( 'comprunlength', $args{'comprunlength'} );
+	$seq_run->setattr( 'compcomplement', $args{'compcomplement'} );
+	
+	$seq_run->setattr( 'runscore', $args{'runscore'} );
+	$seq_run->setattr( 'runprob', $args{'runprob'} );
+
+	$seq_run->addBsmlAttr( 'percent_identity', $args{'percent_identity'} );
+	$seq_run->addBsmlAttr( 'percent_similarity', $args{'percent_similarity'} );
+	$seq_run->addBsmlAttr( 'chain_number', $args{'chain_number'} );
+	$seq_run->addBsmlAttr( 'segment_number', $args{'segment_number'} );
+	$seq_run->addBsmlAttr( 'p_value', $args{'p_value'} );
+
+	$seq_run->addBsmlAttr( 'PEffect_Cluster_Id', $args{'PEffect_Cluster_Id'} );
+	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gap_Count', $args{'PEffect_Cluster_Gap_Count'} );
+	$seq_run->addBsmlAttr( 'PEffect_Cluster_Gene_Count', $args{'PEffect_Cluster_Gene_Count'} );
+	
+	return $alignment_pair;
+    }
+}
+
 sub createAndAddBtabLineN
   {
     my $self = shift;
