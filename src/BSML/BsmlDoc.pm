@@ -53,6 +53,7 @@ use XML::Writer;
 #use warnings;
 use BSML::BsmlSequence;
 use BSML::BsmlSeqPairAlignment;
+use BSML::BsmlMultipleAlignmentTable;
 use BSML::BsmlAnalysis;
 use Log::Log4perl qw(get_logger :easy);
 use Data::Dumper;
@@ -92,6 +93,7 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
     $self->{ 'BsmlSeqPairAlignments' } = [];
+    $self->{ 'BsmlMultipleAlignmentTables' } = [];
     $self->{ 'BsmlAnalyses' } = [];
     
     # bsml Genomes will probably be needed in the future...
@@ -339,6 +341,48 @@ sub returnBsmlSeqPairAlignmentR
   return $self->{'BsmlSeqPairAlignments'}[$index];
 }
 
+sub addBsmlMultipleAlignmentTable
+{
+    my $self = shift;
+    push( @{$self->{'BsmlMultipleAlignmentTables'}}, new BSML::BsmlMultipleAlignmentTable );
+
+    my $index = @{$self->{'BsmlMultipleAlignmentTables'}} - 1;
+    return $index;
+}
+
+sub dropBsmlMultipleAlignmentTable
+  {
+    my $self = shift;
+    my ($index) = @_;
+
+    my @newlist;
+
+    for( my $i=0; $i<length(@{$self->{'BsmlMultipleAlignmentTables'}}); $i++ )
+      {
+	if( $i != $index )
+	  {
+	    push( @newlist, $self->{'BsmlMultipleAlignmentTables'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlMultipleAlignmentTables'} = \@newlist;    
+  }
+
+sub returnBsmlMultipleAlignmentTableListR
+{
+    my $self = shift;
+    return $self->{'BsmlMultipleAlignmentTables'};
+}
+
+sub returnBsmlMultipleAlignmentTableR
+{
+    my $self = shift;
+    my ($index) = @_;
+
+    return $self->{'BsmlMultipleAlignmentTables'}[$index];
+}
+
+
 sub addBsmlAnalysis
   {
     my $self = shift;
@@ -467,13 +511,18 @@ sub write
       $writer->endTag( "Sequences" );
     }
 
-    if( @{$self->{'BsmlSeqPairAlignments'}} )
+    if( @{$self->{'BsmlSeqPairAlignments'}} || @{$self->{'BsmlMultipleAlignmentTables'}} )
     {
       $writer->startTag( "Tables", 'id' => 'BsmlTables' );
 
       foreach my $seqAlignment ( @{$self->{'BsmlSeqPairAlignments'}} )
       {
         $seqAlignment->write( $writer );
+      }
+
+      foreach my $malnTable ( @{$self->{'BsmlMultipleAlignmentTables'}} )
+      {
+	  $malnTable->write( $writer );
       }
 
       $writer->endTag( "Tables" );
