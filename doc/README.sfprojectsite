@@ -2,3 +2,9 @@
 #copy root area
 scp project_pages/* bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
 
+scp ../examples/lma2_98_assembly.bsml bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+scp ../examples/pblast-example.bsml bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+scp assembly_encoding/assembly.doc bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+scp pairwise_alignment_encoding/PairwiseAlignmentRef.doc bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+scp lowerapi/BsmlLowerApiDiagram.ppt bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
+scp bsml_object_layer.ppt bsml.sourceforge.net:/home/groups/b/bs/bsml/htdocs/
