@@ -1,6 +1,28 @@
 package BsmlReference;
 @ISA = qw( BsmlElement );
 
+=head1 NAME
+
+  BsmlReference.pm - Bsml API Object representing the Bsml Reference Element
+
+=head1 VERSION
+
+  This document refers to version 1.0 of the BSML Object Layer
+
+=head1 DESCRIPTION
+
+=head2 Overview
+
+  The BsmlReference class allows for storage and manipulation of Bsml Reference elements 
+
+=head2 Constructor and initialization
+
+=head2 Class and object methods
+
+=over 4
+
+=cut
+
 use BsmlElement;
 use XML::Writer;
 use strict;
