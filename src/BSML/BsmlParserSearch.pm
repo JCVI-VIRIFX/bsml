@@ -37,13 +37,13 @@ sub new
 sub parse
   {
     my $self = shift;
-    my ( $bsml_doc, $filename ) = @_;
+    my ( $bsml_doc, $fileOrHandle ) = @_;
     my $bsml_logger = get_logger( "Bsml" );
 
     $bsmlDoc = ${$bsml_doc}; 
 
-    if( !( $filename ) ){   
-      $bsml_logger->fatal( "Filename not provided for Bsml Parsing." );
+    if( !( $fileOrHandle ) ){   
+      $bsml_logger->fatal( "No filename or handle provided for Bsml Parsing." );
     }
 
     if( !( $bsmlDoc ) ){
@@ -61,12 +61,16 @@ sub parse
 			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler, Analysis => \&analysisHandler }
 			  );
     
-    # parsefile will die if an xml syntax error is encountered or if
+    # parse[file]? will die if an xml syntax error is encountered or if
     # there is an io problem
 
-    $bsml_logger->debug( "Attempting to Parse Bsml Document: $filename" );
-    $twig->parsefile( $filename );
-    $bsml_logger->info( "Successfully Parsed Bsml Document: $filename" );
+    $bsml_logger->debug( "Attempting to Parse Bsml Document: $fileOrHandle" );
+    if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+	$twig->parse( $fileOrHandle );
+    } else {
+	$twig->parsefile( $fileOrHandle );
+    }
+    $bsml_logger->info( "Successfully Parsed Bsml Document: $fileOrHandle" );
 
     # Twig documentation claims circular references in the twig class prevent garbage collection. Could
     # this be the source of the file handle problem? It seems like the 'twig' will go out of scope reguardlessly.

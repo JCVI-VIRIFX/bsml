@@ -22,14 +22,21 @@ my $dtd = $options{'dtd'};
 
 my ($dir) = ($0 =~ /(.*)\/.*/);
 
+my $status = 0;
+
 if( $dtd )
 {
     $dtd =~ s/\//\\\//g;
-    system "sed -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">/<\\!DOCTYPE Bsml SYSTEM \"$dtd\">/\' $file | $dir/Xerces-xsdValid";
+    $status = system "sed -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">/<\\!DOCTYPE Bsml SYSTEM \"$dtd\">/\' $file | $dir/Xerces-xsdValid";
 }
 
 else
 {
-    system "more $file | $dir/Xerces-xsdValid";
+    $status = system "more $file | $dir/Xerces-xsdValid";
 }
 
+my $exit_value = $status >> 8;
+my $signal_num = $status & 127;
+my $dumped_core = $status & 128;
+
+exit($exit_value);

@@ -32,6 +32,7 @@ package BSML::BsmlSequence;
 use BSML::BsmlElement;
 use BSML::BsmlFeatureTable;
 use BSML::BsmlFeatureGroup;
+use BSML::BsmlNumbering;
 use XML::Writer;
 use strict;
 use warnings;
@@ -60,6 +61,7 @@ sub init
     $self->{ 'BsmlSeqData' } = '';
     $self->{ 'BsmlSeqDataImport' } = {};
     $self->{ 'BsmlLink' } = [];
+    $self->{ 'BsmlNumbering' } = '';
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -344,6 +346,26 @@ sub returnBsmlFeatureGroupR
 
 =cut 
 
+sub addBsmlNumbering
+{
+    my $self = shift;
+    $self->{'BsmlNumbering'} = new BSML::BsmlNumbering;
+
+    return $self->{'BsmlNumbering'};
+}
+
+sub returnBsmlNumberingR
+{
+    my $self = shift;
+    return $self->{'BsmlNumbering'};
+}
+
+sub dropBsmlNumbering
+{
+    my $self = shift;
+    $self->{'BsmlNumbering'} = '';
+}
+
 sub write
   {
     my $self = shift;
@@ -393,6 +415,11 @@ sub write
 	    $writer->endTag( 'Seq-data-import' );
 	  }
       }
+
+    if( $self->{'BsmlNumbering'} )
+    {
+	$self->{'BsmlNumbering'}->write( $writer );
+    }
 
     foreach my $link (@{$self->{'BsmlLink'}})
       {

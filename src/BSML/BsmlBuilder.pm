@@ -644,6 +644,8 @@ sub createAndAddBtabLine
 					 unknown2 => $unknown2, e_value => $e_value, p_value => $p_value );
   }
 
+# Add a pairwise alignment object to the document.  
+
 sub createAndAddSequencePairAlignment
 {
     my $self = shift;
@@ -651,42 +653,62 @@ sub createAndAddSequencePairAlignment
 
     #determine if a sequence pair alignment for the query and dbmatch already exists in the document
 
-    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}" );
+    my $alignment_pair_list = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}" );
 
-    if( $alignment_pair ){
-	return $alignment_pair;
+    if( $alignment_pair_list && !( $args{'force'} )){
+
+	# if coordinates specifying the search window for the reference sequence are provided, the object layer will
+	# search for an alignment object having the same coordinates and return it if found. Otherwise a new alignment
+	# object will be created. This functionality is intended to facilitate Doug's blast use case.
+
+	if( $args{'refstart'} && $args{'refend'} )
+	{
+	    foreach my $aln ( @{$alignment_pair_list} )
+	    {
+		if( $args{'refstart'} eq $aln->returnattr( 'refstart' ) && $args{'refend'} eq $aln->returnattr( 'refend' ) )
+		{
+		    return $aln;
+		}   
+	    }
+	}
+	else
+	{
+	    # Else return the first alignment pair to retain legacy compatitibility
+
+	    return $alignment_pair_list->[0];
+	}
     }
-    else{
-	#no alignment pair matches, add a new alignment pair and sequence run
 
-	#check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
+    #no alignment pair matches, add a new alignment pair
+    
+    #check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
+    
+    if( !( $self->returnBsmlSequenceByIDR( "$args{'refseq'}")) ){
+	$self->createAndAddSequence( "$args{'refseq'}", "$args{'refseq'}", $args{'reflength'}, '' );}
+    
+    if( !( $self->returnBsmlSequenceByIDR( "$args{'compseq'}")) ){
+	$self->createAndAddSequence( "$args{'compseq'}", "$args{'compseq'}", $args{'complength'}, '' );}
+    
+    my $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
+    
+    $alignment_pair->setattr( 'refseq', "$args{'refseq'}" );
+    $alignment_pair->setattr( 'compseq', "$args{'compseq'}" );
+    
+    BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}", $alignment_pair );
+    
+    $alignment_pair->setattr( 'refxref', $args{'refxref'});
+    $alignment_pair->setattr( 'refstart', $args{'refstart'} );
+    $alignment_pair->setattr( 'refend', $args{'refend'} );
+    $alignment_pair->setattr( 'reflength', $args{'reflength'} );
+    $alignment_pair->setattr( 'compxref', $args{'compxref'});
+    $alignment_pair->setattr( 'compstart', $args{'compstart'} );
+    $alignment_pair->setattr( 'compend', $args{'compend'} );
+    $alignment_pair->setattr( 'complength', $args{'complength'} );
+    $alignment_pair->setattr( 'method', $args{'method'} );
 
-	if( !( $self->returnBsmlSequenceByIDR( "$args{'refseq'}")) ){
-	    $self->createAndAddSequence( "$args{'refseq'}", "$args{'refseq'}", $args{'reflength'}, '' );}
-	
-	if( !( $self->returnBsmlSequenceByIDR( "$args{'compseq'}")) ){
-	    $self->createAndAddSequence( "$args{'compseq'}", "$args{'compseq'}", $args{'complength'}, '' );}
-
-	$alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
-	
-	$alignment_pair->setattr( 'refseq', "$args{'refseq'}" );
-	$alignment_pair->setattr( 'compseq', "$args{'compseq'}" );
-
-	BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}", $alignment_pair );
-
-	$alignment_pair->setattr( 'refxref', $args{'refxref'});
-	$alignment_pair->setattr( 'refstart', $args{'refstart'} );
-	$alignment_pair->setattr( 'refend', $args{'refend'} );
-	$alignment_pair->setattr( 'reflength', $args{'reflength'} );
-	$alignment_pair->setattr( 'compxref', $args{'compxref'});
-	$alignment_pair->setattr( 'compstart', $args{'compstart'} );
-	$alignment_pair->setattr( 'compend', $args{'compend'} );
-	$alignment_pair->setattr( 'complength', $args{'complength'} );
-	$alignment_pair->setattr( 'method', $args{'method'} );
-
-	return $alignment_pair;
-    }
+    return $alignment_pair;
 }
+
 
 sub createAndAddSequencePairRun
 {
@@ -731,6 +753,8 @@ sub createAndAddSequencePairRun
     }
 }
 
+# Utility to add pairwise alignments specified in the btab format. 
+
 sub createAndAddBtabLineN
   {
     my $self = shift;
@@ -738,9 +762,15 @@ sub createAndAddBtabLineN
 
     #determine if the query name and the dbmatch name are a unique pair in the document
 
-    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}" );
+    my $alignment_pair_list = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}", "$args{'dbmatch_accession'}" );
 
-    if( $alignment_pair )
+    my $alignment_pair = '';
+    if( $alignment_pair_list )
+    {
+	$alignment_pair = $alignment_pair_list->[0];
+    }
+
+    if( $alignment_pair  )
 	  {
 	    #add a new BsmlSeqPairRun to the alignment pair and return
 	    my $seq_run = $alignment_pair->returnBsmlSeqPairRunR( $alignment_pair->addBsmlSeqPairRun() );
@@ -1095,6 +1125,73 @@ sub createAndAddStrain
     $strain->addBsmlAttr( 'name', $strain_name );
     $strain->addBsmlAttr( 'database', $database );
     $strain->addBsmlAttr( 'source_database', $source_database );
+}
+
+sub createAndAddSegmentSet
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $segmentSetType = $args{'segment_set_type'};
+
+    my $segmentSet = $self->returnBsmlSegmentSetR( $self->addBsmlSegmentSet() );
+
+    $segmentSet->addattr( 'seg-set-type', $segmentSetType );
+
+    return $segmentSet;
+}
+
+sub createAndAddSegment
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $segmentSet = $args{'segment_set'};
+    my $segSourceType = $args{'seg_source_type'};
+    my $segSource = $args{'seg_source'};
+    my $segId = $args{'seg_id'};
+    my $segURL = $args{'seg_url'};
+    my $segRole = $args{'seg_role'};
+    my $segStart = $args{'seg_start'};
+    my $segEnd = $args{'seg_end'};
+    my $segOnComplement = $args{'seg_on_complement'};
+
+    my $segment = $segmentSet->returnBsmlSegmentR( $segmentSet->addBsmlSegment() );
+
+    $segment->addattr( 'seg-source-type', $segSourceType );
+    $segment->addattr( 'seg-source', $segSource );
+    $segment->addattr( 'seg-id', $segId );
+    $segment->addattr( 'seg-url', $segURL );
+    $segment->addattr( 'seg-role', $segRole );
+    $segment->addattr( 'seg-start', $segStart );
+    $segment->addattr( 'seg-end', $segEnd );
+    $segment->addattr( 'seg-on-complement', $segOnComplement );
+
+    return $segment;
+}
+
+sub createAndAddNumbering
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $numbering = $args{'seq'}->addBsmlNumbering();
+    
+    $numbering->addattr( 'seqref', $args{'seqref'} );
+    $numbering->addattr( 'use-numbering', $args{'use_numbering'} );
+    $numbering->addattr( 'type', $args{'type'} );
+    $numbering->addattr( 'units', $args{'units'} );
+    $numbering->addattr( 'a', $args{'a'} );
+    $numbering->addattr( 'b', $args{'b'} );
+    $numbering->addattr( 'dec-places', $args{'dec_places'} );
+    $numbering->addattr( 'refnum', $args{'refnum'} );
+    $numbering->addattr( 'has-zero', $args{'has_zero'} );
+    $numbering->addattr( 'ascending', $args{'ascending'} );
+    $numbering->addattr( 'names', $args{'names'} );
+    $numbering->addattr(' from-aligns', $args{'from_aligns'} );
+    $numbering->addattr( 'aligns', $args{'aligns'} );
+    
+    return $numbering;
 }
 
 1;

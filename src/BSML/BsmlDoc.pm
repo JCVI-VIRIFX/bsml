@@ -58,7 +58,7 @@ use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlMultipleAlignmentTable;
 use BSML::BsmlAnalysis;
 use BSML::BsmlGenome;
-
+use BSML::BsmlSegmentSet;
 
 # The default links to the BSML dtd maintained by Labbook
 
@@ -94,6 +94,7 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
+    $self->{ 'BsmlSegmentSets' } = [];
     $self->{ 'BsmlSeqPairAlignments' } = [];
     $self->{ 'BsmlMultipleAlignmentTables' } = [];
     $self->{ 'BsmlAnalyses' } = [];
@@ -131,7 +132,14 @@ sub BsmlSetDocumentLookup
 sub BsmlSetAlignmentLookup
   {
     my ($Seq1, $Seq2, $aln) = @_;
-    $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2} = $aln;
+
+    if( !( $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2} ) )
+    {
+	$BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2} = [];
+    }
+
+    push( @{$BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2}}, $aln );
+
   }
 
 sub BsmlSetFeatureGroupLookup
@@ -160,12 +168,12 @@ sub BsmlReturnAlignmentLookup
 
     if( $Seq2 )
       {
-	#returns a list of alignment objects
+	#returns a reference to a list of alignment objects
 	return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1}->{$Seq2};
       }
     else
       {
-	#returns a hash reference where each key specifies a list of alignment objects
+	#returns a hash reference where each key specifies a reference to a list of alignment objects
 	return $BsmlSeqAlignmentLookups->[$BsmlCurrentTableId]->{$Seq1};
       }
   }
@@ -217,6 +225,20 @@ sub addBsmlSequence
     return $index;    
   }
 
+sub addBsmlSegmentSet
+{
+    my $self = shift;
+    
+    push( @{$self->{'BsmlSegmentSets'}}, new BSML::BsmlSegmentSet );
+
+    my $index = @{$self->{'BsmlSegmentSets'}} - 1;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Added BsmlSegmentSet: $index" );
+
+    return $index;
+}
+
 =item $doc->dropBsmlSequence()
 
 B<Description:> Delete a Bsml Sequence from the document.
@@ -249,6 +271,28 @@ sub dropBsmlSequence
     $bsml_logger->info( "Dropped BsmlSequence: $index" );
   }
 
+sub dropBsmlSegmentSet
+  {
+    my $self = shift;
+
+    my ($index) = @_;
+
+    my $newlist;
+
+    for(  my $i=0;  $i< @{$self->{'BsmlSegmentSets'}}; $i++ ) 
+      {
+	if( $i != $index )
+	  {
+	    push( @{$newlist}, $self->{'BsmlSegmentSets'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlSegmentSets'} = $newlist;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Dropped BsmlSegmentSet: $index" );
+  }
+
 =item $doc->returnBsmlSequenceListR()
 
 B<Description:> Return a list of references to all the sequence objects contained in the document.
@@ -265,6 +309,12 @@ sub returnBsmlSequenceListR
 
     return $self->{'BsmlSequences'};
   }
+
+sub returnBsmlSegmentSetListR
+{
+    my $self = shift;
+    return $self->{'BsmlSegmentSets'};
+}
 
 =item $doc->returnBsmlSequenceR()
 
@@ -283,6 +333,14 @@ sub returnBsmlSequenceR
 
     return $self->{'BsmlSequences'}[$index];  
   }
+
+sub returnBsmlSegmentSetR
+{
+    my $self = shift;
+    my ($index) = @_;
+
+    return $self->{'BsmlSegmentSets'}[$index];
+}
 
 sub returnBsmlSequenceByIDR
   {
@@ -474,9 +532,9 @@ sub dropBsmlGenome
 
 =item $doc->write()
 
-B<Description:> Writes the document to a file 
+B<Description:> Writes the document to a file or stream
 
-B<Parameters:> ($fname, $dtd) - output file name, optional user specified dtd which will override the librarys default
+B<Parameters:> ($fileOrHandle, $dtd) - output file name or the string 'STDOUT' or a file handle, optional user specified dtd which will override the librarys default
 
 B<Returns:> None
 
@@ -485,31 +543,39 @@ B<Returns:> None
 sub write
   {
     my $self = shift;
-    my ($fname, $dtd) = @_;
+    my ($fileOrHandle, $dtd) = @_;
 
     my $bsml_logger = get_logger( "Bsml" );
 
     $bsml_logger->debug( "Attempting to write BsmlDoc" );
     my $output;
 
-    if( !($fname eq 'STDOUT') )
-      {
-	$output = new IO::File( ">$fname" ) or die "could not open output file - $fname $!\n";;
+    # Maintain reverse compatibility; allow use of string 'STDOUT' as a filename
+    if ($fileOrHandle eq 'STDOUT') 
+    {
+	$output = \*STDOUT;
+    }
+    # $fileOrHandle is a handle or glob
+    elsif (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) 
+    {
+	$output = $fileOrHandle;
+    }
+    # otherwise assume $fileOrHandle is a filename
+    else 
+    {
+	$output = new IO::File( ">$fileOrHandle" ) or die "could not open output file - $fileOrHandle $!\n";;
 
 	if( !( $output ) )
 	  {
-	    $bsml_logger->fatal( "Could not open output file - $fname $!" );
-	    die "could not open output file - $fname $!\n";
+	    $bsml_logger->fatal( "Could not open output file - $fileOrHandle $!" );
+	    die "could not open output file - $fileOrHandle $!\n";
 	  }
       }
 
     # Setting DATA_MODE to 1 enables XML::Writer to insert newlines around XML elements for 
     # easier readability. DATA_INDENT specifies an indent of two spaces for child elements
 
-    my $writer;
-
-    if( $fname eq 'STDOUT' ){ $writer = new XML::Writer( DATA_MODE => 1, DATA_INDENT => 2);}
-    else{$writer = new XML::Writer(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2);}
+    my $writer = new XML::Writer(OUTPUT => $output, DATA_MODE => 1, DATA_INDENT => 2);
 
     $writer->xmlDecl();
 
@@ -534,7 +600,7 @@ sub write
 	$writer->endTag( "Attribute" );
       }
 
-    # write the Defintions section, current API only supports Sequences
+    # write the Definitions section; current API only supports Sequences
 
     $writer->startTag( "Definitions" );
 
@@ -550,18 +616,23 @@ sub write
 	$writer->endTag( "Genomes" );
     }
 
-    # write the sequence elements
+    # write the sequence and segment-set elements
 
-    if( @{$self->{'BsmlSequences'}} )
+    if( @{$self->{'BsmlSequences'}} || @{$self->{'BsmlSegmentSets'}} )
     {
-      $writer->startTag( "Sequences" );
+	$writer->startTag( "Sequences" );
 
-      foreach my $seq ( @{$self->{'BsmlSequences'}} )
-        {
-	  $seq->write( $writer );
-        }
+	foreach my $seq ( @{$self->{'BsmlSequences'}} )
+	{
+	    $seq->write( $writer );
+	}
 
-      $writer->endTag( "Sequences" );
+	foreach my $segmentSet ( @{$self->{'BsmlSegmentSets'}} )
+	{
+	    $segmentSet->write( $writer );
+	}
+
+	$writer->endTag( "Sequences" );
     }
 
     if( @{$self->{'BsmlSeqPairAlignments'}} || @{$self->{'BsmlMultipleAlignmentTables'}} )
@@ -603,10 +674,11 @@ sub write
     #clean up open fhs
     $writer->end();
     
-    if( !($fname eq 'STDOUT') )
+    # NOTE: one might also want to omit the call to close() if $output->isa("IO::String")
+    if(($output != \*STDOUT) && ($output != \*STDERR))
       {
 	  $output->close();
-	  $bsml_logger->info("Output handle $output closed for file $fname $!");
+	  $bsml_logger->info("Output handle $output closed for file/handle $fileOrHandle $!");
       }
 
     $bsml_logger->debug( "BsmlDoc successfully written" );

@@ -93,7 +93,7 @@ sub new
 sub parse
   {
     my $self = shift;
-    my ( $filename ) = @_;
+    my ( $fileOrHandle ) = @_;
     my $bsml_logger = get_logger( "Bsml" );
 
     # Set "rooted" twig handlers on Sequence, SeqPairAlignment, and Analysis elements. 
@@ -103,11 +103,15 @@ sub parse
     # parse will die if an xml syntax error is encountered or if
     # there is an io problem
 
-    if( $filename ){
-	$twig->parsefile( $filename );}
-    else{
-	$twig->parse( \*STDIN );}
-
+    if( $fileOrHandle ) {
+	if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+	    $twig->parse( $fileOrHandle );
+	} else {
+	    $twig->parsefile( $fileOrHandle );
+	}
+    } else {
+	$twig->parse( \*STDIN );
+    }
     $twig->dispose();  
   }
 
@@ -252,6 +256,36 @@ sub sequenceHandler
 	my $attr = $seqDatImport->atts();
 	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
       }
+
+    # add numbering information
+
+    my $numbering = $seq->first_child( 'Numbering' );
+
+    if( $numbering )
+    {
+	my $attr = $numbering->atts();
+	my $bsmlNumbering = $bsmlseq->returnBsmlNumberingR( $bsmlseq->addBsmlNumbering() );
+	
+	$bsmlNumbering->addattr( 'seqref', $attr->{'seqref'} );
+	$bsmlNumbering->addattr( 'use-numbering', $attr->{'use_numbering'} );
+	$bsmlNumbering->addattr( 'type', $attr->{'type'} );
+	$bsmlNumbering->addattr( 'units', $attr->{'units'} );
+	$bsmlNumbering->addattr( 'a', $attr->{'a'} );
+	$bsmlNumbering->addattr( 'b', $attr->{'b'} );
+	$bsmlNumbering->addattr( 'dec-places', $attr->{'dec_places'} );
+	$bsmlNumbering->addattr( 'refnum', $attr->{'refnum'} );
+	$bsmlNumbering->addattr( 'has-zero', $attr->{'has_zero'} );
+	$bsmlNumbering->addattr( 'ascending', $attr->{'ascending'} );
+	$bsmlNumbering->addattr( 'names', $attr->{'names'} );
+	$bsmlNumbering->addattr(' from-aligns', $attr->{'from_aligns'} );
+	$bsmlNumbering->addattr( 'aligns', $attr->{'aligns'} );
+
+	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) )
+	{
+	    my $attr = $BsmlAttr->atts();
+	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+	}
+    }
 
     # add Feature Tables with Feature, Reference, and Feature-group Elements
 
@@ -437,7 +471,35 @@ sub minsequenceHandler
 	my $attr = $seqDatImport->atts();
 	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
       }
-      
+
+    my $numbering = $seq->first_child( 'Numbering' );
+    
+    if( $numbering )
+    {
+	my $attr = $numbering->atts();
+	my $bsmlNumbering = $bsmlseq->returnBsmlNumberingR( $bsmlseq->addBsmlNumbering() );
+	
+	$bsmlNumbering->addattr( 'seqref', $attr->{'seqref'} );
+	$bsmlNumbering->addattr( 'use-numbering', $attr->{'use_numbering'} );
+	$bsmlNumbering->addattr( 'type', $attr->{'type'} );
+	$bsmlNumbering->addattr( 'units', $attr->{'units'} );
+	$bsmlNumbering->addattr( 'a', $attr->{'a'} );
+	$bsmlNumbering->addattr( 'b', $attr->{'b'} );
+	$bsmlNumbering->addattr( 'dec-places', $attr->{'dec_places'} );
+	$bsmlNumbering->addattr( 'refnum', $attr->{'refnum'} );
+	$bsmlNumbering->addattr( 'has-zero', $attr->{'has_zero'} );
+	$bsmlNumbering->addattr( 'ascending', $attr->{'ascending'} );
+	$bsmlNumbering->addattr( 'names', $attr->{'names'} );
+	$bsmlNumbering->addattr(' from-aligns', $attr->{'from_aligns'} );
+	$bsmlNumbering->addattr( 'aligns', $attr->{'aligns'} );
+
+	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) )
+	{
+	    my $attr = $BsmlAttr->atts();
+	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+	}
+    }
+    
     $twig->purge;
     return $bsmlseq;
 }

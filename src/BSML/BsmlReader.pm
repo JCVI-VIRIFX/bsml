@@ -64,7 +64,7 @@ sub readSequenceDat
     if( ref($seq) eq 'BSML::BsmlSequence' ){
       return $seq->returnSeqData();}
   }
-# Given a sequence object reference return it's sequence import child
+# Given a sequence object reference return its sequence import child
 # and the raw sequence it references...
 
 sub readSequenceDatImport
@@ -82,6 +82,18 @@ sub readSequenceDatImport
 	return $rhash;
     }
   }
+
+# read subassembly mapping data from a sequence object.
+
+sub readNumbering
+{
+    my $self = shift;
+    my ($seq) = @_;
+
+    my $numbering = $seq->returnBsmlNumberingR();
+
+    return $self->readElement( $numbering );
+}
 
 sub readFeatures
   {
@@ -112,13 +124,15 @@ sub readFeatures
 		foreach my $interval_loc (@{$Feature->returnBsmlIntervalLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $interval_loc->{'startpos'},
-					  endpos => $interval_loc->{'endpos'}} );
+					  endpos => $interval_loc->{'endpos'},
+					  complement => $interval_loc->{'complement'}} );
 		  }
 
 		foreach my $site_loc (@{$Feature->returnBsmlSiteLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $site_loc->{'sitepos'},
-					  endpos => $site_loc->{'sitepos'}} );
+					  endpos => $site_loc->{'sitepos'},
+					  complement => $site_loc->{'complement'}} );
 		  }
 
 		$record->{'locations'} = $locations;
@@ -138,7 +152,7 @@ sub readFeatures
 		my $bsmlhash = $Feature->returnBsmlAttrHashR();
 
 		foreach my $qual (keys(%{$bsmlhash}))
-		  {
+		{
 		    push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
 		  }
 		
@@ -167,13 +181,15 @@ sub readFeatures
 		foreach my $interval_loc (@{$Feature->returnBsmlIntervalLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $interval_loc->{'startpos'},
-					  endpos => $interval_loc->{'endpos'}} );
+					  endpos => $interval_loc->{'endpos'},
+					  complement => $interval_loc->{'complement'}} );
 		  }
 
 		foreach my $site_loc (@{$Feature->returnBsmlSiteLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $site_loc->{'sitepos'},
-					  endpos => $site_loc->{'sitepos'}} );
+					  endpos => $site_loc->{'sitepos'},
+					  complement => $site_loc->{'complement' }} );
 		  }
 
 		$record->{'locations'} = $locations;
@@ -221,13 +237,15 @@ sub readFeatures
 		foreach my $interval_loc (@{$Feature->returnBsmlIntervalLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $interval_loc->{'startpos'},
-					  endpos => $interval_loc->{'endpos'}} );
+					  endpos => $interval_loc->{'endpos'},
+				          complement => $interval_loc->{'complement'} } );
 		  }
 
 		foreach my $site_loc (@{$Feature->returnBsmlSiteLocListR()})
 		  {
 		    push( @{$locations}, {startpos => $site_loc->{'sitepos'},
-					  endpos => $site_loc->{'sitepos'}} );
+					  endpos => $site_loc->{'sitepos'},
+					  complement => $site_loc->{'complement' } });
 		  }
 
 		$record->{'locations'} = $locations;
@@ -848,24 +866,34 @@ sub fetch_all_alignmentPairs
       {
 	  #pushes a reference to an alignment object onto the return list using the lookup tables
 
-	  push( @{$alignments}, BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
+	  if (my $alns = BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ) )
+	  {
+	      foreach my $aln ( @{$alns} )
+	      {
+		  push( @{$alignments}, $aln );
+	      }
+	  }
       }
     else
       {
 	  # this returns a reference to an anonymous hash. The hash is keyed with match query ids
 	  # which point to references to alignment objects. 
 
-	my $href = BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId );
-
-	# push the alignment objects onto the return list.
-
-	foreach my $key ( keys(%{$href}))
-	  {
-	    push( @{$alignments}, $href->{$key} )
-	  }
-      }
+	if( my $href = BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId))
+	{
+	    # push the alignment objects onto the return list.
+	    
+	    foreach my $key ( keys(%{$href}))
+	    {
+		foreach my $aln ( @{ $href->{$key} } )
+		{
+		    push( @{$alignments}, $aln );
+		}
+	    }
+	}
+    }
     return $alignments;
-  }
+}
 
 # Returns an assembly id (parental sequence object) given a valid gene (feature group-set) identifier
 
@@ -1630,9 +1658,41 @@ sub geneCoordstoTranscriptSequenceList
     return $seqList;
   }
 
+# returns a boolean value indicating whether the input sequence object has either 
+# a Seq-data element or a Seq-data-import element.  It does not check that the
+# Seq-data element contains any data, nor that the Seq-data-import element is valid.
+# If this method returns false for a given sequence then subSequence should not be
+# expected to do anything useful for that sequence either.
+
+sub seqHasSeqDataOrImport 
+  {
+    my $self = shift;
+    my ($seqInput) = @_;
+
+    my $seq = $seqInput;
+    
+    if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
+    {
+	$seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqInput );
+
+	if( !(ref($seq) eq 'BSML::BsmlSequence' ) )
+	{
+	    die "Could not find $seqInput in the lookup tables\n";
+	}
+    }
+
+    my $seqdat = $seq->returnSeqData();
+    return 1 if ($seqdat);
+    my $seqimpt = $seq->returnBsmlSeqDataImport();
+
+    # this hash will have no keys iff the entry lacks a parseable Seq-data-import
+
+    return scalar(keys %$seqimpt);
+}
+
 # returns the sequence substring of the input object. Substrings are bounded by the input 
 # start and stop positions. Reverse complement is returned for inputs in which the 
-# start position is greater then the end position. 
+# start position is greater than the end position. 
 
 sub subSequence
   {
@@ -1672,6 +1732,15 @@ sub subSequence
     {
 	my $seqimpt = $seq->returnBsmlSeqDataImport();
 	
+	# no external file data either; this sequence has no sequence data
+
+	if ( (!($seqimpt->{'format'})) )
+	{
+	    print STDERR "BsmlReader::subSequence - Error: The specified sequence (ID=", $seq->returnattr('id'), 
+	    ") has no Seq-data or Seq-data-import.\n";
+	    return '';
+	}
+
 	if( $seqimpt->{'format'} eq 'fasta' )
 	{
 	    $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );
@@ -1682,7 +1751,7 @@ sub subSequence
 
 	if( !($seqdat) )
 	{
-	    print STDERR "BsmlReader::subSequence - Error Unable to retrieve sequence data. $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
+	    print STDERR "BsmlReader::subSequence - Error: Unable to retrieve sequence data. Source: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
 	    return '';
 	}
 	
@@ -1744,6 +1813,7 @@ sub parse_multi_fasta {
       $line = <IN>;
     } else {
       my $header = $1;
+
       if($specified_header eq $header) {
 	while(defined($line=<IN>) and $line !~ /^>/ ) {
 	  next if($line =~/^\s+$/);                   #skip blank lines
@@ -2107,6 +2177,139 @@ sub readGenome
     return $rhash;
 }
 
+sub returnGenomeListR
+{
+    my $self = shift;
+    return $self->returnBsmlGenomeListR();
+}
+
+sub readSnps
+{
+    my $self = shift;
+    my $seq = shift;
+
+    my $rows = $self->readFeatures( $seq );
+    my $rlist = [];
+
+    foreach my $record (@{$rows})
+    {
+	if( $record->{'class'} eq 'SNP' )
+	{
+	    my $snp_record = {};
+	    $snp_record->{'ref_id'} = $record->{'id'};
+	    
+	    # there is only one site location in a SNP definition
+	    $snp_record->{'ref_pos'} = $record->{'locations'}->[0]->{'startpos'};
+	    $snp_record->{'ref_complement'} = $record->{'locations'}->[0]->{'complement'};
+
+	    my $refFeat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $snp_record->{'ref_id'} );
+            my $link = $refFeat->returnBsmlLinkListR()->[0];
+	    $snp_record->{'query_id'} = $link->{'href'};
+
+	    my $rhash = $self->readElement( $refFeat );
+
+	    $snp_record->{'ref_base_change'} = $rhash->{'SNP'};
+	    $snp_record->{'ref_coverage'} = $rhash->{'COVERAGE'};
+	    $snp_record->{'ref_consensus_score'} = $rhash->{'CONSENSUS_SCORE'};
+	    
+
+	    my $queryFeat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $snp_record->{'query_id'} );
+	    
+	    $record = $self->readFeatures($queryFeat)->[0];
+
+	    # there is only one site location in a SNP definition
+	    $snp_record->{'query_pos'} = $record->{'locations'}->[0]->{'startpos'};
+	    $snp_record->{'query_complement'} = $record->{'locations'}->[0]->{'complement'};
+
+	    $rhash = $self->readElement( $queryFeat );
+
+	    $snp_record->{'query_base_change'} = $rhash->{'SNP'};
+	    $snp_record->{'query_coverage'} = $rhash->{'COVERAGE'};
+	    $snp_record->{'query_consensus_score'} = $rhash->{'CONSENSUS_SCORE'};
+	    
+	    push( @{$rlist}, $snp_record );
+	}
+    }
+
+    return $rlist;
+}
+
+sub returnSnpsReferenceSeqId
+{
+    my $self = shift;
+
+    foreach my $seq (@{$self->returnAllSequences()})
+    {
+	if( $self->readElement( $seq )->{'snp_sequence_type'} eq 'reference' )
+	{   
+	    return $seq->returnattr( 'id' );
+	}
+    }
+}
+
+sub readReferenceSnps
+{
+    my $self = shift;
+
+    foreach my $seq (@{$self->returnAllSequences()})
+    {
+	if( $self->readElement( $seq )->{'snp_sequence_type'} eq 'reference' )
+	{   
+	    my $rlist = $self->readSnps( $seq );
+	    return $rlist;
+	}
+    }
+}
+
+sub readSubAssemblyMapping
+{
+    my $self = shift;
+    my $seqs = $self->returnAllSequences();
+
+    my $lookup = {};
+    my $count = 0;
+
+    my $rarray = [];
+
+    foreach my $seq (@{$seqs})
+    {
+	if( $seq->returnBsmlAttr( 'TYPE' ) eq 'SUPERCONTIG' )
+	{
+	    $lookup->{$seq->returnattr( 'id' )} = $count;
+
+	    my $rhash;
+
+	    $rhash->{'length'} = $seq->returnattr( 'length' );
+	    $rhash->{'title'} = $seq->returnattr( 'title' );
+	    $rhash->{'molecule'} = $seq->returnattr( 'molecule' );
+	    $rhash->{'dat'} = \$seq->{'BsmlSeqData'};
+	    $rhash->{'sub_assemblies'} = [];
+	    $rhash->{'super_contig_id'} = $seq->returnattr( 'id' );
+
+	    push( @{$rarray}, $rhash );
+	    $count++;
+	}
+
+	if( $seq->returnBsmlAttr( 'TYPE' ) eq 'CONTIG' )
+	{
+
+	    my $numbering = $self->readNumbering( $seq );
+	 
+	    my $index = $lookup->{$numbering->{'seqref'}};
+	    my $rank = $numbering->{'a'};
+	    
+	    delete( $numbering->{'a'} );
+
+	    $numbering->{'length'} = $seq->returnattr( 'length' );
+	    $numbering->{'title'} = $seq->returnattr( 'title' );
+	    $numbering->{'molecule'} = $seq->returnattr( 'molecule' );
+
+	    $rarray->[$index]->{'sub_assemblies'}->[$rank] = $numbering;
+	}
+    }
+
+    return $rarray;
+}
 
 # A generic read function which flattens the attribute and Bsml Attribute
 # hashes of an element into a single return hash.
@@ -2116,6 +2319,8 @@ sub readElement
     my $self = shift;
     my $elem = shift;
     my $rhash = {};
+
+    return if( !(($elem)));
 
     foreach my $key (keys( %{$elem->{'attr'}} ))
     {

@@ -18,7 +18,7 @@ sub new
 sub parse
   {
     my $self = shift;
-    my ( $input_hash_ref, $filename ) = @_;
+    my ( $input_hash_ref, $fileOrHandle ) = @_;
 
     $rhash = ${$input_hash_ref}; 
 
@@ -30,8 +30,11 @@ sub parse
 			  { Sequence => \&sequenceHandler }
 			  );
     
-   
-    $twig->parsefile( $filename );
+    if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+	$twig->parse( $fileOrHandle );
+    } else {
+	$twig->parsefile( $fileOrHandle );
+    }
   }
 
 # This is a private method implemented as an XML::Twig handler object. It is 

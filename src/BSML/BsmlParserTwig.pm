@@ -15,7 +15,7 @@ This document refers to version 1.0 of the BSML Object Layer
   my $doc = new BsmlDoc;
   my $parser = new BsmlParserTwig;
 
-  $parser->parse( $doc, $fname );
+  $parser->parse( $doc, $filenameOrHandle );
 
 =head1 DESCRIPTION
 
@@ -55,9 +55,9 @@ sub new
 
 =item $parser->parse( $bsml_doc, $filename )
 
-B<Description:> parse the contents of $filename into the BSML Document Object $bsml_doc
+B<Description:> parse the contents of $fileOrHandle into the BSML Document Object $bsml_doc
 
-B<Parameters:> ($bsml_doc, $filename) - a BsmlDoc object, a filename pointing to a BSML document
+B<Parameters:> ($bsml_doc, $fileOrHandle) - a BsmlDoc object, a filename or file handle pointing to a BSML document
 
 B<Returns:> None
 
@@ -66,13 +66,13 @@ B<Returns:> None
 sub parse
   {
     my $self = shift;
-    my ( $bsml_doc, $filename ) = @_;
+    my ( $bsml_doc, $fileOrHandle ) = @_;
     my $bsml_logger = get_logger( "Bsml" );
 
     $bsmlDoc = ${$bsml_doc}; 
 
-    if( !( $filename ) ){   
-      $bsml_logger->fatal( "Filename not provided for Bsml Parsing." );
+    if( !( $fileOrHandle ) ){   
+      $bsml_logger->fatal( "Filename or file handle not provided for Bsml Parsing." );
     }
 
     if( !( $bsmlDoc ) ){
@@ -97,9 +97,13 @@ sub parse
     # parsefile will die if an xml syntax error is encountered or if
     # there is an io problem
 
-    $bsml_logger->debug( "Attempting to Parse Bsml Document: $filename" );
-    $twig->parsefile( $filename );
-    $bsml_logger->info( "Successfully Parsed Bsml Document: $filename" );
+    $bsml_logger->debug( "Attempting to Parse Bsml Document: $fileOrHandle" );
+    if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+	$twig->parse( $fileOrHandle );
+    } else {
+	$twig->parsefile( $fileOrHandle );
+    }
+    $bsml_logger->info( "Successfully Parsed Bsml Document: $fileOrHandle" );
 
     # Twig documentation claims circular references in the twig class prevent garbage collection. Could
     # this be the source of the file handle problem? It seems like the 'twig' will go out of scope reguardlessly.
@@ -176,6 +180,36 @@ sub sequenceHandler
 	my $attr = $seqDatImport->atts();
 	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
       }
+
+    # add numbering information
+
+    my $numbering = $seq->first_child( 'Numbering' );
+
+    if( $numbering )
+    {
+	my $attr = $numbering->atts();
+	my $bsmlNumbering = $bsmlseq->returnBsmlNumberingR( $bsmlseq->addBsmlNumbering() );
+
+	$bsmlNumbering->addattr( 'seqref', $attr->{'seqref'} );
+	$bsmlNumbering->addattr( 'use-numbering', $attr->{'use_numbering'} );
+	$bsmlNumbering->addattr( 'type', $attr->{'type'} );
+	$bsmlNumbering->addattr( 'units', $attr->{'units'} );
+	$bsmlNumbering->addattr( 'a', $attr->{'a'} );
+	$bsmlNumbering->addattr( 'b', $attr->{'b'} );
+	$bsmlNumbering->addattr( 'dec-places', $attr->{'dec_places'} );
+	$bsmlNumbering->addattr( 'refnum', $attr->{'refnum'} );
+	$bsmlNumbering->addattr( 'has-zero', $attr->{'has_zero'} );
+	$bsmlNumbering->addattr( 'ascending', $attr->{'ascending'} );
+	$bsmlNumbering->addattr( 'names', $attr->{'names'} );
+	$bsmlNumbering->addattr(' from-aligns', $attr->{'from_aligns'} );
+	$bsmlNumbering->addattr( 'aligns', $attr->{'aligns'} );
+
+	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) )
+	{
+	    my $attr = $BsmlAttr->atts();
+	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+	}
+    }
 
     # add Feature Tables with Feature, Reference, and Feature-group Elements
 
@@ -277,6 +311,12 @@ sub sequenceHandler
 		    $feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'}, $attr->{'class'} ); 
 		  }
 
+		  foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
+		  {
+		      my $attr = $BsmlAttr->atts();
+		      $feat->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+		  }
+
 		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
 		  {
 		    my $attr = $BsmlLink->atts();
@@ -361,7 +401,6 @@ sub seqPairAlignmentHandler
 	 BSML::BsmlDoc::BsmlSetAlignmentLookup( $refseq, $compseq, $bsmlaln );
        }
    
-
      # add Bsml Attribute elements to the BsmlSeqPairAlignment 
 
      foreach my $BsmlAttr ( $seq_aln->children( 'Attribute' ) )

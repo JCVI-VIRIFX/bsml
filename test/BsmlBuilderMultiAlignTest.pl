@@ -28,11 +28,13 @@ my $summary = $doc->createAndAddAlignmentSummary( 'multipleAlignmentTable' => $t
 						  'seq-type' => 'nucleotide',
 						  'seq-format' => 'FASTA' );
 
-$doc->createAndAddAlignedSequence( 'alignmentSummary' => $summary,
+ $doc->createAndAddAlignedSequence( 'alignmentSummary' => $summary,
 				   'seqref' => 'PF14_0392',
 				   'seqnum' => '0',
 				   'length' => '512',
 				   'name' => 'pfa1 PF14_0392' );
+
+
 
 
 $doc->createAndAddAlignedSequence( 'alignmentSummary' => $summary,
@@ -67,9 +69,11 @@ $doc->createAndAddAlignedPair( 'pairwiseAlignments' => $pairs,
 my $aln = $doc->createAndAddSequenceAlignment( 'multipleAlignmentTable' => $table,
 					       'sequences' => 3 );
 
-$doc->createAndAddSequenceData( 'sequenceAlignment' => $aln,
+my $ref = $doc->createAndAddSequenceData( 'sequenceAlignment' => $aln,
 				'seq-name' => 'pfa1 PF14_0392',
 				'seq-data' => 'AGCTAGCTAGCT------------------------------------------' );
+
+$ref->addBsmlAttr( 'seqnum', 5 );
 
 $doc->createAndAddSequenceData( 'sequenceAlignment' => $aln,
 				'seq-name' => 'pfa1 PF14_0393',

@@ -27,5 +27,10 @@ $schema =~ s/\//\\\//g;
 
 my ($dir) = ($0 =~ /(.*)\/.*/);
 
-system "sed -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">//\' -e \'s/<Bsml>/<Bsml xmlns:xsi=\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"$schema\">/\' $file | $dir/Xerces-xsdValid";
+my $status = system "sed -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">//\' -e \'s/<Bsml>/<Bsml xmlns:xsi=\"http:\\/\\/www.w3.org\\/2001\\/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"$schema\">/\' $file | $dir/Xerces-xsdValid";
 
+my $exit_value = $status >> 8;
+my $signal_num = $status & 127;
+my $dumped_core = $status & 128;
+
+exit($exit_value);

@@ -7,6 +7,7 @@ use BSML::BsmlBuilder;
 use BSML::BsmlReader;
 use BSML::BsmlParserTwig;
 use BSML::BsmlParserSerialSearch;
+use Data::Dumper;
 
 # Test script validates the integrety of BSML search document encoding and
 # decoding. Specifically it tests that BsmlBuilder is able to create a document
@@ -15,7 +16,7 @@ use BSML::BsmlParserSerialSearch;
 # a parsing module. Parsing functionality is tested for BsmlParserTwig 
 # and BsmlParserSerialSearch. 
 
-print '1..8',"\n";
+print '1..10',"\n";
 
 my $doc = new BSML::BsmlBuilder;
 
@@ -216,3 +217,89 @@ else
 # deletes the temp file
 
 unlink 'tmp.bsml';
+
+$doc = new BSML::BsmlBuilder;
+
+my $scores = [
+	      [ 'Seq0001', 'Seq0002', 0, 0, 150, 1000 ],
+	      [ 'Seq0001', 'Seq0003', 0, 0, 200, 1200 ],
+	      [ 'Seq0004', 'Seq0002', 0, 0, 300, 9999 ],
+	      [ 'Seq0001', 'Seq0002', 125, 125, 1000, 2000 ]
+	      ];
+
+foreach my $listR ( @{$scores} )
+{
+    
+    my @list = @{$listR};
+    my $l = @list;
+   
+    # This forces the creation of an alignment object - even if the alignment already exists between the refseq and compseq
+
+    my $aln = $doc->createAndAddSequencePairAlignment( 'refseq' => $list[0],
+						       'compseq' => $list[1],
+						       'force' => 1 );
+
+    my $s = $doc->createAndAddSequencePairRun( 'alignment_pair' => $aln,
+					       'refpos' => $list[2],
+					       'runlength' => $list[4],
+					       'comppos' => $list[3],
+					       'runscore' => $list[5] );
+
+    $s->addBsmlAttr( 'TESTATTR', 'testattr' );
+    
+}
+
+my $aln = $doc->createAndAddSequencePairAlignment( 'refseq' => 'seqA',
+						   'compseq' => 'seqB',
+						   'refstart' => 0,
+						   'refend' => 100 );
+
+my $aln = $doc->createAndAddSequencePairAlignment( 'refseq' => 'seqA',
+						   'compseq' => 'seqB',
+						   'refstart' => 0,
+						   'refend' => 100 );
+
+my $aln = $doc->createAndAddSequencePairAlignment( 'refseq' => 'seqA',
+						   'compseq' => 'seqB',
+						   'refstart' => 101,
+						   'refend' => 200 );
+
+$doc->createAndAddAnalysis( 'algorithm' => 'peffect',
+			    'description' => 'test analysis',
+			    'name' => 'peffect',
+			    'program' => 'peffect',
+			    'program_version' => 'program_version',
+			    'source_name' => 'source_name',
+			    'source_url' => 'source_url',
+			    'source_version' => 'source_version',
+			    'bsml_link_relation' => 'BSMLSEQPAIRALIGNMENTS',
+			    'bsml_link_url' => '#BsmlTables'
+			    );
+
+$doc->write( "tmp.bsml" );
+
+$reader = new BSML::BsmlReader;
+$parser = new BSML::BsmlParserTwig;
+$parser->parse( \$reader, "tmp.bsml" );
+
+my $list = $reader->fetch_all_alignmentPairs( 'Seq0001', 'Seq0002' );
+my $count = @{$list};
+
+# Verify that there are two alignment objects in the list... (the force parameter worked)
+
+if( $count == 2 ){
+    print 'ok 9',"\n";}
+else{
+    print 'not ok 9',"\n";}
+
+my $list = $reader->fetch_all_alignmentPairs( 'seqA', 'seqB' );
+my $count = @{$list};
+
+if( $count == 2 ){
+    print 'ok 10',"\n";}
+else{
+    print 'not ok 10',"\n";}
+
+unlink( 'tmp.bsml' );
+
+

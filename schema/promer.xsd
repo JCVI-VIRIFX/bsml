@@ -117,15 +117,15 @@
       </xs:element>
       <xs:element name="Definitions">
         <xs:complexType>
-          <xs:all>
-            <xs:element name="Sequences" >
+          <xs:sequence>
+            <xs:element name="Sequences" minOccurs="0">
                <xs:complexType>
                  <xs:sequence>
                    <xs:element ref="Sequence" maxOccurs="unbounded" />
                  </xs:sequence>
                </xs:complexType>
             </xs:element>
-            <xs:element name="Tables" >
+            <xs:element name="Tables" minOccurs="0">
               <xs:complexType>
                 <xs:sequence>
                   <xs:element ref="Seq-pair-alignment" maxOccurs="unbounded" />
@@ -133,7 +133,7 @@
                 <xs:attribute name="id" type="BsmlTables" use="optional"/>
               </xs:complexType>
             </xs:element>
-          </xs:all>
+          </xs:sequence>
         </xs:complexType>
       </xs:element>
       <xs:element name="Research" minOccurs="0" maxOccurs="1">
