@@ -868,10 +868,8 @@ sub createAndAddFeatureGroupMember
     my $self = shift;
     my ($FeatureGroup, $featref, $feattype, $grouptype, $cdata) = @_;
 
-    if( ref($featref) eq 'BSML::BsmlFeature' ){
-	$FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
-    }
-
+    $FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
+    
     return $FeatureGroup;
   }
 
