@@ -34,6 +34,7 @@ use XML::Writer;
 use strict;
 use warnings;
 use BsmlFeatureTable;
+use BsmlFeatureGroup;
 
 # a bsml sequence stores raw sequence data and a list of feature tables
 
@@ -54,6 +55,7 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlFeatureTables' } = [];
+    $self->{ 'BsmlFeatureGroups' } = [];
     $self->{ 'BsmlSeqData' } = '';
   }
 
@@ -208,6 +210,50 @@ sub returnSeqData
     return $self->{'BsmlSeqData'};
   }
 
+sub addBsmlFeatureGroup
+  {
+    my $self = shift;
+
+    push( @{$self->{'BsmlFeatureGroups'}}, new BsmlFeatureGroup );
+
+    my $index = @{$self->{'BsmlFeatureGroups'}} - 1;
+    return $index;
+
+  }
+
+sub dropBsmlFeatureGroup
+  {
+    my $self = shift;
+    my ($index) = @_;
+
+    my @newlist;
+
+    for( my $i=0; $i<length(@{$self->{'BsmlFeatureGroups'}}); $i++ )
+      {
+	if( $i != $index )
+	  {
+	    push( @newlist, $self->{'BsmlFeatureGroups'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlFeatureGroups'} = \@newlist;    
+  }
+
+sub returnBsmlFeatureGroupListR
+  {
+    my $self = shift;
+    return $self->{'BsmlFeatureGroups'};
+  }
+
+sub returnBsmlFeatureGroupR
+  {
+    my $self = shift;
+
+    my ($index) = @_;
+    return $self->{'BsmlFeatureTables'}[$index];
+  } 
+
+
 =item $seq->write()
 
   B<Description:> writes the BSML elements encoded by the class to a file using XML::Writer. This method should only be called through the BsmlDoc->write() process.
@@ -231,14 +277,25 @@ sub write
 	$writer->endTag( "Attribute" );
       }
 
-    $writer->startTag( "Feature-tables" );
-
-    foreach my $tbl ( @{$self->{'BsmlFeatureTables'}} )
+    if( my $tcount = @{$self->{'BsmlFeatureTables'}} > 0 )
       {
-	$tbl->write( $writer );
-      }
+	$writer->startTag( "Feature-tables" );
 
-    $writer->endTag( "Feature-tables" );
+	foreach my $tbl ( @{$self->{'BsmlFeatureTables'}} )
+	  {
+	    $tbl->write( $writer );
+	  }
+
+	if( my $gcount = @{$self->{'BsmlFeatureGroups'}} > 0 )
+	  {
+	    foreach my $grp ( @{$self->{'BsmlFeatureGroups'}} )
+	      {
+		$grp->write( $writer );
+	      }
+	  }
+
+	$writer->endTag( "Feature-tables" );
+      }
 
     if( $self->{'BsmlSeqData'} )
       {

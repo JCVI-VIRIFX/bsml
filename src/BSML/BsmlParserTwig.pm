@@ -215,8 +215,33 @@ sub sequenceHandler
 		  }
 	      }
 	  }
-      }
+	foreach my $BsmlFGroup  ($BsmlFTables->children( 'Feature-group' )) 
+	  {
+	    my $group = $bsmlseq->{'BsmlFeatureGroups'}[$bsmlseq->addBsmlFeatureGroup()];
+	    
+	    my $attr = $BsmlFGroup->atts();
+	    
+	    foreach my $key ( keys( %{$attr} ) )
+	      {
+		$group->addattr( $key, $attr->{$key} );
+	      }
 
+	    if( $BsmlFGroup->text() ){
+	      $group->setText( $BsmlFGroup->text() ); 
+	    }
+
+	    foreach my $BsmlFGroupMember ( $BsmlFGroup->children( 'Feature-group-member' ))
+	      {
+		my $attr = $BsmlFGroupMember->atts();
+		my $text = $BsmlFGroupMember->text();
+
+		$group->addBsmlFeatureGroupMember( $attr->{'featref'}, $attr->{'feature-type'}, $attr->{'group-type'}, $text );
+	      }
+	    
+	  }
+	
+      }
+      
     $twig->purge_up_to( $seq );
   }
 
