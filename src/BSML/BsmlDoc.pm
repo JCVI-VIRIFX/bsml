@@ -59,6 +59,7 @@ use BSML::BsmlMultipleAlignmentTable;
 use BSML::BsmlAnalysis;
 use BSML::BsmlGenome;
 use BSML::BsmlSegmentSet;
+use IO::File;
 
 # The default links to the BSML dtd maintained by Labbook
 
@@ -477,6 +478,7 @@ sub dropBsmlAnalysis
 sub returnBsmlAnalysisListR
 {
   my $self = shift;
+
   return $self->{'BsmlAnalyses'};
 }
 
