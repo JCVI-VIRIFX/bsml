@@ -15,6 +15,7 @@ my $reader = new BSML::BsmlReader;
 # The parser will call these functions with an object reference at parse time as element is encoutered. 
 
 my $parser = new BSML::BsmlParserSerialSearch( AlignmentCallBack => \&alignmentPrint, AnalysisCallBack => \&analysisPrint, SequenceCallBack => \&sequencePrint );
+# my $parser = new BSML::BsmlParserSerialSearch( GenomeCallBack => \&genomePrint );
 
 # Begin BSML parse. If no filename is provided the parser defaults to STDIN. 
 
@@ -72,4 +73,16 @@ sub sequencePrint
     print "SEQ: ";
     print $seqref->returnattr( 'id' );
     print "\n";
+}
+
+# A callback for Genome Objects
+
+sub genomePrint
+{
+    my $genome = shift;
+    my $rhash = $reader->readGenome( $genome );
+
+    print "Print Genome<<\n";
+    print Dumper( $rhash );
+    print ">>\n";
 }
