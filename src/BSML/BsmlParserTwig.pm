@@ -77,6 +77,9 @@ sub parse
       $bsml_logger->fatal( "No BsmlDoc object to populate" );
     }
 
+    #insure the lookup tables are using the right namespace
+    $bsmlDoc->makeCurrentDocument();
+
     # Set a Twig Handler on the BSML Sequence Object. The handler is called
     # each time an XML subtree rooted at a Sequence element is completely
     # parsed
@@ -110,7 +113,6 @@ sub sequenceHandler
     # add a new Sequence object to the bsmlDoc
 
     my $bsmlseq = $bsmlDoc->{'BsmlSequences'}[$bsmlDoc->addBsmlSequence()];
-
     
     # add the sequence element's attributes
 
@@ -121,6 +123,11 @@ sub sequenceHandler
 	$bsmlseq->addattr( $key, $attr->{$key} );
       }
 
+    #put the sequence into the general object lookup table if an id was specified
+
+    if( my $id = $bsmlseq->returnattr('id')){
+      BsmlDoc::BsmlSetDocumentLookup( $id, $bsmlseq );}
+      
     # add Sequence level Bsml Attribute elements 
 
     foreach my $BsmlAttr ( $seq->children( 'Attribute' ) )
@@ -172,6 +179,10 @@ sub sequenceHandler
 		$table->addattr( $key, $attr->{$key} );
 	      }
 
+            #if an id has been specified, add the table to the general object lookups
+	    if( my $id = $table->returnattr('id')){
+	      BsmlDoc::BsmlSetDocumentLookup( $id, $table );}
+
 	    foreach my $BsmlLink ( $BsmlFTable->children( 'Link' ) )
 	      {
 		my $attr = $BsmlLink->atts();
@@ -187,6 +198,10 @@ sub sequenceHandler
 		  {
 		    $ref->addattr( $key, $attr->{$key} );
 		  }
+
+                #if an id has been specified, add the reference to the general object lookups
+	        if( my $id = $ref->returnattr('id')){
+	            BsmlDoc::BsmlSetDocumentLookup( $id, $ref );}
 
 		foreach my $BsmlAuthor ($BsmlRef->children( 'RefAuthors' ))
 		  {
@@ -220,6 +235,10 @@ sub sequenceHandler
 		  {
 		    $feat->addattr( $key, $attr->{$key} );
 		  }
+
+		 #if an id has been specified, add the feature to the general object lookups
+	         if( my $id = $feat->returnattr('id')){
+	           BsmlDoc::BsmlSetDocumentLookup( $id, $feat );}
 
 		foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
 		  {
@@ -260,6 +279,10 @@ sub sequenceHandler
 	      {
 		$group->addattr( $key, $attr->{$key} );
 	      }
+
+	    #if an id has been specified, add the table to the general object lookups
+	    if( my $id = $group->returnattr('id')){
+	      BsmlDoc::BsmlSetDocumentLookup( $id, $group );}
 
 	    if( $BsmlFGroup->text() ){
 	      $group->setText( $BsmlFGroup->text() ); 
@@ -302,6 +325,18 @@ sub seqPairAlignmentHandler
        {
 	 $bsmlaln->addattr( $key, $attr->{$key} );
        }
+
+     #if an id has been specified, add the alignment pair to the general object lookups
+     if( my $id = $bsmlaln->returnattr('id')){
+       BsmlDoc::BsmlSetDocumentLookup( $id, $bsmlaln );}
+
+
+     #if refseq and compseq are defined, add the alignment to the alignment lookups
+     if( (my $refseq = $bsmlaln->returnattr('refseq')) && (my $compseq = $bsmlaln->returnattr('compseq')))
+       {
+	 BsmlDoc::BsmlSetAlignmentLookup( $refseq, $compseq, $bsmlaln );
+       }
+   
 
      # add Bsml Attribute elements to the BsmlSeqPairAlignment 
 
@@ -349,6 +384,10 @@ sub analysisHandler
       {
 	$bsml_analysis->addattr( $key, $attr->{$key} );
       }
+
+    #if an id has been specified, add the analysis to the general object lookups
+    if( my $id = $bsml_analysis->returnattr('id')){
+      BsmlDoc::BsmlSetDocumentLookup( $id, $bsml_analysis );}
 
     foreach my $BsmlAttr ( $analysis->children( 'Attribute' ) )
       {
