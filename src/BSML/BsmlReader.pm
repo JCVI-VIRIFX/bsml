@@ -580,6 +580,45 @@ sub get_all_protein_dna
     return $returnhash;
   }
 
+sub get_all_protein_dna_extended
+  {
+    #This function is only designed for Prok data... I'm not sure how it will apply to Euk
+
+    my $self = shift;
+    my ($assembly_id, $extension) = @_;
+
+    #loads the full assembly
+    my $seq_dat = $self->subSequence( $assembly_id, -1, 0, 0 );
+
+    my $seq = BsmlDoc::BsmlReturnDocumentLookup($assembly_id);
+    my $topo = $seq->returnattr( 'topology' );
+
+    my $returnhash = {};
+
+    foreach my $gene( $self->returnAllGeneIDs() )
+      {
+	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
+	  {
+	    my $coords = $self->geneIdtoGenomicCoords($gene);
+	    
+	    my $start = $coords->[0]->{'GeneSpan'}->{'startpos'};
+	    my $end = $coords->[0]->{'GeneSpan'}->{'endpos'};
+	    
+	    my $dnalist = $self->geneCoordstoCDSList( $coords );
+	    
+	    my $i = 0;
+	    foreach my $seq (@{$dnalist})
+	      {
+		$key = $gene."_".$i;
+		$returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
+		$i++;
+	      }
+	  }
+      }
+
+    return $returnhash;
+  }
+
 #return a list of hash references containing...
 #  ParentSeqID, TranscriptID, GeneSpan, CDS_START, CDS_END, Exon_Boundaries
 
@@ -739,6 +778,11 @@ sub subSequence
 	#io is not necessary
 
 	$seq->addBsmlSeqData( $seqdat );
+      }
+
+    if( $start == -1 )
+      {
+	return $seqdat;
       }
 
     if( $seqdat )
