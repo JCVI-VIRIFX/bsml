@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE Bsml SYSTEM "http://www.labbook.com/dtd/bsml2_2.dtd">
+
+<Bsml>
+<Definitions>
+<Sequences>
+<Sequence length="0" title="ntsa04_ORF00721_143664_protein" id="SEQ-io11" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+</Sequence>
+<Sequence length="0" title="gpa_ORF00743_131172_protein" id="SEQ-io12" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+</Sequence>
+</Sequences>
+</Definitions>
+<Display>
+<Styles>
+<Style type="text/css">
+Interval-widget { display : &quot;1&quot;; }
+Feature { display-auto : &quot;1&quot;; }</Style>
+</Styles>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io11" title="ntsa04_ORF00721_143664_protein" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io12" title="gpa_ORF00743_131172_protein" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+</Display>
+</Bsml>
+
+

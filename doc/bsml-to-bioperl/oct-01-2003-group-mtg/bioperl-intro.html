@@ -1,0 +1,134 @@
+<HTML>
+<TITLE>Introduction to Bioperl</TITLE>
+<BODY BGCOLOR="#ffffff">
+
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="0">
+ <TBODY>
+
+ <!-- Header line -->
+  <TR>
+   <TD BGCOLOR="#d0d0ff" ALIGN="left">
+   <FONT COLOR="#000000" FACE="arial,sans-serif">&nbsp;<B>Introduction to Bioperl</B></FONT>
+   </TD>
+   <TD BGCOLOR="#d0d0ff" ALIGN="right">
+   <FONT COLOR="#000000" FACE="arial,sans-serif"><B>October 1, 2003</B>&nbsp;</FONT>
+   </TD>
+  </TR>
+
+  <!-- Main page content -->
+
+  <TR>
+   <TD COLSPAN="2">
+   <BR CLEAR="both">
+   <FONT FACE="" SIZE="+1">
+
+   <UL>
+     <!-- The types of things in Bioperl, roughly speaking -->
+     <LI><B>Perl objects for manipulating bioinformatics-related data, including:</B>
+      <UL>
+       <LI>Classes that represent commonly-used data types (sequences, maps, phenotypes, trees, etc.)</LI>
+       <LI>Utility functions that operate on those data types (sequence translation, feature intersection, etc.)</LI>
+       <LI>Wrapper code for a large number of external bioinformatics tools and databases</LI>
+      </UL>
+     <BR></LI>
+     <!-- Design principles -->
+     <LI><B>General design principles:</B>
+      <UL>
+       <LI>All classes inherit from <tt><A HREF="http://doc.bioperl.org/releases/bioperl-1.2.3/Bio/Root/RootI.html">Bio::Root::RootI</A></tt>, which has methods for:
+        <UL>
+	 <LI>Printing warnings and stack traces</LI>
+	 <LI>Argument processing</LI>
+	 <LI>Memory deallocation/cleanup</LI>
+	</UL>
+       <LI>Use of Perl "interface" classes to define behavior, e.g. <tt><A HREF="http://doc.bioperl.org/releases/bioperl-1.2.3/Bio/SeqI.html">Bio::SeqI</A></tt>
+        <UL>
+	 <LI>These are actually more similar to abstract classes than interfaces</LI>
+	 <LI>Interface methods call <tt>Bio::Root::RootI::throw_not_implemented()</tt></LI>
+	 <LI>Allows non-Bioperl classes to be made Bioperl compliant</LI>
+	</UL>
+       </LI>
+       </LI>
+       <LI>Frequent use of multiple inheritance</LI>
+      </UL><BR>
+     </LI>
+     <!-- Notable classes and packages -->
+     <LI><B>Some notable Bioperl classes and packages:</B>
+      <UL>
+       <LI>Sequences -- <b><tt>Bio::SeqI</tt></b> -- <tt>Bio::Seq</tt>, <tt>Bio::LocatableSeq</tt>, <tt>Bio::Seq::RichSeq</tt>, <tt>Bio::Seq::LargeSeq</tt>, <tt>Bio::Seq::SeqWithQuality</tt></LI>
+       <LI>Features -- <b><tt>Bio::SeqFeatureI</tt></b> -- <tt>Bio::SeqFeature::Generic</tt>, <tt>Bio::SeqFeature::Computation</tt>, <tt>Bio::SeqFeature::Gene::GeneStructure</tt></LI>
+       <LI>BLAST/search results -- <b><tt>Bio::Search</tt></b>, <tt>Bio::Search::Result</tt>, <tt>Bio::Search::Hit</tt>, <tt>Bio::Search::HSP</tt></LI>
+       <LI>Database interaction - <b><tt>Bio::DB</tt></b>, <tt>Bio::DB::GFF</tt>, <tt>Bio::DB::GenBank</tt>, <tt>Bio::DB::SwissProt</tt>
+       <LI>Other -- <tt>Bio::Align::AlignI</tt>, <tt>Bio::Assembly</tt>, <tt>Bio::Biblio</tt>, <b><tt>Bio::Graphics</tt></b>, <tt>Bio::Ontology</tt></LI>
+       <LI>Flat file input/output -- <tt>Bio::SeqIO</tt>, <tt>Bio::AlignIO</tt>, <tt>Bio::SearchIO</tt></LI>
+      </UL><BR>
+     </LI>
+     <!-- Example scripts -->
+     <LI><B>Two simple example scripts (from the Bioperl tutorial):</B>
+      <UL>
+       <LI>Retrieve a SWISS-PROT sequence (result files: <A HREF="roa1.fasta">roa1.fasta</A> <A HREF="roa1.swissprot">roa1.swissprot</A>):
+        <PRE>
+ 	use Bio::Perl;
+	my $seq_object = get_sequence('swissprot',"ROA1_HUMAN");
+	write_sequence(">roa1.fasta",'fasta',$seq_object);
+	write_sequence(">roa1.swissprot",'swiss',$seq_object);
+	</PRE>
+       </LI>
+       <LI>Run a BLAST search (result files: <A HREF="roa1.blast">roa1.blast</A>):
+        <PRE>
+        use Bio::Perl;
+        $seq_object = get_sequence('swissprot',"ROA1_HUMAN");
+        # uses the default database - nr in this case
+        $blast_report = blast_sequence($seq_object);
+        write_blast(">roa1.blast",$blast_report);
+	</PRE>
+       </LI>
+      </UL>
+     </LI>
+     <!-- Example scripts -->
+     <LI><B>Another example:</B>
+      <UL>
+       <LI>Using <tt>Bio::Graphics</tt> to render sequences retrieved by <tt>Bio::Perl::get_sequence</tt>:<BR><BR CLEAR="both">
+       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <TBODY>
+	 <TR><TD><IMG SRC="/cgi-bin/comparative-analysis/bioperlSeqPng.cgi?db=genbank&seqid=X65998" BORDER="1" ALT="GenBank:X65998"><BR CLEAR="both"><BR></TD></TR>
+	 <TR><TD ALIGN="left"><FONT FACE="helvetica,sans-serif"><B>GenBank <A HREF="http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=nucleotide&list_uids=50433&dopt=GenBank&term=x65998">X65998</A></B>: <A HREF="bioperlSeqPng.cgi">bioperlSeqPng.cgi</A> <A HREF="BioGraphicsUtil.pm">BioGraphicsUtil.pm</A></FONT></TD></TR>
+	</TBODY>
+	</TABLE>
+       </LI>
+      </UL>
+     </LI>
+     </LI>
+    </UL>
+
+    <UL>
+     <LI><B>Bioperl links</B> -
+     <A HREF="http://www.bioperl.org">home</A> 
+      | <A HREF="http://doc.bioperl.org/releases/bioperl-1.2.3/">1.2.3 APIs</A> 
+      | <A HREF="http://www.bioperl.org/Core/Latest/modules.html">docs</A> 
+      | <A HREF="http://bugzilla.bioperl.org">bugzilla</A> 
+      | <A HREF="http://bioperl.org/pipermail/bioperl-announce-l/">bioperl-announce-l</A> 
+      | <A HREF="http://bioperl.org/pipermail/bioperl-l/">bioperl-l</A> 
+      | <A HREF="http://bioperl.org/pipermail/bioperl-guts-l/">bioperl-guts-l</A> 
+      </LI>
+   </UL>
+
+   </FONT>
+   </TD>
+  </TR>  
+
+  <!-- End: Main page content -->
+
+  <!-- Page footer -->
+  <TR>
+   <TD ALIGN="left" COLSPAN="2">
+    <FONT FACE="arial,sans-serif" SIZE="-1">
+    Questions/comments: <A HREF="mailto:crabtree@tigr.org">crabtree@tigr.org</A>
+    </FONT>
+   </TD>
+  </TR>
+ </TBODY>
+</TABLE>
+<BR>
+</BODY>
+</HTML>

@@ -1,0 +1,118 @@
+<HTML>
+<TITLE>Potential use-cases for a new Bioperl BSML adaptor</TITLE>
+<BODY BGCOLOR="#ffffff">
+
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="0">
+ <TBODY>
+
+ <!-- Header line -->
+  <TR>
+   <TD BGCOLOR="#d0d0ff" ALIGN="left">
+   <FONT COLOR="#000000" FACE="arial,sans-serif">&nbsp;<B>Potential use-cases for a new Bioperl BSML adaptor</B></FONT>
+   </TD>
+   <TD BGCOLOR="#d0d0ff" ALIGN="right">
+   <FONT COLOR="#000000" FACE="arial,sans-serif"><B>October 1, 2003</B>&nbsp;</FONT>
+   </TD>
+  </TR>
+
+  <!-- Main page content -->
+
+  <TR>
+   <TD COLSPAN="2">
+   <BR CLEAR="both">
+   <FONT FACE="" SIZE="+1">
+
+   <UL>
+     <!-- Get to other people's tools via Bioperl -->
+     <LI><B>Leveraging Bioperl-compatible tools and software:</B>
+      <UL>
+       <LI>Apollo (e.g., via Bioperl support for GAME XML)</LI>
+       <LI>GBrowse (e.g., via Bioperl support for GFF flat file databases)</LI>
+       <LI>DAS server for Chado/BSML data?</LI>
+      </UL><BR>
+     </LI>
+
+     <LI><B>Some of the tools and file formats supported in Bioperl:</B>
+      <UL>
+       <LI>Sequence file formats:
+        <UL>
+	 <LI>abi, 
+	 ace,
+	 alf,
+	 chadoitext, chadosxpr, chadoxml (*),
+	 ctf, 
+	 EMBL, <BR>
+	 FASTA, 
+	 GAME XML, 
+	 GCG, 
+	 GFF, 
+	 GenBank,
+	 PIR,
+	 SWISS-PROT
+         </LI>
+        </UL>
+       </LI>
+       <LI>Search and alignment tools:
+        <UL>
+	 <LI>BLAST,
+	 Clustalw,
+	 EMBOSS (needle, water),
+	 exonerate,
+	 FASTA,<BR>
+	 HMMER,
+	 mase,
+	 MEGA,
+	 MEME,
+	 MSF,
+	 NEXUS,
+	 Pfam,
+	 Phylip,<BR>
+	 Prodom,
+	 PSI-BLAST,
+	 Selex,
+	 WABA</LI>
+	</UL>
+       </LI>
+       <LI>Web-accessible database servers:
+        <UL>
+	 <LI>
+	 AceDB, BioFetch, dbfetch, EMBL, GDB, GenBank, GenPept,<BR> RefSeq, SwissProt, XEMBL
+	 </LI>
+        </UL>
+       </LI>
+     </UL><BR>
+    </LI>
+
+     <!-- Make it more convenient for people outside TIGR to speak TIGR-BSML -->
+     <LI><B>Facilitating data transfers between TIGR and clients/collaborators:</B>
+      <UL>
+       <LI>Allow loading of Bioperl-supported formats into Chado (and vice-versa):
+        <UL>
+	 <LI>Format X -&gt; Bioperl -&gt; TIGR-BSML -&gt; BSML Perl object layer -&gt; Chado (<FONT COLOR="#ff0000"><B>*</B></FONT>)</LI>
+        </UL>
+       </LI>
+       <LI>Data deliverables could be packaged with a standard API in addition to a MySQL DB</LI>
+      </UL>
+     </LI>
+     </UL>
+   </FONT>
+   </TD>
+  </TR>  
+
+  <!-- End: Main page content -->
+
+  <!-- Page footer -->
+  <TR>
+   <TD ALIGN="left" COLSPAN="2">
+    <FONT FACE="arial,sans-serif" SIZE="-1">
+    Questions/comments: <A HREF="mailto:crabtree@tigr.org">crabtree@tigr.org</A>
+    </FONT>
+   </TD>
+  </TR>
+ </TBODY>
+</TABLE>
+<BR>
+</BODY>
+</HTML>
+

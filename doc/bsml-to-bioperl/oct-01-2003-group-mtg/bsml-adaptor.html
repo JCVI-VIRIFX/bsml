@@ -1,0 +1,137 @@
+<HTML>
+<TITLE>The existing Bioperl BSML adaptor (Bio::SeqIO::bsml)</TITLE>
+<BODY BGCOLOR="#ffffff">
+
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="0">
+ <TBODY>
+
+ <!-- Header line -->
+  <TR>
+   <TD BGCOLOR="#d0d0ff" ALIGN="left">
+   <FONT COLOR="#000000" FACE="arial,sans-serif">&nbsp;<B>The existing Bioperl BSML adaptor (<tt>Bio::SeqIO::bsml</tt>)</B></FONT>
+   </TD>
+   <TD BGCOLOR="#d0d0ff" ALIGN="right">
+   <FONT COLOR="#000000" FACE="arial,sans-serif"><B>October 1, 2003</B>&nbsp;</FONT>
+   </TD>
+  </TR>
+
+  <!-- Main page content -->
+
+  <TR>
+   <TD COLSPAN="2">
+   <BR CLEAR="both">
+   <FONT FACE="" SIZE="+1">
+
+   <UL>
+     <!-- The existing Bioperl BSML adaptor -->
+     <LI><B>Implemented by the class <A HREF="http://doc.bioperl.org/releases/bioperl-1.2.3/Bio/SeqIO/bsml.html"><tt>Bio::SeqIO::bsml</tt></A></B>
+      <UL>
+       <LI>Written by Charles Tilford at Bristol-Myers Squibb, circa 2001</LI>
+       <LI>Converts sequences between Bioperl and BSML using a <tt>Bio::SeqIO</tt> stream</LI>
+       <LI>For example (the canonical Bioperl sequence conversion demo):<BR>
+        <PRE>
+        use Bio::SeqIO;
+	my $in  = Bio::SeqIO->newFh(-file => "test.fa", -format => 'fasta');
+	my $out = Bio::SeqIO->newFh(-format => 'bsml');
+	print $out $_ while <$in>;
+        </PRE>
+       </LI>
+       <LI>Generates <tt>Display</tt> elements for rendering, has a couple of LabBook-specific hacks<BR><BR></LI>
+      </UL>
+      </LI>
+
+      <!-- Limitations/dependencies -->
+      <LI><B>Limitations/dependencies:</B>
+       <UL>
+        <LI>Handles only sequences and features, not alignments or searches
+	 <UL>
+	  <LI>hence no <tt>Bio::AlignIO::bsml</tt> or <tt>Bio::SearchIO::bsml</tt></LI>
+	 </UL>
+        </LI>
+        <LI>Implements BSML 2.2
+         <UL>
+ 	  <LI>therefore does not handle 3.1 elements, e.g. <tt>Research</tt> and <tt>Genome</tt></LI>
+	  <LI>no support for joined (i.e., complex) locations</LI>
+	 </UL>
+        </LI>
+	<LI>Does not handle <tt>Seq-data-import</tt></LI>
+	<LI>No nesting of features, or support for <tt>Feature-groups</tt></LI>
+        <LI>Uses <tt>XML::DOM</tt> for parsing XML</LI>
+       </UL><BR>
+      </LI>
+
+      <!-- Other notes -->
+      <LI><B>Other notes:</B>
+       <UL>
+        <LI>Uses heuristics to generated structured Bioperl objects from unstructured BSML
+	 <UL>
+	  <LI><tt>Bio::Species</tt> populated using string-matching on generic BSML <tt>Attributes</tt></LI>
+	  <LI>Same approach used for keywords, date, version, division, etc.</LI>
+	 </UL>
+	</LI>
+	<LI>Parses <tt>References</tt><BR><BR></LI>
+       </UL>
+      </LI>
+
+      <!-- Using Bio::SeqIO::bsml on TIGR-BSML -->
+      <LI><B>Using <tt>Bio::SeqIO::bsml</tt> on TIGR-BSML:</B>
+       <UL>
+        <LI>Round-tripped example BSML files from CVS: <A HREF="bsml-examples/">bsml-examples/</A></LI>
+	<LI>Works reasonably well out of the box, however:
+	 <UL>
+	  <LI><tt>Seq-data-import</tt> sequences are lost</LI>
+	  <LI>Alignments and feature groups are lost</LI>
+	  <LI>Feature <tt>ID</tt> attributes are lost (and these are needed currently)</LI>
+	  <LI>Problems with (improper?) use of <tt>Site-loc</tt> in TIGR-BSML.  For example:
+	   <PRE>
+ &lt;Feature class="TRANSCRIPT" id="lma2.98.t00004_transcript"&gt;
+  &lt;Site-loc complement="0" class="START" sitepos="6616"&gt;&lt;/Site-loc&gt;
+  &lt;Site-loc complement="0" class="STOP" sitepos="7017"&gt;&lt;/Site-loc&gt;
+ &lt;/Feature&gt;
+ &lt;Feature class="GENE" id="lma2.98.t00005_gene"&gt;
+  &lt;Qualifier value="lma2_98_assembly" value-type="name"&gt;&lt;/Qualifier&gt;
+  &lt;Interval-loc endpos="11487" startpos="10144" complement="0"&gt;&lt;/Interval-loc&gt;
+ &lt;/Feature&gt;
+	   </PRE>
+	  </LI>
+	 </UL>
+	</LI>
+       </UL>
+      </LI>
+
+      <!-- Graphical demo -->
+      <LI><B>Graphical demo:</B>
+       <UL>
+        <LI><A HREF="/cgi-bin/comparative-analysis/bsmlToBioGraphics.cgi?format=bsml">Bioperl Bio::Graphics demo using Bio::SeqIO::bsml</A><BR><BR CLEAR="both">
+       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <TBODY>
+	 <TR><TD><IMG SRC="/cgi-bin/comparative-analysis/bsmlSeqPng.cgi?format=bsml&bsmlFile=/home/crabtree/scratch/bsml/test.bsml&seqnum=0" BORDER="1" ALT="lma2_98.bsml"><BR CLEAR="both"><BR></TD></TR>
+	</TBODY>
+	</TABLE>
+
+	</LI>
+       </UL>
+      </LI>
+
+     </UL>
+   </FONT>
+   </TD>
+  </TR>  
+
+  <!-- End: Main page content -->
+
+  <!-- Page footer -->
+  <TR>
+   <TD ALIGN="left" COLSPAN="2">
+    <FONT FACE="arial,sans-serif" SIZE="-1">
+    Questions/comments: <A HREF="mailto:crabtree@tigr.org">crabtree@tigr.org</A>
+    </FONT>
+   </TD>
+  </TR>
+ </TBODY>
+</TABLE>
+<BR>
+</BODY>
+</HTML>
+

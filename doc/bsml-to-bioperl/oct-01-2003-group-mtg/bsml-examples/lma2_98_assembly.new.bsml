@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE Bsml SYSTEM "http://www.labbook.com/dtd/bsml2_2.dtd">
+
+<Bsml>
+<Definitions>
+<Sequences>
+<Sequence length="15561" title="unspecified" molecule="DNA" id="SEQ-io2" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<Feature-table title="Features">
+<Feature class="gene" id="FEAT-io0">
+<Interval-loc endpos="7017" startpos="6616"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io1">
+<Interval-loc endpos="7017" startpos="6616"/>
+</Feature>
+<Feature class="" id="FEAT-io2">
+<Site-loc sitepos="6616"/>
+</Feature>
+<Feature class="" id="FEAT-io3">
+<Site-loc sitepos="7017"/>
+</Feature>
+<Feature class="exon" id="FEAT-io4">
+<Interval-loc endpos="7017" startpos="6616"/>
+</Feature>
+<Feature class="cds" id="FEAT-io5">
+<Interval-loc endpos="7017" startpos="6616"/>
+</Feature>
+<Feature class="" id="FEAT-io6">
+<Site-loc sitepos="6616"/>
+</Feature>
+<Feature class="" id="FEAT-io7">
+<Site-loc sitepos="7017"/>
+</Feature>
+<Feature class="gene" id="FEAT-io8">
+<Interval-loc endpos="11487" startpos="10144"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io9">
+<Interval-loc endpos="11487" startpos="10144"/>
+</Feature>
+<Feature class="" id="FEAT-io10">
+<Site-loc sitepos="10144"/>
+</Feature>
+<Feature class="" id="FEAT-io11">
+<Site-loc sitepos="11487"/>
+</Feature>
+<Feature class="exon" id="FEAT-io12">
+<Interval-loc endpos="11487" startpos="10144"/>
+</Feature>
+<Feature class="cds" id="FEAT-io13">
+<Interval-loc endpos="11487" startpos="10144"/>
+</Feature>
+<Feature class="" id="FEAT-io14">
+<Site-loc sitepos="10144"/>
+</Feature>
+<Feature class="" id="FEAT-io15">
+<Site-loc sitepos="11487"/>
+</Feature>
+<Feature class="gene" id="FEAT-io16">
+<Interval-loc endpos="14989" startpos="14138"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io17">
+<Interval-loc endpos="14989" startpos="14138"/>
+</Feature>
+<Feature class="" id="FEAT-io18">
+<Site-loc sitepos="14138"/>
+</Feature>
+<Feature class="" id="FEAT-io19">
+<Site-loc sitepos="14989"/>
+</Feature>
+<Feature class="exon" id="FEAT-io20">
+<Interval-loc endpos="14989" startpos="14138"/>
+</Feature>
+<Feature class="cds" id="FEAT-io21">
+<Interval-loc endpos="14989" startpos="14138"/>
+</Feature>
+<Feature class="" id="FEAT-io22">
+<Site-loc sitepos="14138"/>
+</Feature>
+<Feature class="" id="FEAT-io23">
+<Site-loc sitepos="14989"/>
+</Feature>
+<Feature class="gene" id="FEAT-io24">
+<Interval-loc endpos="3565" startpos="1259"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io25">
+<Interval-loc endpos="3565" startpos="1259"/>
+</Feature>
+<Feature class="" id="FEAT-io26">
+<Site-loc sitepos="1259"/>
+</Feature>
+<Feature class="" id="FEAT-io27">
+<Site-loc sitepos="3565"/>
+</Feature>
+<Feature class="exon" id="FEAT-io28">
+<Interval-loc endpos="3565" startpos="1259"/>
+</Feature>
+<Feature class="cds" id="FEAT-io29">
+<Interval-loc endpos="3565" startpos="1259"/>
+</Feature>
+<Feature class="" id="FEAT-io30">
+<Site-loc sitepos="1259"/>
+</Feature>
+<Feature class="" id="FEAT-io31">
+<Site-loc sitepos="3565"/>
+</Feature>
+<Feature class="gene" id="FEAT-io32">
+<Interval-loc endpos="4620" startpos="4438" complement="1"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io33">
+<Interval-loc endpos="4620" startpos="4438"/>
+</Feature>
+<Feature class="" id="FEAT-io34">
+<Site-loc complement="1" sitepos="4620"/>
+</Feature>
+<Feature class="" id="FEAT-io35">
+<Site-loc complement="1" sitepos="4438"/>
+</Feature>
+<Feature class="exon" id="FEAT-io36">
+<Interval-loc endpos="4620" startpos="4438" complement="1"/>
+</Feature>
+<Feature class="cds" id="FEAT-io37">
+<Interval-loc endpos="4620" startpos="4438"/>
+</Feature>
+<Feature class="" id="FEAT-io38">
+<Site-loc complement="1" sitepos="4620"/>
+</Feature>
+<Feature class="" id="FEAT-io39">
+<Site-loc complement="1" sitepos="4438"/>
+</Feature>
+<Feature class="gene" id="FEAT-io40">
+<Interval-loc endpos="6944" startpos="6546"/>
+<Qualifier value="lma2_98_assembly" value-type="name"/>
+</Feature>
+<Feature class="transcript" id="FEAT-io41">
+<Interval-loc endpos="6944" startpos="6546"/>
+</Feature>
+<Feature class="" id="FEAT-io42">
+<Site-loc sitepos="6546"/>
+</Feature>
+<Feature class="" id="FEAT-io43">
+<Site-loc sitepos="6944"/>
+</Feature>
+<Feature class="exon" id="FEAT-io44">
+<Interval-loc endpos="6944" startpos="6546"/>
+</Feature>
+<Feature class="cds" id="FEAT-io45">
+<Interval-loc endpos="6944" startpos="6546"/>
+</Feature>
+<Feature class="" id="FEAT-io46">
+<Site-loc sitepos="6546"/>
+</Feature>
+<Feature class="" id="FEAT-io47">
+<Site-loc sitepos="6944"/>
+</Feature>
+</Feature-table>
+</Feature-tables>
+</Sequence>
+<Sequence length="134" title="unspecified" molecule="AA" id="SEQ-io3" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MRALGDSPLQRITATSSPPPPRTPPRLVMLSVYCLSSSALSALSCHASHCAPAALPRTTPSFRFFNFYFCSVAHDVPRCMLPLPHTRMHTSPTPTPQCVVSKGPVTSPCEAKPSSSSSSSPLPPLPVPNHFWR*</Seq-data>
+</Sequence>
+<Sequence length="448" title="unspecified" molecule="AA" id="SEQ-io4" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MCFHLGASWVGDKLQPLLFRCARASPRVHILAPPPFRLLLLLSSFRFFGRCISLLPSSCALSAFPFLFYVSGRLVEFARGSEERKTKIRSVSSAKRDRKCTFTNPREPYAAPSSLSLLIRTHPITHARPRLRRTHATGLRVVYSSLFLYSSILCFIFPFLVSSCTVDLVSTSSPTSLLSPSYIYIYIYIYSDVRVDQRTFFVLESGRLASLTCFTSPHRRRRLSPLAHHLLPLHVFDSDVSGDTFAIFPPFLLTSPPFCLPIRGTHSVTATNQHKTTTTTNNTREGRRVRQKDSTQGFFFHTPRPFLPSPSSPLPFSSLSLCLVDCPSDTRPRPTPRSTDASAWLAAVETSICLSPTFSLCVFVCRYSRQFPSGCKACFFTLSPSPLPPTFCRLACSSGLSFRITSFFSRYLPTPFVLLSGLSCRFFCCCSIYIFSVSLIRYCEKLH*</Seq-data>
+</Sequence>
+<Sequence length="284" title="unspecified" molecule="AA" id="SEQ-io5" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MFSPVYEDVSGLFGHPMPISGFGPSTELQFPQTSYMTTTTNAPQTPTQQQQQQLAGRATVYSLVDASGVQLHRQAAPPQQIPMSSVPFGAFDGASIVPYEVFMQHQQQQQLAAAGKPTAVHAQDGVKYYLSSSTGAPVMASAGPAATTQANIMQMQQHGGTLYTLESNGTTTALTSTPPAGGLFSGAAAANGAPPSGEYPFYAAATGFLSSGPLGMAPATVGSASVTPYAIQGHMPSASPRARGAVNRSPAATIAGNQHHSNSGNNSSSASTRRENQATLHEM*</Seq-data>
+</Sequence>
+<Sequence length="769" title="unspecified" molecule="AA" id="SEQ-io6" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MLNTDRSMTLNSHYSSSDSAAGMPAPGLAVSAAGQTGHKDMVSSPSISVDQAPTTPGSDAINFFAKAPSSYKSHFGDSAAGVVASSTMPVYSAPDTPLQKGINSGYSARAPSRISLSGSVGASASSCGLTGSPAFASGNGVIGAGAGLHSNSSSFGNSPQTVSITPLVKLGLPSSVCIVAQPTSPSAADGVACGGEAAVASDIVNAPEPMGSTCIPNLVDGVGAPLQAIYSSSSSSSTSSAPSPLAQTTSSPQCGGNTSCVSPSGTCSLLFEAEVNISSPNAETASAAQALDEDALGETHQCTFISPPENNAKVDDGRTRSPKTPSRGGPSKSCGSAPSAKSNPRADHAASPPKNSPSHSKQRQQRAGAASRRQNVSASNCSLSTGQMAPESLQKGCSSPASQGEFVSVYDSDFETLLSIPASQVLHRPNPALGVSRLVLCRKFNLENPQSCSKGEMCKFVHADIRKASRCSIHVNYAWRSLALCTYPRLPAGDEVTVLAPNERSPSEVIPSERILVTRGSTNWREHTAPLSHCAHYYFNRMCNRGKRCNFIHAVHVDPNVQGDFKHAPAPRAVAPIASKPSNSAASRAASGAQAASNEGHHQSSAHHGGAAARTAPLAKQPQLLPPVQQNSANNVANAGGGIAYAFAPSIFALPPHGCMAYPLLNPTSSSTAMGVPQSPGGVAGGAPYVMLMNSAGQQVGCSYVPATLMPSTPQQMGGSNGVFLIVPTANGSGGSLGGSGAPLGSPGVPVSPLGQSFSSLGNGPVNW*</Seq-data>
+</Sequence>
+<Sequence length="61" title="unspecified" molecule="AA" id="SEQ-io7" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MTRCTEATVREPAAAVLEKTKTERRAETNTLMQKGDEEASIVCRLSFRFTDHPSLHRNHQ*</Seq-data>
+</Sequence>
+<Sequence length="133" title="unspecified" molecule="AA" id="SEQ-io8" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="lma2_98_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+<Seq-data>
+MHAIYMYSSVLETDASACVCVRVYACVGRLTPSTNHCHLLPPSPKNASAACDAICLLPFLLGPVSALVSCLPLRTRSLAAHHSLFPLLQLLLLQRRPRRAQVYAPSPTHTHAHISDPHPSVRGIEGSGNLTM*</Seq-data>
+</Sequence>
+</Sequences>
+</Definitions>
+<Display>
+<Styles>
+<Style type="text/css">
+Interval-widget { display : &quot;1&quot;; }
+Feature { display-auto : &quot;1&quot;; }</Style>
+</Styles>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io2" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io3" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io4" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io5" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io6" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io7" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io8" title="unspecified" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+</Display>
+</Bsml>
+
+

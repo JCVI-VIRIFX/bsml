@@ -1,0 +1,87 @@
+<HTML>
+<TITLE>Bioperl/BSML demos</TITLE>
+<BODY BGCOLOR="#ffffff">
+
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="0">
+ <TBODY>
+
+ <!-- Header line -->
+  <TR>
+   <TD BGCOLOR="#d0d0ff" ALIGN="left">
+   <FONT COLOR="#000000" FACE="arial,sans-serif">&nbsp;<B>Bioperl/BSML demos</B></FONT>
+   </TD>
+   <TD BGCOLOR="#d0d0ff" ALIGN="right">
+   <FONT COLOR="#000000" FACE="arial,sans-serif"><B>October 1, 2003</B>&nbsp;</FONT>
+   </TD>
+  </TR>
+
+  <!-- Main page content -->
+
+  <TR>
+   <TD COLSPAN="2">
+   <BR CLEAR="both">
+   <FONT FACE="" SIZE="+1">
+
+   <UL>
+     <!-- Rendering BSML Sequences and SequenceFeatures using Bio::Graphics -->
+     <LI><B>Rendering BSML objects using <tt>Bio::Graphics</tt>:</B><BR>
+      <UL>
+        <LI><A HREF="/cgi-bin/comparative-analysis/bsmlToBioGraphics.cgi?format=bsml">Bioperl Bio::Graphics demo using Bio::SeqIO::bsml</A>
+       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <TBODY>
+	 <TR><TD><IMG SRC="/cgi-bin/comparative-analysis/bsmlSeqPng.cgi?format=bsml&bsmlFile=/home/crabtree/scratch/bsml/test.bsml&seqnum=0" BORDER="1" ALT="lma2_98.bsml"><BR CLEAR="both"><BR></TD></TR>
+	</TBODY>
+	</TABLE>
+	</LI>        
+	<LI><A HREF="/cgi-bin/comparative-analysis/bsmlToBioGraphics.cgi?format=bsmltigr">Bioperl Bio::Graphics demo using Bio::SeqIO::bsmltigr</A>
+       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+        <TBODY>
+	 <TR><TD><IMG SRC="/cgi-bin/comparative-analysis/bsmlSeqPng.cgi?format=bsmltigr&bsmlFile=/home/crabtree/scratch/bsml/test.bsml&seqnum=0" BORDER="1" ALT="lma2_98.bsml"><BR CLEAR="both"><BR></TD></TR>
+	</TBODY>
+	</TABLE>
+	</LI>
+      </UL><BR>
+     </LI>
+     
+     <LI><B><tt>Bio::SeqIO::bsmltigr</tt> is a prototype Bioperl BSML adaptor using the BSML Perl object layer</B>
+      <UL>
+       <LI>Supports <tt>Seq-data-import</tt></LI>
+       <LI>Parses <tt>Feature-groups</tt> correctly to generate <tt>Bio::SeqFeature::GeneFeature::GeneStructures</tt></LI>
+       <LI>Subclass of <tt>Bio::SeqFeature::Gene::Transcript</tt> used to store protein sequence</tt></LI>
+      </UL><BR>
+     </LI>
+
+     <!-- GBrowse -->
+     <LI><B>Using GBrowse on BSML data (via Bioperl -&gt; GFF conversion):</B><BR>
+      <UL>
+       <LI>GFF generated via <tt>Bio::SeqIO::bsml</tt> (<A HREF="http://hornet.tigr.org:8080/cgi-bin/gbrowse?source=bsml">GBrowse link</A>)<BR>
+       <IMAGE src="http://hornet.tigr.org:8080/cgi-bin/gbrowse_img?source=bsml;name=lma2_14_assembly:1..100000;type=Genes+Exons+DNA%2FGC%20Content;width=600" / BORDER="1">
+       <BR><BR>
+       </LI>
+       <LI>GFF generated via <tt>Bio::SeqIO::bsmltigr</tt> (<A HREF="http://hornet.tigr.org:8080/cgi-bin/gbrowse?source=bsmltigr">GBrowse link</A>)<BR>
+       <IMAGE src="http://hornet.tigr.org:8080/cgi-bin/gbrowse_img?source=bsmltigr;name=lma2_14_assembly:1..100000;type=Genes+Exons+DNA%2FGC%20Content;width=600" / BORDER="1">
+       </LI>
+      </UL>
+     </LI>
+   </UL>
+<BR>
+   </FONT>
+   </TD>
+  </TR>  
+
+  <!-- End: Main page content -->
+
+  <!-- Page footer -->
+  <TR>
+   <TD ALIGN="left" COLSPAN="2">
+    <FONT FACE="arial,sans-serif" SIZE="-1">
+    Questions/comments: <A HREF="mailto:crabtree@tigr.org">crabtree@tigr.org</A>
+    </FONT>
+   </TD>
+  </TR>
+ </TBODY>
+</TABLE>
+<BR>
+</BODY>
+</HTML>

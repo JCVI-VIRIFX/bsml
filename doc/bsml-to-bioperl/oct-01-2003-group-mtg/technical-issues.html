@@ -1,0 +1,95 @@
+<HTML>
+<TITLE>Technical issues</TITLE>
+<BODY BGCOLOR="#ffffff">
+
+
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="3" CELLSPACING="0">
+ <TBODY>
+
+ <!-- Header line -->
+  <TR>
+   <TD BGCOLOR="#d0d0ff" ALIGN="left">
+   <FONT COLOR="#000000" FACE="arial,sans-serif">&nbsp;<B>Technical issues</B></FONT>
+   </TD>
+   <TD BGCOLOR="#d0d0ff" ALIGN="right">
+   <FONT COLOR="#000000" FACE="arial,sans-serif"><B>October 1, 2003</B>&nbsp;</FONT>
+   </TD>
+  </TR>
+
+  <!-- Main page content -->
+
+  <TR>
+   <TD COLSPAN="2">
+   <BR CLEAR="both">
+   <FONT FACE="" SIZE="+1">
+
+   <UL>
+
+     <LI><B>General technical issues:</B>
+      <UL>
+       <LI>Relationship of new BSML adaptor to existing adaptor
+        <UL>
+	 <LI>Should new adaptor be reverse compatible (e.g. handle <tt>Display</tt> elements)?</LI>
+	 <LI>Should it handle <b>only</B> TIGR-BSML or also generic BSML?</LI>
+	 <LI>Is it possible to implement a completely generic BSML parser using the BSML object layer?</LI>
+        </UL>
+       </LI>
+       <LI>Relationship of objects in BSML object layer to Bioperl objects:
+        <UL>
+	 <LI>BSML objects (e.g. <tt>BSML::BsmlSequence</tt>) could implement Bioperl interfaces (e.g., <tt>SeqI</tt>)</LI>
+	 <LI>BSML objects could be converted into Bioperl objects (e.g., <tt>RichSeq</tt>)</LI>
+	 <LI>Might have problems with the former in dealing with alternatively-spliced BSML transcripts</LI>
+	</UL>
+       </LI>
+       <LI>Where should the adaptor code reside?
+        <UL>
+	 <LI>Probably in <tt>Bio::SeqIO</tt>, <tt>Bio::AlignIO</tt>, <tt>Bio::SearchIO</tt> (and <tt>Bio::AssemblyIO</tt> ?)</LI>
+	 <LI>The <tt>Bio::DB</tt> package is more appropriate for web-based resources with random access</LI>
+	 <LI>Other classes in <tt>Bio::DB</tt> likely depend on various <tt>*IO</tt> packages</LI>
+        </UL>
+       </LI>
+       <LI>Will this be part of the Bioperl core?
+        <UL>
+	 <LI>Would add dependency on BSML Perl object layer, so probably not.</LI>
+	 <LI>Although <tt>SeqIO::chado*</tt> classes appear to have undocumented dependencies</LI>
+	</UL>
+       </LI>
+      </UL><BR>
+     </LI>
+
+     <LI><B>Details of the BSML-Bioperl translation:</B>
+      <UL>
+       <LI>Which Bioperl classes and interfaces should be used?
+        <UL>
+	 <LI>e.g., use of <tt>Bio::SeqFeature::Gene</tt> classes vs. <tt>Bio::SeqFeature::Generic</tt></LI>
+	 <LI>Use of specialized sequence classes to avoid reading sequences from disk</LI>
+	</UL>
+       </LI>
+       <LI>How should "mixed-type" documents be handled?</LI>
+       <LI>How to reconcile <tt>Bio::SeqIO::next_seq</tt> with BSML CDS-&gt;protein HREFs?
+        <UL>
+	 <LI>Read-ahead is the obvious answer</LI>
+        </UL>
+       </LI>
+     </LI>
+   </UL>
+<BR>
+   </FONT>
+   </TD>
+  </TR>  
+
+  <!-- End: Main page content -->
+
+  <!-- Page footer -->
+  <TR>
+   <TD ALIGN="left" COLSPAN="2">
+    <FONT FACE="arial,sans-serif" SIZE="-1">
+    Questions/comments: <A HREF="mailto:crabtree@tigr.org">crabtree@tigr.org</A>
+    </FONT>
+   </TD>
+  </TR>
+ </TBODY>
+</TABLE>
+<BR>
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE Bsml SYSTEM "http://www.labbook.com/dtd/bsml2_2.dtd">
+
+<Bsml>
+<Definitions>
+<Sequences>
+<Sequence length="1353" title="ntsp01_NTORF0004_3454_cds" molecule="AA" id="SEQ-io0" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="ntsp01_1_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+</Sequence>
+<Sequence length="0" title="ntsp01_NTORF0004_3455_protein" molecule="AA" id="SEQ-io1" representation="raw">
+<Attribute content="This file generated to BSML 2.2 standards - joins will be collapsed to a single feature enclosing all members of the join" name="comment"/>
+<Attribute content="ntsp01_1_assembly" name="assembly"/>
+<Feature-tables>
+<!-- Must close <Feature-tables>
+ explicitly -->
+</Feature-tables>
+</Sequence>
+</Sequences>
+</Definitions>
+<Display>
+<Styles>
+<Style type="text/css">
+Interval-widget { display : &quot;1&quot;; }
+Feature { display-auto : &quot;1&quot;; }</Style>
+</Styles>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io0" title="ntsp01_NTORF0004_3454_cds" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+<Page>
+<Screen height="5.5" width="7.8">
+<!-- Must close <Screen>
+ explicitly -->
+</Screen>
+<View seqref="SEQ-io1" title="ntsp01_NTORF0004_3455_protein" title1="{NAME}" title2="{LENGTH} {UNIT}">
+<View-line-widget hcenter="4.6" linear-length="5.8" shape="horizontal"/>
+<View-axis-widget/>
+</View>
+</Page>
+</Display>
+</Bsml>
+
+

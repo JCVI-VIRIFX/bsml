@@ -1,0 +1,192 @@
+ID   ROA1_HUMAN     STANDARD;      PRT;   371 AA.
+AC   P09651;
+DT   01-MAR-1989 (Rel. 10, Created)
+DT   01-AUG-1990 (Rel. 15, Last sequence update)
+DT   15-SEP-2003 (Rel. 42, Last annotation update)
+DE   Heterogeneous nuclear ribonucleoprotein A1 (Helix-destabilizing protein) 
+DE   (Single-strand binding protein) (hnRNP core protein A1).
+GN   HNRPA1.
+OS   Homo sapiens (Human).
+OC   Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi; Mammalia; 
+OC   Eutheria; Primates; Catarrhini; Hominidae; Homo.
+OX   NCBI_TaxID=9606;
+RN   [1]
+RP   SEQUENCE FROM N.A. (ISOFORM A1-A).
+RC   TISSUE=Liver;
+RX   MEDLINE=89342435; PubMed=2760922;
+RA   Biamonti G., Buvoli M., Bassi M.T., Morandi C., Cobianchi F., Riva S.;
+RT   "Isolation of an active gene encoding human hnRNP protein A1. Evidence for 
+RT   alternative splicing.";
+RL   J. Mol. Biol. 207:491-503(1989).
+RN   [2]
+RP   SEQUENCE FROM N.A. (ISOFORM A1-A).
+RC   TISSUE=Fibroblast;
+RX   MEDLINE=88233978; PubMed=2836799;
+RA   Buvoli M., Biamonti G., Ghetti A., Riva S., Bassi M.T., Horandi C.;
+RT   "cDNA cloning of human hnRNP protein A1 reveals the existence of multiple 
+RT   mRNA isoforms.";
+RL   Nucleic Acids Res. 16:3751-3770(1988).
+RN   [3]
+RP   SEQUENCE FROM N.A. (ISOFORM A1-A).
+RC   TISSUE=Lung;
+RA   Knudsen S.M., Leffers H.;
+RT   
+RL   Submitted (JUN-1994) to the EMBL/GenBank/DDBJ databases.
+RN   [4]
+RP   PARTIAL SEQUENCE FROM N.A.
+RC   TISSUE=Liver;
+RX   MEDLINE=87053868; PubMed=3023065;
+RA   Riva S., Morandi C., Tsoulfas P., Pandolfo M., Biamonti G., Merrill B., 
+RA   Williams K.R., Multhaup G., Beyreuther K., Werr H., Heinrich B., Schaefer 
+RA   K.P.;
+RT   "Mammalian single-stranded DNA binding protein UP I is derived from the 
+RT   hnRNP core protein A1.";
+RL   EMBO J. 5:2267-2273(1986).
+RN   [5]
+RP   SEQUENCE OF 251-302 FROM N.A. (ISOFORM A1-B).
+RX   MEDLINE=90214633; PubMed=1691095;
+RA   Buvoli M., Cobianchi F., Bestagno M.G., Mangiarotti A., Bassi M.T., 
+RA   Biamonti G., Riva S.;
+RT   "Alternative splicing in the human gene for the core protein A1 generates 
+RT   another hnRNP protein.";
+RL   EMBO J. 9:1229-1235(1990).
+RN   [6]
+RP   NUCLEAR LOCALIZATION DOMAIN.
+RX   MEDLINE=95247808; PubMed=7730395;
+RA   Siomi H., Dreyfuss G.;
+RT   "A nuclear localization domain in the hnRNP A1 protein.";
+RL   J. Cell Biol. 129:551-560(1995).
+RN   [7]
+RP   NUCLEAR LOCALIZATION DOMAIN, AND NUCLEAR EXPORT.
+RX   MEDLINE=96067639; PubMed=8521471;
+RA   Michael W.M., Choi M., Dreyfuss G.;
+RT   "A nuclear export signal in hnRNP A1: a signal-mediated, temperature- 
+RT   dependent nuclear protein export pathway.";
+RL   Cell 83:415-422(1995).
+RN   [8]
+RP   NUCLEAR LOCALIZATION DOMAIN.
+RX   MEDLINE=95286702; PubMed=7769000;
+RA   Weighardt F., Biamonti G., Riva S.;
+RT   "Nucleo-cytoplasmic distribution of human hnRNP proteins: a search for the 
+RT   targeting domains in hnRNP A1.";
+RL   J. Cell Sci. 108:545-555(1995).
+RN   [9]
+RP   3D-STRUCTURE MODELING OF 106-189.
+RX   MEDLINE=91099515; PubMed=2176620;
+RA   Ghetti A., Bolognesi M., Cobianchi F., Morandi C.;
+RT   "Modeling by homology of RNA binding domain in A1 hnRNP protein.";
+RL   FEBS Lett. 277:272-276(1990).
+RN   [10]
+RP   X-RAY CRYSTALLOGRAPHY (1.75 ANGSTROMS) OF 8-180.
+RX   MEDLINE=97307256; PubMed=9164463;
+RA   Shamoo Y., Krueger U., Rice L.M., Williams K.R., Steitz T.A.;
+RT   "Crystal structure of the two RNA binding domains of human hnRNP A1 at 
+RT   1.75-A resolution.";
+RL   Nat. Struct. Biol. 4:215-222(1997).
+RN   [11]
+RP   X-RAY CRYSTALLOGRAPHY (1.9 ANGSTROMS) OF 6-181.
+RX   MEDLINE=97277240; PubMed=9115444;
+RA   Xu R.M., Jokhan L., Cheng X., Mayeda A., Krainer A.R.;
+RT   "Crystal structure of human UP1, the domain of hnRNP A1 that contains two 
+RT   RNA-recognition motifs.";
+RL   Structure 5:559-570(1997).
+CC   -!- FUNCTION: INVOLVED IN THE PACKAGING OF PRE-MRNA INTO HNRNP
+CC       PARTICLES, TRANSPORT OF POLY-A MRNA FROM THE NUCLEUS TO THE
+CC       CYTOPLASM AND MAY MODULATE SPLICE SITE SELECTION.
+CC   -!- SUBCELLULAR LOCATION: NUCLEAR. SHUTTLES CONTINUOUSLY BETWEEN THE
+CC       NUCLEUS AND THE CYTOPLASM ALONG WITH MRNA. COMPONENT OF
+CC       RIBONUCLEOSOMES.
+CC   -!- ALTERNATIVE PRODUCTS:
+CC       Event=Alternative splicing; Named isoforms=2;
+CC       Name=A1-B;
+CC         IsoId=P09651-1; Sequence=Displayed;
+CC       Name=A1-A;
+CC         IsoId=P09651-2; Sequence=VSP_005824;
+CC         Note=Is twenty times more abundant than isoform A1-B;
+CC   -!- SIMILARITY: BELONGS TO THE A/B GROUP OF HNRNP, WHICH ARE BASIC AND
+CC       GLY-RICH PROTEINS.
+CC   -!- SIMILARITY: CONTAINS 2 RNA RECOGNITION MOTIF (RRM) DOMAINS.
+CC   --------------------------------------------------------------------------
+CC   This SWISS-PROT entry is copyright. It is produced through a collaboration
+CC   between  the Swiss Institute of Bioinformatics  and the  EMBL outstation -
+CC   the European Bioinformatics Institute.  There are no  restrictions on  its
+CC   use  by  non-profit  institutions as long  as its content  is  in  no  way
+CC   modified and this statement is not removed.  Usage  by  and for commercial
+CC   entities requires a license agreement (See http://www.isb-sib.ch/announce/
+CC   or send an email to license@isb-sib.ch).
+CC   --------------------------------------------------------------------------
+DR   EMBL; X12671; CAA31191.1; -.
+DR   EMBL; X06747; CAA29922.1; ALT_SEQ.
+DR   EMBL; X04347; CAA27874.1; -.
+DR   EMBL; X79536; CAA56072.1; -.
+DR   PIR; S02061; S02061.
+DR   PDB; 1HA1; 15-MAY-97.
+DR   PDB; 1UP1; 17-SEP-97.
+DR   PDB; 2UP1; 22-JUN-99.
+DR   SWISS-2DPAGE; P09651; HUMAN.
+DR   Aarhus/Ghent-2DPAGE; 207; NEPHGE.
+DR   Aarhus/Ghent-2DPAGE; 2114; NEPHGE.
+DR   Aarhus/Ghent-2DPAGE; 3612; NEPHGE.
+DR   Genew; HGNC:5031; HNRPA1.
+DR   GK; P09651; -.
+DR   MIM; 164017; -.
+DR   GO; GO:0005737; C:cytoplasm; TAS.
+DR   GO; GO:0005654; C:nucleoplasm; TAS.
+DR   InterPro; IPR000504; RNA_rec_mot.
+DR   Pfam; PF00076; rrm; 2.
+DR   SMART; SM00360; RRM; 2.
+DR   PROSITE; PS50102; RRM; 2.
+DR   PROSITE; PS00030; RRM_RNP_1; 2.
+KW   Nuclear protein; RNA-binding; Repeat; Ribonucleoprotein; Methylation; 
+KW   Alternative splicing; 3D-structure; Polymorphism.
+FT   INIT_MET      0      0       .
+FT   DOMAIN        3     93       GLOBULAR A DOMAIN..
+FT   DOMAIN       94    184       GLOBULAR B DOMAIN..
+FT   DOMAIN       13     96       RNA-BINDING (RRM) 1..
+FT   DOMAIN      104    183       RNA-BINDING (RRM) 2..
+FT   DOMAIN      217    239       RNA-BINDING RGG-BOX..
+FT   DOMAIN      194    371       GLY-RICH..
+FT   DOMAIN      319    356       NUCLEAR TARGETING SEQUENCE (M9)..
+FT   MOD_RES     193    193       METHYLATION (BY SIMILARITY)..
+FT   VARSPLIC    251    302       Missing (in isoform A1-A)./FTId=VSP_005824..
+FT   VARIANT      72     72       N -> S (in dbSNP:6533)./FTId=VAR_014711..
+FT   MUTAGEN     325    325       G->A: NO NUCLEAR IMPORT NOR EXPORT..
+FT   MUTAGEN     326    326       P->A: NO NUCLEAR IMPORT NOR EXPORT..
+FT   MUTAGEN     333    334       GG->LL: NORMAL NUCLEAR IMPORT AND EXPORT..
+FT   CONFLICT    139    139       R -> P (IN REF. 4)..
+FT   HELIX        10     13       .
+FT   STRAND       14     18       .
+FT   TURN         22     23       .
+FT   HELIX        26     33       .
+FT   HELIX        34     36       .
+FT   STRAND       39     46       .
+FT   TURN         48     50       .
+FT   STRAND       53     61       .
+FT   HELIX        64     72       .
+FT   TURN         73     73       .
+FT   STRAND       77     78       .
+FT   TURN         79     80       .
+FT   STRAND       81     82       .
+FT   STRAND       84     87       .
+FT   STRAND      105    112       .
+FT   TURN        113    114       .
+FT   HELIX       117    124       .
+FT   TURN        125    127       .
+FT   STRAND      130    137       .
+FT   TURN        139    141       .
+FT   STRAND      144    152       .
+FT   HELIX       155    162       .
+FT   TURN        163    163       .
+FT   STRAND      168    169       .
+FT   TURN        170    171       .
+FT   STRAND      172    173       .
+FT   STRAND      175    178       .
+SQ   SEQUENCE   371 AA;  38715 MW;  B3EEFA5AE1DB7C26 CRC64;
+     SKSESPKEPE QLRKLFIGGL SFETTDESLR SHFEQWGTLT DCVVMRDPNT KRSRGFGFVT 
+     YATVEEVDAA MNARPHKVDG RVVEPKRAVS REDSQRPGAH LTVKKIFVGG IKEDTEEHHL 
+     RDYFEQYGKI EVIEIMTDRG SGKKRGFAFV TFDDHDSVDK IVIQKYHTVN GHNCEVRKAL 
+     SKQEMASASS SQRGRSGSGN FGGGRGGGFG GNDNFGRGGN FSGRGGFGGS RGGGGYGGSG 
+     DGYNGFGNDG GYGGGGPGYS GGSRGYGSGG QGYGNQGSGY GGSGSYDSYN NGGGRGFGGG 
+     SGSNFGGGGS YNDFGNYNNQ SSNFGPMKGG NFGGRSSGPY GGGGQYFAKP RNQGGYGGSS 
+     SSSSYGSGRR F 
+//
