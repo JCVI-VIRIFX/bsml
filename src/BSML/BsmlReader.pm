@@ -2078,6 +2078,36 @@ sub readSequenceAlignment
     return $rhash;
 }
 
+# Parse a genome object and return the following data
+# $genome->{'species'}
+#          {'genus'}
+#          {'database'}                  TIGR Chado database name
+#          {'source_database'}           TIGR Legacy database name
+#          {'strain'}                    strain name
+
+# This function expects one organism per genome with a single strain associated 
+# with it.
+
+sub readGenome
+{
+    my $self = shift;
+    my $bsmlGenome = shift;
+
+    my $rhash = {};
+
+    my $bsmlOrganism = $bsmlGenome->returnBsmlOrganismR();
+    my $bsmlStrain = $bsmlOrganism->returnBsmlStrainR(0);
+
+    $rhash->{'species'} = $bsmlOrganism->returnattr( 'species' );
+    $rhash->{'genus'} = $bsmlOrganism->returnattr( 'genus' );
+    $rhash->{'database'} = $bsmlStrain->returnBsmlAttr( 'database' );
+    $rhash->{'source_database'} = $bsmlStrain->returnBsmlAttr( 'source_database' );
+    $rhash->{'strain'} = $bsmlStrain->returnBsmlAttr( 'name' );
+
+    return $rhash;
+}
+
+
 # A generic read function which flattens the attribute and Bsml Attribute
 # hashes of an element into a single return hash.
 

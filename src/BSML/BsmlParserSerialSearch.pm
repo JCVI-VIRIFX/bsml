@@ -10,6 +10,7 @@ use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlAnalysis;
 use BSML::BsmlSequence;
 use BSML::BsmlFeature;
+use BSML::BsmlGenome;
 
 
 # Clients must define callback routines which are called during parsing. Callbacks may be defined
@@ -75,6 +76,15 @@ sub new
 					     my $bsml_feature = featureHandler( $twig, $feature );
 					     $self->{'FeatureCallBack'}( $bsml_feature );
 					 };
+    }
+
+    if( $args{'GenomeCallBack'} ){
+	$self->{'GenomeCallBack'} = $args{'GenomeCallBack'};
+
+	$self->{'Roots'}->{'Genome'} = sub {my ($twig, $genome ) = @_;
+									  my $bsml_genome = genomeHandler($twig,$genome);
+									  $self->{'GenomeCallBack'}( $bsml_genome );
+						    };
     }
 	
     return $self;
@@ -432,6 +442,7 @@ sub minsequenceHandler
     return $bsmlseq;
 }
 
+# returns a BsmlFeature object
 
 sub featureHandler
 {
@@ -476,6 +487,83 @@ sub featureHandler
     $twig->purge;
 
     return $feat;
+}
+
+######################################################################
+##
+#  Support for import of data associated with Genome elements and
+#  children.
+
+
+sub genomeHandler
+{
+    print "GENOME HANDLER...\n";
+
+    my ($twig, $genome) = @_;
+    my $bsmlGenome = new BSML::BsmlGenome;
+
+    addBsmlAttrLinks( $twig, $genome, $bsmlGenome );
+
+    foreach my $organism ( $genome->children( 'Organism' ))
+    {
+	organismHandler( $twig, $organism, $bsmlGenome );
+    }
+
+    $twig->purge_up_to( $genome );
+
+    return $bsmlGenome;
+}
+
+sub organismHandler
+{
+    my ($twig, $organism, $bsmlGenome) = @_;
+
+    my $bsmlOrganism = $bsmlGenome->returnBsmlOrganismR( $bsmlGenome->addBsmlOrganism() );
+    
+    addBsmlAttrLinks( $twig, $organism, $bsmlOrganism );
+
+    foreach my $strain ($organism->children( 'Strain' ))
+    {
+	strainHandler( $twig, $strain, $bsmlOrganism );
+    }   
+}
+
+sub strainHandler
+{
+    my ($twig, $strain, $bsmlOrganism ) = @_;
+
+    print "STRAIN Handler...\n";
+
+    my $bsmlStrain = $bsmlOrganism->returnBsmlStrainR( $bsmlOrganism->addBsmlStrain() );
+   
+    addBsmlAttrLinks( $twig, $strain, $bsmlStrain );
+}
+
+# Generic function to add attributes, Bsml Attributes, and 
+# Bsml links to generic objects
+
+sub addBsmlAttrLinks
+{
+    my ($twig, $elem, $bsmlObj ) = @_;
+
+    my $attr = $elem->atts();
+    
+    foreach my $key ( keys( %{$attr} ) )
+    {
+	$bsmlObj->addattr( $key, $attr->{$key} );
+    }
+
+    foreach my $BsmlAttr ( $elem->children( 'Attribute' ) )
+    {
+	my $attr = $BsmlAttr->atts();
+	$bsmlObj->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+    }
+
+    foreach my $BsmlLink ( $elem->children( 'Link' ) )
+    {
+	my $attr = $BsmlLink->atts();
+	$bsmlObj->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+    }    
 }
 
 1
