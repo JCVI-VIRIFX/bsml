@@ -24,4 +24,14 @@
       </Seq-pair-alignment>
     </Tables>
   </Definitions>
+  <Research>
+    <Analyses>
+      <Analysis>
+        <Attribute name="sourcename" content="/usr/local/annotation/TRYP/BSML_repository/blastp/tba2_1139_assembly.blastp.bsml"></Attribute>
+        <Attribute name="programversion" content="2.0"></Attribute>
+        <Attribute name="program" content="blastp 2.0mp-washu"></Attribute>
+        <Link href="#BsmlTables" rel="SEQ_PAIR_ALIGNMENTS"></Link>
+      </Analysis>
+    </Analyses>
+  </Research>
 </Bsml>
