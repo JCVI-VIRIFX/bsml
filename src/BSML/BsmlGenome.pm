@@ -3,6 +3,7 @@ package BSML::BsmlGenome;
 
 use BSML::BsmlElement;
 use BSML::BsmlOrganism;
+use BSML::BsmlCrossReference;
 use XML::Writer;
 
 use strict;
@@ -28,6 +29,7 @@ sub init
     $self->{'BsmlLink'} = [];
     $self->{'BsmlOrganism'} = undef;
     $self->{'BsmlChromosomes'} = [];
+    $self->{'BsmlCrossReference'} = undef;
 }
 
 sub addBsmlOrganism
@@ -43,6 +45,32 @@ sub returnBsmlOrganismR
     my $self = shift;
 
     return $self->{'BsmlOrganism'};
+}
+
+#----------------------------------------------------------------------
+# BsmlCrossReference support
+#
+#----------------------------------------------------------------------
+
+sub addBsmlCrossReference
+{
+    my $self = shift;
+
+    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
+    return $self->{'BsmlCrossReference'};
+}
+
+sub returnBsmlCrossReferenceR
+{
+    my $self = shift;
+
+    return $self->{'BsmlCrossReference'};
+}
+
+sub dropBsmlCrossReference
+{
+    my $self = shift;
+    $self->{'BsmlCrossReference'} = '';
 }
 
 sub addBsmlChromosome
@@ -87,6 +115,13 @@ sub write
     {
 	$org->write( $writer );
     }
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
+    }
+
+
 
     foreach my $link (@{$self->{'BsmlLink'}})
     {

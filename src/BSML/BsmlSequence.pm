@@ -33,6 +33,7 @@ use BSML::BsmlElement;
 use BSML::BsmlFeatureTable;
 use BSML::BsmlFeatureGroup;
 use BSML::BsmlNumbering;
+use BSML::BsmlCrossReference;
 use XML::Writer;
 use strict;
 use warnings;
@@ -62,6 +63,7 @@ sub init
     $self->{ 'BsmlSeqDataImport' } = {};
     $self->{ 'BsmlLink' } = [];
     $self->{ 'BsmlNumbering' } = '';
+    $self->{ 'BsmlCrossReference' } = undef;
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -366,6 +368,34 @@ sub dropBsmlNumbering
     $self->{'BsmlNumbering'} = '';
 }
 
+
+#----------------------------------------------------------------------
+# BsmlCrossReference support
+#
+#----------------------------------------------------------------------
+sub addBsmlCrossReference
+{
+    my $self = shift;
+
+    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
+    return $self->{'BsmlCrossReference'};
+}
+
+sub returnBsmlCrossReferenceR
+{
+    my $self = shift;
+
+    return $self->{'BsmlCrossReference'};
+}
+
+sub dropBsmlCrossReference
+{
+    my $self = shift;
+    $self->{'BsmlCrossReference'} = '';
+}
+
+
+
 sub write
   {
     my $self = shift;
@@ -419,6 +449,11 @@ sub write
     if( $self->{'BsmlNumbering'} )
     {
 	$self->{'BsmlNumbering'}->write( $writer );
+    }
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
     }
 
     foreach my $link (@{$self->{'BsmlLink'}})

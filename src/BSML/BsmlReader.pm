@@ -99,6 +99,17 @@ sub readNumbering
     return $self->readElement( $numbering );
 }
 
+sub readCrossReference
+{
+    my $self = shift;
+    my ($seq) = @_;
+
+    my $xref = $seq->returnBsmlCrossReferenceR();
+
+    return $self->readElement( $xref );
+}
+
+
 sub readFeatures
   {
     my $self = shift;
@@ -640,6 +651,16 @@ sub readAnalysis
 	$rhash->{'bsml_link_relation'} = $link->{'rel'};
 	$rhash->{'bsml_link_url'} = $link->{'href'};
 	
+
+	my $analysisHash = {};
+
+
+	my $bsmlAttributeHashR = $analysis->returnBsmlAttrHashR();
+	foreach my $qual (keys(%{$bsmlAttributeHashR})){
+	    $analysisHash->{$qual} = $bsmlAttributeHashR->{$qual};
+	}
+	push ( @{$rhash->{'analysisAttr'}}, $analysisHash );
+
 	return $rhash;
     }
 }

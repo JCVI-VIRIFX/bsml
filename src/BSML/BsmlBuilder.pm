@@ -1189,4 +1189,29 @@ sub createAndAddNumbering
     return $numbering;
 }
 
+sub createAndAddCrossReference
+{
+  my $self = shift;
+  my %args = @_;
+
+  my $parent = $args{ 'parent' };
+
+  my $xref = $parent->returnBsmlCrossReferenceR( $parent->addBsmlCrossReference );
+
+  $xref->addattr( 'id', $args{'id'} );		 
+  $xref->addattr( 'context', $args{'context'} );
+  $xref->addattr( 'database', $args{'database'} );
+  $xref->addattr( 'identifier', $args{'identifier'} );
+  $xref->addattr( 'identifier-type', $args{'identifier-type'} );
+  $xref->addattr( 'title', $args{'title'} );
+  $xref->addattr( 'behavior', $args{'behavior'} );
+  $xref->addattr( 'href', $args{'href'} );
+  $xref->addattr( 'role', $args{'role'} );
+  
+  return $xref;
+
+}
+
+
+
 1;

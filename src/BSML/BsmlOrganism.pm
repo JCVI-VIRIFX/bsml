@@ -3,6 +3,7 @@ package BSML::BsmlOrganism;
 
 use BSML::BsmlElement;
 use BSML::BsmlStrain;
+use BSML::BsmlCrossReference;
 use XML::Writer;
 
 use strict;
@@ -26,6 +27,7 @@ sub init
     $self->{'BsmlAttr'} = {};
     $self->{'BsmlLink'} = [];
     $self->{'BsmlStrain'} = [];
+    $self->{'BsmlCrossReference'} = undef;
 }
 
 sub addBsmlStrain
@@ -72,6 +74,34 @@ sub returnBsmlStrainR
     return $self->{'BsmlStrain'}[$index];
 }
 
+#----------------------------------------------------------------------
+# BsmlCrossReference support
+#
+#----------------------------------------------------------------------
+
+sub addBsmlCrossReference
+{
+    my $self = shift;
+
+    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
+    return $self->{'BsmlCrossReference'};
+}
+
+sub returnBsmlCrossReferenceR
+{
+    my $self = shift;
+
+    return $self->{'BsmlCrossReference'};
+}
+
+sub dropBsmlCrossReference
+{
+    my $self = shift;
+    $self->{'BsmlCrossReference'} = '';
+}
+
+
+
 sub write
 {
     my $self = shift;
@@ -89,6 +119,12 @@ sub write
 	$writer->startTag( "Attribute",  'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
 	$writer->endTag( "Attribute" );
       }
+
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
+    }
 
     foreach my $link (@{$self->{'BsmlLink'}})
     {

@@ -3,6 +3,7 @@ package BSML::BsmlFeature;
 
 use XML::Writer;
 use BSML::BsmlElement;
+use BSML::BsmlCrossReference;
 use strict;
 use warnings;
 
@@ -62,6 +63,7 @@ sub init
     $self->{ 'BsmlInterval-Loc' } = [];
     $self->{ 'BsmlQual' } = {};
     $self->{ 'BsmlLink' } = [];
+    $self->{ 'BsmlCrossReference' } = undef;
   }
     
 =item $feature->addBsmlQualifier( $valuetype, $value )
@@ -376,6 +378,34 @@ sub returnBsmlIntervalLocListR
 =cut 
 
 
+
+#----------------------------------------------------------------------
+# BsmlCrossReference support
+#
+#----------------------------------------------------------------------
+
+sub addBsmlCrossReference
+{
+    my $self = shift;
+
+    $self->{'BsmlCrossReference'} = new BSML::BsmlCrossReference;
+    return $self->{'BsmlCrossReference'};
+}
+
+sub returnBsmlCrossReferenceR
+{
+    my $self = shift;
+
+    return $self->{'BsmlCrossReference'};
+}
+
+sub dropBsmlCrossReference
+{
+    my $self = shift;
+    $self->{'BsmlCrossReference'} = '';
+}
+
+
 sub write
   {
     my $self = shift;
@@ -408,6 +438,12 @@ sub write
 	$writer->startTag( "Interval-loc", %{$bsmlsite} );
 	$writer->endTag( "Interval-loc" );
       }
+
+
+    if ( my $xref = $self->{'BsmlCrossReference'})
+    {
+	$xref->write( $writer );
+    }
     
     foreach my $link (@{$self->{'BsmlLink'}})
       {
