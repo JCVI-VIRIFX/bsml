@@ -100,10 +100,12 @@ if( ($rhash->{'id'} eq 'PF14_0392') &&
     ($rhash->{'title'} eq 'pfa1 PF14_0392') &&
     ($rhash->{'molecule'} eq 'dna'))
 {
+    print "ASSEMBLY Sequence successfully written and read.\n";
     print 'ok 1',"\n";
 }
 else
 {
+    print "ASSEMBLY Sequence unsuccessfully written and read.\n";
     print 'not ok 1',"\n";
 }
 
@@ -116,13 +118,19 @@ foreach my $seq ( @{$rlist} )
 
     if( $rhash->{'id'} eq 'PF14_0392' )
     {
-	my $seqdat = $reader->subSequence( 'PF14_0392', -1, 0, 0 );
+
+	my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( 'PF14_0392' );
+	my $seqdatImport = $reader->readSequenceDatImport( $seq, -1, 0, 0 );
+	my $seqdat = $seqdatImport->{'seqdat'};
+	
 	if( $seqdat =~ /NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN/ )
 	{
+	    print "Successfully read ASSEMBLY sequence from FASTA file.\n";
 	    print 'ok 2',"\n";
 	}
 	else
 	{
+	    print "Unable to read ASSEMBLY sequence from FASTA file.\n";
 	    print 'not ok 2',"\n";
 	}
 
@@ -154,10 +162,12 @@ TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKV
 FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
 KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK' )
 	{
+	    print "Successfully read inline sequence data from protein sequence.\n";
 	    print 'ok 3',"\n";
 	}
 	else
 	{
+	    print "Unable to read inline sequence data from protein sequence.\n";
 	    print 'not ok 3',"\n";
 	}
     }
@@ -169,10 +179,12 @@ my $rlist = $reader->geneIdtoGenomicCoords( 'M1396-03861' );
 	($rlist->[0]->{'GeneSpan'}->{'endpos'} == 7366) &&
 	($rlist->[0]->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'endpos'} == 110))
     {
+	print "Successfully extracted gene coordinates using feature group (gene) lookups\n";
 	print 'ok 4',"\n";
     }
     else
     {
+	print "Unable to extract gene coordinates using feature group (gene) lookups\n";
 	print 'not ok 4',"\n";
     }
 }
@@ -181,6 +193,7 @@ my $rvalue = system( "/usr/local/annotation/PNEUMO/chauser_dir/xmlvalid-1-0-0-Li
 
 if( $rvalue == 0 )
 {
+    print "Successfully validated temporary gene-sequence BSML document\n"; 
     print 'ok 5',"\n";
 }
 else
