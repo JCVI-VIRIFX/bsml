@@ -516,7 +516,6 @@ sub returnAllGeneIDs
     return $self->returnAllFeatureGroupSetIds();
   }
 
-
 #Return the assembly id (eg 'PNEUMO_19') from which a sequence is contained or derived.
 #Use the sequences id as input.
 
@@ -1419,6 +1418,13 @@ sub subSequence
 
     if( $seqdat )
       {
+	  if( ($start-1) > length($seqdat) )
+	  {
+	      #Log error condition
+	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access.\n";
+	      return '';
+	  }
+
 	if( $complement == 0 )
 	  {
 	      my $rseq = substr( $seqdat, $start-1, ($stop-$start+1));
