@@ -347,14 +347,21 @@ sub readBsmlAttributes
     my ($elem) = @_;
 
     my $bsmlattr = [];
-    my $bsmlhash = $elem->returnBsmlAttrHashR();
 
-    foreach my $qual (keys(%{$bsmlhash}))
+    #it would be nice to check if $elem is a valid Bsml Object.
+    #can SUPER be used???
+
+    if( $elem )
       {
-	push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
-      }
+	my $bsmlhash = $elem->returnBsmlAttrHashR();
+
+	foreach my $qual (keys(%{$bsmlhash}))
+	  {
+	    push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
+	  }
 		
-    return $bsmlattr;
+	return $bsmlattr;
+      }
   }
 
 sub returnAllFeatureTables
@@ -392,37 +399,40 @@ sub readSeqPairAlignment
     my ($SeqPairAln) = @_;
     my $rhash = {};
 
-    $rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
-    $rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
-    $rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
-    $rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
-    $rhash->{'refend'} = $SeqPairAln->returnattr('refend');
-    $rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
-    $rhash->{'method'} = $SeqPairAln->returnattr('method');
-    $rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
-    $rhash->{'seqPairRuns'} = [];
-
-    foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+    if( ref($SeqPairAln) eq 'BsmlSeqPairAlignment' )
       {
-	my $runDat = {};
-	$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-	$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-	$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-	$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-	$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
-	$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-	$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-	$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-	$runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
-	$runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
-	$runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
-	$runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
-	$runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
+	$rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
+	$rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
+	$rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
+	$rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
+	$rhash->{'refend'} = $SeqPairAln->returnattr('refend');
+	$rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
+	$rhash->{'method'} = $SeqPairAln->returnattr('method');
+	$rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
+	$rhash->{'seqPairRuns'} = [];
 
-	push( @{$rhash->{'seqPairRuns'}}, $runDat );	
-      }
+	foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+	  {
+	    my $runDat = {};
+	    $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+	    $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+	    $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+	    $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+	    $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+	    $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+	    $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+	    $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+	    $runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
+	    $runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
+	    $runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
+	    $runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
+	    $runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
+
+	    push( @{$rhash->{'seqPairRuns'}}, $runDat );	
+	  }
     
-    return $rhash;
+	return $rhash;
+      }
   }
 
 sub readLinks
@@ -1132,7 +1142,7 @@ sub fetch_genome_pairwise_matches
 		    $rhash->{'match_gene_name'} = $match_ref->{'compseq'};
 
 		    my $best_percent_identity = 0.0;
-		    
+	      
 		    foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
 
 
