@@ -2,3 +2,9 @@ cvs export -P -r [RELEASE_NAME] bsml_install
 perl Makefile.PL PREFIX=/usr/local/devel/ANNOTATION/shared
 make
 make install
+
+
+cvs export bsml_schema
+cd bsml_schema/xsdValid-Xerces/
+make
+make install
