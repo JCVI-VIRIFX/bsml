@@ -48,6 +48,8 @@ sub new
     my (%args) = @_; 
     my $self = {};
     bless $self, $class;
+
+    $self->{'Ignore'} = {};
     
     if( $args{'AlignmentCallBack'} ){
 	$self->{'AlignmentCallBack'} = $args{'AlignmentCallBack'};
@@ -91,7 +93,8 @@ sub new
 			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
 					      my $bsml_sequence = minsequenceHandler( $twig, $sequence );
 					      $self->{'SequenceCallBack'}( $bsml_sequence );
-					  };
+					  }; 
+			$self->{'Ignore'}->{'Feature-tables'}=1;
 		    }
 	}
 	else{
@@ -130,8 +133,8 @@ sub parse
     my $bsml_logger = get_logger( "Bsml" );
 
     # Set "rooted" twig handlers on Sequence, SeqPairAlignment, and Analysis elements. 
-
-    my $twig = new XML::Twig( TwigRoots => $self->{'Roots'} );
+    my $twig = new XML::Twig( TwigRoots => $self->{'Roots'},
+			      ignore_elts => $self->{'Ignore'});
 
     # parse will die if an xml syntax error is encountered or if
     # there is an io problem
