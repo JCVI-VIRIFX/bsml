@@ -40,7 +40,7 @@ sub MY::postamble {
     my  $postamble = << 'END';
 
 SCHEMA_SRC_DIR=schema
-VALIDATOR_SRC_DIR=Xerces-xsdValid
+VALIDATOR_SRC_DIR=schema/Xerces-xsdValid
 VALIDATOR_BIN_DIR=$(PREFIX)/bin
 INCLUDE = -I/usr/local/packages/xerces-c++/include
 LIBDIR = -L/usr/local/packages/xerces-c++/lib
