@@ -810,6 +810,12 @@ sub get_all_protein_dna_extended
 	    foreach my $seq (@{$dnalist})
 	      {
 		my $key = $gene."_".$i;
+
+		if( !($seq_dat) || !($topo) || !($start) || !($end) )
+		{
+		    print STDERR "Error in call to extend_seq - Gene: $gene Topo: $topo Start: $start End: $end\n";
+		}
+
 		$returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
 		$i++;
 	      }
