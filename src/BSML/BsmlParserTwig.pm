@@ -82,7 +82,7 @@ sub parse
     # parsed
 
     my $twig = new XML::Twig( TwigHandlers => 
-			  { Sequence => \&sequenceHandler }
+			  { Sequence => \&sequenceHandler, 'Seq-pair-alignment' => \&seqPairAlignmentHandler }
 			  );
     
     # parsefile will die if an xml syntax error is encountered or if
@@ -137,8 +137,7 @@ sub sequenceHandler
 	$bsmlseq->addBsmlSeqData( $seqDat->text() );
       }
 
-    # add Feature Tables with Feature and Reference Elements
-    # support for Feature-group forthcoming
+    # add Feature Tables with Feature, Reference, and Feature-group Elements
 
     my $BsmlFTables = $seq->first_child( 'Feature-tables' );
 
@@ -245,4 +244,44 @@ sub sequenceHandler
     $twig->purge_up_to( $seq );
   }
 
+sub seqPairAlignmentHandler
+  {
+     my ($twig, $seq_aln) = @_;
+
+     # add a new BsmlSeqPairAlignment object to the bsmlDoc
+
+     my $bsmlaln = $bsmlDoc->{'BsmlSeqPairAlignments'}[$bsmlDoc->addBsmlSeqPairAlignment()];
+     
+     # add the BsmlSeqPairAlignment element's attributes
+
+     my $attr = $seq_aln->atts();
+
+     foreach my $key ( keys( %{$attr} ) )
+       {
+	 $bsmlaln->addattr( $key, $attr->{$key} );
+       }
+
+     # add Bsml Attribute elements to the BsmlSeqPairAlignment 
+
+     foreach my $BsmlAttr ( $seq_aln->children( 'Attribute' ) )
+      {
+	my $attr = $BsmlAttr->atts();
+	$bsmlaln->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+      }
+     
+     foreach my $seq_run ( $seq_aln->children('Seq-pair-run') )
+       {
+	 my $bsmlseqrun = $bsmlaln->returnBsmlSeqPairRunR( $bsmlaln->addBsmlSeqPairRun() ); 
+
+	 my $attr = $seq_run->atts();
+	 foreach my $key ( keys( %{$attr} ) ){
+	   $bsmlseqrun->addattr( $key, $attr->{$key} );
+	 }
+
+	 foreach my $BsmlAttr ( $seq_run->children( 'Attribute' ) ){
+	   my $attr = $BsmlAttr->atts();
+	   $bsmlseqrun->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+	 }
+       }     
+  }
 1
