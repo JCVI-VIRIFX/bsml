@@ -1790,7 +1790,7 @@ sub subSequence
 
     if( $seqdat )
       {
-	  if( ($start-1) > length($seqdat) )
+	  if( ($start) > length($seqdat) )
 	  {
 	      # Log error condition and return the empty string
 	      print STDERR "BsmlReader::subSequence() - Error: Out of Bounds Substring Access. SeqId($seqInput) Start($start) Stop($stop) Complement($complement)\n";
@@ -1800,13 +1800,13 @@ sub subSequence
 	  # return 5' to 3' data
 	  if( $complement == 0 )
 	  {
-	      my $rseq = substr( $seqdat, $start-1, ($stop-$start+1));
+	      my $rseq = substr( $seqdat, $start, ($stop-$start+1));
 	      return $rseq;
 	  }
 	  # return 3' to 5' data
 	  else
 	  {
-	      return reverse_complement(substr( $seqdat, $start-1, ($stop-$start+1)));
+	      return reverse_complement(substr( $seqdat, $start, ($stop-$start+1)));
 	  }
       }
 }
