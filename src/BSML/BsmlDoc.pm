@@ -36,7 +36,10 @@ This document refers to version 1.0 of the BSML Object Layer
 
 When a BsmlDoc is created an empty document skeleton is created which currently supports 
 document level attributes, BSML Attribute elements, and sequence data. Future support for 
-Genome BSML elements as well as Research elements is expected at this here.
+Genome BSML elements as well as Research elements is expected at here.
+
+If a path to a valid Log4Perl configuration file is passed to the constructor, the default
+logging will be over-ridden.
 
 =head2 Class and object methods
 
