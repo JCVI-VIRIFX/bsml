@@ -391,6 +391,8 @@ sub returnAllSeqPairAlignmentsListR
     return $self->returnBsmlSeqPairAlignmentListR();
   }
 
+# return a structured hash containing the data associated with an alignment pair and all of its seq pair runs.
+
 sub readSeqPairAlignment
   {
     my $self = shift;
@@ -399,34 +401,41 @@ sub readSeqPairAlignment
 
     if( ref($SeqPairAln) eq 'BSML::BsmlSeqPairAlignment' )
       {
-	$rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
-	$rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
-	$rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
-	$rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
-	$rhash->{'refend'} = $SeqPairAln->returnattr('refend');
-	$rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
-	$rhash->{'method'} = $SeqPairAln->returnattr('method');
-	$rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
-	$rhash->{'seqPairRuns'} = [];
+	  # Bsml Identifiers are not set for SeqPairAlignments so a "raw" reference to the SeqPairAlignment Object is returned 
+	  $rhash->{'bsmlRef'} = $SeqPairAln;  
 
-	foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
+	  $rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
+	  $rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
+	  $rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
+	  $rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
+	  $rhash->{'refend'} = $SeqPairAln->returnattr('refend');
+	  $rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
+	  $rhash->{'method'} = $SeqPairAln->returnattr('method');
+	  $rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
+	  $rhash->{'seqPairRuns'} = [];
+
+	  foreach my $SeqPairRun ( @{$SeqPairAln->returnBsmlSeqPairRunListR()} )
 	  {
-	    my $runDat = {};
-	    $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-	    $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-	    $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-	    $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-	    $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
-	    $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-	    $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-	    $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
-	    $runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
-	    $runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
-	    $runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
-	    $runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
-	    $runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
+	      my $runDat = {};
 
-	    push( @{$rhash->{'seqPairRuns'}}, $runDat );	
+	      # Bsml Identifiers are not set for SeqPairRuns so a "raw" reference to the SeqPairRun Object is returned.
+	      $runDat->{'bsmlRef'} = $SeqPairRun;
+                      
+	      $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
+	      $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
+	      $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
+	      $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
+	      $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+	      $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
+	      $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
+	      $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+	      $runDat->{'percent_identity'} = $SeqPairRun->returnBsmlAttr( 'percent_identity' );
+	      $runDat->{'percent_similarity'} = $SeqPairRun->returnBsmlAttr( 'percent_similarity' );
+	      $runDat->{'chain_number'} = $SeqPairRun->returnBsmlAttr( 'chain_number' );
+	      $runDat->{'segment_number'} = $SeqPairRun->returnBsmlAttr( 'segment_number' );
+	      $runDat->{'p_value'} = $SeqPairRun->returnBsmlAttr( 'p_value' );
+
+	      push( @{$rhash->{'seqPairRuns'}}, $runDat );	
 	  }
     
 	return $rhash;
