@@ -215,18 +215,19 @@ sub returnSeqData
 sub addBsmlSeqDataImport
   {
     my $self = shift;
-    my ($format, $source) = @_;
+    my ($format, $source, $id) = @_;
 
     $self->{'BsmlSeqDataImport'}->{'format'} = $format;
     $self->{'BsmlSeqDataImport'}->{'source'} = $source;
+    $self->{'BsmlSeqDataImport'}->{'id'} = $id;
   }
 
 sub setBsmlSeqDataImport
   {
     my $self = shift;
-    my ($format, $source) = @_;
+    my ($format, $source, $id) = @_;
 
-    $self->addBsmlSeqDataImport( $format, $source );
+    $self->addBsmlSeqDataImport( $format, $source, $id );
   }
 
 sub dropBsmlSeqDataImport
@@ -321,7 +322,7 @@ sub returnBsmlFeatureGroupR
     my $self = shift;
 
     my ($index) = @_;
-    return $self->{'BsmlFeatureTables'}[$index];
+    return $self->{'BsmlFeatureGroups'}[$index];
   } 
 
 

@@ -12,28 +12,34 @@ use BsmlBuilder;
 my $seqdat = 'agctagctagctagctagctagct';
 
 my $doc = new BsmlBuilder;
+$doc->makeCurrentDocument();
 
+my $seq = $doc->createAndAddSequence( 'PF14_0392', 'pfa1 PF14_0392', '', 'dna' );
+$doc->createAndAddSeqDataImport( $seq, 'fasta', '/usr/local/annotation/chr001.fa', 'CT1234' );
 
-BsmlDoc::BsmlSetCurrentDocumentLookupTable( 1 );
+my $FTable = $doc->createAndAddFeatureTable( $seq, '', ''); 
+my $FGroup = $doc->createAndAddFeatureGroup( $seq, 'FGroup1', 'PF14_0392-relationships' );
 
-my $seq = $doc->createAndAddSequence( '_bsml001', 'test_basic_sequence', length( $seqdat ), 'dna' );
+my $Feat = $doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861','' , 'GENE', '', '', 1, 7366, 0 );
+$doc->createAndAddQualifier( $Feat, 'name', 'PF14_0392' );
+$doc->createAndAddLink( $FGroup, 'GENE', '#M1396-03861' );
 
-my $seq2 = $doc->createAndAddExtendedSequenceN( id => '_bsml002', title => 'test_extended_sequence', length => '24', molecule => 'dna', topology => 'linear' );
+$Feat = $doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-TRANSCRIPT', '', 'TRANSCRIPT', '', '', 1, 7366, 0 );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-TRANSCRIPT', 'TRANSCRIPT', '', '' );
 
-$doc->createAndAddSeqDataImport( $seq2, 'fasta', '../examples/test.fa' );
+$Feat = $doc->createAndAddFeature( $FTable, 'M1396-03861-CDS', '', 'CDS', '', '' );
+$doc->createAndAddSiteLoc( $Feat, 70, 0 );
 
-my $FTable = $doc->createAndAddFeatureTable( '_bsml001', '_FeatT001', 'feature_table_1', 'feature-table'); 
-my $FTable2 = $doc->createAndAddFeatureTable( $seq2, '_FeatT002', 'feature_table_2', 'feature-table' );
-my $FTable3 = $doc->createAndAddFeatureTableN( seq => $seq2, id => '' );
-
-$doc->createAndAddReference( $FTable3, '', 'Chris Hauser', 'Bsml Object Layer', '' );
-
-my $feat = $doc->createAndAddFeatureWithLocN( FTable => '_FeatT001', id=>'_feat001', title=>'feature-001', class=>'feature', comment=>'test', start=>'10', end=>'10', complement=>'0' );
-
-$doc->createAndAddLink( $feat, 'otherSequence', '_bsml001' );
-$doc->createAndAddLink( $seq2, 'featurelink', '_feat001' );
-
-$doc->createAndAddQualifier( $feat, 'gene', 'ubiquitin' );
+$doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON1', '', 'EXON', '', '', 70, 110, 0 );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON1', 'EXON', '', '' );
+$doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON2', '', 'EXON', '', '', 229, 289, 0 );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON2', 'EXON', '', '' );
+$doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON3', '', 'EXON', '', '', 437, 660, 0 ); 
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON3', 'EXON', '', '' );
+$doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON4', '', 'EXON', '', '', 774, 982, 0 );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON4', 'EXON', '', '' );
+$doc->createAndAddFeatureWithLoc( $FTable, 'M1396-03861-EXON5', '', 'EXON', '', '', 1256, 7366, 0 );
+$doc->createAndAddFeatureGroupMember( $FGroup, 'M1396-03861-EXON5', 'EXON', '', '' );
 
 $doc->write( 'output.xml' );
 

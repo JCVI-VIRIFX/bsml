@@ -359,17 +359,20 @@ sub createAndAddFeatureWithLoc
 
     my $feature = $self->createAndAddFeature( $FTable, $id, $title, $class, $comment, $displayAuto );
 
-    if( $start == $end )
+    if( $start && $end )
       {
-	#add a site position to the feature
-	$feature->addBsmlSiteLoc( $start, $complement );
+	if( $start == $end )
+	  {
+	    #add a site position to the feature
+	    $feature->addBsmlSiteLoc( $start, $complement );
+	  }
+	else
+	  {
+	    #add an interval location to the feature
+	    $feature->addBsmlIntervalLoc( $start, $end, $complement );
+	  }
       }
-    else
-      {
-	#add an interval location to the feature
-	$feature->addBsmlIntervalLoc( $start, $end, $complement );
-      }
-
+    
     return $feature;     
   }
 
@@ -423,11 +426,11 @@ sub createAndAddIntervalLocN
 sub createAndAddSiteLoc
   {
     my $self = shift;
-    my ( $feature, $site, $complement ) = @_;
+    my ( $feature, $site, $complement, $class ) = @_;
 
     if( ref($feature) eq 'BsmlFeature' )
       {
-	$feature->addBsmlSiteLoc( $site, $complement );
+	$feature->addBsmlSiteLoc( $site, $complement, $class );
       }
     else
       {
@@ -441,7 +444,7 @@ sub createAndAddSiteLoc
 		  {
 		    if( $rFeature->returnattr( 'id' ) eq $feature )
 		      {
-			$rFeature->addBsmlSiteLoc( $site, $complement );
+			$rFeature->addBsmlSiteLoc( $site, $complement, $class );
 		      }
 		  }
 	      }
@@ -535,9 +538,9 @@ sub createAndAddAttributeN
 sub createAndAddLink
   {
     my $self = shift;
-    my ($elem, $title, $href) = @_;
+    my ($elem, $rel, $href) = @_;
 
-    $elem->addBsmlLink( $title, $href );
+    $elem->addBsmlLink( $rel, $href );
   }
 
 sub createAndAddLinkN
@@ -587,11 +590,11 @@ sub createAndAddSeqDataN
 sub createAndAddSeqDataImport
   {
     my $self = shift;
-    my ( $seq, $format, $source ) = @_;
+    my ( $seq, $format, $source, $id ) = @_;
 
     if( ref($seq) eq 'BsmlSequence' )
       {
-	$seq->addBsmlSeqDataImport( $format, $source  );	
+	$seq->addBsmlSeqDataImport( $format, $source, $id  );	
 	return $seq;
       }
     else
@@ -602,7 +605,7 @@ sub createAndAddSeqDataImport
 	  {
 	    if( $seqR->returnattr('id') eq $seq )
 	      {
-		$seqR->addBsmlSeqDataImport( $format, $source );
+		$seqR->addBsmlSeqDataImport( $format, $source, $id );
 		
 		return $seqR;
 	      }
@@ -615,7 +618,7 @@ sub createAndAddSeqDataImportN
     my $self = shift;
     my %args = @_;
     
-    return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'} );
+    return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'}, $args{'id'} );
   }
 
 sub createAndAddBtabLine
@@ -752,14 +755,13 @@ sub createAndAddFeatureGroup
       }
     
     my $FeatureGroup = $seq->returnBsmlFeatureGroupR( $seq->addBsmlFeatureGroup() );
-    $FeatureGroup->setattr( 'id', $id );
-    
+    $FeatureGroup->setattr( 'id', $id ); 
+
     if( ($groupset) )
       {
 	$FeatureGroup->setattr( 'group-set', $groupset );
       }
 
-    
     BsmlDoc::BsmlSetDocumentLookup( $id, $FeatureGroup );
 
     return $FeatureGroup;

@@ -185,11 +185,15 @@ B<Returns:> None
 sub addBsmlSiteLoc
   {
     my $self = shift;
-    my ( $sitepos, $comp ) = @_;
+    my ( $sitepos, $comp, $class ) = @_;
 
     if( !( $comp ) ){ $comp = 0; }
 
-    push( @{$self->{'BsmlSite-Loc'}}, { 'sitepos' => $sitepos, 'complement' => $comp } );
+    my $href = {'sitepos' => $sitepos, 'complement' => $comp};
+    if( $class ){ $href->{'class'} = $class;}
+
+
+    push( @{$self->{'BsmlSite-Loc'}}, $href );
   }
 
 =item $feature->setBsmlSiteLoc( $position, $complement )
@@ -205,7 +209,7 @@ B<Returns:> None
 sub setBsmlSiteLoc
   {
     my $self = shift;
-    my ( $sitepos, $comp ) = @_;
+    my ( $sitepos, $comp, $class ) = @_;
 
     my @newlist;
 
@@ -219,7 +223,7 @@ sub setBsmlSiteLoc
 
     $self->{'BsmlSite-Loc'} = \@newlist;
 
-    $self->addBsmlSiteLoc( $sitepos, $comp );
+    $self->addBsmlSiteLoc( $sitepos, $comp, $class );
   }
 
 =item $feature->dropBsmlSiteLoc( $position  )

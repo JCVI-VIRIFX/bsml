@@ -159,7 +159,7 @@ sub sequenceHandler
     if( $seqDatImport )
       {
 	my $attr = $seqDatImport->atts();
-	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'} );
+	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
       }
 
     # add Feature Tables with Feature, Reference, and Feature-group Elements

@@ -255,18 +255,18 @@ sub returnBsmlAttr
 sub addBsmlLink
   {
     my $self = shift;
-    my ($title, $href) = @_;
+    my ($rel, $href) = @_;
 
-    push(@{$self->{'BsmlLink'}}, {title=>$title, href=>$href});
+    push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href});
     return @{$self->{'BsmlLink'}} - 1;
   }
 
 sub setBsmlLink
   {
     my $self = shift;
-    my ($title, $href) = @_;
+    my ($rel, $href) = @_;
     
-    return $self->addBsmlLink( $title, $href );
+    return $self->addBsmlLink( $rel, $href );
   }
 
 sub dropBsmlLink

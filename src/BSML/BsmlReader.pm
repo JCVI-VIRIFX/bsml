@@ -451,6 +451,76 @@ sub readFeatureGroup
     return $returnhash;
   }
 
+############################################################
 
+sub geneIdtoNucSequence
+  {
+
+  }
+
+# this function still needs a lot of work
+sub geneIdtoAASequence
+  {
+    my $self = shift;
+    my ($geneId) = @_;
+
+    my $featref = BsmlDoc::ReturnDocumentLookup( $geneId );
+
+    if( ref($featref) eq 'BsmlFeature' )
+      {
+
+	if( $featref->returnattr( 'class' ) eq 'CDS' )
+	  {
+	    my $links = $featref->returnBsmlLinkListR();
+	    foreach my $link ( @{$links} )
+	      {
+		if( $link->{'rel'} eq 'SEQ' )
+		  {
+		    my $id = substr($link->{'href'}, 1, length($link->{'href'})-1);
+		    my $seq = BsmlDoc::ReturnDocumentLookup( $id );
+		
+		    if( ref($seq) eq 'BsmlSequence' )
+		      {
+			my $seqdat = $seq->returnSeqData();
+			
+			if($seqdat){ 
+			  return $seqdat; }
+			else
+			  {
+			    #handle sequence data import
+			    my $href = $seq->returnBsmlSeqDataImport();
+			
+			    if( $href->{'format'} eq 'fasta' )
+			      {
+				return "Need to implement a fasta sequence loader\n";
+			      }
+
+			    if( $href->{'format'} eq 'bsml' )
+			      {
+				return "Need to implement a bsml sequence loader\n";
+			      }
+			  }
+		      }
+		  }
+	      }
+	    
+	  }
+      }
+  }
+
+sub seqIdtoSequence
+  {
+
+  }
+
+sub seqIdtoSequenceRef
+  {
+
+  }
+
+sub seqReftoGeneCoord
+  {
+
+  }
 
 1
