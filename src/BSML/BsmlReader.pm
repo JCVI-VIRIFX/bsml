@@ -48,14 +48,18 @@ sub readSequence
 sub returnAllSequences
   {
     my $self = shift;
-    return $self->returnBsmlSequenceListR();
+
+    if( ref($self) eq 'BsmlReader' ){
+      return $self->returnBsmlSequenceListR();}
   }
 
 sub readSequenceDat
   {
     my $self = shift;
     my ($seq) = @_;
-    return $seq->returnSeqData();
+
+    if( ref($seq) eq 'BsmlSequence' ){
+      return $seq->returnSeqData();}
   }
 
 sub readFeatures
@@ -237,7 +241,89 @@ sub readFeatures
 
 sub readReferences
   {
+    my $self = shift;
+    my ($input) = @_;
 
+    my $reflist = [];
+
+    if( ref($input) eq 'BsmlSequence' )
+      {
+	foreach my $FTable ( @{$self->returnBsmlFeatureTableListR()} )
+	  {
+	    foreach my $rref ( @{$self->returnBsmlReferenceListR()} )
+	      {
+		my $rhash = {};
+		$rhash->{'FTable'} = '';
+		$rhash->{'refID'} = $rref->returnattr( 'id' );
+		$rhash->{'refAuthors'} = $rref->returnBsmlRefAuthors();
+		$rhash->{'refTitle'} = $rref->returnBsmlRefTitle();
+		$rhash->{'refJournal'} = $rref->returnBsmlRefJournal();
+		$rhash->{'dbxref'} = $rref->returnattr( 'dbxref' );
+
+		my $bsmlattr = [];
+		my $bsmlhash = $rref->returnBsmlAttrHashR();
+	
+		foreach my $qual (keys(%{$bsmlhash}))
+		  {
+		    push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
+		  }
+	
+		$rhash->{'bsmlattrs'} = $bsmlattr;	
+		push( @{$reflist}, $rhash );
+	      }
+	  }
+      }
+    
+    if( ref($input) eq 'BsmlFeatureTable' )
+      {
+	foreach my $rref ( @{$self->returnBsmlReferenceListR()} )
+	  {
+	    my $rhash = {};
+	    $rhash->{'FTable'} = '';
+	    $rhash->{'refID'} = $rref->returnattr( 'id' );
+	    $rhash->{'refAuthors'} = $rref->returnBsmlRefAuthors();
+	    $rhash->{'refTitle'} = $rref->returnBsmlRefTitle();
+	    $rhash->{'refJournal'} = $rref->returnBsmlRefJournal();
+	    $rhash->{'dbxref'} = $rref->returnattr( 'dbxref' );
+
+	    my $bsmlattr = [];
+	    my $bsmlhash = $rref->returnBsmlAttrHashR();
+	
+	    foreach my $qual (keys(%{$bsmlhash}))
+	      {
+		push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
+	      }
+	
+	    $rhash->{'bsmlattrs'} = $bsmlattr;	
+	    push( @{$reflist}, $rhash );
+	  }
+
+	return $reflist;
+      }
+
+    if( ref($input) eq 'BsmlReference' )
+      {
+	my $rhash = {};
+	$rhash->{'FTable'} = '';
+	$rhash->{'refID'} = $self->returnattr( 'id' );
+	$rhash->{'refAuthors'} = $self->returnBsmlRefAuthors();
+	$rhash->{'refTitle'} = $self->returnBsmlRefTitle();
+	$rhash->{'refJournal'} = $self->returnBsmlRefJournal();
+	$rhash->{'dbxref'} = $self->returnattr( 'dbxref' );
+
+	my $bsmlattr = [];
+	my $bsmlhash = $self->returnBsmlAttrHashR();
+	
+	foreach my $qual (keys(%{$bsmlhash}))
+	  {
+	    push( @{$bsmlattr}, { key => $qual, value => $bsmlhash->{$qual} } );
+	  }
+	
+	$rhash->{'bsmlattrs'} = $bsmlattr;	
+	push( @{$reflist}, $rhash );
+
+	return $reflist;
+      }
   }
 
 sub readBsmlAttributes
@@ -265,7 +351,8 @@ sub returnAllFeatureTables
       {
 	return $input->returnBsmlFeatureTableListR();
       }
-    else
+   
+    if( ref($input) eq 'BsmlReader' )
       {
 	my $list = [];
 
