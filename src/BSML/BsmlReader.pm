@@ -518,7 +518,7 @@ sub assemblyIdtoGeneList
 
     my $rlist = [];
 
-    foreach my $geneId ( @{$self->returnAllGeneIDs()} )
+    foreach my $geneId ($self->returnAllGeneIDs() )
       {
 	#This loops through all the featuregroup set ids (genes) in the document.
 	#Check to see if the gene is on the assembly of interest
@@ -544,9 +544,9 @@ sub fetch_gene_positions
 	my $rhash = {};
         my $geneCoords = $self->geneIdtoGenomicCoords( $gene );
 
-	$rhash->{$gene}->{'startpos'} = $geneCoords->{'GeneSpan'}->{'startpos'};
-	$rhash->{$gene}->{'endpos'} = $geneCoords->{'GeneSpan'}->{'endpos'};
-	$rhash->{$gene}->{'complement'} = $geneCoords->{'GeneSpan'}->{'complement'};
+	$rhash->{$gene}->{'startpos'} = $geneCoords->[0]->{'GeneSpan'}->{'startpos'};
+	$rhash->{$gene}->{'endpos'} = $geneCoords->[0]->{'GeneSpan'}->{'endpos'};
+	$rhash->{$gene}->{'complement'} = $geneCoords->[0]->{'GeneSpan'}->{'complement'};
 
 	push( @{$rlist}, $rhash );
       }
