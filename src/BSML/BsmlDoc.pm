@@ -52,6 +52,7 @@ use XML::Writer;
 use strict;
 use warnings;
 use BsmlSequence;
+use BsmlSeqPairAlignment;
 use Log::Log4perl qw(get_logger :levels);
 
 # The default links to the BSML dtd maintained by Labbook
@@ -75,8 +76,7 @@ sub new
     my $class = shift;
     my ($logger_conf) = @_;
     my $self = {};
-    bless $self, $class;
-    
+    bless $self, $class;    
     $self->init( $logger_conf );
     return $self;
   }
@@ -89,6 +89,7 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
+    $self->{ 'BsmlSeqPairAlignments' } = [];
     
     # bsml Genomes will probably be needed in the future...
 
@@ -196,6 +197,55 @@ sub returnBsmlSequenceR
     return $self->{'BsmlSequences'}[$index];  
   }
 
+sub addBsmlSeqPairAlignment
+  {
+    my $self = shift;
+     
+    push( @{$self->{'BsmlSeqPairAlignments'}}, new BsmlSeqPairAlignment );
+
+    my $index = @{$self->{'BsmlSeqPairAlignments'}} - 1;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Added BsmlSeqPairAlignment: $index" );
+
+    return $index;    
+  }
+
+sub dropBsmlSeqPairAlignment
+{
+   my $self = shift;
+   my ($index) = @_;
+
+   my $newlist;
+   for(  my $i=0;  $i< @{$self->{'BsmlSeqPairAlignments'}}; $i++ ) 
+      {
+	if( $i != $index )
+	  {
+	    push( @{$newlist}, $self->{'BsmlSeqPairAlignments'}[$i] );
+	  }
+      }
+
+    $self->{'BsmlSeqPairAlignements'} = $newlist;
+
+    my $bsml_logger = get_logger( "Bsml" );
+    $bsml_logger->info( "Dropped BsmlSeqPairAlignment: $index" );
+}
+
+sub returnBsmlSeqPairAlignmentListR
+{
+  my $self = shift;
+  return $self->{'BsmlSeqPairAlignments'};
+}
+
+sub returnBsmlSeqPairAlignmentR
+{
+  my $self = shift;
+  my ($index) = @_;
+
+  return $self->{'BsmlSeqPairAlignments'}[$index];
+}
+
+
 =item $doc->write()
 
 B<Description:> Writes the document to a file 
@@ -257,14 +307,30 @@ sub write
 
     # write the sequence elements
 
-    $writer->startTag( "Sequences" );
+    if( @{$self->{'BsmlSequences'}} )
+    {
+      $writer->startTag( "Sequences" );
 
-    foreach my $seq ( @{$self->{'BsmlSequences'}} )
+      foreach my $seq ( @{$self->{'BsmlSequences'}} )
+        {
+	  $seq->write( $writer );
+        }
+
+      $writer->endTag( "Sequences" );
+    }
+
+    if( @{$self->{'BsmlSeqPairAlignments'}} )
+    {
+      $writer->startTag( "Tables" );
+
+      foreach my $seqAlignment ( @{$self->{'BsmlSeqPairAlignments'}} )
       {
-	$seq->write( $writer );
+        $seqAlignment->write( $writer );
       }
 
-    $writer->endTag( "Sequences" );
+      $writer->endTag( "Tables" );
+    }
+
     $writer->endTag( "Definitions" );
     $writer->endTag( "Bsml" );
 
