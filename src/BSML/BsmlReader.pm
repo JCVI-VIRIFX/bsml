@@ -2082,17 +2082,20 @@ sub readSequenceAlignment
 sub readElement
 {
     my $self = shift;
+    my $elem = shift;
     my $rhash = {};
 
-    foreach my $key (keys( %{$self->{'attr'}} ))
+    foreach my $key (keys( %{$elem->{'attr'}} ))
     {
-	$rhash->{$key} = $self->{'attr'}->{$key};
+	$rhash->{$key} = $elem->{'attr'}->{$key};
     }
 
-    foreach my $key (keys( %{$self->{'BsmlAttr'}}))
+    foreach my $key (keys( %{$elem->{'BsmlAttr'}}))
     {
-	$rhash->{$key} = $self->{'BsmlAttr'}->{$key};
-    }	
+	$rhash->{$key} = $elem->{'BsmlAttr'}->{$key};
+    }
+
+    return $rhash;
 }
 
 1

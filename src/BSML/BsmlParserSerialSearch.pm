@@ -15,7 +15,7 @@ use BSML::BsmlFeature;
 # Clients must define callback routines which are called during parsing. Callbacks may be defined
 # for Sequence, SeqPairAlignment, and Analysis objects. These functions are called with an object 
 # reference during the parse as each element is encountered. The objects may be used directly or
-# through the BsmlReader class. Twigs are rooted at Sequence, SeqPairAlignment, or Analysis elements
+# through the BsmlReader class. Twigs are rooted at Sequence, SeqPairAlignment, Feature, or Analysis elements
 # for maximum efficiency. 
 
 sub new
@@ -374,6 +374,8 @@ sub sequenceHandler
     $twig->purge;
     return $bsmlseq;
   }
+
+# Feature tables and Feature groups are not parsed with the minisequenceHandler
 
 sub minsequenceHandler
   {
