@@ -1,6 +1,34 @@
 package BsmlSequence;
 @ISA = qw( BsmlElement );
 
+=head1 NAME
+
+  BsmlSequence.pm - Bsml API Object representing the Bsml Sequence Element 
+
+=head1 VERSION
+  
+  This document refers to version 1.0 of the BSML Object Layer
+
+=head1 Description
+
+=head2 Overview
+
+  The BsmlSequence class allows sequence data <Seq-dat> and feature tables to be added and manipulated.
+
+=head2 Constructor and initialization
+
+  Typically a BsmlSequence is created by the BsmlDoc object it is contained within and manipulated
+  as a reference.
+
+  my $doc = new BsmlDoc;
+  my $seq = $doc->returnBsmlSequenceR( $doc->addBsmlSequence() );
+
+=head2 Class and object methods
+
+=over 4
+
+=cut
+
 use BsmlElement;
 use XML::Writer;
 use strict;
@@ -29,6 +57,16 @@ sub init
     $self->{ 'BsmlSeqData' } = '';
   }
 
+=item $seq->addBsmlFeatureTable()
+
+B<Description:> adds a feature table to the sequence object
+
+B<Parameters:> None
+
+B<Returns:> The index of the added feature table
+
+=cut 
+
 sub addBsmlFeatureTable
   {
     my $self = shift;
@@ -37,6 +75,16 @@ sub addBsmlFeatureTable
     my $index = @{$self->{'BsmlFeatureTables'}} - 1;
     return $index;
   }
+
+=item $seq->dropBsmlFeatureTable( $index )
+
+B<Description:> deletes a feature table from the sequence object
+
+B<Parameters:> The index of the feature table to be deleted
+
+B<Returns:> None
+
+=cut 
 
 sub dropBsmlFeatureTable
   {
@@ -56,6 +104,16 @@ sub dropBsmlFeatureTable
     $self->{'BsmlFeatureTables'} = \@newlist;    
   }
 
+=item $seq->returnBsmlFeatureTableListR()
+
+B<Description:> Return a list of references to all the feature table objects contained in the document.
+
+B<Parameters:> None
+
+B<Returns:> a list of BsmlFeatureTable object references
+
+=cut 
+
 sub returnFeatureTableListR
   {
     my $self = shift;
@@ -63,7 +121,17 @@ sub returnFeatureTableListR
     return $self->{'BsmlFeatureTables'};
   }
 
-sub returnFeatureTable
+=item $seq->returnBsmlFeatureTableR( $index )
+
+B<Description:> Return a reference to a feature table object given its index
+
+B<Parameters:> ($index) - the feature table index returned from addBsmlFeatureTable (position of the table in the reference list)
+
+B<Returns:> a BsmlFeatureTable object reference
+
+=cut
+
+sub returnFeatureTableR
   {
     my $self = shift;
     my ($index) = @_;
@@ -71,12 +139,32 @@ sub returnFeatureTable
     return $self->{'BsmlFeatureTables'}[$index];
   }
 
+=item $seq->addBsmlSeqData( $seq_string )
+
+B<Description:> add a sequence string <Seq_dat> to the object
+
+B<Parameters:> ( $seq_string ) - string containing raw sequence data
+
+B<Returns:> None
+
+=cut
+
 sub addBsmlSeqData
   {
     my $self = shift;
 
     ($self->{'BsmlSeqData'}) = @_; 
   }
+
+=item $seq->setBsmlSeqData( $seq_string )
+
+B<Description:> same as addBsmlSeqData - maintained to make methods consistent with the rest of the API
+
+B<Parameters:> ( $seq_string ) - string containing raw sequence data
+
+B<Returns:> None
+
+=cut
 
 sub setBsmlSeqData
   {
@@ -86,6 +174,16 @@ sub setBsmlSeqData
     $self->addBsmlSeqData( $seq );
   }
 
+=item $seq->dropBsmlSeqData()
+
+B<Description:> delete the raw sequence <Seq-dat> from the sequence object
+
+B<Parameters:> None
+
+B<Returns:> None
+
+=cut
+
 sub dropBsmlSeqData
   {
     my $self = shift;
@@ -93,12 +191,32 @@ sub dropBsmlSeqData
     $self->{'BsmlSeqData'} = '';
   }
 
+=item $seq->returnSeqData
+
+B<Description:> return a string containing the raw sequence from the sequence object
+
+B<Parameters:> None
+
+B<Returns:> a string containing raw sequence data
+
+=cut
+
 sub returnSeqData
   {
     my $self = shift;
 
     return $self->{'BsmlSeqData'};
   }
+
+=item $seq->write()
+
+  B<Description:> writes the BSML elements encoded by the class to a file using XML::Writer. This method should only be called through the BsmlDoc->write() process.
+
+  B<Parameters:> None
+
+  B<Returns:> None
+
+=cut 
 
 sub write
   {
