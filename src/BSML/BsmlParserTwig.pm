@@ -133,8 +133,18 @@ sub sequenceHandler
 
     my $seqDat = $seq->first_child( 'Seq-data' );
     
-      if( $seqDat ){
-	$bsmlseq->addBsmlSeqData( $seqDat->text() );
+    if( $seqDat ){
+      $bsmlseq->addBsmlSeqData( $seqDat->text() );
+    }
+
+    # add appended sequence data if found
+
+    my $seqDatImport = $seq->first_child( 'Seq-data-import' );
+    
+    if( $seqDatImport )
+      {
+	my $attr = $seqDatImport->atts();
+	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'} );
       }
 
     # add Feature Tables with Feature, Reference, and Feature-group Elements
