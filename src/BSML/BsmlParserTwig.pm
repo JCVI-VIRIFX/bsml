@@ -291,7 +291,7 @@ sub sequenceHandler
 	    foreach my $BsmlLink ( $BsmlFGroup->children( 'Link' ) )
 	      {
 		my $attr = $BsmlLink->atts();
-		$group->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+		$group->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
 	      }
 
 	    foreach my $BsmlFGroupMember ( $BsmlFGroup->children( 'Feature-group-member' ))
@@ -358,7 +358,7 @@ sub seqPairAlignmentHandler
      foreach my $BsmlLink ( $seq_aln->children( 'Link' ) )
        {
 	 my $attr = $BsmlLink->atts();
-	 $bsmlaln->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+	 $bsmlaln->addBsmlLink( $attr->{'ref'}, $attr->{'href'} );
        }
      
      foreach my $seq_run ( $seq_aln->children('Seq-pair-run') )

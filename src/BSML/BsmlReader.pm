@@ -554,63 +554,93 @@ sub get_all_protein_aa
     return $returnhash;
   }
 
+#return a list of hash references containing...
+#  ParentSeqID, TranscriptID, GeneSpan, CDS_START, CDS_END, Exon_Boundaries
+
+sub geneIdtoGenomicCoords
+  {
+    my $self = shift;
+    my ($geneID) = @_;
+
+    my $returnlist = [];
+
+    foreach my $fgroup( @{BsmlDoc::BsmlReturnFeatureGroupLookup($geneID)} )
+      {
+	my $coordRecord = {};
+	$coordRecord->{'ParentSeq'} = $fgroup->returnParentSequenceId();
+
+	foreach my $link ( @{$fgroup->returnBsmlLinkListR()} )
+	  {
+	    if( $link->{'rel'} eq 'GENE' )
+	      {
+	
+		my $generef = $link->{'href'};
+		$generef =~ s/#//;
+		my $feat = BsmlDoc::BsmlReturnDocumentLookup($generef);
+
+		if($feat)
+		  {
+		    my $intervals = $feat->returnBsmlIntervalLocListR();
+		    $coordRecord->{'GeneSpan'} = { 'startpos' => $intervals->[0]->{'startpos'},
+						   'endpos' => $intervals->[0]->{'endpos'},
+						   'complement' => $intervals->[0]->{'endpos'}};
+		  }
+	      }
+	  }
+
+	$coordRecord->{'Transcripts'} = [];
+
+	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
+	  {
+	    my $group = {};
+	    my $featureRef = $fmember->{'feature'};
+	    my $featureType = $fmember->{'feature-type'};
+	    my $featureGroup = $fmember->{'group-type'};
+
+	    if( $featureType eq 'CDS' )
+	      {
+		my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+
+		if($feat)
+		  {
+		    foreach my $site (@{$feat->returnBsmlSiteLocListR()})
+		      {
+			if($site->{'class'} eq 'START' )
+			  {
+			    $group->{'CDS_START'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			  }
+
+			if($site->{'class'} eq 'STOP' )
+			  {
+			    $group->{'CDS_STOP'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			  }
+		      }
+
+
+		  }
+	      }
+
+	    if( $featureType eq 'EXON' )
+	      {
+		
+	      }
+
+	    if( $featureType eq 'TRANSCRIPT' )
+	      {
+		
+	      }
+	    
+	    push( @{$coordRecord->{'Transcripts'}}, $group ); 
+	  }
+	push( @{$returnlist}, $coordRecord );
+      }
+
+    return $returnlist;
+  }
+
 sub geneIdtoNucSequence
   {
 
-  }
-
-# this function still needs a lot of work
-
-# GeneID's are stored in the feature group lookup table
-# 
-
-sub geneIdtoAASequence
-  {
-    my $self = shift;
-    my ($geneId) = @_;
-
-    my $featref = BsmlDoc::ReturnDocumentLookup( $geneId );
-
-    if( ref($featref) eq 'BsmlFeature' )
-      {
-
-	if( $featref->returnattr( 'class' ) eq 'CDS' )
-	  {
-	    my $links = $featref->returnBsmlLinkListR();
-	    foreach my $link ( @{$links} )
-	      {
-		if( $link->{'rel'} eq 'SEQ' )
-		  {
-		    my $id = substr($link->{'href'}, 1, length($link->{'href'})-1);
-		    my $seq = BsmlDoc::ReturnDocumentLookup( $id );
-		
-		    if( ref($seq) eq 'BsmlSequence' )
-		      {
-			my $seqdat = $seq->returnSeqData();
-			
-			if($seqdat){ 
-			  return $seqdat; }
-			else
-			  {
-			    #handle sequence data import
-			    my $href = $seq->returnBsmlSeqDataImport();
-			
-			    if( $href->{'format'} eq 'fasta' )
-			      {
-				return "Need to implement a fasta sequence loader\n";
-			      }
-
-			    if( $href->{'format'} eq 'bsml' )
-			      {
-				return "Need to implement a bsml sequence loader\n";
-			      }
-			  }
-		      }
-		  }
-	      }
-	    
-	  }
-      }
   }
 
 sub seqIdtoSequence
