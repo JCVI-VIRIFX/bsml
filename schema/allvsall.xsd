@@ -24,11 +24,10 @@
   </xs:restriction>
 </xs:simpleType>
 
-<xs:simpleType name="pblast_bsml_attr_name">
+<xs:simpleType name="allvsall_bsml_attr_name">
   <xs:restriction base="xs:NMTOKEN">
     <xs:enumeration value="segment_number"/>
     <xs:enumeration value="chain_number"/>
-    <xs:enumeration value="percent_bit_score"/>
     <xs:enumeration value="percent_identity"/>
     <xs:enumeration value="percent_similarity"/>
     <xs:enumeration value="p_value"/>
@@ -58,18 +57,18 @@
       <xs:element name="Seq-pair-run" minOccurs="1" maxOccurs="unbounded" >
               <xs:complexType>
                 <xs:sequence>
-                  <xs:element name="Attribute" minOccurs="6" maxOccurs="6">
+                  <xs:element name="Attribute" minOccurs="5" maxOccurs="5">
                     <xs:complexType>
-                      <xs:attribute name="name" type="pblast_bsml_attr_name" use="required"/>
+                      <xs:attribute name="name" type="allvsall_bsml_attr_name" use="required"/>
                       <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
                     </xs:complexType>
                   </xs:element>
                 </xs:sequence>
-                <xs:attribute name="refpos" type="xs:decimal" use="required" />
-                <xs:attribute name="runlength" type="xs:decimal" use="required" />
+                <xs:attribute name="refpos" type="xs:integer" use="required" />
+                <xs:attribute name="runlength" type="xs:integer" use="required" />
                 <xs:attribute name="refcomplement" type="xs:integer" use="required" />
-                <xs:attribute name="comppos" type="xs:decimal" use="required" />
-                <xs:attribute name="comprunlength" type="xs:decimal" use="required" />
+                <xs:attribute name="comppos" type="xs:integer" use="required" />
+                <xs:attribute name="comprunlength" type="xs:integer" use="required" />
                 <xs:attribute name="compcomplement" type="xs:integer" use="required" />
                 <xs:attribute name="runscore" type="xs:integer" use="required" />
                 <xs:attribute name="runprob" type="xs:integer" use="required" />
