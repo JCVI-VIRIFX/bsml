@@ -52,35 +52,22 @@ sub createAndAddSequence
     {
       $id = "Bsml"."$elem_id";
       $elem_id++;
-
-      #replace with log4perl
-      print "Warning: id not approriately defined. Using $id\n";
     }
 
   if( !($title) )
     {
       $title = 'unspecified';
-
-      #replace with log4perl
-      print "Warning: title not approriately defined. Using $title\n";
     }
 
   if( !($molecule) )
     {
       $molecule = 'mol-not-set';
-
-      #replace with log4perl
-      print "Warning: molecule not appropriately defined. Using $molecule.\n";
     }
   else
     {
       if( !(($molecule eq 'mol-not-set') || ($molecule eq 'dna') || ($molecule eq 'rna') || ($molecule eq 'aa') || ($molecule eq 'na') || ($molecule eq 'other-mol')) )
 	{
-	  print "molecule: $molecule\n";
 	  $molecule = 'mol-not-set';
-	  
-	  #replace with log4perl 
-	  print "Warning: molecule type not with controlled vocabulary. Using $molecule.\n";
 	}
     }
 
@@ -132,7 +119,6 @@ sub createAndAddExtendedSequence
 	$seq->setattr('topology', $topology);}
       else{
 	$topology = 'top-not-set';
-	print "Warning: topology not in controled vocabulary. Using $topology\n";
 	$seq->setattr('topology', $topology);}
     }
 
@@ -141,7 +127,6 @@ sub createAndAddExtendedSequence
 	$seq->setattr('strand', $strand);}
       else{
 	$strand = 'std-not-set';
-	print "Warning: strand not in controled vocabulary. Using $strand\n";
 	$seq->setattr('strand', $strand);}
     }
 		
@@ -187,9 +172,6 @@ sub createAndAddFeatureTable
       {
 	$id = "Bsml"."$elem_id";
 	$elem_id++;
-
-	#replace with log4perl
-	print "Warning: id not approriately defined. Using $id\n";
       }
 
     if( ref($seq) eq 'BsmlSequence' )
@@ -238,9 +220,6 @@ sub createAndAddReference
       {
 	$refID = "Bsml"."$elem_id";
 	$elem_id++;
-
-	#replace with log4perl
-	print "Warning: id not approriately defined. Using $refID\n";
       }
 
      if( ref($FTable) eq 'BsmlFeatureTable' )
@@ -302,9 +281,6 @@ sub createAndAddFeature
       {
 	$id = "Bsml"."$elem_id";
 	$elem_id++;
-
-	#replace with log4perl
-	print "Warning: id not appropriately defined. Using $id\n";
       }
 
       if( ref($FTable) eq 'BsmlFeatureTable' )
@@ -766,4 +742,4 @@ sub returnSequenceByID
       }
   }
 
-1
+1;
