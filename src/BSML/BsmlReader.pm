@@ -772,6 +772,35 @@ sub geneIdtoAASeqHash
     return $returnAASequenceHash;
   }
 
+#Return all the protein identifiers associaated with their assembly ids.
+
+sub get_all_protein_assemblyId
+{
+    my $self = shift;
+
+    # return all the sequence objects referenced in the document
+    my $seqList = $self->returnAllSequences();
+
+    # return structure is a reference to a hash with key value pairs
+    # of protein id -> assembly id
+
+    my $rhash = {};
+
+    # loop through the sequence list, checking for sequences of type amino acid
+
+    foreach my $seq (@{$seqList})
+    {
+	# when an aa sequence is found, add it and its assembly id to the return structure
+
+	if( $seq->returnattr('molecule') eq 'aa' )
+	{
+	    $rhash->{$seq->returnattr('id')} = $seq->returnBsmlAttr('ASSEMBLY');
+	}
+    }
+    
+    return $rhash;
+}
+
 #return all the protein sequences associated with an assembly
 #returns a hash reference where the keys are sequence ids and
 #the values are the sequences. Note for data containing multiple

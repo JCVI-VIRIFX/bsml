@@ -10,13 +10,11 @@ my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-$aahash = $reader->get_all_protein_dna( $ARGV[1] );
+$aahash = $reader->get_all_protein_assemblyId();
 my @list = keys( %{$aahash} );
 
 foreach my $k (@list)
 {
-    print ">$k\n";
-    print $aahash->{$k};
-    print "\n";
+    print ">$k -> $aahash->{$k}\n";
 }
 
