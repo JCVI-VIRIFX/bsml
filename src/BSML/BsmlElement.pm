@@ -1,4 +1,4 @@
-package BsmlElement;
+package BSML::BsmlElement;
 
 =head1 NAME
 
@@ -128,7 +128,7 @@ sub returnattrHashR
 
 =item $elem->returnattr( $key )
 
-B<Description:> returns an attribute's value given its key
+B<Description:> returns an attributes value given its key
 
 B<Parameters:> ( $key ) - an attribute key
 

@@ -1,8 +1,8 @@
-package BsmlSeqPairAlignment;
-@ISA = qw( BsmlElement );
+package BSML::BsmlSeqPairAlignment;
+@ISA = qw( BSML::BsmlElement );
 
-use BsmlElement;
-use BsmlSeqPairRun;
+use BSML::BsmlElement;
+use BSML::BsmlSeqPairRun;
 
 use XML::Writer;
 use strict;
@@ -33,7 +33,7 @@ sub init
 sub addBsmlSeqPairRun
   {
     my $self = shift;
-    push( @{$self->{'BsmlSeqPairRuns'}}, new BsmlSeqPairRun );
+    push( @{$self->{'BsmlSeqPairRuns'}}, new BSML::BsmlSeqPairRun );
 
     my $index = @{$self->{'BsmlSeqPairRuns'}} - 1;
     return $index;

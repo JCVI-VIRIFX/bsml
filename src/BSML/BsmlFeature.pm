@@ -1,8 +1,8 @@
-package BsmlFeature;
-@ISA = qw( BsmlElement );
+package BSML::BsmlFeature;
+@ISA = qw( BSML::BsmlElement );
 
 use XML::Writer;
-use BsmlElement;
+use BSML::BsmlElement;
 use strict;
 use warnings;
 
@@ -140,7 +140,7 @@ sub dropBsmlQualifier
 
 =item $feature->returnBsmlQualifierHash( )
 
-B<Description:> returns a hash reference to the key value pairs representing a feature's qualifiers
+B<Description:> returns a hash reference to the key value pairs representing a features qualifiers
 
 B<Parameters:> None
 
@@ -156,7 +156,7 @@ sub returnBsmlQualifierHashR
 
 =item $feature->returnBsmlQualifier( $key )
 
-B<Description:> return a the value associated with a Qualifier's key
+B<Description:> return a the value associated with a Qualifiers key
 
 B<Parameters:> ($key) - Qualifier key
 
@@ -351,7 +351,7 @@ sub dropBsmlIntervalLoc
 
 =item $feature->returnBsmlIntervalLocList( )
 
-B<Description:> return a reference to a list containing the feature's interval locations
+B<Description:> return a reference to a list containing the features interval locations
 
 B<Parameters:> None
 

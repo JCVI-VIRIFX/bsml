@@ -6,14 +6,14 @@
 # The BsmlBuilder class mirrors the Java API defined in the LabBook Bsml Documentation
 # for building Bsml sequences.
 
-use lib "../src/BSML";
-use BsmlBuilder;
+use lib "../src/";
+use BSML::BsmlBuilder;
 
 $outfile = 'STDOUT';
 
 if( $ARGV[0] ){ $outfile = $ARGV[0] };
 
-my $doc = new BsmlBuilder;
+my $doc = new BSML::BsmlBuilder;
 $doc->makeCurrentDocument();
 
 my $seq = $doc->createAndAddSequence( 'PF14_0392', 'pfa1 PF14_0392', '', 'dna' );

@@ -1,5 +1,5 @@
-package BsmlFeatureGroup;
-@ISA = qw( BsmlElement );
+package BSML::BsmlFeatureGroup;
+@ISA = qw( BSML::BsmlElement );
 
 =head1 NAME
 
@@ -32,7 +32,7 @@ This document refers to version 1.0 of the BSML Object Layer
 
 =cut
 
-use BsmlElement;
+use BSML::BsmlElement;
 use XML::Writer;
 use strict;
 use warnings;

@@ -1,12 +1,10 @@
-package BsmlReader;
-@ISA = qw( BsmlDoc );
+package BSML::BsmlReader;
+@ISA = qw( BSML::BsmlDoc );
 
 use strict;
 use warnings;
-use BsmlDoc;
+use BSML::BsmlDoc;
 use Data::Dumper;
-
-
 
 sub readSequence
   {
@@ -26,13 +24,13 @@ sub readSequence
 	#if a sequence reference has not been passed in, get the sequence
 	#with the sequence identifier provided.
 	
-	if( !(ref($seq) eq 'BsmlSequence' ))
+	if( !(ref($seq) eq 'BSML::BsmlSequence' ))
 	  {
 	    #pull the Bsml Object with identifier $seq from the document lookup table
 	    #and verify that it is a sequence object
 
-	    $seq = BsmlDoc::BsmlReturnDocumentLookup( $seq );
-	    if( !(ref($seq) eq 'BsmlSequence')){ return undef; }
+	    $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seq );
+	    if( !(ref($seq) eq 'BSML::BsmlSequence')){ return undef; }
 	  }
       }
 
@@ -55,7 +53,7 @@ sub returnAllSequences
   {
     my $self = shift;
 
-    if( ref($self) eq 'BsmlReader' ){
+    if( ref($self) eq 'BSML::BsmlReader' ){
       return $self->returnBsmlSequenceListR();}
   }
 
@@ -64,7 +62,7 @@ sub readSequenceDat
     my $self = shift;
     my ($seq) = @_;
 
-    if( ref($seq) eq 'BsmlSequence' ){
+    if( ref($seq) eq 'BSML::BsmlSequence' ){
       return $seq->returnSeqData();}
   }
 
@@ -73,7 +71,7 @@ sub readSequenceDatImport
     my $self = shift;
     my ($seq) = @_;
 
-    if( ref($seq) eq 'BsmlSequence' ){
+    if( ref($seq) eq 'BSML::BsmlSequence' ){
       return $seq->returnBsmlSeqDataImport();}
   }
 
@@ -84,7 +82,7 @@ sub readFeatures
 
     my $feat_list = [];
 
-    if( ref($input) eq 'BsmlSequence' )
+    if( ref($input) eq 'BSML::BsmlSequence' )
       {
 	#loop over all feature tables
 	#add a feature record to return for each feature 
@@ -144,7 +142,7 @@ sub readFeatures
 	return $feat_list;
       }
     
-    if( ref($input) eq 'BsmlFeatureTable' )
+    if( ref($input) eq 'BSML::BsmlFeatureTable' )
       {
 	 foreach my $Feature (@{$input->returnBsmlFeatureListR()})
 	      {
@@ -198,7 +196,7 @@ sub readFeatures
 	 return $feat_list;
        }
     
-    if( ref($input) eq 'BsmlFeature' )
+    if( ref($input) eq 'BSML::BsmlFeature' )
       {
 		my $record = {};
 		my $Feature = $input;
@@ -261,7 +259,7 @@ sub readReferences
 
     my $reflist = [];
 
-    if( ref($input) eq 'BsmlSequence' )
+    if( ref($input) eq 'BSML::BsmlSequence' )
       {
 	foreach my $FTable ( @{$self->returnBsmlFeatureTableListR()} )
 	  {
@@ -289,7 +287,7 @@ sub readReferences
 	  }
       }
     
-    if( ref($input) eq 'BsmlFeatureTable' )
+    if( ref($input) eq 'BSML::BsmlFeatureTable' )
       {
 	foreach my $rref ( @{$self->returnBsmlReferenceListR()} )
 	  {
@@ -316,7 +314,7 @@ sub readReferences
 	return $reflist;
       }
 
-    if( ref($input) eq 'BsmlReference' )
+    if( ref($input) eq 'BSML::BsmlReference' )
       {
 	my $rhash = {};
 	$rhash->{'FTable'} = '';
@@ -369,12 +367,12 @@ sub returnAllFeatureTables
     my $self = shift;
     my ($input) = @_;
 
-    if( ref($input) eq 'BsmlSequence' )
+    if( ref($input) eq 'BSML::BsmlSequence' )
       {
 	return $input->returnBsmlFeatureTableListR();
       }
    
-    if( ref($input) eq 'BsmlReader' )
+    if( ref($input) eq 'BSML::BsmlReader' )
       {
 	my $list = [];
 
@@ -399,7 +397,7 @@ sub readSeqPairAlignment
     my ($SeqPairAln) = @_;
     my $rhash = {};
 
-    if( ref($SeqPairAln) eq 'BsmlSeqPairAlignment' )
+    if( ref($SeqPairAln) eq 'BSML::BsmlSeqPairAlignment' )
       {
 	$rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
 	$rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
@@ -454,7 +452,7 @@ sub readFeatureGroup
     my $self = shift;
     my ($FeatureGroup) = @_;
 
-    if( ref( $FeatureGroup ) eq 'BsmlFeatureGroup' )
+    if( ref( $FeatureGroup ) eq 'BSML::BsmlFeatureGroup' )
       {
 	my $returnhash = {};
 	
@@ -493,7 +491,7 @@ sub returnAllFeatureGroupSetIds
     #this returns a list of strings, probably should be made to return a reference
     #to a list for consistency.
 
-    return BsmlDoc::BsmlReturnFeatureGroupLookupIds();
+    return BSML::BsmlDoc::BsmlReturnFeatureGroupLookupIds();
   }
 
 # This uses the convention of our Bsml gene encoding. Each gene is represented
@@ -522,11 +520,11 @@ sub seqIdtoAssemblyId
 
     #grab a reference to a sequence object from the lookup tables
 
-    my $seq = BsmlDoc::BsmlReturnDocumentLookup( $sequenceId );
+    my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $sequenceId );
 
     #check to verify that a reference to a sequence object was returned
 
-    if( ref($seq) eq 'BsmlSequence' )
+    if( ref($seq) eq 'BSML::BsmlSequence' )
       {
 	  #return the Bsml ASSEMBLY Attribute
 	  #Note, this is a custom attribute and is TIGR specific based on our
@@ -624,14 +622,14 @@ sub fetch_all_alignmentPairs
       {
 	  #pushes a reference to an alignment object onto the return list using the lookup tables
 
-	  push( @{$alignments}, BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
+	  push( @{$alignments}, BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId, $matchSeqId ));
       }
     else
       {
 	  # this returns a reference to an anonymous hash. The hash is keyed with match query ids
 	  # which point to references to alignment objects. 
 
-	my $href = BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId );
+	my $href = BSML::BsmlDoc::BsmlReturnAlignmentLookup( $querySeqId );
 
 	# push the alignment objects onto the return list.
 
@@ -649,7 +647,7 @@ sub geneIdtoAssemblyId
   {
     my $self = shift;
     my ($geneId) = @_;
-    my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+    my $fgrouplist = BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
 
     # Genes are referenced by ID through the feature group lookup tables. 
     # A feature group stores a refernce to the parent sequence it belongs to.
@@ -683,7 +681,7 @@ sub geneIdtoAASeqList
 
     my @returnAASequenceList;
 
-    my $fgrouplist = BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+    my $fgrouplist = BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
     
     # This series of loops essentially retrieves the CDS feaature and its associated
     # amino acid sequence from a feature group representing a single transcript. Note
@@ -695,14 +693,14 @@ sub geneIdtoAASeqList
 	  {
 	    if( $fmember->{'feature-type'} eq 'CDS' )
 	      {
-		my $feat = BsmlDoc::BsmlReturnDocumentLookup( $fmember->{'feature'} );
+		my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $fmember->{'feature'} );
 		foreach my $link ( @{$feat->returnBsmlLinkListR()} )
 		  {
 		    if( $link->{'rel'} eq 'SEQ' )
 		      {
 			my $sref = $link->{'href'};
 			$sref =~ s/#//;
-			my $seq = BsmlDoc::BsmlReturnDocumentLookup( $sref );
+			my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $sref );
 			
 			if( my $seqdat = $seq->returnSeqData() ){
 			  push( @returnAASequenceList, $seqdat );}
@@ -790,7 +788,7 @@ sub get_all_protein_dna_extended
     #loads the full assembly
     my $seq_dat = $self->subSequence( $assembly_id, -1, 0, 0 );
 
-    my $seq = BsmlDoc::BsmlReturnDocumentLookup($assembly_id);
+    my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($assembly_id);
     my $topo = $seq->returnattr( 'topology' );
 
     my $returnhash = {};
@@ -830,7 +828,7 @@ sub geneIdtoGenomicCoords
     my $returnlist = [];
 
     #loops 
-    foreach my $fgroup( @{BsmlDoc::BsmlReturnFeatureGroupLookup($geneID)} )
+    foreach my $fgroup( @{BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneID)} )
       {
 	my $coordRecord = {};
 	$coordRecord->{'ParentSeq'} = $fgroup->returnParentSequenceId();
@@ -842,7 +840,7 @@ sub geneIdtoGenomicCoords
 	
 		my $generef = $link->{'href'};
 		$generef =~ s/#//;
-		my $feat = BsmlDoc::BsmlReturnDocumentLookup($generef);
+		my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup($generef);
 
 		if($feat)
 		  {
@@ -867,7 +865,7 @@ sub geneIdtoGenomicCoords
 
 	    if( $featureType eq 'CDS' )
 	      {
-		my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+		my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup($featureRef);
 
 		if($feat)
 		  {
@@ -890,7 +888,7 @@ sub geneIdtoGenomicCoords
 
 	    if( $featureType eq 'EXON' )
 	      {
-		  my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup($featureRef);
 
 		  if($feat)
 		  {
@@ -905,7 +903,7 @@ sub geneIdtoGenomicCoords
 
 	    if( $featureType eq 'TRANSCRIPT' )
 	      {
-		  my $feat = BsmlDoc::BsmlReturnDocumentLookup($featureRef);
+		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup($featureRef);
 
 		  if($feat)
 		  {
@@ -1133,7 +1131,7 @@ sub subSequence
 	($start, $stop) = ($stop, $start);
     }
 
-    my $seq = BsmlDoc::BsmlReturnDocumentLookup( $seqId );
+    my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $seqId );
     
     my $seqdat = $seq->returnSeqData();
 

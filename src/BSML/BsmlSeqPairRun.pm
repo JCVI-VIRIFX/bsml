@@ -1,7 +1,7 @@
-package BsmlSeqPairRun;
-@ISA = qw( BsmlElement );
+package BSML::BsmlSeqPairRun;
+@ISA = qw( BSML::BsmlElement );
 
-use BsmlElement;
+use BSML::BsmlElement;
 use XML::Writer;
 use strict;
 use warnings;

@@ -1,12 +1,12 @@
 #! /local/perl/bin/perl
 
-use lib "../src/BSML";
-use BsmlReader;
-use BsmlParserTwig;
+use lib "../src/";
+use BSML::BsmlReader;
+use BSML::BsmlParserTwig;
 use Data::Dumper; 
 
-my $reader = new BsmlReader;
-my $parser = new BsmlParserTwig;
+my $reader = new BSML::BsmlReader;
+my $parser = new BSML::BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 

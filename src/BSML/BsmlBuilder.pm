@@ -1,5 +1,5 @@
-package BsmlBuilder;
-@ISA = qw( BsmlDoc );
+package BSML::BsmlBuilder;
+@ISA = qw( BSML::BsmlDoc );
 
 =head1 NAME
 
@@ -25,7 +25,7 @@ $doc->write( 'output_file.xml' );
 
 use strict;
 use warnings;
-use BsmlDoc;
+use BSML::BsmlDoc;
 
 # class variable used to create unique element identifiers
 my $elem_id = 0;
@@ -80,7 +80,7 @@ sub createAndAddSequence
 
   #Put a reference to the new sequence in the document namespace
 
-  BsmlDoc::BsmlSetDocumentLookup( $id, $seq );
+  BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $seq );
 
   #return a reference to the new sequence
 
@@ -178,7 +178,7 @@ sub createAndAddFeatureTable
 	$elem_id++;
       }
 
-    if( ref($seq) eq 'BsmlSequence' )
+    if( ref($seq) eq 'BSML::BsmlSequence' )
       {
 	my $FTable = $seq->returnBsmlFeatureTableR( $seq->addBsmlFeatureTable() );
 	$FTable->setattr( 'id', $id );
@@ -186,7 +186,7 @@ sub createAndAddFeatureTable
 	if( $class ){ $FTable->setattr('class', $class); }
 
 	#Put a reference to the new feature table in the document namespace
-	BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
+	BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
 
 	return $FTable;
       }
@@ -204,7 +204,7 @@ sub createAndAddFeatureTable
 		if( $class ){ $FTable->setattr('class', $class); }
 		
 		#Put a reference to the new feature table in the document namespace
-		BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
+		BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $FTable );
 
 		return $FTable;
 	      }
@@ -232,7 +232,7 @@ sub createAndAddReference
 	$elem_id++;
       }
 
-     if( ref($FTable) eq 'BsmlFeatureTable' )
+     if( ref($FTable) eq 'BSML::BsmlFeatureTable' )
       {
 	my $rref = $FTable->returnBsmlReferenceR( $FTable->addBsmlReference() );
 	$rref->setattr( 'id', $refID );
@@ -244,7 +244,7 @@ sub createAndAddReference
 	if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
 
 	#Put a reference to the new Bsml reference in the document namespace
-	BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
+	BSML::BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
 
 	return $rref;
       }
@@ -270,7 +270,7 @@ sub createAndAddReference
 		    if( defined($dbxref) && !($dbxref eq '' )){ $rref->setattr( 'dbxref', $dbxref ); }
 
 		    #Put a reference to the new Bsml reference in the document namespace
-		    BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
+		    BSML::BsmlDoc::BsmlSetDocumentLookup( $refID, $rref );
 
 		    return $rref;
 		  }
@@ -299,7 +299,7 @@ sub createAndAddFeature
 	$elem_id++;
       }
 
-      if( ref($FTable) eq 'BsmlFeatureTable' )
+      if( ref($FTable) eq 'BSML::BsmlFeatureTable' )
       {
 	my $fref = $FTable->returnBsmlFeatureR( $FTable->addBsmlFeature() );
 	$fref->setattr( 'id', $id );
@@ -311,7 +311,7 @@ sub createAndAddFeature
 	if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
 
 	#Put a reference to the new Bsml feature in the document namespace
-	BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
+	BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
 
 	return $fref;
       }
@@ -335,7 +335,7 @@ sub createAndAddFeature
 		    if( defined($displayAuto) && !($displayAuto eq '' )){ $fref->setattr( 'display-auto', $displayAuto ); }
 
 		    #Put a reference to the new Bsml feature in the document namespace
-		    BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
+		    BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $fref );
 
 		    return $fref;
 		  }
@@ -389,7 +389,7 @@ sub createAndAddIntervalLoc
     my $self = shift;
     my ( $feature, $start, $end, $complement ) = @_;
 
-    if( ref($feature) eq 'BsmlFeature' )
+    if( ref($feature) eq 'BSML::BsmlFeature' )
       {
 	$feature->addBsmlIntervalLoc( $start, $end, $complement );
       }
@@ -428,7 +428,7 @@ sub createAndAddSiteLoc
     my $self = shift;
     my ( $feature, $site, $complement, $class ) = @_;
 
-    if( ref($feature) eq 'BsmlFeature' )
+    if( ref($feature) eq 'BSML::BsmlFeature' )
       {
 	$feature->addBsmlSiteLoc( $site, $complement, $class );
       }
@@ -467,7 +467,7 @@ sub createAndAddQualifier
     my $self = shift;
     my ( $feature, $valuetype, $value ) = @_;
 
-    if( ref($feature) eq 'BsmlFeature' )
+    if( ref($feature) eq 'BSML::BsmlFeature' )
       {
 	$feature->addBsmlQualifier( $valuetype, $value );
       }
@@ -556,7 +556,7 @@ sub createAndAddSeqData
     my $self = shift;
     my ( $seq, $seqdat ) = @_;
 
-    if( ref($seq) eq 'BsmlSequence' )
+    if( ref($seq) eq 'BSML::BsmlSequence' )
       {
 	$seq->addBsmlSeqData( $seqdat );	
 	return $seq;
@@ -598,7 +598,7 @@ sub createAndAddSeqDataImport
 	$elem_id++;
     }
     
-    if( ref($seq) eq 'BsmlSequence' )
+    if( ref($seq) eq 'BSML::BsmlSequence' )
       {
 	$seq->addBsmlSeqDataImport( $format, $source, $id  );	
 	return $seq;
@@ -651,7 +651,7 @@ sub createAndAddBtabLineN
 
     #determine if the query name and the dbmatch name are a unique pair in the document
 
-    my $alignment_pair = BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa" );
+    my $alignment_pair = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa" );
 
     if( $alignment_pair )
 	  {
@@ -705,7 +705,7 @@ sub createAndAddBtabLineN
     $alignment_pair->setattr( 'refseq', "$args{'query_name'}_aa" );
     $alignment_pair->setattr( 'compseq', "$args{'dbmatch_accession'}_aa" );
 
-    BsmlDoc::BsmlSetAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa", $alignment_pair );
+    BSML::BsmlDoc::BsmlSetAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa", $alignment_pair );
 
     $alignment_pair->setattr( 'refxref', ':'.$args{'query_name'});
     $alignment_pair->setattr( 'refstart', 0 );
@@ -766,10 +766,10 @@ sub createAndAddFeatureGroup
     if( ($groupset) )
       {
 	$FeatureGroup->setattr( 'group-set', $groupset );
-	BsmlDoc::BsmlSetFeatureGroupLookup( $groupset, $FeatureGroup );
+	BSML::BsmlDoc::BsmlSetFeatureGroupLookup( $groupset, $FeatureGroup );
       }
 
-    BsmlDoc::BsmlSetDocumentLookup( $id, $FeatureGroup );
+    BSML::BsmlDoc::BsmlSetDocumentLookup( $id, $FeatureGroup );
 
     return $FeatureGroup;
   }
@@ -787,7 +787,7 @@ sub createAndAddFeatureGroupMember
     my $self = shift;
     my ($FeatureGroup, $featref, $feattype, $grouptype, $cdata) = @_;
 
-    if( ref($featref) eq 'BsmlFeature' ){
+    if( ref($featref) eq 'BSML::BsmlFeature' ){
 	$FeatureGroup->addBsmlFeatureGroupMember( $featref, $feattype, $grouptype, $cdata );
     }
 

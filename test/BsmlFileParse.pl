@@ -12,8 +12,8 @@ use lib "../src/";
 
 use strict;
 use Getopt::Long;
-use BsmlDoc;
-use BsmlParserTwig;
+use BSML::BsmlDoc;
+use BSML::BsmlParserTwig;
 
 my $dtd = '';
 my $logconf = '';
@@ -29,8 +29,8 @@ if( !( $inputfile ) || !( $outputfile ) )
 
 # Create a new BsmlDocument object and a Twig Parser
 
-my $doc = new BsmlDoc( $logconf );
-my $parser = new BsmlParserTwig;
+my $doc = new BSML::BsmlDoc( $logconf );
+my $parser = new BSML::BsmlParserTwig;
 
 # Use the Twig Parser to fill the object with data from a BSML file
 

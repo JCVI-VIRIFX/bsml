@@ -1,5 +1,5 @@
-package BsmlDoc;
-@ISA = qw( BsmlElement );
+package BSML::BsmlDoc;
+@ISA = qw( BSML::BsmlElement );
 
 =head1 NAME
 
@@ -47,13 +47,13 @@ logging will be over-ridden.
 
 =cut
 
-use BsmlElement;
+use BSML::BsmlElement;
 use XML::Writer;
 #use strict;
 #use warnings;
-use BsmlSequence;
-use BsmlSeqPairAlignment;
-use BsmlAnalysis;
+use BSML::BsmlSequence;
+use BSML::BsmlSeqPairAlignment;
+use BSML::BsmlAnalysis;
 use Log::Log4perl qw(get_logger :levels);
 use Data::Dumper;
 
@@ -219,7 +219,7 @@ sub addBsmlSequence
   {
     my $self = shift;
      
-    push( @{$self->{'BsmlSequences'}}, new BsmlSequence );
+    push( @{$self->{'BsmlSequences'}}, new BSML::BsmlSequence );
 
     my $index = @{$self->{'BsmlSequences'}} - 1;
 
@@ -308,7 +308,7 @@ sub addBsmlSeqPairAlignment
   {
     my $self = shift;
      
-    push( @{$self->{'BsmlSeqPairAlignments'}}, new BsmlSeqPairAlignment );
+    push( @{$self->{'BsmlSeqPairAlignments'}}, new BSML::BsmlSeqPairAlignment );
 
     my $index = @{$self->{'BsmlSeqPairAlignments'}} - 1;
 
@@ -356,7 +356,7 @@ sub addBsmlAnalysis
   {
     my $self = shift;
      
-    push( @{$self->{'BsmlAnalyses'}}, new BsmlAnalysis );
+    push( @{$self->{'BsmlAnalyses'}}, new BSML::BsmlAnalysis );
 
     my $index = @{$self->{'BsmlAnalyses'}} - 1;
 

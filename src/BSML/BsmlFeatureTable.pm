@@ -1,5 +1,5 @@
-package BsmlFeatureTable;
-@ISA = qw( BsmlElement );
+package BSML::BsmlFeatureTable;
+@ISA = qw( BSML::BsmlElement );
 
 =head1 NAME
 
@@ -35,10 +35,11 @@ This document refers to version 1.0 of the BSML Object Layer
 
 =cut
 
-use BsmlElement;
+use BSML::BsmlElement;
+use BSML::BsmlFeature;
+use BSML::BsmlReference;
 use XML::Writer;
-use BsmlFeature;
-use BsmlReference;
+
 use strict;
 use warnings;
 
@@ -78,7 +79,7 @@ B<Returns:> index of the created feature (position of the feature in the feature
 sub addBsmlFeature
   {
     my $self = shift;
-    push( @{$self->{'BsmlFeatures'}}, new BsmlFeature );
+    push( @{$self->{'BsmlFeatures'}}, new BSML::BsmlFeature );
 
     my $index = @{$self->{'BsmlFeatures'}} - 1;
     return $index;
@@ -133,7 +134,7 @@ sub returnBsmlFeatureListR
 
 B<DESCRIPTION:> returns a reference to the BsmlFeature at position $index in the feature list
 
-B<Parameters:> $index - the feature's position in the feature list
+B<Parameters:> $index - the features position in the feature list
 
 B<Returns:> reference to a BsmlFeature
 
@@ -160,7 +161,7 @@ B<Returns:> index of the created reference (position of the reference in the ref
 sub addBsmlReference
   {
     my $self = shift;
-    push( @{$self->{'BsmlReferences'}}, new BsmlReference );
+    push( @{$self->{'BsmlReferences'}}, new BSML::BsmlReference );
 
     my $index = @{$self->{'BsmlReferences'}} - 1;
     return $index;
@@ -215,7 +216,7 @@ sub returnBsmlReferenceListR
 
 B<DESCRIPTION:> returns a reference to the BsmlReference at position $index in the reference list
 
-B<Parameters:> $index - the reference's position in the reference list
+B<Parameters:> $index - the references position in the reference list
 
 B<Returns:> reference to a BsmlReference
 

@@ -1,5 +1,5 @@
-package BsmlReference;
-@ISA = qw( BsmlElement );
+package BSML::BsmlReference;
+@ISA = qw( BSML::BsmlElement );
 
 =head1 NAME
 
@@ -23,7 +23,7 @@ package BsmlReference;
 
 =cut
 
-use BsmlElement;
+use BSML::BsmlElement;
 use XML::Writer;
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
-package BsmlSequence;
-@ISA = qw( BsmlElement );
+package BSML::BsmlSequence;
+@ISA = qw( BSML::BsmlElement );
 
 =head1 NAME
 
@@ -29,12 +29,13 @@ package BsmlSequence;
 
 =cut
 
-use BsmlElement;
+use BSML::BsmlElement;
+use BSML::BsmlFeatureTable;
+use BSML::BsmlFeatureGroup;
 use XML::Writer;
 use strict;
 use warnings;
-use BsmlFeatureTable;
-use BsmlFeatureGroup;
+
 
 # a bsml sequence stores raw sequence data and a list of feature tables
 
@@ -74,7 +75,7 @@ B<Returns:> The index of the added feature table
 sub addBsmlFeatureTable
   {
     my $self = shift;
-    push( @{$self->{'BsmlFeatureTables'}}, new BsmlFeatureTable );
+    push( @{$self->{'BsmlFeatureTables'}}, new BSML::BsmlFeatureTable );
 
     my $index = @{$self->{'BsmlFeatureTables'}} - 1;
     return $index;
@@ -256,7 +257,7 @@ sub addBsmlFeatureGroup
   {
     my $self = shift;
 
-    push( @{$self->{'BsmlFeatureGroups'}}, new BsmlFeatureGroup );
+    push( @{$self->{'BsmlFeatureGroups'}}, new BSML::BsmlFeatureGroup );
 
     my $index = @{$self->{'BsmlFeatureGroups'}} - 1;
 

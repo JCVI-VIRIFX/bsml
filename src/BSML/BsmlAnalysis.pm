@@ -1,7 +1,7 @@
-package BsmlAnalysis;
-@ISA = qw( BsmlElement );
+package BSML::BsmlAnalysis;
+@ISA = qw( BSML::BsmlElement );
 
-use BsmlElement;
+use BSML::BsmlElement;
 use XML::Writer;
 use strict;
 use warnings;
