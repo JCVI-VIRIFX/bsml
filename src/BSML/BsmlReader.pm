@@ -501,6 +501,40 @@ sub readFeatureGroup
       }
   }
 
+sub returnAllAnalysis
+{
+    my $self = shift;
+    return $self->returnBsmlAnalysisListR();
+}
+
+sub readAnalysis
+{
+    my $self = shift;
+
+    my ($analysis) = @_;
+
+    if( ref($analysis) eq 'BSML::BsmlAnalysis' )
+    {
+	my $rhash = {};
+
+	$rhash->{'algorithm'} = $analysis->returnBsmlAttr('algorithm');
+	$rhash->{'description'} = $analysis->returnBsmlAttr('description');
+	$rhash->{'name'} = $analysis->returnBsmlAttr('name');
+	$rhash->{'program'} = $analysis->returnBsmlAttr('program');
+	$rhash->{'program_version'} = $analysis->returnBsmlAttr('program_version');
+	$rhash->{'source_name'} = $analysis->returnBsmlAttr('source_name');
+	$rhash->{'source_url'} = $analysis->returnBsmlAttr('source_version');
+
+	my $link = $analysis->returnBsmlLinkR( 0 );
+	$rhash->{'bsml_link_relation'} = $link->{'rel'};
+	$rhash->{'bsml_link_url'} = $link->{'href'};
+	
+	return $rhash;
+    }
+}
+
+
+
 ############################################################
 
 # The following set of functions were implemented as helper routines

@@ -29,13 +29,13 @@ while( my $line = <INFILE> )
 
     if( $l == 4 )
     {
-	my $aln = $doc->createAndAddSequencePairAlignment( 'query_name' => $list[2],
-							   'dbmatch_accession' => $list[3] );
+	my $aln = $doc->createAndAddSequencePairAlignment( 'refseq' => $list[2],
+							   'compseq' => $list[3] );
 
 	my $s = $doc->createAndAddSequencePairRun( 'alignment_pair' => $aln,
-					   'start_query' => $list[0],
+					   'refpos' => $list[0],
 					   'runlength' => 0,
-					   'start_hit' => $list[1],
+					   'comppos' => $list[1],
 					   'runscore' => $ClusterScore,
 					   'PEffect_Cluster_Id' => $ClusterId,
 					   'PEffect_Cluster_Gap_Count' => $ClusterGapCount,
@@ -43,5 +43,17 @@ while( my $line = <INFILE> )
 
     }
 }
+
+$doc->createAndAddAnalysis( 'algorithm' => 'peffect',
+			    'description' => 'test analysis',
+			    'name' => 'peffect',
+			    'program' => 'peffect',
+			    'program_version' => 'program_version',
+			    'source_name' => 'source_name',
+			    'source_url' => 'source_url',
+			    'source_version' => 'source_version',
+			    'bsml_link_relation' => 'BSMLSEQPAIRALIGNMENTS',
+			    'bsml_link_url' => '#BsmlTables'
+			    );
 
 $doc->write( STDOUT );

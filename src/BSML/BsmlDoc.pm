@@ -482,7 +482,7 @@ sub write
 
     if( @{$self->{'BsmlSeqPairAlignments'}} )
     {
-      $writer->startTag( "Tables" );
+      $writer->startTag( "Tables", 'id' => 'BsmlTables' );
 
       foreach my $seqAlignment ( @{$self->{'BsmlSeqPairAlignments'}} )
       {

@@ -11,7 +11,7 @@
         <Attribute name="ASSEMBLY" content="ntsp01_1_assembly"></Attribute>
       </Sequence>
     </Sequences>
-    <Tables>
+    <Tables id="BsmlTables">
       <Seq-pair-alignment compxref="/tmp/ntsp01_NTORF0004_3455_protein.minidb.4083:ntsp01_NTORF0004_3455_protein" method="praze" refseq="ntsp01_NTORF0004_3454_cds" refxref=":ntsp01_NTORF0004_3454_cds" compseq="ntsp01_NTORF0004_3455_protein" refstart="0" refend="1352" reflength="1353">
         <Seq-pair-run runprob="451" comprunlength="451" runlength="1353" compcomplement="0" comppos="1" refpos="1" runscore="99" refcomplement="0">
           <Attribute name="segment_number" content="5187"></Attribute>

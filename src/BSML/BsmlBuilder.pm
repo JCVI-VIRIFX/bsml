@@ -905,4 +905,30 @@ sub createAndAddAttr
     return $elm;
   }
 
+# First attempts at encoding search parameters in a Bsml Analysis element. Better use of the 
+# Bsml DTD may be required. 
+
+sub createAndAddAnalysis
+{
+    my $self = shift;
+    my %args = @_;
+
+    my $analysis = $self->returnBsmlAnalysisR( $self->addBsmlAnalysis() );
+
+    $analysis->addattr( 'id', $args{'id'} );
+
+    $analysis->addBsmlAttr( 'algorithm', $args{'algorithm'} );
+    $analysis->addBsmlAttr( 'description', $args{'description'} );
+    $analysis->addBsmlAttr( 'name', $args{'name'} );
+    $analysis->addBsmlAttr( 'program', $args{'program'} );
+    $analysis->addBsmlAttr( 'program_version', $args{'program_version'} );
+    $analysis->addBsmlAttr( 'source_name', $args{'source_name'} );
+    $analysis->addBsmlAttr( 'source_url', $args{'source_url'} );
+    $analysis->addBsmlAttr( 'source_version', $args{'source_version'} );
+
+    $analysis->addBsmlLink( $args{'bsml_link_relation'}, $args{'bsml_link_url'} );
+
+    return $analysis;
+}
+
 1;
