@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.17 2004/02/11 23:27:33 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.18 2004/05/18 12:23:46 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.17 $. 
-Last modified on $Date: 2004/02/11 23:27:33 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.18 $. 
+Last modified on $Date: 2004/05/18 12:23:46 $
 
 =head1 SYNOPSIS
 
@@ -105,17 +105,16 @@ sub list_assemblies{
     return \@asmbllist;    
 }
 
-#sub list_bsml_files{
-#    my ($self,$subdir) = shift;
-#    my $dir = "$self->{_PATH}/$subdir
-#    $self->{_logger}->debug("Listing bsml files from directory $dir") if($self->{_logger}->is_debug());
-#    opendir BSMLDIR, "$dir" or $self->{_logger}->logdie("Can't read directory $dir");
-#    my @bsmlfiles = grep /\.$self->{_BSML_FILE_EXT}$/, readdir BSMLDIR;
-#    my @bsmllist;
-#    foreach my $bsml (@bsmlfiles ){
-#	push @bsmllist, "$dir/$bsml";
-#    }
-#    return \@bsmllist;    
-#}
-
+sub list_bsml_files{
+    my ($self,$subdir) = shift;
+    my $dir = $self->{"_PATH"};
+    $self->{_logger}->debug("Listing bsml files from directory $dir") if($self->{_logger}->is_debug());
+    opendir BSMLDIR, "$dir" or $self->{_logger}->logdie("Can't read directory $dir");
+    my @bsmlfiles = grep /\.$self->{_BSML_FILE_EXT}$/, readdir BSMLDIR;
+    my @bsmllist;
+    foreach my $bsml (@bsmlfiles ){
+	push @bsmllist, "$dir/$bsml";
+    }
+    return \@bsmllist;    
+}
 1;

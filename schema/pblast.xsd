@@ -71,14 +71,6 @@
     <xs:sequence>
       <xs:element name="Seq-pair-run" minOccurs="1" maxOccurs="unbounded" >
               <xs:complexType>
-                <xs:sequence>
-                  <xs:element name="Attribute" minOccurs="5" maxOccurs="5">
-                    <xs:complexType>
-                      <xs:attribute name="name" type="pblast_bsml_attr_name" use="required"/>
-                      <xs:attribute name="content" type="xs:NMTOKEN" use="required"/>
-                    </xs:complexType>
-                  </xs:element>
-                </xs:sequence>
                 <xs:attribute name="refpos" type="xs:decimal" use="required" />
                 <xs:attribute name="runlength" type="xs:decimal" use="required" />
                 <xs:attribute name="refcomplement" type="xs:integer" use="required" />
@@ -141,24 +133,6 @@
             <xs:element name="Analyses">
               <xs:complexType>
                 <xs:all>
-                  <xs:element name="Analysis">
-                    <xs:complexType>
-                      <xs:sequence>
-                        <xs:element name="Attribute" minOccurs="1" maxOccurs="10">
-                          <xs:complexType>
-                            <xs:attribute name="name" type="analysis_bsml_attr_name" use="required"/>
-                            <xs:attribute name="content" type="xs:string" use="required"/>
-                        </xs:complexType>
-                      </xs:element>
-                      <xs:element name="Link">
-                        <xs:complexType>
-                          <xs:attribute name="href" type="xs:string"/>
-                          <xs:attribute name="rel" type="xs:string"/>
-                        </xs:complexType>
-                      </xs:element>
-                    </xs:sequence>
-                  </xs:complexType>
-                </xs:element>
                </xs:all>
               </xs:complexType>
             </xs:element>
