@@ -525,21 +525,31 @@ sub returnAllGeneIDs
 #       {'cdsId'} -> $cdsId
 #       {'featureGroupId'} -> $featureGroupId
 #       {'proteinId'} -> $proteinId
+#
+# input filters can be applied to limit return records
+# seqId, geneId, transcriptId, exonId, cdsId, proteinId
+#
+#
 
 sub returnAllIdentifiers
 {
     my $self = shift;
+    my %args = @_;
 
     my $rhash = {};
-   
+
     # loop over all feature group sets (gene ids)
-    foreach my $geneId ( $self->returnAllFeatureGroupSetIds() )
+    GENE: foreach my $geneId ( $self->returnAllFeatureGroupSetIds() )
     {
+	next GENE if( $args{'geneId'} && !($args{'geneId'} eq $geneId) ); 
+
 	# loop over each feature group in the set
-	foreach my $fgroup ( @{BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId)} )
+	TRANSCRIPT: foreach my $fgroup ( @{BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId)} )
 	{
 	    #get the parent sequence (assembly)
 	    my $seqId = $fgroup->returnParentSequenceId();
+	    next GENE if( $args{'seqId'} && !($args{'seqId'} eq $seqId));
+
 	    my $groupDat = $self->readFeatureGroup( $fgroup );
 
 	    my $transcriptId = '';
@@ -554,6 +564,7 @@ sub returnAllIdentifiers
 		{
 		    # retreive the CDS id and the Protein id
 		    $cdsId = $featmember->{'featref'};
+		    next TRANSCRIPT if( $args{'cdsId'} && !($args{'cdsId'} eq $cdsId));
 		    
 		    # protein id is stored in the SEQ link of the CDS object
 		    # get the CDS object from the lookups and retrieve its links
@@ -569,6 +580,8 @@ sub returnAllIdentifiers
 			{
 			    $proteinId = $link->{'href'};
 			    $proteinId =~ s/#//;
+
+			    next TRANSCRIPT if( $args{'proteinId'} && !($args{'proteinId'} eq $proteinId));
 			}
 		    }
 
@@ -577,6 +590,8 @@ sub returnAllIdentifiers
 		if( $featmember->{'feature-type'} eq 'TRANSCRIPT' )
 		{
 		    $transcriptId = $featmember->{'featref'};
+
+		    next TRANSCRIPT if( $args{'transcriptId'} && !($args{'transcriptId'} eq $transcriptId));
 		}
 
 		if( $featmember->{'feature-type'} eq 'EXON' )
@@ -584,6 +599,23 @@ sub returnAllIdentifiers
 		    push( @{$exonIds}, $featmember->{'featref'} );
 		}
 	    }
+
+	    if( $args{'exonId'} )
+	    {
+		my $searchFlag = 0;
+		
+		foreach my $exId (@{$exonIds})
+		{
+		    if( $exId eq $args{'exonId'} )
+		    {
+			$searchFlag = 1;
+		    }
+		}
+		
+		next TRANSCRIPT if( $searchFlag == 0 );
+	    }
+
+
 
 	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'exonIds'} = $exonIds;
 	    $rhash->{$seqId}->{$geneId}->{$transcriptId}->{'cdsId'} = $cdsId;
