@@ -2,10 +2,10 @@
 
 # Simple demonstration of loading the BSML object layer from a BSML
 # document and printing it back out through the API. Current support
-# approximated the annotation complexity of a GenBank file.
+# approximates the annotation complexity of a GenBank file.
 
 # Usage is... 
-# BsmlFileParse.pl [inputfile.xml] [outputfile.xml] --dtd[dtd file] --logconf [logconf file
+# BsmlFileParse.pl [inputfile.xml] [outputfile.xml] --dtd[dtd file] --logconf [logconf file]
 # if the dtd or logconf are ommitted, defaults are provided through the API.
 
 use lib "../src/";
