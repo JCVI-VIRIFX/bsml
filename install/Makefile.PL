@@ -30,7 +30,7 @@ WriteMakefile(
 
 package MY;
 
-sub MY::postamble { 
+sub MY::postamble_old { 
     if($schemadocsdir eq ""){
 	return;
     }
@@ -74,6 +74,8 @@ sub install {
     my $self = shift;
     if($schemadocsdir ne ""){
 	my $installstr = $self->MM::install(@_);
+	return $installstr;
+	#shortcircuit sub temporarily here
 	my $addltarget = 'validation';
 	$installstr =~ s/(pure_install\s+::\s+)(.*)/$1 $2 $addltarget/;
 	return $installstr;
