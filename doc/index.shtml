@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>TIGR Intranet -- Bioinformatics</title>
+
+
+<!--#include virtual="/include/header_ifx.inc"-->
+
+<div align="center">
+<p class="title">BSML</p>
+</div>
+	<div class="maintext">
+
+<!-- BEGIN MAIN BODY -->	
+
+<hr>
+
+<br>
+<br>
+<b>Description</b><br>
+BSML is an xml format
+<p>
+<b>Documentation</b><br>
+<a href='http://bsml.sourceforge.net'>Project site</a><br>
+
+<p>
+<b>Software Products</b><br> 
+
+See <a href='/ifx/devel/prism'>Prism</a> and <a
+href='/ifx/devel/papyrus'>Papyrus</a> for software that utilizes BSML.
+
+<p>
+<b>Code</b><br>
+Perl object layer <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/src'>[CVS]</a><br>
+XML schemas <a href='http://tools/viewcvs/viewcvs.cgi/ANNOTATION/bsml/schema/'>[CVS]</a>
+<p>
+
+<b>Last modified:</b><!--#config timefmt="%Y-%m-%d" --> <!--#echo var="LAST_MODIFIED" -->
+</table>	
+
+<!-- END MAIN BODY -->
+
+	
+	</div>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>
