@@ -1,15 +1,20 @@
 package BsmlReader;
 @ISA = qw( BsmlDoc );
 
-#use strict;
-#use warnings;
+use strict;
+use warnings;
 use BsmlDoc;
 use Data::Dumper;
+
+
 
 sub readSequence
   {
     my $self = shift;
     my ($seq) = @_;
+
+    #input for $seq is either a reference to a Bsml Sequence object
+    #or a valid sequence identifier
 
     if( !($seq) )
       {
@@ -18,21 +23,21 @@ sub readSequence
       }
     else
       {
-	if( !(ref( $seq ) eq 'BsmlSequence') )
+	#if a sequence reference has not been passed in, get the sequence
+	#with the sequence identifier provided.
+	
+	if( !(ref($seq) eq 'BsmlSequence' ))
 	  {
-	    foreach my $sequence (@{$self->returnBsmlSequenceListR()})
-	      {
-		if( $sequence->returnattr( 'id' ) eq $seq )
-		  {
-		    $seq = $sequence;
-		    last;
-		  }
-	      }
+	    #pull the Bsml Object with identifier $seq from the document lookup table
+	    #and verify that it is a sequence object
+
+	    $seq = BsmlDoc::BsmlReturnDocumentLookup( $seq );
+	    if( !(ref($seq) eq 'BsmlSequence')){ return undef; }
 	  }
       }
 
     my $returnhash = {};
-
+    
     $returnhash->{ 'id' } = $seq->returnattr( 'id' );
     $returnhash->{ 'title'} = $seq->returnattr( 'title' );
     $returnhash->{ 'molecule'} = $seq->returnattr( 'molecule' );
@@ -42,7 +47,7 @@ sub readSequence
     $returnhash->{ 'icAcckey' } = $seq->returnattr( 'icAcckey' );
     $returnhash->{ 'topology' } = $seq->returnattr( 'topology' );
     $returnhash->{ 'strand' } = $seq->returnattr( 'strand' );
-
+    
     return $returnhash;
 }
 
@@ -494,6 +499,51 @@ sub assemblyIdtoSeqList
     return $rlist;
   }
 
+# returns a list of gene identifiers given an assembly id
+
+sub assemblyIdtoGeneList
+  {
+    my $self = shift;
+    my ($assemblyId) = @_;
+
+    my $rlist = [];
+
+    foreach my $geneId ( @{$self->returnAllGeneIDs()} )
+      {
+	#This loops through all the featuregroup set ids (genes) in the document.
+	#Check to see if the gene is on the assembly of interest
+
+	if( $self->geneIdtoAssemblyId($geneId) eq $assemblyId )
+	  {
+	    push( @{$rlist}, $geneId );
+	  }
+      }
+
+    return $rlist;
+  }
+
+sub fetch_gene_positions
+  {
+    my $self = shift;
+    my ($assemblyId) = @_;
+
+    my $rlist = [];
+
+    foreach my $gene ( @{$self->assemblyIdtoGeneList($assemblyId)} )
+      {
+	my $rhash = {};
+        my $geneCoords = $self->geneIdtoGenomicCoords( $gene );
+
+	$rhash->{$gene}->{'startpos'} = $geneCoords->{'GeneSpan'}->{'startpos'};
+	$rhash->{$gene}->{'endpos'} = $geneCoords->{'GeneSpan'}->{'endpos'};
+	$rhash->{$gene}->{'complement'} = $geneCoords->{'GeneSpan'}->{'complement'};
+
+	push( @{$rlist}, $rhash );
+      }
+
+    return $rlist;
+  }
+
 # returns all the alignments associated with a query sequence and optional match seq.
 
 sub fetch_all_alignmentPairs
@@ -534,6 +584,8 @@ sub geneIdtoAssemblyId
 	return '';
       }
   }
+
+#returns a list of amino acid sequences given a gene identifier
 
 sub geneIdtoAASeqList
   {
@@ -577,9 +629,10 @@ sub geneIdtoAASeqList
 #return all the protein sequences associated with an assembly
 #returns a hash reference where the keys are sequence ids and
 #the values are the sequences. Note for data containing multiple
-#transcripts the ids will be set as genename_index where index
+#transcripts the ids will be set as gene-name_index where index
 #is incremented as sequences are encountered. Should BsmlFGroup ids
-#be used to store transcript identifiers???
+#be used to store transcript identifiers to replace this more or 
+#less arbitrary indexing???
 
 sub get_all_protein_aa
   {
@@ -597,7 +650,7 @@ sub get_all_protein_aa
 	    my $i = 0;
 	    foreach my $seq (@{$aalist})
 	      {
-		$key = $gene."_".$i;
+		my $key = $gene."_".$i;
 		$returnhash->{$key} = $seq;
 		$i++;
 	      }
@@ -623,7 +676,7 @@ sub get_all_protein_dna
 	    my $i = 0;
 	    foreach my $seq (@{$dnalist})
 	      {
-		$key = $gene."_".$i;
+		my $key = $gene."_".$i;
 		$returnhash->{$key} = $seq;
 		$i++;
 	      }
@@ -662,7 +715,7 @@ sub get_all_protein_dna_extended
 	    my $i = 0;
 	    foreach my $seq (@{$dnalist})
 	      {
-		$key = $gene."_".$i;
+		my $key = $gene."_".$i;
 		$returnhash->{$key} =  extend_seq300( $seq_dat, $topo, $start, $end );
 		$i++;
 	      }
@@ -765,7 +818,7 @@ sub geneCoordstoCDSList
 
     my $seqId = $coords->[0]->{'ParentSeq'};
 
-    foreach $transcript (@{$coords})
+    foreach my $transcript (@{$coords})
       {
 	if( $transcript->{'TranscriptDat'}->{'EXONS'} )
 	  {
@@ -926,7 +979,8 @@ sub extend_seq300 {
 #extends an gene sequence 300bp on both side.  
 #returns the extended sequence 
 #if it looks wierd or hard to understand, i didn't write this...
-    
+
+    my $DEBUG = 0;
     my($sequence, $topo, $end5, $end3) = @_;
     my($seqlen, $tmp, $tmpEnd5, $tmpEnd3, $EXseq);
     my ($rightEnd5);
@@ -1015,6 +1069,7 @@ sub extend_seq300 {
 }
 
 
+#this function might serve better as a bitscore uitility function than in the general API
 
 sub fetchAlignmentScoresBetweenAssemblies {
 
@@ -1041,7 +1096,7 @@ sub fetchAlignmentScoresBetweenAssemblies {
 		#to provide a baseline for bit score comparison
 		#-----------------------------------------------------
 		my $aln = $reader->fetch_all_alignmentPairs($seq_id, $seq_id);
-		my $match_ref = $reader->readSeqPairAlignment($aln->[0]);            #return all pair_runs for an alignment_pair
+		$match_ref = $reader->readSeqPairAlignment($aln->[0]);            #return all pair_runs for an alignment_pair
 		my $best_bit_score=0;
 		foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
 		    $best_bit_score = $pair_run->{'runscore'} if($pair_run->{'runscore'} > $best_bit_score);  #store best bit_score
@@ -1055,6 +1110,58 @@ sub fetchAlignmentScoresBetweenAssemblies {
 
 	return $bit_score_hash;
 }
+
+sub fetch_genome_pairwise_matches
+  {
+    my $reader = shift;
+    my ($query_asmbl_id, $match_asmbl_id) = @_;
+
+    my $rlist=[];
+
+    foreach my $seq (@{$reader->assemblyIdtoSeqList($query_asmbl_id )}) {   #grab all seq obj given query_asmbl_id
+	my $seq_id = $seq->returnattr( 'id' );                              #return seq_id of an seq obj
+	foreach my $aln (@{$reader->fetch_all_alignmentPairs( $seq_id )}) { #return all alignment with query as $seq_id
+	    if(ref($aln)) {
+		my $match_ref = $reader->readSeqPairAlignment($aln);            #return all pair_runs for an alignment_pair
+		my $m_asmbl_id = $reader->seqIdtoAssemblyId($match_ref->{'compseq'});
+		if($m_asmbl_id eq $match_asmbl_id || $match_asmbl_id eq 'all' )
+		  {
+		    my $rhash = {};
+		    
+		    $rhash->{'query_gene_name'} = $match_ref->{'refseq'};
+		    $rhash->{'match_gene_name'} = $match_ref->{'compseq'};
+
+		    my $best_percent_identity = 0.0;
+		    
+		    foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+			$best_percent_identity = $pair_run->{'percent_identity'} if($pair_run->{'percent_identity'} > $best_percent_identity);
+		      }
+
+		    $rhash->{'percent_identity'} = $best_percent_identity;
+
+		    my $best_percent_similarity = 0.0;
+		    
+		    foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+			$best_percent_similarity = $pair_run->{'percent_similarity'} if($pair_run->{'percent_similarity'} > $best_percent_similarity);
+		      }
+
+		    $rhash->{'percent_similarity'} = $best_percent_similarity;
+
+		    my $best_pval = 1e30;
+		    foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+		      $best_pval = $pair_run->{'p_value'} if($pair_run->{'p_value'} < $best_pval);
+		    }
+
+		    $rhash->{'pval'} = $best_pval;
+
+		    push( @{$rlist}, $rhash );
+		  }
+		  
+	      }
+	  }
+      }
+    return $rlist;
+  }
 
 
 1
