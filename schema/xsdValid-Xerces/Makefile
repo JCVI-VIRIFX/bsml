@@ -6,8 +6,8 @@ LINK = g++
 CXXFLAGS = -O2
 LIBRARIES = -lxerces-c
 
-SCHEMA_DIR = /tmp/schema
-BIN_DIR =/tmp/bin
+SCHEMA_DIR = /usr/local/devel/ANNOTATION/shared/doc/schema
+BIN_DIR =/usr/local/devel/ANNOTATION/shared/bin
 
 Xerces-xsdValid:  SAX2Print.cpp SAX2Print.hpp SAX2PrintHandlers.o
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o Xerces-xsdValid SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
