@@ -1143,6 +1143,12 @@ sub subSequence
 	#Store the imported sequence in the object layer so further file
 	#io is not necessary
 
+	if( !($seqdat) )
+	{
+	    print "File: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
+	    die "Could not read sequence data from file\n";
+	}
+
 	$seq->addBsmlSeqData( $seqdat );
       }
 
