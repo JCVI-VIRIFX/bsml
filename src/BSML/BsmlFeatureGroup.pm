@@ -1,6 +1,37 @@
 package BsmlFeatureGroup;
 @ISA = qw( BsmlElement );
 
+=head1 NAME
+
+BsmlFeatureGroup.pm - Bsml Feature Group Class
+
+=head1 VERSION
+
+This document refers to version 1.0 of the BSML Object Layer
+
+=head1 SYNOPSIS
+
+  Adding a feature group member to a feature group
+
+  addBsmlFeatureGroupMember( 'Cald1', 'GENE', '', '' );
+
+=head1 DESCRIPTION
+
+=head2 Overview
+
+  The BsmlFeatureGroup class provides method and storage for Bsml Feature-group and Feature-group-member elements
+
+=head2 Constructor and initialization
+
+  Typically  BsmlFeatureGroup is created by the BsmlSequence object it is contained within and manipulated as a 
+  reference.
+
+  my $FGroup = $seq->returnBsmlFeatureGroupR( $seq->addBsmlFeatureGroup() );
+
+=over 4
+
+=cut
+
 use BsmlElement;
 use XML::Writer;
 use strict;
@@ -16,6 +47,10 @@ sub new
     return $self;
   }
 
+# A BsmlFeatureGroup stores a list of feature-group-members. Feature-group-members
+# are represented as Perl hashes containing the keys for: feature-id, feature-type, 
+# group-type, and the CDATA text for the element 
+
 sub init
   {
     my $self = shift;
@@ -25,6 +60,20 @@ sub init
     $self->{ 'BsmlFeatureGroupMembers' } = [];
     $self->{ 'text' } = '';
   }
+
+=item $FGroup->addBsmlFeatureGroupMember( $feature_id, $feature_type, $group_type, $cdata )
+
+B<Description:> adds a feature group memeber to the feature group
+
+B<Parameters:> ( $feature_id, $feature_type, $group_type, $cdata ) - 
+  $feature_id - the id of the feature to be added to the feature group (unique at the document level)
+  $feature_type - the type of feature
+  $group_type - the group type the feature belongs to
+  $cdata - the character data associated with the feature
+
+B<Returns:> The index of the added feature group member
+
+=cut
 
 sub addBsmlFeatureGroupMember
   {
@@ -38,6 +87,16 @@ sub addBsmlFeatureGroupMember
     my $index = @{$self->{'BsmlFeatureGroupMembers'}} - 1;
     return $index;
   }
+
+=item $FGroup->dropBsmlFeatureGroupMember( $index )
+
+B<Description:> deletes a feature group member from the feature group
+
+B<Parameters:> $index - the index of the feature group member to be deleted
+
+B<Returns:> none
+
+=cut
 
 sub dropBsmlFeatureGroupMember
   {
@@ -57,6 +116,16 @@ sub dropBsmlFeatureGroupMember
     $self->{'BsmlFeatureGroupMembers'} = \@newlist;    
   }
 
+=item $FGroup->setText( $text )
+
+B<Description:> sets the CDATA associated with the feature group
+
+B<Parameters:> The text to be set
+
+B<Returns:> none
+
+=cut
+
 sub setText
   {
     my $self = shift;
@@ -65,17 +134,47 @@ sub setText
     $self->{'text'} = $text;
   }
 
+=item $FGroup->returnText()
+
+B<Description:> returns the CDATA associated with the feature group
+
+B<Parameters:> None
+
+B<Returns:> the CDATA associated with the feature group
+
+=cut
+
 sub returnText
   {
     my $self = shift;
     return $self->{'text'};
   }
 
+=item $FGroup->returnFeatureGroupMemberListR()
+
+B<Description:> returns a list of feature-group-members (hash references)
+
+B<Parameters:> none
+
+B<Returns:> returns a list of feature-group-members (hash references)
+
+=cut
+
 sub returnFeatureGroupMemberListR
   {
     my $self = shift;
     return $self->{'BsmlFeatureGroupMembers'};
   }
+
+=item $FGroup->returnFeatureGroupMemberR( $index )
+
+B<Description:> returns a feature-group-member (hash reference)
+
+B<Parameters:> $index - the index of the feature-group-member
+
+B<Returns:> returns a feature-group-member (hash references)
+
+=cut
 
 sub returnFeatureGroupMemberR
   {
@@ -84,6 +183,16 @@ sub returnFeatureGroupMemberR
 
     return $self->{'BsmlFeatureGroupMembers'}[$index];
   }
+
+=item $seq->write()
+
+  B<Description:> writes the BSML elements encoded by the class to a file using XML::Writer. This method should only be called through the BsmlDoc->write() process.
+
+  B<Parameters:> None
+
+  B<Returns:> None
+
+=cut 
 
 sub write
   {
