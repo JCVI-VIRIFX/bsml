@@ -645,7 +645,7 @@ sub createAndAddBtabLineN
 
     #determine if the query name and the dbmatch name are a unique pair in the document
 
-    my $alignment_pair = BsmlDoc::BsmlReturnAlignmentLookup( "_$args{'query_name'}", "_$args{'dbmatch_accession'}" );
+    my $alignment_pair = BsmlDoc::BsmlReturnAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa" );
 
     if( $alignment_pair )
 	  {
@@ -687,19 +687,19 @@ sub createAndAddBtabLineN
 
     #check to see if sequences exist in the BsmlDoc, if not add them with basic attributes
 
-    if( !( $self->returnBsmlSequenceByIDR( "_$args{'query_name'}")) ){
-      $self->createAndAddSequence( "_$args{'query_name'}", "$args{'query_name'}", $args{'query_length'}, 'mol-not-set' );}
+    if( !( $self->returnBsmlSequenceByIDR( "$args{'query_name'}_aa")) ){
+      $self->createAndAddSequence( "$args{'query_name'}_aa", "$args{'query_name'}", $args{'query_length'}, 'aa' );}
 
-    if( !( $self->returnBsmlSequenceByIDR( "_$args{'dbmatch_accession'}")) ){
-      $self->createAndAddSequence( "_$args{'dbmatch_accession'}", "$args{'dbmatch_accession'}", '', 'mol-not-set' );}
+    if( !( $self->returnBsmlSequenceByIDR( "$args{'dbmatch_accession'}_aa")) ){
+      $self->createAndAddSequence( "$args{'dbmatch_accession'}_aa", "$args{'dbmatch_accession'}", '', 'aa' );}
 
     $alignment_pair = $self->returnBsmlSeqPairAlignmentR( $self->addBsmlSeqPairAlignment() );
     
 
-    $alignment_pair->setattr( 'refseq', "_$args{'query_name'}" );
-    $alignment_pair->setattr( 'compseq', "_$args{'dbmatch_accession'}" );
+    $alignment_pair->setattr( 'refseq', "$args{'query_name'}_aa" );
+    $alignment_pair->setattr( 'compseq', "$args{'dbmatch_accession'}_aa" );
 
-    BsmlDoc::BsmlSetAlignmentLookup( "_$args{'query_name'}", "_$args{'dbmatch_accession'}", $alignment_pair );
+    BsmlDoc::BsmlSetAlignmentLookup( "$args{'query_name'}_aa", "$args{'dbmatch_accession'}_aa", $alignment_pair );
 
     $alignment_pair->setattr( 'refxref', ':'.$args{'query_name'});
     $alignment_pair->setattr( 'refstart', 0 );
