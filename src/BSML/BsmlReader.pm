@@ -1038,6 +1038,17 @@ sub fetchAlignmentScoresBetweenAssemblies {
 		$bit_score_hash->{$seq_id}->{ $match_ref->{'compseq'} }->{'bit_score'} = $best_bit_score;
 	    }
          }
+	#add the best bit score for a query gene against itself 
+        #to provide a baseline for bit score comparison
+	#-----------------------------------------------------
+        my $aln = $reader->fetch_all_alignmentPairs($seq_id, $seq_id);
+	my $match_ref = $reader->readSeqPairAlignment($aln);            #return all pair_runs for an alignment_pair
+	my $best_bit_score=0;
+	foreach my $pair_run(@{ $match_ref->{'seqPairRuns'} }) {
+	    $best_bit_score = $pair_run->{'runscore'} if($pair_run->{'runscore'} > $best_bit_score);  #store best bit_score
+	}
+	$bit_score_hash->{$seq_id}->{$seq_id}->{'bit_score'} = $best_bit_score;
+        #------------------------------------------------------
     }
     
     return $bit_score_hash;
