@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use BSML::BsmlDoc;
 use Data::Dumper;
+use Log::Log4perl qw(get_logger);
 
 sub readSequence
   {
@@ -438,14 +439,14 @@ sub readSeqPairAlignment
 	# Bsml Identifiers are not set for SeqPairAlignments so a "raw" reference to the SeqPairAlignment Object is returned 
 	$rhash->{'bsmlRef'} = $SeqPairAln;  
 	
-	$rhash->{'refseq'} = $SeqPairAln->returnattr('refseq');
-	$rhash->{'compseq'} = $SeqPairAln->returnattr('compseq');
-	$rhash->{'refxref'} = $SeqPairAln->returnattr('refxref');
-	$rhash->{'refstart'} = $SeqPairAln->returnattr('refstart');
-	$rhash->{'refend'} = $SeqPairAln->returnattr('refend');
-	$rhash->{'reflength'} = $SeqPairAln->returnattr('reflength');
-	$rhash->{'method'} = $SeqPairAln->returnattr('method');
-	$rhash->{'compxref'} = $SeqPairAln->returnattr('compxref');
+	$rhash->{'refseq'}      = $SeqPairAln->returnattr('refseq');
+	$rhash->{'compseq'}     = $SeqPairAln->returnattr('compseq');
+	$rhash->{'refxref'}     = $SeqPairAln->returnattr('refxref');
+	$rhash->{'refstart'}    = $SeqPairAln->returnattr('refstart');
+	$rhash->{'refend'}      = $SeqPairAln->returnattr('refend');
+	$rhash->{'reflength'}   = $SeqPairAln->returnattr('reflength');
+	$rhash->{'method'}      = $SeqPairAln->returnattr('method');
+	$rhash->{'compxref'}    = $SeqPairAln->returnattr('compxref');
 	$rhash->{'seqPairRuns'} = [];
 	
 	#-----------------------------------------------------
@@ -459,7 +460,10 @@ sub readSeqPairAlignment
 		die "Un-recognized attribute: $filter";
 	    }
 	    if ($filter_count !~ /[\d]+/){
-		die "filter_count was:$filter_count";
+		die "Unacceptable value for filter_count:$filter_count (must be a non-zero numerical value)";
+	    }
+	    if ($filter_count == 0){
+		die "Unacceptable value for filter_count:$filter_count (must be a non-zero numerical value)";
 	    }
 
 	    my $loaded_seq_pair_run=0;	    
@@ -473,14 +477,14 @@ sub readSeqPairAlignment
 		    $runDat->{'bsmlRef'} = $SeqPairRun;
 		    
 		    # package the SeqPairRun data
-		    $runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-		    $runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-		    $runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-		    $runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-		    $runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+		    $runDat->{'refpos'}         = $SeqPairRun->returnattr( 'refpos' );
+		    $runDat->{'runlength'}      = $SeqPairRun->returnattr( 'runlength' );
+		    $runDat->{'refcomplement'}  = $SeqPairRun->returnattr( 'refcomplement' );
+		    $runDat->{'comppos'}        = $SeqPairRun->returnattr( 'comppos' );
+		    $runDat->{'comprunlength'}  = $SeqPairRun->returnattr( 'comprunlength' );
 		    $runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-		    $runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-		    $runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+		    $runDat->{'runscore'}       = $SeqPairRun->returnattr( 'runscore' );
+		    $runDat->{'runprob'}        = $SeqPairRun->returnattr( 'runprob' );
 		    
 		    # add client defined Bsml Attributes to the return structure
 		    
@@ -514,14 +518,14 @@ sub readSeqPairAlignment
 		$runDat->{'bsmlRef'} = $SeqPairRun;
 		
 		# package the SeqPairRun data
-		$runDat->{'refpos'} = $SeqPairRun->returnattr( 'refpos' );
-		$runDat->{'runlength'} = $SeqPairRun->returnattr( 'runlength' );
-		$runDat->{'refcomplement'} = $SeqPairRun->returnattr( 'refcomplement' );
-		$runDat->{'comppos'} = $SeqPairRun->returnattr( 'comppos' );
-		$runDat->{'comprunlength'} = $SeqPairRun->returnattr( 'comprunlength' );
+		$runDat->{'refpos'}         = $SeqPairRun->returnattr( 'refpos' );
+		$runDat->{'runlength'}      = $SeqPairRun->returnattr( 'runlength' );
+		$runDat->{'refcomplement'}  = $SeqPairRun->returnattr( 'refcomplement' );
+		$runDat->{'comppos'}        = $SeqPairRun->returnattr( 'comppos' );
+		$runDat->{'comprunlength'}  = $SeqPairRun->returnattr( 'comprunlength' );
 		$runDat->{'compcomplement'} = $SeqPairRun->returnattr( 'compcomplement' );
-		$runDat->{'runscore'} = $SeqPairRun->returnattr( 'runscore' );
-		$runDat->{'runprob'} = $SeqPairRun->returnattr( 'runprob' );
+		$runDat->{'runscore'}       = $SeqPairRun->returnattr( 'runscore' );
+		$runDat->{'runprob'}        = $SeqPairRun->returnattr( 'runprob' );
 		
 		# add client defined Bsml Attributes to the return structure
 		
@@ -2028,6 +2032,9 @@ sub get_all_alignment_references
 
 sub returnMultipleAlignmentTables
 {
+    my $logger = get_logger("bsml");
+    $logger->info("Entered returnMultipleAlignmentTables");
+
     my $self = shift;
     return $self->{'BsmlMultipleAlignmentTables'};
 }
@@ -2070,6 +2077,10 @@ sub returnSequenceAlignments
 
 sub readMultipleAlignmentTable
 {
+
+    my $logger = get_logger("bsml");
+    $logger->info("Entered readMultipleAlignmentTable");
+
     my $self = shift;
     my $mTable = shift;
 
