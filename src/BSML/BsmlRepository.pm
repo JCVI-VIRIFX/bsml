@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.3 2004/01/19 15:33:04 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.4 2004/01/19 15:34:27 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.3 $. 
-Last modified on $Date: 2004/01/19 15:33:04 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.4 $. 
+Last modified on $Date: 2004/01/19 15:34:27 $
 
 =head1 SYNOPSIS
 
@@ -43,7 +43,8 @@ B<Returns:> $self (A BSML::BsmlRepository object).
 
 sub new {
     my ($class) = shift;
-     my $self = bless {}, ref($class) || $class;
+    my $self = bless {}, ref($class) || $class;
+    $self->_init();
     return $self;
 }
 
