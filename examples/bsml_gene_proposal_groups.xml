@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE Bsml PUBLIC "-//EBI//Labbook, Inc. BSML DTD//EN" "http://www.labbook.com/dtd/bsml3_1.dtd">
+<Bsml>
+  <Definitions>
+    <Sequences>
+      <Sequence id="PF14_0392" molecule="dna" title="pfa1 PF14_0392">
+        <Feature-tables>
+          <Feature-table>
+            <Feature id="M1396-03861" class="GENE">
+              <Qualifier value-type="name" value="PF14_0392" />
+              <Interval-loc startpos="1" endpos="7366" />
+            </Feature>
+	    <Feature id="M1396-03861Transcript" class="TRANSCRIPT">
+	      <Interval-loc startpos="1" endpos="7366" />
+	    </Feature>
+            <Feature id="M1396-03861Exon1" class="EXON">
+              <Interval-loc startpos="70" endpos="110" />
+            </Feature>
+            <Feature id="M1396-03861Exon2" class="EXON">
+              <Interval-loc startpos="229" endpos="289" />
+            </Feature>
+            <Feature id="M1396-03861Exon3" class="EXON">
+              <Interval-loc startpos="437" endpos="660" />
+            </Feature>
+            <Feature id="M1396-03861Exon4" class="EXON">
+              <Interval-loc startpos="774" endpos="982" />
+            </Feature>
+            <Feature id="M1396-03861Exon5" class="EXON">
+              <Interval-loc startpos="1256" endpos="7366" />
+            </Feature>
+            <Feature id="M1396-03861CDS" class="CDS" >
+              <Qualifier value-type="name" value="PF14_0392" />
+              <Site-loc class="START" sitepos="70" complement="0" />
+              <Site-loc class="STOP"  sitepos="7366" complement="0" />
+              <Interval-loc startpos="70" endpos="7366" />
+              <Link rel="SEQ" href="#M1396-03861TranslatedSequence" />
+            </Feature>
+          </Feature-table>
+          <Feature-group group-set="PF14_0392_GeneCDSTranscript">
+            <Feature-group-member featref="M1396-03861Transcript" feature-type="TRANSCRIPT"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861CDS" feature-type="CDS"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861" feature-type="GENE"></Feature-group-member>
+            <Link rel="GENE" href="#M1396-03861"></Link>
+          </Feature-group>
+          <Feature-group group-set="PF14_0392_Exons">
+            <Feature-group-member featref="M1396-03861Exon1" feature-type="EXON"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon2" feature-type="EXON"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon3" feature-type="EXON"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon4" feature-type="EXON"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861Exon5" feature-type="EXON"></Feature-group-member>
+            <Feature-group-member featref="M1396-03861" feature-type="GENE"></Feature-group-member>
+            <Link rel="GENE" href="#M1396-03861"></Link>
+          </Feature-group>
+       </Feature-tables>
+       <Seq-data-import format="fasta" source="/usr/local/sequences/chr1.fa" id="CT1234" />
+      </Sequence>
+      <Sequence id="M1396-03861TranslatedSequence" molecule="aa"
+      title="PF14_0392 fatty acyl CoA synthetase 1">
+        <Seq-data> MTTTDTWKVEWDNELRQLPNVESVTCFDLQLTENVFLIWQFLKLYLSTSPQVRSIIDFIAIKKAQSLQWGDHIDSVMSSGLRKGQELFHVFLSNGKKIQT
+TYSKKKLCDRLEYYHIKNYIILEKINTGSVGQVHVALDKSTDTFVAAKAIDKSTVQGDIGLFEKLKDEIKISCMMNHPVVKTLNILETKDKIIQIMEYCDAGDLISYV
+RNKLYLDEVSAQYFFRKIVEGLKYMHKNNIAHRDLKPENIFLCKIQISQKEKTLIRVGKLPSCIEYDLKIGDFGACCINEKNKLHHDIVGTLSYAAPEVLNCNNNNGY
+NSEKADIWSLGIILYAMLFGLLPYDSEDKDVKEAYNEIIKKKIVFPKNRVNKFSTSVRSLLLAMLNINPQNRLSLDEVMKHEWLAGTAKNRLEMSNINKKINFPISST
+VGYPIYSNKNIMDYNIYKRLALIKNDHNSSTNSLYSNGNSTTISNSNTTNMNNNVNNNVNSNVNNNVNNNVNNNVNNNMHNNIMNNVYNNMSNNISAILKVNNLRDKN
+NIAENTYKLDSITNSLYGVHNNNVNSNNLKEVLYNHMKYYLKGDNKYNNTPGEHKNDYNLETLLKKKEDQVVGDLKVINKKVGHYLSSKNTKEININNKIANLVVGNK
+NGNNNIIAKKNIMINNNNNDNNNISSDNIPNKMCKVDNNIVSYNKFNVEHYEYNNKGCMQSKCNQNKKDEEVVHMNKLHSICSSNDHKLYEMYMYQKNDNNMNEHVNF
+INKSSNKEISRLENKYVEKIYYLKNNDMHINDDYIKDKAIKNVEKYNFINKDKNSSTYKIKDYINNNTLNRTKYNIRADKFNNIIALNNHIISNDTNRHLYINNKLSI
+NKQKYNNTPYYNYYYYYYDDDDDRKKEYNKYVYKKNKKCGTNNSELISYNSSVYEKGSTPSSYNINNVPISYIKHDSIYNGSLSQYVNNSSYDKKILSSSYIKDNESH
+VNKMNIEKSTIWYCSTNELPNDTIKKDSVHKKESLSQEFPVNNNDDVLDIKNDEQSKCAYNNSVVDEKENNNINVGEFKIISPNNLDSNNISSTKHITVRDTYNDNIN
+KTKEAYILIKKDVNNAKCDNIFELSKMNEHSENGNNSKHTNSDIEINDRAKNLNDFVSMHEMNNFNKVDDTQLYKKKISELSNNNEKCCNINEDKNKENKNIHMHVIK
+EDPNNNNNDNNNTNISADNNYSYKYVDGDIKRECVYSTDDINYVYVKPSVCSLNADGNENTEKIIKNMNFYGMDKIYSTIVQEKNEETKEDINMDHIKYNINGNIKED
+IINSNNVFNTHNEQPFIDNKIMMSNINSKDNTKMYGNIFQNRNSNSIYEIKRKEKIYIINVDTPDECNEVKCDFSYNDHKIEANKDGDNKEHNNKDKDGENDEHNNKD
+KDGDNDEHNNKDKYGDNNEHNYIDNNEDNYIDKDEYVNYYHDYNNPENIDHNKYEQISGLNIKEYDINEKGNYNNKKKKKQKNEHKKEANFTKHKMFILEDQKMLNTR
+RGNNHMKLMDKDYINEYIKIETSNYFNKEHIKKYSSLYGKNEKKNDIINIRNFNDCISDYKNSICDGFQDIKNNSVKNIFNQDKKIYHDLSNNCVLYNNIFTQTNLEH
+FSSNKLEYNKNCKYPYNNLMKNYSYSEYSFDIQNKTSTYTNKVDINKADLKEAYSDKKIKYKISNITKNEQINIYDDIKKCSSNNNNTFYIDDEASCLDITNLSDKEI
+KNKKERAKKKNILNNKKCILSNGSNIFIGKEYKKNQHMDYMNKIKKNENDVLYLNNSVSLKRSFSMLHFNRNIKNHVNYYYDDHNKDRREKDILLVDHMNNYVIEHKN
+KINIYNINLNNSNLNNINKNENNKIDSITSIAKKCHSSDIFLIRDNILNNLSNKEFKNIIARNVSLSHEFPLIHTNEELNKKTKKQIINNNIIYDKIGISNNKKCNIP
+TKKYVNNMYNLKYKKCEPNQQFNDNVKNYKVDNVVSDFILTSEESLMTKKNNKNYKNDKNDKNYFDNSNIISYNEMKKKVTMENINMDCVVKNKTYDNMNKSNMKKIN
+FNKLNISHNTQNNNNHIYNKINTYDNNLMNIKDTLGTYSVTEKHYCRQKNIMNEKEIFHYDLISSNNWDNHLRDYMLYSLSKNHYTFLRKNTLSKDIPMHSDINLFNN
+KKEDTTSKNKNEKNFKINHNEKNISEYPNLSNNSISHISHTNIKSKKVKQNNDQDNHFHKKIINEQSNVFQPKLKWLNIFTRNFNKDQLGTKYK
+        </Seq-data>
+      </Sequence>
+    </Sequences>
+  </Definitions>
+</Bsml>
+
