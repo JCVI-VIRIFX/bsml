@@ -2311,13 +2311,15 @@ sub readSubAssemblyMapping
 	    my $index = $lookup->{$numbering->{'seqref'}};
 	    my $rank = $numbering->{'a'};
 	    
-	    delete( $numbering->{'a'} );
+	    #delete( $numbering->{'a'} );
 
 	    $numbering->{'length'} = $seq->returnattr( 'length' );
 	    $numbering->{'title'} = $seq->returnattr( 'title' );
 	    $numbering->{'molecule'} = $seq->returnattr( 'molecule' );
 
 	    $rarray->[$index]->{'sub_assemblies'}->[$rank] = $numbering;
+
+	    print "$rank\n";
 	}
     }
 

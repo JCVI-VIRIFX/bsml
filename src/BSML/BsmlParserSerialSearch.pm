@@ -387,6 +387,14 @@ sub sequenceHandler
 		    $feat->addattr( $key, $attr->{$key} );
 		  }
 
+		 # add Feature level Bsml Attribute elements 
+
+		foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
+		{
+		    my $attr = $BsmlAttr->atts();
+		    $feat->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+		}
+
 		foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
 		  {
 		    my $attr = $BsmlQualifier->atts();
@@ -551,6 +559,14 @@ sub featureHandler
     {
 	$feat->addattr( $key, $attr->{$key} );
     }
+
+    # add Feature level Bsml Attribute elements 
+
+    foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
+      {
+	my $attr = $BsmlAttr->atts();
+	$feat->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+      }
 
     foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
     {

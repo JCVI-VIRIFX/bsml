@@ -54,11 +54,6 @@ sub createAndAddSequence
       $elem_id++;
     }
 
-  if( !($title) )
-    {
-      $title = 'unspecified';
-    }
-
   if( !($molecule) )
     {
       $molecule = 'mol-not-set';
