@@ -21,14 +21,14 @@ BSML is an xml format
 <p>
 <b>Documentation</b><br>
 Project site <a href='project_pages/'>[Local]</a>&nbsp;<a href='http://bsml.sourceforge.net'>[Sourceforge]</a><br>
-<a href='/ifx/devel/papyrus/srs_repository.html'>Data repository</a><br>
+<a href='/ifx/devel/cas/papyrus/srs_repository.html'>Data repository</a><br>
     Perl CLI coding standards 
   <p> <b>Software Products</b><br>
     See <a href='/ifx/devel/cas/prism'>Prism</a> and <a
 href='/ifx/devel/cas/papyrus'>Papyrus</a> for software that utilizes BSML.<p>
 <ul>
 <li><em>check_repository</em><br>
-<a href='srs_check_repository.html'>[srs]</a> <a href='use_case_check_repository.html'>[use cases]</a></li>
+<a href='srs_check_repository.html'>[srs]</a> [use cases]</li>
 </ul>
 </p>
   <p>
