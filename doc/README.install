@@ -1,0 +1,4 @@
+cvs export -P -r [RELEASE_NAME] bsml_install
+perl Makefile.PL PREFIX=/usr/local/devel/ANNOTATION/shared
+make
+make install
