@@ -10,7 +10,8 @@ use BsmlSequence;
 my $default_dtd_pID = '-//EBI//Labbook, Inc. BSML DTD//EN';
 my $default_dtd_sID = 'http://www.labbook.com/dtd/bsml3_1.dtd';
 
-# a bsml document stores a list of annotated sequences
+# a bsml document stores a list of annotated sequences, 
+# document level attributes, and Bsml Attribute Elements
 
 sub new
   {
@@ -30,8 +31,11 @@ sub init
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlSequences' } = [];
     
-    #bsml Genomes will probably be needed in the future...
+    # bsml Genomes will probably be needed in the future...
   }
+
+# Add a Bsml Sequence to the sequence list
+# Returns the index of the added sequence.
 
 sub addBsmlSequence
   {
@@ -43,24 +47,29 @@ sub addBsmlSequence
     return $index;    
   }
 
+# Delete a Bsml Sequence from the sequence list given a sequence index.
+
 sub dropBsmlSequence
   {
     my $self = shift;
 
     my ($index) = @_;
 
-    my @newlist;
+    my $newlist;
 
-    for(  my $i=0;  $i<length(@{$self->{'BsmlSequences'}}); $i++ ) 
+    for(  my $i=0;  $i< @{$self->{'BsmlSequences'}}; $i++ ) 
       {
 	if( $i != $index )
 	  {
-	    push( @newlist, $self->{'BsmlSequences'}[$i] );
+	    push( @{$newlist}, $self->{'BsmlSequences'}[$i] );
 	  }
       }
 
-    $self->{'BsmlSequences'} = \@newlist;
+    $self->{'BsmlSequences'} = $newlist;
   }
+
+
+# Return a list of references to all the sequence objects contained in the document
 
 sub returnBsmlSequenceListR
   {
@@ -69,13 +78,19 @@ sub returnBsmlSequenceListR
     return $self->{'BsmlSequences'};
   }
 
-sub returnBsmlSequence
+# Return a reference to a sequence object given its list index.
+
+sub returnBsmlSequenceR
   {
     my $self = shift;
     my ($index) = @_;
 
     return $self->{'BsmlSequences'}[$index];  
   }
+
+# Write the document to file given a filename and optional dtd file name. 
+# If the dtd is not provided, the default is used which links to the 
+# Bsml dtd maintained at Labbook.
 
 sub write
   {
