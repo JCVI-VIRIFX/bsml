@@ -500,6 +500,56 @@ sub createAndAddQualifierN
     return $self->createAndAddQualifier( $args{'feature'}, $args{'valuetype'}, $args{'value'} )
   }
 
+sub createAndAddBsmlAttribute
+  {
+    my $self = shift;
+    my ($elem, $key, $value ) = @_;
+
+    $elem->addBsmlAttr( $key, $value );
+  }
+
+sub createAndAddBsmlAtributeN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    my $elem = $args{'elem'};
+    $elem->addBsmlAttr( $args{'key'}, $args{'value'} ); 
+  }
+
+sub createAndAddAttribute
+  {
+    my $self = shift;
+    my ($elem, $key, $value) = @_;
+
+    $elem->addattr( $key, $value );
+  }
+
+sub createAndAddAttributeN
+  {
+    my $self = shift;
+    my %args = @_;
+
+    my $elem = $args{'elem'};
+    $elem->addattr( $args{'key'}, $args{'value'} );
+  }
+
+sub createAndAddLink
+  {
+    my $self = shift;
+    my ($elem, $title, $href) = @_;
+
+    $elem->addBsmlLink( $title, $href );
+  }
+
+sub createAndAddLinkN
+  {
+    my $self = shift;
+    my %args = @_;
+    my $elem = $args{'elem'};
+    $elem->addBsmlLink( $args{'title'}, $args{'href'} );
+  }
+
 sub createAndAddSeqData
   {
     my $self = shift;
