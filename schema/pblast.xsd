@@ -28,7 +28,6 @@
   <xs:restriction base="xs:NMTOKEN">
     <xs:enumeration value="segment_number"/>
     <xs:enumeration value="chain_number"/>
-    <xs:enumeration value="percent_bit_score"/>
     <xs:enumeration value="percent_identity"/>
     <xs:enumeration value="percent_similarity"/>
     <xs:enumeration value="p_value"/>
