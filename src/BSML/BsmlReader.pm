@@ -1032,6 +1032,31 @@ sub get_all_protein_aa
     return $returnhash;
   }
 
+## return model protein sequences in the bsml file in the reader object
+## return is the same as that of get_all_protein_aa
+
+
+sub get_all_protein_aa2
+{
+    my $self = shift;
+    my ($assembly_id) = @_; 
+    my %return_hash = ();
+ 
+    ### loop through by bsml sequences
+
+    my $seqs = $self->returnAllSequences();
+    foreach my $seq ( @{$seqs} )
+    {
+	my $hr = $self->readSequence( $seq );
+	my $id = $hr->{'id'};
+	if($id =~ /\.m\d+\_protein/){ ## if id is a model protein
+            my $seqdata = $seq->returnSeqData();
+	    $return_hash{$id} = $seqdata;
+	}	
+    }
+    return \%return_hash;
+}
+
 
 
 # Return the sequence data associated with all the CDS features on the input assembly.
