@@ -554,6 +554,32 @@ sub get_all_protein_aa
     return $returnhash;
   }
 
+sub get_all_protein_dna
+  {
+    my $self = shift;
+    my ($assembly_id) = @_;
+
+    my $returnhash = {};
+
+    foreach my $gene( $self->returnAllGeneIDs() )
+      {
+	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
+	  {
+	    my $dnalist = $self->geneCoordstoCDSList($self->geneIdtoGenomicCoords($gene));
+	    
+	    my $i = 0;
+	    foreach my $seq (@{$dnalist})
+	      {
+		$key = $gene."_".$i;
+		$returnhash->{$key} = $seq;
+		$i++;
+	      }
+	  }
+      }
+
+    return $returnhash;
+  }
+
 #return a list of hash references containing...
 #  ParentSeqID, TranscriptID, GeneSpan, CDS_START, CDS_END, Exon_Boundaries
 
@@ -583,12 +609,12 @@ sub geneIdtoGenomicCoords
 		    my $intervals = $feat->returnBsmlIntervalLocListR();
 		    $coordRecord->{'GeneSpan'} = { 'startpos' => $intervals->[0]->{'startpos'},
 						   'endpos' => $intervals->[0]->{'endpos'},
-						   'complement' => $intervals->[0]->{'endpos'}};
+						   'complement' => $intervals->[0]->{'complement'}};
 		  }
 	      }
 	  }
 
-	$coordRecord->{'Transcripts'} = [];
+	$coordRecord->{'TranscriptDat'} = {};
 
 	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
 	  {
@@ -630,7 +656,7 @@ sub geneIdtoGenomicCoords
 		
 	      }
 	    
-	    push( @{$coordRecord->{'Transcripts'}}, $group ); 
+	    $coordRecord->{'TranscriptDat'} = $group;
 	  }
 	push( @{$returnlist}, $coordRecord );
       }
@@ -638,9 +664,94 @@ sub geneIdtoGenomicCoords
     return $returnlist;
   }
 
-sub geneIdtoNucSequence
+sub geneCoordstoCDSList
   {
+    my $self = shift;
+    my ($coords) = @_;
 
+    my $seqList = [];
+
+    my $seqId = $coords->[0]->{'ParentSeq'};
+
+    foreach $transcript (@{$coords})
+      {
+	if( $transcript->{'TranscriptDat'}->{'EXONS'} )
+	  {
+	    #Euk data join the exon subsequences with care around the CDS start and end
+	  }
+	else
+	  {
+	    #Prok Orf=Gene=CDS
+
+	    my $start = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+	    my $stop = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+	    my $complement = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'complement'};
+
+	    push( @{$seqList}, $self->subSequence( $seqId, $start, $stop, $complement ));
+	  }
+      }
+	
+    return $seqList;
+  }
+
+sub geneCoordstoGenomicSequence
+  {
+    my $self = shift;
+    my ($coords) = @_;
+
+    my $seqId = $coords->[0]->{'ParentSeq'};
+    my $start = $coords->[0]->{'GeneSpan'}->{'startpos'};
+    my $stop = $coords->[0]->{'GeneSpan'}->{'endpos'};
+    my $complement = $coords->[0]->{'GeneSpan'}->{'complement'};
+
+    print "$seqId, $start, $stop, $complement )";
+
+    return $self->subSequence( $seqId, $start, $stop, $complement );
+  }
+
+sub geneCoordstoTranscriptSequenceList
+  {
+    #join the exon subsequences
+  }
+
+sub subSequence
+  {
+    my $self = shift;
+    my ($seqId, $start, $stop, $complement) = @_;
+
+    if( $start > $stop )
+      {
+	($start, $stop) = ($stop, $start);
+	if( $complement == 0 ){ $complement = 1; }
+	else{ $complement = 0; }
+      }
+
+    my $seq = BsmlDoc::BsmlReturnDocumentLookup( $seqId );
+    
+    my $seqdat = $seq->returnSeqData();
+
+    if( !($seqdat) ){
+	my $seqimpt = $seq->returnBsmlSeqDataImport();
+	if( $seqimpt->{'format'} eq 'fasta' ){
+	  $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );}
+
+	#Store the imported sequence in the object layer so further file
+	#io is not necessary
+
+	$seq->addBsmlSeqData( $seqdat );
+      }
+
+    if( $seqdat )
+      {
+	if( $complement == 0 )
+	  {
+	    return substr( $seqdat, $start-1, ($stop-$start+1));
+	  }
+	else
+	  {
+	    return reverse_complement(substr( $seqdat, $start-1, ($stop-$start+1)));
+	  }
+      }
   }
 
 sub seqIdtoSequence
@@ -657,5 +768,153 @@ sub seqReftoGeneCoord
   {
 
   }
+
+sub parse_multi_fasta {
+
+  my $fasta_file = shift;
+  my $specified_header = shift;
+  
+  open (IN, $fasta_file) or die "Unable to open $fasta_file due to $!";
+  my $line = <IN>;
+  my $seq_ref = [];
+  while(defined($line)) {
+    unless($line =~ /^>([^\s]+)/) {
+      $line = <IN>;
+    } else {
+      my $header = $1;
+      if($specified_header eq $header) {
+	while(defined($line=<IN>) and $line !~ /^>/ ) {
+	  next if($line =~/^\s+$/);                   #skip blank lines
+	  chomp($line);
+	  push(@$seq_ref, $line);
+	}
+	last;   #seq found, terminating fasta_file parasing
+      } else { $line = <IN>; };  #wrong seq, keep looking
+    }
+    }
+  close IN;
+  
+  my $final_seq = join("", @$seq_ref);
+  
+  return $final_seq; 
+}
+
+sub reverse_complement {
+
+    my $seq = shift;
+
+    $seq =~ s/\n//g;
+    
+
+    my $complementation = { 'A' => 'T',
+                            'T' => 'A',
+                            'C' => 'G',
+                            'G' => 'C'
+                          };
+
+    my $rev_seq = reverse($seq);
+    
+    my $final_seq;
+    foreach my $base (split("",$rev_seq)) {
+        my $comple_base= $complementation->{$base};
+        $comple_base = $base if(!$comple_base);
+        $final_seq .= $comple_base;
+    }
+
+    return $final_seq;
+
+}
+
+sub extend_seq300 {
+#extends an gene sequence 300bp on both side.  
+#returns the extended sequence 
+#if it looks wierd or hard to understand, i didn't write this...
+    
+    my($sequence, $topo, $end5, $end3) = @_;
+    my($seqlen, $tmp, $tmpEnd5, $tmpEnd3, $EXseq);
+    my ($rightEnd5);
+
+    $seqlen = length($sequence);
+    print "Initial end5/end3: $end5\/$end3\n" if ($DEBUG);
+
+    if ($end5 < $end3) {
+	$end5 -= 300;
+	$end3 += 300;
+	print "Extended end5/end3: $end5\/$end3\n" if ($DEBUG);
+	if ($end5 < 1) {  ## overextended
+	    print "OVEREXTENDED end5\n" if ($DEBUG);
+	    if ($topo ne "linear") {  # wrap, treat unknowns as circular
+		print "Not linear...\n" if ($DEBUG);
+		$tmpEnd5 = $seqlen + $end5;
+		$tmpEnd3 = $seqlen;
+		$end5 = 1;
+		$EXseq = substr($sequence, $tmpEnd5 - 1, $tmpEnd3 - $rightEnd5 + 1);
+		$EXseq .= substr($sequence, $end5 - 1, $end3 - $end5 + 1);
+	    } else {
+		$end5 = 1;
+		$EXseq=substr($sequence, $end5 - 1, $end3 - $end5 + 1);
+	    }
+	} elsif ($end3 > $seqlen) {  ## overextended
+	    print "OVEREXTENDED end3\n" if ($DEBUG);
+	    if ($topo ne "linear") {  # wrap, treat unknowns as circular
+		print "Not linear...\n" if ($DEBUG);
+		$tmpEnd5 = 1;
+		$tmpEnd3 = $end3 - $seqlen;
+		$end3 = $seqlen;
+		$EXseq = substr($sequence, $end5 - 1, $end3 - $end5 + 1);
+		$EXseq .= substr($sequence, $tmpEnd5 - 1, $tmpEnd3 - $rightEnd5 + 1);
+	    } else {
+		$end3 = $seqlen;
+		$EXseq=substr($sequence, $end5 - 1, $end3 - $end5 + 1);
+	    }
+	} elsif (($end5 > 0) && ($end3 <= $seqlen)) {  ## OK
+	    $EXseq=substr($sequence, $end5 - 1, $end3 - $end5 + 1);
+	} else {
+	    ## BUSTED
+	}
+    } elsif ($end3 < $end5) {
+	$end5 += 300;
+	$end3 -= 300;
+	print "Extended end5/end3: $end5\/$end3\n" if ($DEBUG);
+	if ($end3 < 1) {  ## overextended
+	    print "OVEREXTENDED end3\n" if ($DEBUG);
+	    if ($topo ne "linear") {  # wrap, treat unknowns as circular
+		print "Not linear...\n" if ($DEBUG);
+		$tmpEnd3 = $seqlen + $end3;
+		$tmpEnd5 = $seqlen;
+		$end3 = 1;
+		$tmp = substr($sequence, $tmpEnd3 - 1, $tmpEnd5 - $tmpEnd3 + 1); 
+		$tmp .= substr($sequence, $end3 - 1, $end5 - $end3 + 1);
+	    } else {
+		$end3 = 1;
+		$tmp=substr($sequence, $end3 - 1, $end5 - $end3 + 1); 
+	    }
+	} elsif ($end5 > $seqlen) {  ## overextended
+	    print "OVEREXTENDED end5\n" if ($DEBUG);
+	    if ($topo ne "linear") {  # wrap, treat unknowns as circular
+		print "Not linear...\n" if ($DEBUG);
+		$tmpEnd3 = 1;
+		$tmpEnd5 = $end5 - $seqlen;
+		$end5 = $seqlen;
+		$tmp = substr($sequence, $end3 - 1, $end5 - $end3 + 1); 
+		$tmp .= substr($sequence, $tmpEnd3 - 1, $tmpEnd5 - $tmpEnd3 + 1); 
+	    } else {
+		$end5 = $seqlen;
+		$tmp=substr($sequence, $end3 - 1, $end5 - $end3 + 1); 
+	    }
+	} elsif (($end3 > 0) && ($end5 <= $seqlen)) {  ## OK
+	    $tmp=substr($sequence, $end3 - 1, $end5 - $end3 + 1); 
+	} else {
+	    ## BUSTED
+	}
+
+  	$EXseq = join("",reverse(split(/ */,$tmp)));
+  	$EXseq =~tr/ACGTacgtyrkmYRKM/TGCAtgcarymkRYMK/;
+
+    } else {
+	# BUSTED
+    }
+    return($EXseq);
+}
 
 1

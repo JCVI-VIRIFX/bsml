@@ -10,6 +10,9 @@ my $parser = new BsmlParserTwig;
 
 $parser->parse( \$reader, $ARGV[0] );
 
-my $aa_seqs = $reader->geneIdtoGenomicCoords( 'ORFO01806' );
+my $rhash = $reader->get_all_protein_dna( 'PNEUMO_19' );
 
-print Dumper( %{$aa_seqs->[0]} );
+foreach $key (sort(keys(%{$rhash})) )
+  {
+    print ">$key\n".$rhash->{$key}."\n";
+  }
