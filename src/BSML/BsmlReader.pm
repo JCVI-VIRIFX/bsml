@@ -1878,8 +1878,6 @@ sub parse_multi_fasta {
   
   my $final_seq = join("", @$seq_ref);
   
-
-  print $final_seq."\n";
   return $final_seq; 
 }
 
