@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>TIGR Intranet -- Bioinformatics</title>
+
+
+<!--#include virtual="/include/header_ifx.inc"-->
+
+<div align="center">
+  <p class="title">TIGR-BSML to Bioperl Adaptor</p>
+</div>
+	<div class="maintext">
+
+<!-- BEGIN MAIN BODY -->	
+
+<hr>
+
+<br>
+<br>
+<p>
+<b>Description</b><br>
+The TIGR-BSML to Bioperl adaptor is a set of <a href='http://www.bioperl.org'>Bioperl</a> 
+modules that use the <a href='/ifx/devel/cas/bsml'>BSML object layer</a> to allow Bioperl 
+scripts to read and write BSML files that adhere to the BSML encoding conventions used 
+at TIGR.
+</p>
+
+<p>
+<b>Documentation</b><br>
+</p>
+
+<p>
+<b>Software Products</b><br>
+</p>
+<ul>
+<li>Bio::SeqIO::bsmltigr [under development]</li>
+</ul>
+<p>
+<b>Code</b><br>
+Not yet in CVS.
+</p>
+
+<b>Last modified:</b><!--#config timefmt="%Y-%m-%d" --> <!--#echo var="LAST_MODIFIED" -->
+</table>	
+
+<!-- END MAIN BODY -->
+
+	
+	</div>
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>
