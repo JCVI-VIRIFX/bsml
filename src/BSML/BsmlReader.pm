@@ -718,6 +718,62 @@ sub geneIdtoAASeqList
     return \@returnAASequenceList;
   }
 
+sub geneIdtoAASeqHash
+  {
+    my $self = shift;
+    my ($geneId) = @_;
+
+    print "FLIP\n";
+
+    my $returnAASequenceHash = {};
+
+    my $fgrouplist = BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
+    
+    # This series of loops essentially retrieves the CDS feaature and its associated
+    # amino acid sequence from a feature group representing a single transcript. Note
+    # in Prok data - Gene=Transcript=CDS.
+
+    foreach my $fgroup (@{$fgrouplist})
+      {
+	foreach my $fmember (@{$fgroup->returnFeatureGroupMemberListR()})
+	  {
+	    if( $fmember->{'feature-type'} eq 'CDS' )
+	      {
+		my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $fmember->{'feature'} );
+		foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+		  {
+		    if( $link->{'rel'} eq 'SEQ' )
+		      {
+			my $sref = $link->{'href'};
+			$sref =~ s/#//;
+			my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup( $sref );
+			
+
+			if( ref($seq) eq 'BSML::BsmlSequence' )
+			{
+			    if( my $seqdat = $seq->returnSeqData() ){
+				my $id = $seq->returnattr('id');
+				$returnAASequenceHash->{$id} = $seqdat;
+			    }
+			    else
+			    {
+				# handle sequence data import tags
+				# The current document implementations inline the AA sequences...
+			    }
+			}
+			else
+			{
+			    print STDERR "BsmlReader::geneIdtoAASeqHash - Error amino acid sequence object ($sref) not found.\n";
+			}
+		      }
+		  }
+	      }
+	  }
+      }
+     
+    return $returnAASequenceHash;
+  }
+
 #return all the protein sequences associated with an assembly
 #returns a hash reference where the keys are sequence ids and
 #the values are the sequences. Note for data containing multiple
@@ -737,14 +793,11 @@ sub get_all_protein_aa
       {
 	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
 	  {
-	    my $aalist = $self->geneIdtoAASeqList($gene);
+	    my $aahash = $self->geneIdtoAASeqHash($gene);
 	    
-	    my $i = 0;
-	    foreach my $seq (@{$aalist})
+	    foreach my $seqId (keys(%{$aahash}))
 	      {
-		my $key = $gene."_".$i;
-		$returnhash->{$key} = $seq;
-		$i++;
+		  $returnhash->{$seqId} = $aahash->{$seqId};
 	      }
 	  }
       }
@@ -769,16 +822,11 @@ sub get_all_protein_dna
       {
 	if( $self->geneIdtoAssemblyId($gene) eq $assembly_id )
 	  {
-	    my $dnalist = $self->geneCoordstoCDSList($self->geneIdtoGenomicCoords($gene));
+	    my $dnahash = $self->geneCoordstoCDSHash($self->geneIdtoGenomicCoords($gene));
 	    
-	    my $i = 0;
-
-	    foreach my $seq (@{$dnalist})
-	      {
-		my $key = $gene."_".$i;
-
-		$returnhash->{$key} = $seq;
-		$i++;
+	    foreach my $seqId (keys( %{$dnahash} ))
+	    {
+		$returnhash->{$seqId} = $dnahash->{$seqId};
 	      }
 	  }
       }
@@ -855,6 +903,7 @@ sub geneIdtoGenomicCoords
       {
 	my $coordRecord = {};
 	$coordRecord->{'ParentSeq'} = $fgroup->returnParentSequenceId();
+	$coordRecord->{'GeneId'} = $geneID;
 
 	foreach my $link ( @{$fgroup->returnBsmlLinkListR()} )
 	  {
@@ -892,22 +941,24 @@ sub geneIdtoGenomicCoords
 
 		if($feat)
 		  {
-		    foreach my $site (@{$feat->returnBsmlSiteLocListR()})
-		      {
-			if($site->{'class'} eq 'START' )
-			  {
-			    $group->{'CDS_START'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
-			  }
+		      $group->{'CDS_ID'} = $feat->returnattr('id');
 
-			if($site->{'class'} eq 'STOP' )
+		      foreach my $site (@{$feat->returnBsmlSiteLocListR()})
+		      {
+			  if($site->{'class'} eq 'START' )
 			  {
-			    $group->{'CDS_STOP'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			      $group->{'CDS_START'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
+			  }
+			  
+			  if($site->{'class'} eq 'STOP' )
+			  {
+			      $group->{'CDS_STOP'} = {'sitepos' => $site->{'sitepos'}, 'complement' => $site->{'complement'}};
 			  }
 		      }
-
-
+		      
+		      
 		  }
-	      }
+	    }
 
 	    if( $featureType eq 'EXON' )
 	      {
@@ -918,7 +969,7 @@ sub geneIdtoGenomicCoords
 		      foreach my $interval (@{$feat->returnBsmlIntervalLocListR()})
 		      {
 			
-			  my $href = { startpos => $interval->{'startpos'}, endpos => $interval->{'endpos'}, complement => $interval->{'complement'} };
+			  my $href = { startpos => $interval->{'startpos'}, endpos => $interval->{'endpos'}, complement => $interval->{'complement'}, id => $feat->returnattr('id') };
 			  push( @{$group->{'EXON_COORDS'}}, $href );
 		      }
 		  }
@@ -930,6 +981,8 @@ sub geneIdtoGenomicCoords
 
 		  if($feat)
 		  {
+		      $group->{'TRANSCRIPT_ID'} = $feat->returnattr('id');
+
 		      foreach my $site (@{$feat->returnBsmlSiteLocListR()})
 		      {
 			  if($site->{'class'} eq 'START' )
@@ -1042,6 +1095,176 @@ sub geneCoordstoCDSList
       }
 	
     return $seqList;
+  }
+
+sub geneCoordstoCDSHash
+  {
+    my $self = shift;
+    my ($coords) = @_;
+
+    my $seqHash = {};
+
+    my $seqId = $coords->[0]->{'ParentSeq'};
+
+    foreach my $transcript (@{$coords})
+      {
+	if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0] )
+	  {
+	      #Euk data join the exon subsequences with care around the CDS start and end
+
+	      # First check to see if the gene is on the complementary strand
+
+	      if( $transcript->{'TranscriptDat'}->{'EXON_COORDS'}->[0]->{'complement'} eq '1' )
+	      {
+		  # The transcript is on the complementary strand
+
+		  # This sorts coordinate data in descending order based on startpos. Since the transcript is on 
+		  # the complementary strand, this puts the first exon in the first position.
+
+		  my @sorted_lref = sort { $b->{'startpos'} <=> $a->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
+
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  #get the protein id from the sequence object linked to the CDS object
+		  
+		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
+
+		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
+		  {
+		      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
+		      return;
+		  }
+		 
+		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+		  {
+		      if( $link->{'rel'} eq 'SEQ' )
+		      {
+			  
+			  my $seqref = $link->{'href'};
+			  $seqref =~ s/#//;
+			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
+
+			  if( ref($seq) eq 'BSML::BsmlSequence' )
+			  {
+			      $seqHash->{$seq->returnattr('id')} = $cds;
+			  }
+			  else
+			  {
+			      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
+			  }
+		      }
+		  }
+	      }
+	      else
+	      {
+		  # The transcript is not on the complementary strand.
+
+		  # This sorts coordinate data in ascending order based on startpos. Since the transcript is on 
+		  # the non-complementary strand, this puts the first exon in the first position.
+
+		  my @sorted_lref = sort { $a->{'startpos'} <=> $b->{'startpos'} } @{$transcript->{'TranscriptDat'}->{'EXON_COORDS'}};
+
+		  # Adjust the start and stop positions on the first and last exon to match the CDS_START and CDS_STOP 
+		  # tags.
+
+		  $sorted_lref[0]->{'startpos'} = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+		  $sorted_lref[length(@sorted_lref) - 1]->{'endpos'} = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+
+		  # Join the DNA sequences of each exon. Note that subSequence will take care of the reverse complemnent operation.
+		  my $cds = '';
+
+		  foreach my $exon ( @sorted_lref )
+		  {
+		      $cds .= $self->subSequence( $seqId, $exon->{'startpos'}, $exon->{'endpos'}, $exon->{'complement'} );
+		  }
+
+		  	  #get the protein id from the sequence object linked to the CDS object
+		  
+		  my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
+
+		  if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
+		  {
+		      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
+		      return;
+		  }
+		 
+		  foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+		  {
+		      if( $link->{'rel'} eq 'SEQ' )
+		      {
+			  
+			  my $seqref = $link->{'href'};
+			  $seqref =~ s/#//;
+			  my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
+
+			  if( ref($seq) eq 'BSML::BsmlSequence' )
+			  {
+			      $seqHash->{$seq->returnattr('id')} = $cds;
+			  }
+			  else
+			  {
+			      print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
+			  }
+		      }
+		  }
+	      }
+	      
+	  }
+	else
+	  {
+	      #Prok Orf=Gene=CDS
+	      
+	      my $start = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'sitepos'};
+	      my $stop = $transcript->{'TranscriptDat'}->{'CDS_STOP'}->{'sitepos'};
+	      my $complement = $transcript->{'TranscriptDat'}->{'CDS_START'}->{'complement'};
+	      
+	      my $cds = $self->subSequence( $seqId, $start, $stop, $complement);
+	      
+	      #get the protein id from the sequence object linked to the CDS object
+		  
+	      my $feat = BSML::BsmlDoc::BsmlReturnDocumentLookup( $transcript->{'TranscriptDat'}->{'CDS_ID'} );
+
+	      if( !(ref($feat) eq 'BSML::BsmlFeature' ) )
+	      {
+		  print STDERR "BsmlReader::geneCoordstoCDSHash() - Error CDS Feature not found\n";
+		  return;
+		  }
+	      
+	      foreach my $link ( @{$feat->returnBsmlLinkListR()} )
+	      {
+		  if( $link->{'rel'} eq 'SEQ' )
+		  {
+		      
+		      my $seqref = $link->{'href'};
+		      $seqref =~ s/#//;
+		      my $seq = BSML::BsmlDoc::BsmlReturnDocumentLookup($seqref);
+		      
+		      if( ref($seq) eq 'BSML::BsmlSequence' )
+		      {
+			  $seqHash->{$seq->returnattr('id')} = $cds;
+		      }
+		      else
+		      {
+			  print STDERR "BsmlReader::geneCoordstoCDSHash() - Error Amino Acid Sequence not found.\n";
+		      }
+		  }
+	      }
+	  }
+      }
+	
+    return $seqHash;
   }
 
 sub geneCoordstoGenomicSequence
