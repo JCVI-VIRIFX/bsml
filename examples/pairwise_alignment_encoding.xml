@@ -5,25 +5,25 @@
   <Definitions>
     <Sequences>
       <Sequence length="83" title="ORFO01980" molecule="aa" id="ORFO01980_aa">
-        <Attribute name="assembly" content="PNEUMO_19"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_19"></Attribute>
       </Sequence>
       <Sequence title="ORFL01928" molecule="aa" id="ORFL01928_aa">
-        <Attribute name="assembly" content="PNEUMO_16"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_16"></Attribute>
       </Sequence>
       <Sequence title="ORFD01850" molecule="aa" id="ORFD01850_aa">
-        <Attribute name="assembly" content="PNEUMO_7"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_7"></Attribute>
       </Sequence>
       <Sequence title="ORFI01997" molecule="aa" id="ORFI01997_aa">
-        <Attribute name="assembly" content="PNEUMO_13"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_13"></Attribute>
       </Sequence>
       <Sequence title="ORFK01816" molecule="aa" id="ORFK01816_aa">
-        <Attribute name="assembly" content="PNEUMO_15"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_15"></Attribute>
       </Sequence>
       <Sequence title="ORFM01778" molecule="aa" id="ORFM01778_aa">
-        <Attribute name="assembly" content="PNEUMO_17"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_17"></Attribute>
       </Sequence>
       <Sequence title="ORFN01967" molecule="aa" id="ORFN01967_aa">
-        <Attribute name="assembly" content="PNEUMO_18"></Attribute>
+        <Attribute name="ASSEMBLY" content="PNEUMO_18"></Attribute>
       </Sequence>
     </Sequences>
     <Tables>
