@@ -64,7 +64,6 @@ sub readSequenceDat
     if( ref($seq) eq 'BSML::BsmlSequence' ){
       return $seq->returnSeqData();}
   }
-
 # Given a sequence object reference return it's sequence import child
 # and the raw sequence it references...
 
@@ -488,6 +487,9 @@ sub readSeqPairAlignment
 	    #
 	    my @sorted_keys = (sort {$a->{'score'} <=> $b->{'score'}} @tmp_array);
 	    
+
+	    print Dumper(@tmp_array);
+
 	    
 	    #
 	    # Only want to load the top X seq_pair_runs
