@@ -95,6 +95,10 @@ sub parse
     $bsml_logger->debug( "Attempting to Parse Bsml Document: $filename" );
     $twig->parsefile( $filename );
     $bsml_logger->info( "Successfully Parsed Bsml Document: $filename" );
+
+    # Don't want to keep the extra reference around in a class variable.
+
+    $bsmlDoc = undef;
   }
 
 # This is a private method implemented as an XML::Twig handler object. It is 
