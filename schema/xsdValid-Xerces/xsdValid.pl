@@ -19,6 +19,22 @@ if( $options{'help'} )
     exit(4);
 }
 
+##############################################################################
+## TEMPORARY HACK
+## because of library differences between the servers and desktop machines,
+## this script will return true any time it is run on a machine with the 2.6
+## series kernel.  this should be removed once the servers are upgraded.
+
+my $uname = `uname -r`;
+
+if ($uname =~ /^2.6/) {
+    exit(0);
+}
+
+$ENV{LD_LIBRARY_PATH} = "/usr/local/lib:$ENV{LD_LIBRARY_PATH}";
+
+##############################################################################
+
 my $file = $ARGV[0];
 
 my $schema = $options{'schema'};
