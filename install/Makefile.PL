@@ -6,7 +6,7 @@ else{
     ExtUtils::Manifest::mkmanifest();
   }
 
-my $schemadocsdir = '/usr/local/devel/ANNOTATION/shared/doc/schema';
+my $schemadocsdir = '';#/usr/local/devel/ANNOTATION/shared/doc/schema';
 my $isschemadocsdir=0;
 foreach my $arg (@ARGV){
 	if($arg =~ /SCHEMA_DOCS_DIR/){
@@ -37,10 +37,10 @@ sub MY::postamble {
     }
     my $postamble = "SCHEMA_DIR=$schemadocsdir";
 
-    my  $postamble = << 'END';
+    $postamble .= << 'END';
 
 SCHEMA_SRC_DIR=schema
-VALIDATOR_SRC_DIR=schema/Xerces-xsdValid
+VALIDATOR_SRC_DIR=schema/xsdValid-Xerces
 VALIDATOR_BIN_DIR=$(PREFIX)/bin
 INCLUDE = -I/usr/local/packages/xerces-c++/include
 LIBDIR = -L/usr/local/packages/xerces-c++/lib
@@ -51,15 +51,15 @@ LIBRARIES = -lxerces-c
 
 validation: Xerces-xsdValid validation_install
 
-Xerces-xsdValid:  SAX2Print.cpp SAX2Print.hpp SAX2PrintHandlers.o
-	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o Xerces-xsdValid SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
+Xerces-xsdValid:  $(VALIDATOR_SRC_DIR)/SAX2Print.cpp $(VALIDATOR_SRC_DIR)/SAX2Print.hpp SAX2PrintHandlers.o
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o Xerces-xsdValid $(VALIDATOR_SRC_DIR)/SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
 
-SAX2PrintHandlers.o: SAX2PrintHandlers.cpp SAX2PrintHandlers.hpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c SAX2PrintHandlers.cpp
+SAX2PrintHandlers.o: $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.hpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp
 
-validation install : Xerces-xsdValid
+validation_install : Xerces-xsdValid
 	@mkdir -p $(SCHEMA_DIR)
-	@mkdir -p $(BIN_DIR)
+	@mkdir -p $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/Xerces-xsdValid $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/xsdValid.pl $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/dtdValid.pl $(VALIDATOR_BIN_DIR)
@@ -75,7 +75,7 @@ sub install {
     my $self = shift;
     if($schemadocsdir ne ""){
 	my $installstr = $self->MM::install(@_);
-	my $addltarget = 'workflow_install';
+	my $addltarget = 'validation';
 	$installstr =~ s/(pure_install\s+::\s+)(.*)/$1 $2 $addltarget/;
 	return $installstr;
     }
