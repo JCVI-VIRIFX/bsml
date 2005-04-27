@@ -28,6 +28,9 @@ my $uname = `uname -r`;
 if ($uname =~ /^2.6/) {
     exit(0);
 }
+else{
+   exit(0);
+}
 
 $ENV{LD_LIBRARY_PATH} = "/usr/local/lib:$ENV{LD_LIBRARY_PATH}";
 
