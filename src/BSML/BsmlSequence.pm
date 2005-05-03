@@ -1,6 +1,7 @@
 package BSML::BsmlSequence;
 @ISA = qw( BSML::BsmlElement );
 
+
 =head1 NAME
 
   BsmlSequence.pm - Bsml API Object representing the Bsml Sequence Element 
@@ -37,12 +38,20 @@ use BSML::BsmlCrossReference;
 use XML::Writer;
 use strict;
 use warnings;
+use Log::Log4perl qw(get_logger);
+use Data::Dumper;
+
+my $logger = get_logger("Logger::BSML");
 
 
 # a bsml sequence stores raw sequence data and a list of feature tables
 
 sub new
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $class = shift;
     my $self = {};
     bless $self, $class;
@@ -53,6 +62,8 @@ sub new
 
 sub init
   {
+
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
 
     $self->{ 'attr' } = {};
@@ -64,6 +75,8 @@ sub init
     $self->{ 'BsmlLink' } = [];
     $self->{ 'BsmlNumbering' } = undef;
     $self->{ 'BsmlCrossReference' } = [];
+    $self->{ 'BsmlAttributeList' } = undef;
+    
   }
 
 =item $seq->addBsmlFeatureTable()
@@ -78,6 +91,10 @@ B<Returns:> The index of the added feature table
 
 sub addBsmlFeatureTable
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     push( @{$self->{'BsmlFeatureTables'}}, new BSML::BsmlFeatureTable );
 
@@ -97,6 +114,9 @@ B<Returns:> None
 
 sub dropBsmlFeatureTable
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($index) = @_;
 
@@ -125,6 +145,9 @@ B<Returns:> a list of BsmlFeatureTable object references
 
 sub returnBsmlFeatureTableListR
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     return $self->{'BsmlFeatureTables'};
@@ -142,6 +165,10 @@ B<Returns:> a BsmlFeatureTable object reference
 
 sub returnBsmlFeatureTableR
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ($index) = @_;
 
@@ -160,6 +187,9 @@ B<Returns:> None
 
 sub addBsmlSeqData
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     ($self->{'BsmlSeqData'}) = @_; 
@@ -177,6 +207,9 @@ B<Returns:> None
 
 sub setBsmlSeqData
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($seq) = @_;
 
@@ -195,6 +228,8 @@ B<Returns:> None
 
 sub dropBsmlSeqData
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
    
     $self->{'BsmlSeqData'} = undef;
@@ -212,6 +247,8 @@ B<Returns:> a string containing raw sequence data
 
 sub returnSeqData
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     return $self->{'BsmlSeqData'};
@@ -219,30 +256,42 @@ sub returnSeqData
 
 sub addBsmlSeqDataImport
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
-    my ($format, $source, $id) = @_;
+    my ($format, $source, $id, $identifier) = @_;
 
     $self->{'BsmlSeqDataImport'}->{'format'} = $format;
     $self->{'BsmlSeqDataImport'}->{'source'} = $source;
+
+    $self->{'BsmlSeqDataImport'}->{'identifier'} = $identifier;
+
     $self->{'BsmlSeqDataImport'}->{'id'} = $id;
   }
 
 sub setBsmlSeqDataImport
   {
-    my $self = shift;
-    my ($format, $source, $id) = @_;
+      $logger->debug("") if $logger->is_debug;
 
-    $self->addBsmlSeqDataImport( $format, $source, $id );
+    my $self = shift;
+    my ($format, $source, $id, $identifier) = @_;
+
+    $self->addBsmlSeqDataImport( $format, $source, $id, $identifier );
   }
 
 sub dropBsmlSeqDataImport
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     $self->{'BsmlSeqDataImport'} = {};
   }
 
 sub returnBsmlSeqDataImport
   {
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     return $self->{'BsmlSeqDataImport'};
   }
@@ -259,6 +308,8 @@ B<Returns:> the index of the added feature group
 
 sub addBsmlFeatureGroup
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     push( @{$self->{'BsmlFeatureGroups'}}, new BSML::BsmlFeatureGroup );
@@ -287,6 +338,8 @@ B<Returns:> None
 
 sub dropBsmlFeatureGroup
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($index) = @_;
 
@@ -315,8 +368,10 @@ B<Returns:> a list of feature group references
 
 sub returnBsmlFeatureGroupListR
   {
-    my $self = shift;
-    return $self->{'BsmlFeatureGroups'};
+      $logger->debug("") if $logger->is_debug;
+      
+      my $self = shift;
+      return $self->{'BsmlFeatureGroups'};
   }
 
 =item $seq->returnFeatureGroupR( $index )
@@ -331,6 +386,8 @@ B<Returns:> a reference to a feature group
 
 sub returnBsmlFeatureGroupR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     my ($index) = @_;
@@ -350,6 +407,8 @@ sub returnBsmlFeatureGroupR
 
 sub addBsmlNumbering
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     $self->{'BsmlNumbering'} = new BSML::BsmlNumbering;
 
@@ -358,86 +417,163 @@ sub addBsmlNumbering
 
 sub returnBsmlNumberingR
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->{'BsmlNumbering'};
 }
 
 sub dropBsmlNumbering
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     $self->{'BsmlNumbering'} = undef;
 }
 
 
+#
+# Added 2004-11-02 Bugzilla case 1808
+#
 
-sub write
-  {
+
+# sub addBsmlAttributeList {
+
+#     my $self = shift;
+#     push ( @{$self->{'BsmlAttributeList'}}, new BSML::BsmlAttributeList );
+    
+#     my $index = @{$self->{'BsmlAttributeList'}} - 1;
+#     return $index;
+# }
+
+# sub dropBsmlAttributeList {
+
+#     my $self = shift;
+#     my ($index) = @_;
+
+#     my $newlist = [];
+
+#     for(  my $i=0;  $i< @{$self->{'BsmlAttributeList'}}; $i++ ) {
+# 	if( $i != $index ){
+# 	    push( @{$newlist}, $self->{'BsmlAttributeList'}[$i] );
+# 	}
+#     }
+
+#     $self->{'BsmlAttributeList'} = $newlist;
+# }
+
+# sub returnBsmlAttributeListListR {
+
+#     my $self = shift;
+#     return $self->{'BsmlAttributeList'};
+
+# }
+
+# sub returnBsmlAttributeListR {
+
+#     my $self = shift;
+#     my ($index) = @_;
+
+#     return $self->{'BsmlAttributeList'}[$index];
+# }
+
+
+
+sub write  {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my $writer = shift;
-
+    
     $writer->startTag( "Sequence", %{$self->{'attr'}} );
+    
+    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}})){
 
-    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}}))
-      {
 	$writer->startTag( "Attribute", 'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
 	$writer->endTag( "Attribute" );
-      }
+    }
 
-    if( my $tcount = @{$self->{'BsmlFeatureTables'}} > 0 )
-      {
+    if( my $tcount = @{$self->{'BsmlFeatureTables'}} > 0 ) {
+
 	$writer->startTag( "Feature-tables" );
 
-	foreach my $tbl ( @{$self->{'BsmlFeatureTables'}} )
-	  {
+	foreach my $tbl ( @{$self->{'BsmlFeatureTables'}} ) {
+
 	    $tbl->write( $writer );
-	  }
-
-	if( my $gcount = @{$self->{'BsmlFeatureGroups'}} > 0 )
-	  {
-	    foreach my $grp ( @{$self->{'BsmlFeatureGroups'}} )
-	      {
+	}
+	
+	if( my $gcount = @{$self->{'BsmlFeatureGroups'}} > 0 )  {
+	    
+	    foreach my $grp ( @{$self->{'BsmlFeatureGroups'}} ){
 		$grp->write( $writer );
-	      }
-	  }
-
+	    }
+	}
+	    
 	$writer->endTag( "Feature-tables" );
-      }
+    }
 
     # either imbedded or linked sequence data is expected, not both
-
-    if( $self->{'BsmlSeqData'} )
-      {
+    
+    if( $self->{'BsmlSeqData'} )  {
 	$writer->startTag( "Seq-data" );
 	$writer->characters( $self->{'BsmlSeqData'} );
 	$writer->endTag( "Seq-data" );
-      }
-    else
-      {
-	if( $self->{'BsmlSeqDataImport'}->{'source'} )
-	  {
+    }
+    else {
+	
+	if( $self->{'BsmlSeqDataImport'}->{'source'} ) {
 	    $writer->startTag( 'Seq-data-import', %{$self->{'BsmlSeqDataImport'}} );
 	    $writer->endTag( 'Seq-data-import' );
-	  }
-      }
+	}
+    }
 
-    if( $self->{'BsmlNumbering'} )
-    {
+    if( $self->{'BsmlNumbering'} ) {
+
 	$self->{'BsmlNumbering'}->write( $writer );
     }
 
     foreach my $xref (@{$self->{'BsmlCrossReference'}}){
 	$xref->write( $writer );
     }
+    
+      foreach my $link (@{$self->{'BsmlLink'}})  {
+	  $writer->startTag( "Link", %{$link} );
+	  $writer->endTag( "Link" );
+      }
 
-    foreach my $link (@{$self->{'BsmlLink'}})
-      {
-        $writer->startTag( "Link", %{$link} );
-        $writer->endTag( "Link" );
+      foreach my $listref (@{$self->{'BsmlAttributeList'}}){
+	  $writer->startTag( "Attribute-list");
+	    foreach my $hash ( sort {$a->{'name'} cmp $b->{'name'}} @{$listref} ){ 
+		    $writer->startTag( "Attribute",  'name' => $hash->{'name'}, 'content' => $hash->{'content'} );
+		    $writer->endTag( "Attribute" );
+		}
+	   $writer->endTag( "Attribute-list" );
       }
     
     $writer->endTag( "Sequence" );
     
-  }
+}
+
+
+
+sub detectBsmlFeatureTables {
+    
+    $logger->debug("") if $logger->is_debug;
+    
+    my $self = shift;
+
+    if (scalar(@{$self->{'BsmlFeatureTables'}}) > 1 )  {
+	return 1;
+    }
+    else {
+	return 0;
+    }
+
+}
+
+
 
 1
 

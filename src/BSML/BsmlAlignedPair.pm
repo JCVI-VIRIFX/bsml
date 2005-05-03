@@ -34,7 +34,7 @@ sub write
 
     $writer->startTag( "Aligned-pair", %{$self->{'attr'}} );
      
-    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}}))
+    foreach my $bsmlattr (sort (keys( %{$self->{ 'BsmlAttr'}})))
     {
 	$writer->startTag( "Attribute", 'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
 	$writer->endTag( "Attribute" );

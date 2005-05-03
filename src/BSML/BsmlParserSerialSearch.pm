@@ -16,8 +16,7 @@ use BSML::BsmlMultipleAlignmentTable;
 use Log::Log4perl qw(get_logger);
 use Data::Dumper;
 
-
-my $logger = get_logger();
+my $logger = get_logger("Logger::BSML");
 
 #-------------------------------------------------------------------------------------------------------------------
 #
@@ -50,20 +49,25 @@ sub new
     bless $self, $class;
 
     $self->{'Ignore'} = {};
-    
+
+    $logger->debug("Instantiating BsmlParserSerialSearch") if($logger->is_debug());
+
     if( $args{'AlignmentCallBack'} ){
 	$self->{'AlignmentCallBack'} = $args{'AlignmentCallBack'};
 	
 	$self->{'Roots'}->{'Seq-pair-alignment'} = sub {my ($twig, $seq_aln ) = @_;
+							$logger->debug("Starting alignment call back") if($logger->is_debug());
 							my $bsml_aln = seqPairAlignmentHandler($twig,$seq_aln);
 							$self->{'AlignmentCallBack'}( $bsml_aln );
 						    };
     }
 
     if( $args{'MultipleAlignmentCallBack'} ){
+		
 	$self->{'MultipleAlignmentCallBack'} = $args{'MultipleAlignmentCallBack'};
 
 	$self->{'Roots'}->{'Multiple-alignment-table'} = sub {my ($twig, $seq_aln ) = @_;
+							      $logger->debug("Starting multiple alignment call back") if($logger->is_debug());
 							      my $bsml_aln = multipleAlignmentHandler($twig,$seq_aln);
 							      $self->{'MultipleAlignmentCallBack'}( $bsml_aln );
 							  };
@@ -74,6 +78,7 @@ sub new
 	$self->{'AnalysisCallBack'} = $args{'AnalysisCallBack'};
 	
 	$self->{'Roots'}->{'Analysis'} = sub {my ($twig, $analysis) = @_;
+					      $logger->debug("Starting analysis call back") if($logger->is_debug());
 					      my $bsml_analysis = analysisHandler( $twig, $analysis );
 					      $self->{'AnalysisCallBack'}( $bsml_analysis );
 					  };
@@ -81,26 +86,40 @@ sub new
 
     if( $args{'SequenceCallBack'} ){
 	$self->{'SequenceCallBack'} = $args{'SequenceCallBack'};
-	
-	if( defined( $args{'ReadFeatureTables'} ) ){
+
+	if ( defined ( $args{'DetectFeatureTables'} ) ){
+	    if ( $args{'DetectFeatureTables'} == 1 ){
+
+		$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
+						      $logger->debug("Starting sequence handler and reading feature tables") if($logger->is_debug());
+						      my $bsml_sequence = minsequenceHandler( $twig, $sequence, 'detect' );
+						      $self->{'SequenceCallBack'}( $bsml_sequence );
+						  };
+	    }
+		
+	}
+	elsif( defined( $args{'ReadFeatureTables'} ) ){
 	    if( $args{'ReadFeatureTables'} == 1 ){
-			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
-					      my $bsml_sequence = sequenceHandler( $twig, $sequence );
-					      $self->{'SequenceCallBack'}( $bsml_sequence );
+		$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
+						      $logger->debug("Starting sequence handler and reading feature tables") if($logger->is_debug());
+						      my $bsml_sequence = sequenceHandler( $twig, $sequence );
+						      $self->{'SequenceCallBack'}( $bsml_sequence );
 					  };
 		    }
 	    else{
 			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
-					      my $bsml_sequence = minsequenceHandler( $twig, $sequence );
-					      $self->{'SequenceCallBack'}( $bsml_sequence );
+							      $logger->debug("Starting sequence handler and skipping reading feature tables") if($logger->is_debug());
+							      my $bsml_sequence = minsequenceHandler( $twig, $sequence );
+							      $self->{'SequenceCallBack'}( $bsml_sequence );
 					  }; 
 			$self->{'Ignore'}->{'Feature-tables'}=1;
 		    }
 	}
 	else{
 	    $self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
-					      my $bsml_sequence = sequenceHandler( $twig, $sequence );
-					      $self->{'SequenceCallBack'}( $bsml_sequence );
+						  $logger->debug("Reading sequences and subfeatures") if($logger->is_debug());
+						  my $bsml_sequence = sequenceHandler( $twig, $sequence );
+						  $self->{'SequenceCallBack'}( $bsml_sequence );
 					  };
 	}
     }
@@ -109,25 +128,39 @@ sub new
 	$self->{'FeatureCallBack'} = $args{'FeatureCallBack'};
 	
 	$self->{'Roots'}->{'Feature'} = sub {my ($twig, $feature) = @_;
+					     $logger->debug("Starting feature call back") if($logger->is_debug());
 					     my $bsml_feature = featureHandler( $twig, $feature );
 					     $self->{'FeatureCallBack'}( $bsml_feature );
 					 };
     }
 
+    if( $args{'SeqFeatureCallBack'} ){
+	$self->{'SeqFeatureCallBack'} = $args{'SeqFeatureCallBack'};
+	
+	$self->{'Roots'}->{'Feature'} = sub {my ($twig, $feature) = @_;
+					     $logger->debug("Starting feature call back") if($logger->is_debug());
+					     my $bsml_feature = SeqFeatureHandler( $twig, $feature );
+					     $self->{'SeqFeatureCallBack'}( $bsml_feature );
+					 };
+    }
+
     if( $args{'GenomeCallBack'} ){
 	$self->{'GenomeCallBack'} = $args{'GenomeCallBack'};
-
+	
 	$self->{'Roots'}->{'Genome'} = sub {my ($twig, $genome ) = @_;
-									  my $bsml_genome = genomeHandler($twig,$genome);
-									  $self->{'GenomeCallBack'}( $bsml_genome );
-						    };
+					    $logger->debug("Starting genome call back") if($logger->is_debug());
+					    my $bsml_genome = genomeHandler($twig,$genome);
+					    $self->{'GenomeCallBack'}( $bsml_genome );
+					};
     }
 	
     return $self;
   }
 
-sub parse
-  {
+sub parse  {
+
+    $logger->debug("") if($logger->is_debug());
+
     my $self = shift;
     my ( $fileOrHandle ) = @_;
     my $bsml_logger = get_logger( "Bsml" );
@@ -141,15 +174,22 @@ sub parse
 
     if( $fileOrHandle ) {
 	if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+
+	    $logger->debug("twig->parse") if($logger->is_debug());
 	    $twig->parse( $fileOrHandle );
-	} else {
+	} 
+	else {
+
+	    $logger->debug("twig->parsefile") if($logger->is_debug());
 	    $twig->parsefile( $fileOrHandle );
 	}
-    } else {
+    } 
+    else {
 	$twig->parse( \*STDIN );
     }
+    $logger->debug("twig->dispose") if($logger->is_debug());
     $twig->dispose();  
-  }
+}
 
 # handler for SeqPairAlignment elements. Returns a reference to a BSML::SeqPairAlignment object.
 
@@ -181,7 +221,7 @@ sub seqPairAlignmentHandler
      foreach my $BsmlLink ( $seq_aln->children( 'Link' ) )
        {
 	 my $attr = $BsmlLink->atts();
-	 $bsmlaln->addBsmlLink( $attr->{'ref'}, $attr->{'href'} );
+	 $bsmlaln->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
        }
      
      foreach my $seq_run ( $seq_aln->children('Seq-pair-run') )
@@ -201,7 +241,7 @@ sub seqPairAlignmentHandler
 	 foreach my $BsmlLink ( $seq_run->children( 'Link' ) )
 	   {
 	     my $attr = $BsmlLink->atts();
-	     $bsmlseqrun->addBsmlLink( $attr->{'ref'}, $attr->{'href'} );
+	     $bsmlseqrun->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
 	   }
        }     
      
@@ -273,6 +313,9 @@ sub sequenceHandler
   {
     my ($twig, $seq) = @_;
 
+
+    $logger->debug("Entered sequenceHandler") if $logger->is_debug;
+
     # add a new Sequence object to the bsmlDoc
 
     my $bsmlseq = new BSML::BsmlSequence;
@@ -281,20 +324,27 @@ sub sequenceHandler
 
     my $attr = $seq->atts();
 
-    foreach my $key ( keys( %{$attr} ) )
-      {
+
+    $logger->debug("Processing all //Sequence/\@attributes") if $logger->is_debug;
+
+    foreach my $key ( keys( %{$attr} ) ) {
 	$bsmlseq->addattr( $key, $attr->{$key} );
-      }
+    }
 
     # add Sequence level Bsml Attribute elements 
 
-    foreach my $BsmlAttr ( $seq->children( 'Attribute' ) )
-      {
+
+    $logger->debug("Processing all //Sequence/Attribute elements") if $logger->is_debug;
+
+
+    foreach my $BsmlAttr ( $seq->children( 'Attribute' ) ) {
 	my $attr = $BsmlAttr->atts();
 	$bsmlseq->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
-      }
-
+    }
+    
     # add any Bsml Links
+    
+    $logger->debug("Processing all //Sequence/Link elements") if $logger->is_debug;
 
     foreach my $BsmlLink ( $seq->children( 'Link' ) )
       {
@@ -304,6 +354,10 @@ sub sequenceHandler
 
     # add raw sequence data if found 
 
+
+    $logger->debug("Processing all //Sequence/Seq-data elements") if $logger->is_debug;
+
+
     my $seqDat = $seq->first_child( 'Seq-data' );
     
     if( $seqDat ){
@@ -312,20 +366,30 @@ sub sequenceHandler
 
     # add appended sequence data if found
 
+
+    $logger->debug("Processing all //Sequence/Seq-data-import elements") if $logger->is_debug;
+
     my $seqDatImport = $seq->first_child( 'Seq-data-import' );
     
-    if( $seqDatImport )
-      {
-	my $attr = $seqDatImport->atts();
-	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
-      }
 
+
+    $logger->debug("Processing all //Sequence/Seq-data-import/\@attributes") if $logger->is_debug;
+
+
+    if( $seqDatImport )       {
+	my $attr = $seqDatImport->atts();
+	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'},$attr->{'identifier'});
+    }
+    
     # add numbering information
+
+
+    $logger->debug("Processing all //Sequence/Numbering/ elements") if $logger->is_debug;
 
     my $numbering = $seq->first_child( 'Numbering' );
 
-    if( $numbering )
-    {
+    if( $numbering ) {
+	
 	my $attr = $numbering->atts();
 	my $bsmlNumbering = $bsmlseq->returnBsmlNumberingR( $bsmlseq->addBsmlNumbering() );
 	
@@ -343,8 +407,10 @@ sub sequenceHandler
 	$bsmlNumbering->addattr(' from-aligns', $attr->{'from_aligns'} );
 	$bsmlNumbering->addattr( 'aligns', $attr->{'aligns'} );
 
-	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) )
-	{
+
+	$logger->debug("Processing //Sequence/Numbering/Attribute elements") if $logger->is_debug;
+
+	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) ) {
 	    my $attr = $BsmlAttr->atts();
 	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
 	}
@@ -352,122 +418,175 @@ sub sequenceHandler
 
     # add Feature Tables with Feature, Reference, and Feature-group Elements
 
+
+
+
     my $BsmlFTables = $seq->first_child( 'Feature-tables' );
 
-    if( $BsmlFTables )
-      {
-	foreach my $BsmlFTable ( $BsmlFTables->children( 'Feature-table' ) )
-	  {
+    if( $BsmlFTables ) {
+
+	$logger->debug("Processing first_child //Feature-table/ element") if $logger->is_debug;
+	
+	foreach my $BsmlFTable ( $BsmlFTables->children( 'Feature-table' ) ) {
+
+
+#	    $logger->debug("BsmlTable: " . Dumper $BsmlFTable) if $logger->is_debug;
+
+	    
 	    my $table = $bsmlseq->{'BsmlFeatureTables'}[$bsmlseq->addBsmlFeatureTable()];
-
+	    
 	    my $attr = $BsmlFTable->atts();
-
-	    foreach my $key ( keys( %{$attr} ) )
-	      {
+	    
+	    
+	    $logger->debug("Processing //Feature-table/\@attibutes") if $logger->is_debug;
+	    
+	    foreach my $key ( keys( %{$attr} ) ){
 		$table->addattr( $key, $attr->{$key} );
-	      }
+	    }
+	    
 
-	    foreach my $BsmlLink ( $BsmlFTable->children( 'Link' ) )
-	      {
+	    $logger->debug("Processing //Feature-table/Link elements") if $logger->is_debug;
+
+
+	    foreach my $BsmlLink ( $BsmlFTable->children( 'Link' ) ) {
 		my $attr = $BsmlLink->atts();
 		$table->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
-	      }
+	    }
 
-	    foreach my $BsmlRef ($BsmlFTable->children( 'Reference' ) )
-	      {
+
+	    $logger->debug("Processing //Feature-table/Reference/ elements") if $logger->is_debug;
+
+	    foreach my $BsmlRef ($BsmlFTable->children( 'Reference' ) ) {
+		
 		my $ref = $table->{'BsmlReferences'}[$table->addBsmlReference()];
 		my $attr = $BsmlRef->atts();
-
-		foreach my $key ( keys( %{$attr} ) )
-		  {
+		
+		foreach my $key ( keys( %{$attr} ) ) {
 		    $ref->addattr( $key, $attr->{$key} );
-		  }
-
-		foreach my $BsmlAuthor ($BsmlRef->children( 'RefAuthors' ))
-		  {
+		}
+		
+		foreach my $BsmlAuthor ($BsmlRef->children( 'RefAuthors' )) {
 		    $ref->addBsmlRefAuthors( $BsmlAuthor->text() );
-		  }
-
-		foreach my $BsmlRefTitle ($BsmlRef->children( 'RefTitle' ))
-		  {
+		}
+		
+		foreach my $BsmlRefTitle ($BsmlRef->children( 'RefTitle' )) {
 		    $ref->addBsmlRefTitle( $BsmlRefTitle->text() );
-		  }
-
-		foreach my $BsmlRefJournal ($BsmlRef->children( 'RefJournal' ))
-		  {
+		}
+		
+		foreach my $BsmlRefJournal ($BsmlRef->children( 'RefJournal' )) {
 		    $ref->addBsmlRefJournal( $BsmlRefJournal->text() );
-		  }
+		}
 
-		foreach my $BsmlLink ( $BsmlRef->children( 'Link' ) )
-		  {
+		foreach my $BsmlLink ( $BsmlRef->children( 'Link' ) ) {
 		    my $attr = $BsmlLink->atts();
 		    $ref->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
-		  }
-	      }
-	  
+		}
+	    }
+	    
 
-	    foreach my $BsmlFeature ($BsmlFTable->children( 'Feature' ))
-	{
+	    $logger->debug("Attempting to process //Feature-table/Feature/ elements") if $logger->is_debug;
+
+	    foreach my $BsmlFeature ($BsmlFTable->children( 'Feature' )){
+		
 		my $feat = $table->{'BsmlFeatures'}[$table->addBsmlFeature()];
 		my $attr = $BsmlFeature->atts();
+		
 
-		foreach my $key ( keys( %{$attr} ) )
-	        {
+		$logger->debug("Attempting to process //Feature-table/Feature/\@attributes") if $logger->is_debug;
+
+
+		foreach my $key ( keys( %{$attr} ) ) {
 		    $feat->addattr( $key, $attr->{$key} );
 		}
 		
-		foreach my $crossRef( $BsmlFeature->children( 'Cross-reference' ))
-         	{
-		
-		my $attr = $crossRef->atts();
-		
-		my $xref = $feat->returnBsmlCrossReferenceR( $feat->addBsmlCrossReference );
-		
-		foreach my $key ( keys( %{$attr} ) )
-                {
-		    $xref->addattr( $key, $attr->{$key});
+
+		$logger->debug("Attempting to process //Feature-table/Feature/Cross-reference elements") if $logger->is_debug;
+
+		foreach my $crossRef( $BsmlFeature->children( 'Cross-reference' )) {
+		    
+		    my $attr = $crossRef->atts();
+		    
+		    my $xref = $feat->returnBsmlCrossReferenceR( $feat->addBsmlCrossReference );
+		    
+		    foreach my $key ( keys( %{$attr} ) ) {
+
+			$xref->addattr( $key, $attr->{$key});
+		    }
 		}
-	    }
 		
-		 # add Feature level Bsml Attribute elements 
+		# add Feature level Bsml Attribute elements 
 		
-		foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
-		{
+		$logger->debug("Attempting to process //Feature-table/Feature/Attribute elements") if $logger->is_debug;
+
+		foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) ) {
 		    my $attr = $BsmlAttr->atts();
 		    $feat->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
 		}
+		
+		$logger->debug("Attempting to process //Feature-table/Feature/Qualifier elements") if $logger->is_debug;
 
-		foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
-		  {
+		foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' )) {
 		    my $attr = $BsmlQualifier->atts();
 		    $feat->addBsmlQualifier( $attr->{'value-type'} , $attr->{'value'} ); 
-		  }
+		}
 
-		foreach my $BsmlIntervalLoc ($BsmlFeature->children( 'Interval-loc' ))
-		  {
+
+		$logger->debug("Attempting to process //Feature-table/Feature/Interval-loc elements") if $logger->is_debug;
+
+		foreach my $BsmlIntervalLoc ($BsmlFeature->children( 'Interval-loc' )) {
+
 		    my $attr = $BsmlIntervalLoc->atts();
 		    if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
-
+		    
 		    $feat->addBsmlIntervalLoc( $attr->{'startpos'} , $attr->{'endpos'}, $attr->{'complement'} ); 
-		  }
+		}
 
-		foreach my $BsmlSiteLoc ($BsmlFeature->children( 'Site-loc' ))
-		  {
+
+		$logger->debug("Attempting to process //Feature-table/Feature/Site-loc elements") if $logger->is_debug;
+
+		foreach my $BsmlSiteLoc ($BsmlFeature->children( 'Site-loc' )) {
 		    my $attr = $BsmlSiteLoc->atts();
-
+		    
 		    if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
 		    $feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'}, $attr->{'class'} ); 
-		  }
+		}
 
-		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
-		  {
+
+
+		$logger->debug("Attempting to process //Feature-table/Feature/Link elements") if $logger->is_debug;
+
+		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) ) {
 		    my $attr = $BsmlLink->atts();
 		    $feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
-		  }
-	      }
-	  }
-	foreach my $BsmlFGroup  ($BsmlFTables->children( 'Feature-group' )) 
-	  {
+		}
+
+
+		$logger->debug("Attempting to process //Feature-table/Feature/Attribute-list elements") if $logger->is_debug;
+
+		foreach my $attlist( $BsmlFeature->children( 'Attribute-list' )){
+		    
+		    my $listref = [];
+
+		    foreach my $BsmlAttr ( $attlist->children( 'Attribute' ) ) {
+
+			my $attr = $BsmlAttr->atts();
+			
+			push (@{$listref}, $attr);
+		    }
+ 
+		    $feat->addBsmlAttributeList( $listref );
+
+		    $logger->debug("called feat->addBsmlAttributeList") if $logger->is_debug;
+
+		}
+	    }
+	}
+
+
+	$logger->debug("Attempting to process all //Feature-table/Feature-group elements") if $logger->is_debug;
+
+	foreach my $BsmlFGroup  ($BsmlFTables->children( 'Feature-group' )) {
+
 	    my $group = $bsmlseq->{'BsmlFeatureGroups'}[$bsmlseq->addBsmlFeatureGroup()];
 	    
 	    my $attr = $BsmlFGroup->atts();
@@ -500,20 +619,37 @@ sub sequenceHandler
       }
 
 
-    foreach my $crossRef( $seq->children( 'Cross-reference' ))
-    {
+    
+    $logger->debug("Attempting to process all //Sequence/Cross-reference/ elements") if $logger->is_debug;
 
+    foreach my $crossRef( $seq->children( 'Cross-reference' )) {
+	
 	my $attr = $crossRef->atts();
-
+	
 	my $xref = $bsmlseq->returnBsmlCrossReferenceR( $bsmlseq->addBsmlCrossReference );
 	
-	foreach my $key ( keys( %{$attr} ) )
-        {
+	foreach my $key ( keys( %{$attr} ) ) {
 	    $xref->addattr( $key, $attr->{$key});
         }
     }
+    
+    
+    $logger->debug("Attempting to process //Sequence/Attribute-list elements") if $logger->is_debug;
+    
+    foreach my $attlist( $seq->children( 'Attribute-list' )){
+	
+	my $listref = [];
 
-      
+	foreach my $BsmlAttr ( $attlist->children( 'Attribute' ) ) {
+
+	    my $attr = $BsmlAttr->atts();
+	    
+	    push (@{$listref}, $attr);
+	}
+	
+	$bsmlseq->addBsmlAttributeList( $listref );
+    }
+  
     $twig->purge;
     return $bsmlseq;
   }
@@ -522,12 +658,24 @@ sub sequenceHandler
 
 sub minsequenceHandler
   {
-    my ($twig, $seq) = @_;
+    my ($twig, $seq, $detect) = @_;
 
     # add a new Sequence object to the bsmlDoc
 
     my $bsmlseq = new BSML::BsmlSequence;
     
+    #
+    # Code to detect presence of nested <Feature-tables> element
+    # underneath <Sequence> element
+    #
+    if (( defined($detect)) and ($detect eq 'detect')){
+	
+#	die;
+	my $BsmlFTables = $seq->first_child( 'Feature-tables' );
+    
+	print Dumper $BsmlFTables;die;
+    }
+
     # add the sequence element's attributes
 
     my $attr = $seq->atts();
@@ -568,7 +716,7 @@ sub minsequenceHandler
     if( $seqDatImport )
       {
 	my $attr = $seqDatImport->atts();
-	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'});
+	$bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'},$attr->{'identifier'});
       }
 
     my $numbering = $seq->first_child( 'Numbering' );
@@ -598,10 +746,42 @@ sub minsequenceHandler
 	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
 	}
     }
+
+      $logger->debug("Attempting to process all //Sequence/Cross-reference/ elements") if $logger->is_debug;
+
+    foreach my $crossRef( $seq->children( 'Cross-reference' )) {
+	
+	my $attr = $crossRef->atts();
+	
+	my $xref = $bsmlseq->returnBsmlCrossReferenceR( $bsmlseq->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) ) {
+	    $xref->addattr( $key, $attr->{$key});
+        }
+    }
+    
+    
+    $logger->debug("Attempting to process //Sequence/Attribute-list elements") if $logger->is_debug;
+    
+    foreach my $attlist( $seq->children( 'Attribute-list' )){
+	
+	my $listref = [];
+
+	foreach my $BsmlAttr ( $attlist->children( 'Attribute' ) ) {
+
+	    my $attr = $BsmlAttr->atts();
+	    
+	    push (@{$listref}, $attr);
+	}
+	
+	$bsmlseq->addBsmlAttributeList( $listref );
+    }
     
     $twig->purge;
     return $bsmlseq;
 }
+
+
 
 # returns a BsmlFeature object
 
@@ -609,8 +789,24 @@ sub featureHandler
 {
     my ($twig, $BsmlFeature) = @_;
 
+    # print "executing featurHandler\n";
+
+    my $twigSequence = (($BsmlFeature->parent())->parent())->parent();
+   
+
+    my $bsmlseq = new BSML::BsmlSequence;
+
+    # add the sequence element's attributes
+
+    my $attr = $twigSequence->atts();
+
+    foreach my $key ( keys( %{$attr} ) )
+      {
+	$bsmlseq->addattr( $key, $attr->{$key} );
+    }
+
     my $feat = new BSML::BsmlFeature;
-    my $attr = $BsmlFeature->atts();
+    $attr = $BsmlFeature->atts();
 
     foreach my $key ( keys( %{$attr} ) )
     {
@@ -665,11 +861,228 @@ sub featureHandler
 	}
     }
 
+
+    foreach my $attlist( $BsmlFeature->children( 'Attribute-list' )){
+		     
+	my $listref = [];
+	
+	foreach my $BsmlAttr ( $attlist->children( 'Attribute' ) ) {
+	    
+	    my $attr = $BsmlAttr->atts();
+			  
+	    push (@{$listref}, $attr);
+	}
+
+	$feat->addBsmlAttributeList( $listref );
+    }   
    
     $twig->purge;
 
-    return $feat;
+    my $listref = [$feat, $bsmlseq];
+    return $listref;
 }
+
+# [$bsml_feature_ref, $bsml_sequence_ref] SeqFeatureHandler( $twig, $BsmlFeature )
+
+# A handler that returns a reference to a list containg a bsml feature 
+# reference and its parent sequence. This needs to be used in conjunction
+# with the sequence handler in order to insure the parse tree containing 
+# the parental elements is created. XML twig calls the feature callback each
+# time the parser has fully parsed the subtree rooted at the feature element.
+# This subtree is pruned (purged) from the Sequence parse tree after the call back
+# has successfully completed. 
+
+sub SeqFeatureHandler
+{
+    my ($twig, $BsmlFeature) = @_;
+
+    # Retreive the parent sequence object - *NOTE this must be used with the sequence handler
+    # or equivalent that looks at the parent nodes else (FeatureTable->FeatureTables->Sequence) 
+    # will  be null.
+
+    my $twigSequence = (($BsmlFeature->parent())->parent())->parent();
+   
+
+    ##################################################
+    # Extract data from the sequence object, not looking at the feature tables. This is 
+    # equivalent to the minSequenceHandler.
+
+    my $bsmlseq = new BSML::BsmlSequence;
+
+    # add the sequence element's attributes
+
+    my $attr = $twigSequence->atts();
+
+    foreach my $key ( keys( %{$attr} ) )
+      {
+	$bsmlseq->addattr( $key, $attr->{$key} );
+    }
+
+    # add Sequence level Bsml Attribute elements 
+
+    foreach my $BsmlAttr ( $twigSequence->children( 'Attribute' ) )
+    {
+	my $attr = $BsmlAttr->atts();
+	$bsmlseq->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+    }
+    
+    # add any Bsml Links
+    
+    foreach my $BsmlLink ( $twigSequence->children( 'Link' ) )
+    {
+	my $attr = $BsmlLink->atts();
+	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+    }
+
+    # add raw sequence data if found 
+    
+    my $seqDat = $twigSequence->first_child( 'Seq-data' );
+    
+    if( $seqDat ){
+	$bsmlseq->addBsmlSeqData( $seqDat->text() );
+    }
+
+    # add appended sequence data if found
+    
+    my $seqDatImport = $twigSequence->first_child( 'Seq-data-import' );
+    
+    if( $seqDatImport )
+      {
+	  my $attr = $seqDatImport->atts();
+	  $bsmlseq->addBsmlSeqDataImport( $attr->{'format'}, $attr->{'source'}, $attr->{'id'},$attr->{'identifier'});
+      }
+    
+    my $numbering = $twigSequence->first_child( 'Numbering' );
+    
+    if( $numbering )
+    {
+	my $attr = $numbering->atts();
+	my $bsmlNumbering = $bsmlseq->returnBsmlNumberingR( $bsmlseq->addBsmlNumbering() );
+	
+	$bsmlNumbering->addattr( 'seqref', $attr->{'seqref'} );
+	$bsmlNumbering->addattr( 'use-numbering', $attr->{'use_numbering'} );
+	$bsmlNumbering->addattr( 'type', $attr->{'type'} );
+	$bsmlNumbering->addattr( 'units', $attr->{'units'} );
+	$bsmlNumbering->addattr( 'a', $attr->{'a'} );
+	$bsmlNumbering->addattr( 'b', $attr->{'b'} );
+	$bsmlNumbering->addattr( 'dec-places', $attr->{'dec_places'} );
+	$bsmlNumbering->addattr( 'refnum', $attr->{'refnum'} );
+	$bsmlNumbering->addattr( 'has-zero', $attr->{'has_zero'} );
+	$bsmlNumbering->addattr( 'ascending', $attr->{'ascending'} );
+	$bsmlNumbering->addattr( 'names', $attr->{'names'} );
+	$bsmlNumbering->addattr(' from-aligns', $attr->{'from_aligns'} );
+	$bsmlNumbering->addattr( 'aligns', $attr->{'aligns'} );
+
+	foreach my $BsmlAttr ( $numbering->children( 'Attribute' ) )
+	{
+	    my $attr = $BsmlAttr->atts();
+	    $bsmlNumbering->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+	}
+    }
+    
+    ###################################################
+    #
+
+    # parse the feature and construct a Bsml Feature object
+
+    my $feat = new BSML::BsmlFeature;
+    $attr = $BsmlFeature->atts();
+
+    foreach my $key ( keys( %{$attr} ) )
+    {
+	$feat->addattr( $key, $attr->{$key} );
+    }
+
+    # add Feature level Bsml Attribute elements 
+
+    foreach my $BsmlAttr ( $BsmlFeature->children( 'Attribute' ) )
+      {
+	my $attr = $BsmlAttr->atts();
+	$feat->addBsmlAttr( $attr->{'name'}, $attr->{'content'} );
+      }
+
+    foreach my $BsmlQualifier ($BsmlFeature->children( 'Qualifier' ))
+    {
+	my $attr = $BsmlQualifier->atts();
+	$feat->addBsmlQualifier( $attr->{'value-type'} , $attr->{'value'} ); 
+    }
+
+    foreach my $BsmlIntervalLoc ($BsmlFeature->children( 'Interval-loc' ))
+    {
+	my $attr = $BsmlIntervalLoc->atts();
+	if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
+	
+	$feat->addBsmlIntervalLoc( $attr->{'startpos'} , $attr->{'endpos'}, $attr->{'complement'} ); 
+    }
+
+    foreach my $BsmlSiteLoc ($BsmlFeature->children( 'Site-loc' ))
+    {
+	my $attr = $BsmlSiteLoc->atts();
+	
+	if( !( $attr->{'complement'} ) ){ $attr->{ 'complement' } = 0 };
+	$feat->addBsmlSiteLoc( $attr->{'sitepos'} , $attr->{'complement'}, $attr->{'class'} ); 
+    }
+    
+    foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
+    {
+	my $attr = $BsmlLink->atts();
+	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+    }
+
+
+    foreach my $crossRef( $BsmlFeature->children( 'Cross-reference' )){
+	
+	my $attr = $crossRef->atts();
+	
+	my $xref = $feat->returnBsmlCrossReferenceR( $feat->addBsmlCrossReference );
+	
+	foreach my $key ( keys( %{$attr} ) ) {
+	    $xref->addattr( $key, $attr->{$key});
+	}
+    }
+
+
+    foreach my $attlist( $BsmlFeature->children( 'Attribute-list' )){
+		     
+	my $listref = [];
+	
+	foreach my $BsmlAttr ( $attlist->children( 'Attribute' ) ) {
+	    
+	    my $attr = $BsmlAttr->atts();
+			  
+	    push (@{$listref}, $attr);
+	}
+
+	$feat->addBsmlAttributeList( $listref );
+    }   
+   
+
+    # prune the subtree rooted at the feature element
+    $twig->purge;
+
+
+    # return a reference to a list containing references to the feature and parental
+    # sequence objects
+
+    my $listref = [$feat, $bsmlseq];
+    return $listref;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ######################################################################
 ##
@@ -681,6 +1094,9 @@ sub genomeHandler
 {
     my ($twig, $genome) = @_;
     my $bsmlGenome = new BSML::BsmlGenome;
+
+
+    $logger->debug("Entered genomeHandler") if $logger->is_debug;
 
     addBsmlAttrLinks( $twig, $genome, $bsmlGenome );
 
@@ -704,6 +1120,9 @@ sub genomeHandler
     }
 
     $twig->purge_up_to( $genome );
+
+
+    $logger->debug("Leaving genomeHandler") if $logger->is_debug;
 
     return $bsmlGenome;
 }

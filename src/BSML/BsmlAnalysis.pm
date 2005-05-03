@@ -26,7 +26,7 @@ sub init
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
     $self->{ 'BsmlLink' } = [];
-    $self->{'BsmlCrossReference'} = undef;
+    $self->{ 'BsmlCrossReference' } = undef;
 
   }
 

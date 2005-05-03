@@ -6,7 +6,7 @@ BSML::Indexer;
 
 =head1 VERSION
 
-This document refers to $Revision: 1.1 $ of TIGR::Yank::Indexer.pm.
+This document refers to $Revision: 1.2 $ of TIGR::Yank::Indexer.pm.
 
 =head1 SYNOPSIS
 
@@ -60,7 +60,7 @@ my $logger = get_logger(__PACKAGE__);
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.1 $)[1];
+our $VERSION = (qw$Revision: 1.2 $)[1];
 our @DEPEND = qw(Data::Dumper CDB_File Cwd File::Basename
                  File::Path Log::Log4perl);
 
@@ -91,6 +91,12 @@ B<Returns:> $self, an instance of the class.
 sub new {
     my ($class, $file, $indexdir, @args) = @_;
     $logger->info("In constructor.");
+
+
+
+    my ($package, $filename, $line) = caller;
+
+#    print STDERR "Indexer.pm line 99: package '$package' filename '$filename' line '$line'\n";
 
     $logger->debug("Datafile: $file; Indexdir: $indexdir.");
 
@@ -471,7 +477,8 @@ B<Returns:> None.
 
 sub index_entries {
     my $self = shift;
-    $logger->info("In index_entries.");
+
+    $logger->debug("In index_entries.") if $logger->is_debug;
 
     # We don't want this to be interruptible, so ignore CONTROL-C.
     local $SIG{INT} = 'IGNORE';
@@ -487,6 +494,10 @@ sub index_entries {
     my $total_length = 0;
     my $end = 0;
     my $length;
+
+    $logger->debug("filepath '$filepath'") if $logger->is_debug;
+
+
 
     my $indexdir = $self->indexdir;
     $self->_make_indexdir unless (-d $indexdir);
@@ -507,7 +518,7 @@ sub index_entries {
     # the entry from the file.
 
     open (DATA, "<", $filepath)
-        or $logger->logdie("Could not open data file for reading.");
+        or $logger->logdie("Could not open data file '$filepath' for reading.: $!");
 
     while (<DATA>) {
         my $segment = $_;

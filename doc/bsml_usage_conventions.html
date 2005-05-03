@@ -1,0 +1,1238 @@
+<html>
+
+<head>
+    <title>BSML usage conventions</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+
+<body>
+
+<p class="doc_header">
+    BSML usage conventions<br>
+</p>
+
+<p class="section_header">
+    <a name="overview">
+    Overview
+</p>
+<p>
+    BSML is an XML-based format for storing Bioinformatics data.  This document describes the usage 
+    conventions instituted by TIGR for encoding annotation information in BSML.  The conventions 
+    described in this document are implemented as part of the production annotation pipelines at 
+    TIGR, including pipelines used for comparative analysis.   In these pipelines, BSML is used to 
+    encode input and output data for each stage of the pipeline.  The BSML documents from each stage 
+    of the pipeline are loaded into a relational database, which uses the Chado schema.  The usage 
+    conventions described in this document were based on the available BSML documentation, which 
+    included the BSML v3.1 DTD and Reference Manual from LabBook.   The usage conventions were designed 
+    to take advantage of the most generic elements of BSML and define the simplest representation that 
+    met the needs of the production annotation pipelines at TIGR.   A small subset of elements from 
+    the full BSML 3.1 specification are required to fully describe the annotation data types used by 
+    TIGR's production annotation pipelines.  This subset of elements includes:
+</p>
+<p class="code">
+    &lt;Genome&gt;
+    &lt;Organism&gt;
+    &lt;Sequence&gt;
+    &lt;Feature&gt;
+    &lt;Feature-group-member&gt;
+    &lt;Interval-loc&gt;
+    &lt;Attribute&gt;
+    &lt;Attribute-list&gt;
+    &lt;Cross-reference&gt;
+    &lt;Link&gt;
+    &lt;Seq-pair-alignment&gt;
+    &lt;Seq-pair-run&gt;
+    &lt;Seq-data&gt;
+    &lt;Seq-data-import&gt;
+    &lt;Multiple-alignment-table&gt;
+    &lt;Alignment-summary&gt;
+    &lt;Aligned-sequence&gt;
+    &lt;Sequence-alignment&gt;
+    &lt;Sequence-data&gt;
+    &lt;Analysis&gt;
+</p>
+<p>
+    The defined usage adheres to the BSML v3.1 DTD.  The appendix of this document also lists a set 
+    of XML schemas, which define many of the conventions described in this document.  These XML 
+    schemas are used, in part, to validate adherence to the defined usage conventions.
+</p>
+
+<p class="section_header">
+    Document Notations
+</p>
+
+<p class="subsection_header">
+    XML Elements
+</p>
+<p>
+    Only XML elements that encode data are described in this document.  This limits the 
+    description to elements that contain attributes or PCDATA.  Organizing elements, such as 
+    &lt;BSML&gt;,&lt;Research&gt;,&lt;Definitions&gt;,&lt;Tables&gt;, are shown in the figures but not documented further.  
+    If its not already obvious, XML elements are written as tags.
+</p>
+<p class="code">
+    Example:
+    &lt;Feature&gt;
+</p>
+
+<p class="subsection_header">
+    XML Attributes
+</p>
+<p>
+    XML attributes should not be confused with the BSML element named <Attribute>.  Here is an 
+    example of an XML attribute, named `id' for the element &lt;Feature&gt;
+</p>
+<p class="code">
+    Example:
+    &lt;Feature id='id1'&gt;
+</p>
+<p>
+    Documentation for XML attributes used in the BSML encoding are provided.  The data type is 
+    assumed to be a string unless stated otherwise.  In addition, the set of allowable values and 
+    default values are listed when available.  XML attributes that are optional in our usage 
+    convention are also marked in the documentation.  
+</p>
+
+<p class="subsection_header">
+    XPath
+</p>
+<p>
+    This document uses XPath notation to describe relationships between elements in BSML and 
+    qualify data types.  This technical notation is used in this text to provide developers with 
+    a concise and clear description of the data where appropriate.  See 
+    <a href="http://www.w3.org/TR/xpath">http://www.w3.org/TR/xpath</a> for additional information 
+    about XPath.  For example:
+</p>
+<p class="xpath">
+    //Seq-pair-alignment[@method] = //Analysis[@class]	
+</p>
+
+<p class="subsection_header">
+    Coordinates
+</p>
+<p>
+    Coordinates listed in the document are assumed to be interbase (space-based) coordinates 
+    starting at zero.
+</p>
+
+<p class="section_header">
+    BSML encoding of pairwise sequence alignments
+</p>
+
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    This section describes the conventions for encoding pairwise alignment data produced by search
+    algorithms such as BLAST. The conventions used in the document should be extensible to any other 
+    pairwise alignment data.
+</p>
+
+<p class="subsection_header">
+    BSML document structure
+</p>
+<p>
+    &lt;Seq-pair-alignments&gt; describe regions of similarity (Seq-pair-runs) between a query sequence (refseq) and a subject 
+    sequence(compseq). Each query and subject sequence is defined in the &lt;Sequences&gt; section of the BSML document. &lt;Seq-pair-
+    run&gt; elements provide a set of attributes to associate basic scores with the run.  Additional scores can be added with by adding 
+    &lt;Attribute&gt; tags as children of the Seq-pair-run.  Attributes shared between Seq-pair-run elements are stored as &lt;Attributes&gt; in their 
+    parent Seq-pair-alignment element. 
+</p>
+
+<p class=code>
+    <figure_legend>Figure 1 - Example sequence pair alignment document</figure_legend>
+    
+    &lt;BSML&gt;
+        &lt;Definitions&gt;
+            &lt;Sequences&gt;
+                &lt;Sequence length="447" molecule="aa" id="gbs_ORF00003_23193_protein"&gt;
+                    &lt;Seq-data-import format="fasta" id=" gbs_ORF00003_2319_protein"
+                                     source="/usr/local/annotation/BSML_repository/PNEUMO.pep"&gt;
+                    &lt;/Seq-data-import&gt;
+                &lt;/Sequence&gt;
+                &lt;Sequence length="447" molecule="aa" id="gbs18rs21_ORF00032_35101_protein"/&gt;
+                    &lt;Seq-data-import format="fasta" identifier=" gbs18rs21_ORF00032_35101_protein"
+                                     source="/usr/local/annotation/BSML_repository/PNEUMO.pep"&gt;
+                    &lt;/Seq-data-import&gt;
+                &lt;/Sequence&gt;
+            &lt;/Sequences&gt;
+            &lt;Tables&gt;
+                &lt;Seq-pair-alignment compxref="/usr/local/annotation/BSML_repository/PNEUMO/blast/gbs_799/PNEUMO.pep:gbs18rs21_ORF00032_35101_protein" 
+                                    compseq="gbs18rs21_ORF00032_35101_protein" refstart="0" method="blastp" 
+                                    refseq="gbs_ORF00003_23193_protein" refxref=":gbs_ORF00003_23193_protein" 
+                                    refend="446" reflength="447"&gt;
+                    &lt;Seq-pair-run runlength="447" runprob="1e-115" comprunlength="447" comppos="1" 
+                                  compcomplement="0" refpos="1" runscore="2182" refcomplement="0"&gt;
+                        &lt;Attribute name="percent_identity" content="99.000000"&gt;&lt;/Attribute&gt;
+                        &lt;Attribute name="percent_similarity" content="99.000000"&gt;&lt;/Attribute&gt;
+                    &lt;/Seq-pair-run&gt;
+                &lt;/Seq-pair-alignment&gt;
+            &lt;/Tables&gt;
+        &lt;/Definitions&gt;
+    &lt;/BSML&gt;
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-pair-alignment&gt;
+</p>
+<p>
+    A &lt;Seq-pair-alignment&gt; describes an alignment between two sequences, which BSML designates refseq and compseq.  This 
+    document uses the term `query sequence' to describe refseq and `subject sequence' to describe compseq.  For search programs 
+    such as BLAST, this nomenclature assumes that the query sequence was searched against a database of subject sequences.  The 
+    &lt;Seq-pair-alignment&gt; contains a set of &lt;Seq-pair-runs&gt; which describe each region of similarity within the alignment. 
+</p>
+<p>
+    The following attributes are currently used in search result encodings.
+</p>
+<p>
+    <table border=0>
+        <tr>
+            <td class="element">refseq</td>
+            <td>
+                <p>
+                    BSML ID associated with the query sequence &lt;Sequence&gt; element.  This must reference 
+                    a valid &lt;Sequence&gt; element in the document.
+                </p>
+                <p class="xpath">
+                    //Seq-pair-alignment[@refseq] = //Sequence[@id] 
+                </p>
+                <p>
+                    where <xpath>//Sequence</xpath> represents the &lt;Sequence&gt; element of the query sequence.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">refxref</td>
+            <td>
+                <p>
+                    Database accession associated with the query sequence (formatted as database:accession)
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">refstart</td>
+            <td>
+                <p>
+                    First position on query sequence used as a subsequence in alignment search. 
+                    <br>
+                    Integer.  0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">refend</td>
+            <td>
+                <p>
+                    Stop position on the query sequence used as a subsequence in alignment search. 
+                    <br>
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">reflength</td>
+            <td>
+                <p>
+                    Length of the query sequence.
+                    <br>
+                    Integer.  0 -> <xpath>//Sequence[@length].</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">compseq</td>
+            <td>
+                <p>
+                    BSML ID associated with the subject sequence &lt;Sequence&gt; element.<br>
+                    <xpath>//Seq-pair-alignment[@refseq] = //Sequence[@id]</xpath><br>
+                    where <xpath>//Sequence</xpath> represents the &lt;Sequence&gt; element of the subject sequence.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">compxref</td>
+            <td>
+                <p>
+                    Database accession associated with the subject sequence (formatted database:accession_id)
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">complength</td>
+            <td>
+                <p>
+                    Length of the subject sequence.<br>
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">compstart</td>
+            <td>
+                <p>
+                    Start position on subject sequence used as a subsequence in alignment search.<br>
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">compend</td>
+            <td>
+                <p>
+                    Stop position on subject sequence used as a subsequence in alignment search.<br>
+                    Integer value.  <xpath>//Seq-pair-alignment[@compstart]?//Sequence[@length] </xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">method</td>
+            <td>
+                <p>
+                    Description of alignment method.  This field may be used to associate a &lt;Seq-pair-alignment&gt;
+                    with an &lt;Analysis&gt; object. 
+                    <xpath>//Seq-pair-alignment[@method] = //Analysis[@class]</xpath><br>
+                    eg. <xpath>//Seq-pair-alignment[@method='blastp']</xpath>
+                </p>
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-pair-run&gt;
+</p>
+<p>
+    A &lt;Seq-pair-run&gt; describes a region of similarity between the two sequences referenced in its 
+    parent &lt;Seq-pair-alignment&gt;.   A seq-pair-run is analogous to an HSP for blast searches.
+</p>
+<p>
+    The following attributes are currently used in seq-pair-run elements.  Many of these attributes are 
+    ambiguously defined and usage may vary depending on the search algorithm used.  
+</p>
+<p>
+    <table border=0>
+        <tr>
+            <td class="element">runscore</td>
+            <td>
+                <p>
+                    Score associated with the region.  For blast encoding, the runscore attribute is used 
+                    to store the bit score.<br>
+                    Floating point.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">runprob</td>
+            <td>
+                <p>
+                    Statistical significance of match. For blast encoding, the runprob is used to store the 
+                    p-value.<br>
+                    Floating point.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">runlength</td>
+            <td>
+                <p>
+                    Length of the alignment segment on the query sequence(refseq).  Integer. 0 -><br>
+                    <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">comprunlength</td>
+            <td>
+                <p>
+                    Length of the alignment segment on the subject sequence(compseq).<br>
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>.  Default value is assumed to be equal to 
+                    <xpath>//Seq-pair-alignment[@runlength]</xpath>	
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">refpos</td>
+            <td>
+                <p>
+                    Start position of seq-pair-run reference sequence.<br>
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">refcomplement</td>
+            <td>
+                <p>
+                    For nucleotide sequences only.  Equal to 1 if matching sequence derived from the reverse 
+                    complement.<br>
+                    Bit value 0/1.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">comppos</td>
+            <td>
+                <p>
+                    Start position of seq-pair-run on the subject sequence.<br> 
+                    Integer. 0 -> <xpath>//Sequence[@length]</xpath>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">compcomplement</td>
+            <td>
+                <p>
+                    For nucleotide sequences only.  Equal to 1 if matching sequence derived from the reverse 
+                    complement.<br>
+                    Bit value 0/1
+                </p>
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute&gt;
+</p>
+<p>
+    Additional information about the &lt;Seq-pair-run&gt; is stored in &lt;Attribute&gt; elements.  The &lt;Attribute&gt; 
+    tags provide a means to associate arbitrary score values to the &lt;Seq-pair-run&gt; in addition to the 
+    attributes provided within the &lt;Seq-pair-run&gt; element.  The &lt;Attribute&gt; elements required to describe 
+    a &lt;Seq-pair-run&gt; will vary from search to search.  Example usage of &lt;Attribute&gt; elements follows.
+</p>
+
+<p class="subsection_header">
+    Blastp encoding
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="xpath">//Seq-pair-run/Attribute/[@name='percent_identity']</td>
+            <td>
+                Percentage of identical character matches in the alignment.<br>
+                Floating point.
+            </td>
+        </tr>
+        <tr>
+            <td class="xpath">//Seq-pair-run/Attribute/[@name='percent_similarity']</td>
+            <td>
+                Percentage of similar character matches in the alignment.<br>
+                Floating point.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="section_header">
+    BSML encoding of gene clusters as multiple alignments
+</p>
+
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    The multiple alignment encoding is used encode gene clusters and capture the text of the multiple 
+    alignment.  Data that is stored using the multiple alignment encoding includes paralogous and orthologous 
+    gene clusters.
+</p>
+
+<p class="subsection_header">
+    BSML document structure
+</p>
+<p>
+    The multiple alignment encoding is used encode gene clusters and capture the text of the multiple 
+    alignment.  Data that is stored using the multiple alignment encoding includes paralogous and orthologous 
+    gene clusters.
+</p>
+
+<p class="code">
+    <figure_legend>Figure 2 - Example Multiple alignment encoding</figure_legend>
+
+    &lt;Bsml&gt;
+        &lt;Definitions&gt;
+            &lt;Tables&gt;
+                &lt;Multiple-alignment-table molecule-type="protein"&gt;
+                    &lt;Alignment-summary seq-type="protein" seq-format="msf"&gt;
+                        &lt;Aligned-sequence length="252" seqnum="1" name="tpa1.526.m03960_protein:1"&gt;
+                        &lt;/Aligned-sequence&gt;
+                        &lt;Aligned-sequence length="252" seqnum="2" name="tpa1.526.m03963_protein:2"&gt;
+                        &lt;/Aligned-sequence&gt;
+                    &lt;/Alignment-summary&gt;
+                    &lt;Sequence-alignment sequences="1:2:"&gt;
+                        &lt;Sequence-data seq-name="tpa1.526.m03960_protein:1"&gt;
+                            tpa1.526.m03960_protein   MYRNQYDTDC ITWSPQGRLF QVEYAMESVK QGTCCVGIKS NTHLVLCALK
+                            tpa1.526.m03960_protein   RKISKLAQVQ DKLYKVGEYI GVAMSGITSD AKMIISYMRN ECLSNRFLYG
+                            tpa1.526.m03960_protein   CDITASQLVS LVSEKSQANT QVSSKRPFGV GLLVAGYDET TGLHLFETCP
+                            tpa1.526.m03960_protein   SGNVVEFNAT AFGARCQSAK TYLERKIVNF SESDLNGLIY HAIKALKTTI
+                            tpa1.526.m03960_protein   PNDGEFDVDV ISVGVVGKGT PWKVLDSDFV QTFVDKVLPD SLTGCRLNKK
+                            tpa1.526.m03960_protein   MV
+                        &lt;/Sequence-data&gt;
+                        &lt;Sequence-data seq-name="tpa1.526.m03963_protein:2"&gt;
+                            tpa1.526.m03963_protein   MYRNQYDTDC ITWSPQGRLF QVEYAMESVK QGTCCVGIKS NTHLVLCALK
+                            tpa1.526.m03963_protein   RKISKLAQVQ DKLYKVGEYI GVAMSGITSD AKMIISYMRN ECLSNRFLYG
+                            tpa1.526.m03963_protein   CDITASQLVS LVSEKSQANT QVSSKRPFGV GLLVAGYDET TGLHLFETCP
+                            tpa1.526.m03963_protein   SGNVVEFNAT AFGARCQSAK TYLERKIVNF SESDLNGLIY HAIKALKTTI
+                            tpa1.526.m03963_protein   PNDGEFDVDV ISVGVVGKGT PWKVLDSDFV QTFVDKVLPD SLTGCRLNKK
+                            tpa1.526.m03963_protein   MV
+                        &lt;/Sequence-data&gt;
+                        &lt;Alignment-consensus&gt;&lt;/Alignment-consensus&gt;
+                    &lt;/Sequence-alignment&gt;
+                &lt;/Multiple-alignment-table&gt;
+            &lt;/Tables&gt;
+        &lt;/Definitions&gt;
+    &lt;/Bsml&gt;
+</p>
+
+<p class="subsection_header">
+    &lt;Multiple-alignment-table&gt;
+</p>
+<p>
+    &lt;Multiple-alignment-table&gt; is an organizing element.  This element may contain one or more multiple 
+    alignments encoded using the &lt;Alignment-summary&gt; elements.
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">molecule-type</td>
+            <td>
+                Enumerated string: 'nucleotide' or 'protein'
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Alignment-summary&gt;
+</p>
+<p>
+    &lt;Alignment-summary&gt; is an organizing element for a single multiple alignment.
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">seq-type</td>
+            <td>
+                Enumerated string: 'nucleotide' or 'protein'
+            </td>
+        </tr>
+        <tr>
+            <td class="element">seq-format</td>
+            <td>
+                Data format used in the subsequent &lt;Sequence-data&gt; element for the alignment text. Usually the 
+                alignment data is stored in MSF format and this field will equal `msf'.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Aligned-sequence&gt;
+</p>
+<p>
+    Description of &lt;Aligned-sequence&gt;
+</p>
+
+<p>
+    <table>
+        <tr>
+            <td class="element">seqref</td>
+            <td>
+                BSML ID associated with the sequence &lt;Sequence&gt; element of the member sequence.  This must 
+                reference a valid &lt;Sequence&gt; element in the document. <br>
+                <xpath>//Seq-pair-alignment[@refseq] = //Sequence[@id]</xpath><br>
+                where <xpath>//Sequence</xpath> represents the &lt;Sequence&gt; element of the query sequence.
+
+            </td>
+        </tr>
+        <tr>
+            <td class="element">name</td>
+            <td>
+                Name of the &lt;Sequence-data&gt; record that contains the alignment text.<br>
+                <xpath>//Aligned-sequence[@name] = //Sequence-data[@seq-name]</xpath>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">seqnum</td>
+            <td>
+                Integer index used to reference to the sequence record within the &lt;Sequence-alignment&gt; 
+                record.  Relative order of the sequence in the multiple alignment.
+            </td>
+        </tr>
+        <tr>
+            <td class="element">length</td>
+            <td>
+                Length of sequence in multiple alignment.
+            </td>
+        </tr>
+        <tr>
+            <td class="element">start</td>
+            <td>
+                Start coordinate of sequence used in the alignment.<br>
+                Integer. 0 -> <xpath>//Aligned-sequence[@length]</xpath>.<br>
+                Default assumed to be 0.
+            </td>
+        </tr>
+        <tr>
+            <td class="element">on-complement</td>
+            <td>
+                For nucleotide sequences.  Equal to 1 if matching sequence derived from the reverse complement.<br>
+                Bit value 0/1.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence-alignment&gt;
+</p>
+<p>
+    Description of &lt;Sequence-alignment&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">sequences</td>
+            <td>
+                Colon delimited list of sequence indices.  These indices are defined by 
+                <xpath>//Aligned-sequence[@seqnum]</xpath>.  The list of indices specifies the relative order of the sequences 
+                in the multiple alignment.  This information is used to regenerate the full text of the multiple 
+                alignment from individual alignment strings stored in &lt;Sequence-data&gt;.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence-data&gt;
+</p>
+<p>
+    Description of &lt;Sequence-data&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">seq-name</td>
+            <td>
+                Alignment text for a single sequence in the multiple alignment.<br>
+                <xpath>//Aligned-sequence[@name] = //Sequence-data[@seq-name]</xpath>
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Alignment-consensus&gt;
+</p>
+<p>
+    Consensus sequence associated with the multiple alignment. Optional.
+</p>
+
+<p class="section_header">
+    BSML encoding of sequence polymorphisms
+</p>
+
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    The sequence polymorphism encoding is used encode SNPs and indels.
+</p>
+
+<p class="subsection_header">
+    BSML document structure
+</p>
+<p>
+</p>
+
+<p class="code">
+    <figure_legend>Figure 2 - Example polymorphism encoding</figure_legend>
+
+        &lt;BSML&gt;
+        &lt;Definitions&gt;
+            &lt;Sequences&gt;
+                &lt;Sequence length="5227288" molecule="dna" id="ggg_6616_assembly"&gt;
+                    &lt;Seq-data-import format="fasta" id=" gbs_6616_assembly"
+                                     source="/usr/local/annotation/GGG/BSML_repository/ggg.fsa"&gt;
+                    &lt;/Seq-data-import&gt;
+                &lt;/Sequence&gt;
+                &lt;Sequence length="5227293" molecule="dna" id="ggg_6615_assembly"/&gt;
+                    &lt;Seq-data-import format="fasta" identifier="ggg_6615_assembly"
+                                     source="/usr/local/annotation/GGG/BSML_repository/ggg.fsa"&gt;
+                    &lt;/Seq-data-import&gt;
+                &lt;/Sequence&gt;
+            &lt;/Sequences&gt;
+            &lt;Tables&gt;
+                &lt;Seq-pair-alignment compseq="ggg_6616_assembly" refstart="0" refend="5227293" reflength="5227293" method="polymorphism" 
+                                    refseq="ggg_6615_assembly" &gt;
+                    &lt;Seq-pair-run runlength="1" comprunlength="1" comppos="1000" 
+                                  compcomplement="0" refpos="1000" refcomplement="0"&gt;
+                    &lt;/Seq-pair-run&gt;
+                &lt;/Seq-pair-alignment&gt;
+		&lt;Seq-pair-alignment compseq="ggg_6616_assembly" refstart="0" refend="5227293" reflength="5227293" method="polymorphism" 
+                                    refseq="ggg_6615_assembly" &gt;
+                    &lt;Seq-pair-run runlength="3" comprunlength="0" comppos="1510" 
+                                  compcomplement="0" refpos="1510" refcomplement="0"&gt;
+                    &lt;/Seq-pair-run&gt;
+                &lt;/Seq-pair-alignment&gt;
+            &lt;/Tables&gt;
+        &lt;/Definitions&gt;
+    &lt;/BSML&gt;
+</p>
+
+
+
+<p class="section_header">
+    BSML encoding of sequences
+</p>
+
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    This section describes the encoding of sequence data in BSML, including storage of nucleotide and protein 
+    sequence residues. 
+</p>
+
+<p class="subsection_header">
+    Document structure
+</p>
+<p class="code">
+    <figure_legend>Figure 3 - Example sequence encoding</figure_legend>
+    
+    <incomplete>Example here.</incomplete>
+</p>
+<p>
+    The &lt;Sequence&gt; element in BSML is used to describe a sequence.  The sequence residues may be 
+    encoded "in-line" through the usage of a &lt;Seq-data&gt; element (Figure 2) or externally by a 
+    &lt;Seq-data-import&gt; element (Figure 3).   The &lt;Sequence&gt; element is also a parent element the 
+    &lt;Feature&gt; element discussed in a later section.  The class attribute of a &lt;Sequence&gt; element 
+    describes the type of sequence.  The class attribute can be any valid sequence type.  Valid 
+    sequence types are usually defined by the Sequence Ontology (SO).
+</p>
+<p class="code">
+    <figure_legend>Figure 4 - In-line sequence representation</figure_legend>
+    
+    &lt;Sequence length="15561" molecule="dna" id="lma2_98_assembly" class="assembly"&gt;
+	    &lt;Seq-data&gt;AGCTACG...&lt;/Seq-data&gt;
+    &lt;/Sequence&gt;
+</p>
+<p class="code">
+    <figure_legend>Figure 5 - External sequence representation</figure_legend>
+    
+    &lt;Sequence length="15561" molecule="dna" id="lma2_98_assembly" id="&gt;
+	    &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98_assembly"
+                         source="/usr/local/annotation/TRYP/FASTA_Repository/tryp.fsa"&gt;
+        &lt;/Seq-data-import&gt;
+    &lt;/Sequence&gt;
+</p>
+
+<p class="subsection_header">
+    Assembly sequence element
+</p>
+<p>
+    Genomic sequence is described using the SO term "assembly".  
+</p>
+<p class="xpath">
+    //Sequence/[@class="assembly"]
+</p>
+<p>
+    Using the generic name "assembly" for all genomic sequence allows for simplier querying and 
+    handling of genomic sequence by software and staff.  A more descriptive secondary SO term for 
+    the sequence is expected as an &lt;Attribute&gt;.  Figure 6 shows an example of encoding a sequence 
+    of a "contig" sequence.  Figure 7 shows an example encoding of a "supercontig" sequence.
+</p>
+<p class="code">
+    <figure_legend>Figure 6 - Example contig sequence representation</figure_legend>
+    
+    &lt;Sequence length="15561" molecule="dna" id="lma2_98_assembly" class='assembly'&gt;
+        &lt;Attribute-list&gt;
+            &lt;Attribute name='SO' value='contig'&gt;&lt;/Attribute&gt;
+            &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98_assembly"
+             source="/usr/local/annotation/TRYP/FASTA_Repository/tryp.fsa"&gt;&lt;/Seq-data-import&gt;
+        &lt;/Attribute-list&gt;
+    &lt;/Sequence&gt;
+</p>
+
+<p class="subsection_header">
+    Subsequence mappings
+</p>
+<p>
+    Other types of assembly sequence are a "supercontig" or a "tiling path".   When available, the 
+    mapping of sub-sequences to the larger assembly is stored with the sub-sequence using the &lt;Numbering&gt; 
+    element.  
+</p>
+<p class="code">
+    <incomplete>This example is pretty mangled</incomplete>
+    <figure_legend>Figure 7 - Example supercontig sequence representation</figure_legend>
+    
+    &lt;Sequence length="15561" molecule="dna" id="lma2_98_assembly" class="assembly"&gt;
+        &lt;Attribute-list&gt;
+        &lt;Attribute name='SO' value='supercontig'&gt;&lt;/Attribute&gt;
+        &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98_assembly"
+        source="/usr/local/annotation/TRYP/FASTA_Repository/tryp.fsa"&gt;&lt;/Seq-data-import&gt;
+        &lt;/Sequence&gt;
+        &lt;Sequence length='1981345' molecule='dna' id='lma2_101_assembly" class="assembly"&gt;
+        &lt;Attribute-list&gt;
+        &lt;Attribute name='SO' value='contig'&gt;
+        &lt;/Attribute&gt;
+        &lt;Numbering seqref='lma2_100_assembly' refnum="883496" ascending="1"&gt;&lt;/Numbering&gt;
+    &lt;/Sequence&gt;
+</p>
+
+<p class="subsection_header">
+    Protein sequence
+</p>
+<p class="code">
+    <figure_legend>Figure 8 - Example protein sequence representation</figure_legend>
+    
+    &lt;Sequence length="1147" molecule="aa" id="lma2_98.t00001_protein" class="protein"&gt;
+	    &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98.t00001_protein"
+                         source="/usr/local/annotation/TRYP/FASTA_Repository/tryp_protein.fsa"&gt;
+        &lt;/Seq-data-import&gt;
+    &lt;/Sequence&gt;
+</p>
+
+<p class="subsection_header">
+    CDS sequence
+</p>
+<p class="code">
+    <figure_legend>Figure 9 - Example CDS sequence representation</figure_legend>
+    
+    &lt;Sequence length="3441" molecule="dna" id="lma2_98.t00001_cds" class="cds"&gt;
+	    &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98_cds"
+                         source="/usr/local/annotation/TRYP/FASTA_Repository/tryp_cds.fsa"&gt;
+        &lt;/Seq-data-import&gt;
+    &lt;/Sequence&gt;
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">id</td>
+            <td>BSML ID</td>
+        </tr>
+        <tr>
+            <td class="element">length</td>
+            <td>Length of sequence</td>
+        </tr>
+        <tr>
+            <td class="element">molecule</td>
+            <td>'dna' or 'aa'</td>
+        </tr>
+        <tr>
+            <td class="element">class</td>
+            <td>Type of sequence</td>
+        </tr>
+        <tr>
+            <td class="element">topology</td>
+            <td>Topology of molecule.  Eg. 'linear' or 'circular'</td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-data-import&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">format</td>
+            <td>
+                Format of file containing the sequence record. Currently, `fasta' is the only supported 
+                format.
+            </td>
+        </tr>
+        <tr>
+            <td class="element">identifier</td>
+            <td>
+                FASTA identifier of the sequence record in the file.  This identifier must match the 
+                first consecutive non-whitespace characters on the header line.
+                <br><br>
+                &gt;tryp_lma2_98_cds_seq
+                <br><br>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">source</td>
+            <td>Full path of filename containing sequence record</td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Numbering&gt;
+</p>
+<p>
+    The &lt;Numbering&gt; element maps a &lt;Sequence&gt; element to a location on another &lt;Sequence&gt; element.  
+    The &lt;Numbering&gt; element requires that the mapping is contiguous (eg. an exact mapping between 
+    sequences with no gaps).
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">seqref</td>
+            <td>BSML ID of the source/reference sequence used in the mapping.</td>
+        </tr>
+        <tr>
+            <td class="element">refnum</td>
+            <td>
+                Start coordinate of sequence on seqref.  See description of ascending attribute for derivation of the 
+                end coordinate.<br>
+                Min coordinates = <xpath>//Numbering/refnum</xpath><br>
+                Max coordinate = <xpath>//Numbering/refnum+//Sequence/@length</xpath>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">ascending</td>
+            <td>
+                Orientation of mapping between sequences.  0 or 1.  Determines the strand of the sequence that maps.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute-list&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Cross-reference&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="section_header">
+    <incomplete>
+        <br>
+        THE FOLLOWING SECTIONS ARE OUT OF DATE, INCORRECT AND NEED EDITS
+        <br><br>
+    </incomplete>
+</p>
+
+<p class="subsection_header">
+    Feature elements
+</p>
+<p>
+    The Bsml Object Layer API uses data referenced in these elements to extract a gene's genomic sequence, 
+    transcript sequence, CDS sequence, and individual exons. 
+</p>
+<p>
+    To provide consistency with amino acid sequence representations, a Bsml Attribute element is provided 
+    referencing the assembly id of the genomic sequence.
+</p>
+<p class="code">
+    <figure_legend>Figure 10 - Bsml Attribute Element : Assembly</figure_legend>
+    
+    &lt;Sequence id="Genomic Assembly"&gt;
+	    &lt;Attribute name="ASSEMBLY" content="lma2_98_assembly"/&gt;
+    &lt;/Sequence&gt;
+</p>
+<p>
+    Feature elements identify gene, transcript, cds, and exon locations on an assembly sequence. Each 
+    feature type is identified using the "class" attribute which has the following controlled vocabulary.
+    <br><br>
+    { GENE, CDS, TRANSCRIPT, EXON }
+</p>
+<p>
+    Feature "id" attributes uniquely identify feature elements and are currently assigned the identifiers 
+    found in the TIGR databases. Note XML idrefs cannot be started with a numeric digit. 
+</p>
+<p>
+    Features are assigned location elements of type Interval-loc or Site-loc. Interval-loc elements have 
+    "startpos," "endpos,", and "complement" attributes. "Startpos" and "endpos" correspond to  nucleotide 
+    positions relative to the genomic assembly sequence. "Complement" is defined as 0 if the referenced 
+    sequence is on the same strand as the reference sequence and 1 if it corresponds to the reverse 
+    complement. Site-loc elements define a single position identifier denoted as the "pos" attribute as 
+    well as a "class" attribute of either "START" or "STOP." The "complement" attribute is set in the same 
+    manner as an Interval-loc.
+</p>
+<p>
+    A gene feature contains an Assembly attribute specifying the assembly id of the sequence it references. 
+    This is a temporary fix serving to facilitate API lookup table queries and will be removed before the 
+    system goes into production. The referenced assembly should be implied by the bsml hierarchy. 
+</p>
+<p>
+    Each CDS feature contains a bsml Link element specifying the bsml id of the amino acid sequence the CDS 
+    encodes. The sequences are defined in the &lt;Sequences&gt; section of the bsml document and provide 
+    inline sequence data.
+</p>
+<p class="code">
+    <figure_legend>Figure 11 - Amino Acid Sequence definition referenced by a CDS feature</figure_legend>
+    
+    &lt;Sequence length="61" molecule="aa" id="protein_22125"&gt;
+        &lt;Attribute name="ASSEMBLY" content="lma2_98_assembly"&gt;&lt;/Attribute&gt;
+        &lt;Seq-data&gt;MTRCTEATVREPAAA...&lt;/Seq-data&gt;
+    &lt;/Sequence&gt;
+
+    &lt;Feature class="CDS" id="cds_22134"&gt;
+        &lt;Site-loc complement="0" class="START" sitepos="6616"&gt;&lt;/Site-loc&gt;
+        &lt;Site-loc complement="0" class="STOP" sitepos="7017"&gt;&lt;/Site-loc&gt;
+        &lt;Link href="#protein_22125" rel="SEQ"&gt;&lt;/Link&gt;
+    &lt;/Feature&gt;
+</p>
+
+<p class="subsection_header">
+    Feature groups
+</p>
+<p>
+    Feature groups associate feature elements into transcriptional units. That is, they associate a TRANSCRIPT 
+    feature, CDS feature, and set of EXONS as a group. Prokaryotic data, for which CDS=TRANSCRIPT=GENE, contain 
+    equivalent CDS and TRANSCRIPT features as well as a single exon spanning this interval. This conforms with 
+    the unified gene model used in the Chado systems. Feature groups contain a bsml Link element referencing 
+    the gene to which the transcript belongs as well as a "group-set" attribute which associates feature groups 
+    with each other. The current scheme sets the "group-set" attribute to the feature id of the gene element, 
+    making the use of a "gene link" redundant. 
+</p>
+<p>
+    Feature-group-member elements contain the attributes "feature-type" and "featref." "Feature-type" attributes 
+    define the type of feature the feature-group-member references and may be set to TRANSCRIPT, CDS, or EXON. 
+    "Featref" sets the bsml identifier associated with the referenced feature element. 
+</p>
+<p>
+    Sets of feature groups, linked by having equivalent "group-set" attributes, define the transcript structure 
+    of a gene. 
+</p>
+
+<p class="section_header">
+    BSML encoding of features
+</p>
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    This section describes the encoding of features in BSML.  Feature elements identify gene, transcript, 
+    cds, and exon locations on an assembly sequence. Each feature type is identified using the "class" 
+    attribute which has the following controlled vocabulary.
+</p>
+<p>
+    <xpath>//Feature/@id</xpath> attributes uniquely identify feature elements.  Note XML idrefs cannot start 
+    with a numeric digit. 
+</p>
+<p>
+    Features are assigned coordinate locations using the &lt;Interval-loc&gt; element.  The coordinates 
+    of BSML &lt;Features&gt; are assumed to be interbase coordinates that start at zero.  See Figure 12 for a 
+    depiction of the coordinate
+</p>
+<p class="code">
+    <figure_legend>Figure 12 - Interbase coordinate system.</figure_legend>
+
+      T   A   C   A   G    -> Feature1
+    0   1   2   3   4   5
+      A   T   G   T   C    -> Feature2
+
+    &lt;Feature id='Feature1' class='dummy'&gt;
+        &lt;Interval-loc startpos=0 endpos=5 complement=0&gt;
+    &lt;/Feature&gt;
+    &lt;Feature id='Feature2' class='dummy'&gt;
+       &lt;Interval-loc startpos=0 endpos=5 complement=1&gt;
+    &lt;/Feature&gt;
+</p>
+<p>
+    Features are assigned database references using the &lt;Cross-reference&gt; elements. 
+</p>
+
+<p class="section_header">
+    BSML document structure
+</p>
+<p class="code">
+    <figure_legend>Figure 13 - A complete BSML document</figure_legend>
+    
+    &lt;Bsml&gt;
+      &lt;Definitions&gt;
+        &lt;Sequences&gt;
+          &lt;Sequence length="15561" molecule="dna" id="lma2_98_assembly"&gt;
+            &lt;Feature-tables&gt;
+              &lt;Feature-table&gt;
+                &lt;Feature class="gene" id="lma2_98.t00001_feature_id_gene:22118"&gt;
+                  &lt;Interval-loc endpos="3565" startpos="125" complement="0"&gt;&lt;/Interval-loc&gt;
+                &lt;/Feature&gt;
+                &lt;Feature class="transcript" id="transcript_22117"&gt;
+                  &lt;Interval-loc endpos="3565" startpos="1259" complement="0"&gt;&lt;/Interval-loc&gt;
+                &lt;/Feature&gt;
+                &lt;Feature class="exon" id="exon_22121"&gt;
+                  &lt;Interval-loc endpos="3565" startpos="1259" complement="0"&gt;&lt;/Interval-loc&gt;
+                &lt;/Feature&gt;
+                &lt;Feature class="cds" id="cds_22119"&gt;
+                  &lt;Interval-loc endpos="3565" startpos="1259" complement="0"&gt;&lt;/Interval-loc&gt;
+                  &lt;Link href="#protein_22120" rel="SEQ"&gt;&lt;/Link&gt;
+                &lt;/Feature&gt;
+              &lt;/Feature-group&gt;
+            &lt;/Feature-tables&gt;
+          &lt;Seq-data-import format="fasta" identifier="tryp_lma2_98_assembly"
+          source="/usr/local/annotation/BSML_REPOSITORY/chado_tryp.fsa"&gt;
+          &lt;/Seq-data-import&gt;
+        &lt;/Sequence&gt;
+      &lt;/Definitions&gt;
+    &lt;Bsml&gt;
+</p>
+
+<p class="subsection_header">
+    &lt;Feature&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">id</td>
+            <td>BSML ID</td>
+        </tr>
+        <tr>
+            <td class="element">class</td>
+            <td>
+                The type of Feature. This type should correspond to a term in the Sequence Ontology.  Eg. 
+                gene, transcript, CDS, protein.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Interval-loc&gt;
+</p>
+<p>
+    <table>
+        <tr>
+            <td class="element">startpos</td>
+            <td>
+                Start coordinate of feature.  The coordinate is assumed to be interbase coordinate starting 
+                at zero.  The startpos coordinate is expected to be less than or equal to the endpos 
+                coordinate.  Eg. <xpath>//Interval-loc/startpos <= //Interval-loc/endpos.</xpath>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">endpos</td>
+            <td>
+                End coordinate of feature.  The coordinate is assumed to be a zero start interbase 
+                coordinate.  The startpos coordinate is expected to be less than or equal to the endpos 
+                coordinate.  Eg. <xpath>//Interval-loc/startpos <= //Interval-loc/endpos.</xpath>
+            </td>
+        </tr>
+        <tr>
+            <td class="element">complement</td>
+            <td>
+                Complement is defined as 0 if the referenced feature is on the same strand as the reference 
+                sequence and 1 if the feature corresponds to sequence on the reverse complement.
+            </td>
+        </tr>
+    </table>
+</p>
+
+<p class="subsection_header">
+    &lt;Feature-group&gt;
+</p>
+<p class="code">
+    <figure_legend>Figure 14 - &lt;Feature-group&gt; encoding</figure_legend>
+
+    &lt;Feature-group group-set="lma2_98.t00003_feature_id_gene:22128"&gt;
+        &lt;Feature-group-member feature-type="transcript" featref="transcript_22127"&gt;&lt;/Feature-group-member&gt;
+        &lt;Feature-group-member feature-type="exon" featref="exon_22131"&gt;&lt;/Feature-group-member&gt;
+        &lt;Feature-group-member feature-type="cds" featref="cds_22129"&gt;&lt;/Feature-group-member&gt;
+        &lt;Feature-group-member feature-type="gene" featref="cds_22129"&gt;&lt;/Feature-group-member&gt;
+    &lt;/Feature-group&gt;
+</p>
+
+<p class="subsection_header">
+    &lt;Analysis&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute-list&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Cross-reference&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Link&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p>
+    <xpath>
+    //Link[@rel='analysis']
+    <br><br>
+    //Link[@rel='sequence']
+    </xpath>
+</p>
+
+<p class="section_header">
+    BSML Encoding of computational analysis descriptions
+</p>
+
+<p class="subsection_header">
+    Overview
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="section_header">
+    BSML encoding of sequence quality information
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="section_header">
+    BSML encoding of polymorphism encoding
+</p>
+<p class="subsection_header">
+    SNP
+</p>
+<p class="subsection_header">
+    Indel
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

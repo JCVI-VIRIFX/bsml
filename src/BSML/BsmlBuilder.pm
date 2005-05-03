@@ -26,11 +26,16 @@ $doc->write( 'output_file.xml' );
 use strict;
 use warnings;
 use BSML::BsmlDoc;
+use Log::Log4perl qw(get_logger);
+use Data::Dumper;
+
+my $logger = get_logger("Logger::BSML");
+
 
 # class variable used to create unique element identifiers
 my $elem_id = 0;
 
-=item $builder->createAndAddSequence( $id, $title, $length, $molecule )
+=item $builder->createAndAddSequence( $id, $title, $length, $molecule, $class )
 
 B<Description:> Creates a simple Bsml sequence containing minimum attributes
 
@@ -50,8 +55,7 @@ sub createAndAddSequence
 
   if( !($id) )
     {
-      $id = "Bsml"."$elem_id";
-      $elem_id++;
+	$id = $self->getUID();
     }
 
   if( !($molecule) )
@@ -83,7 +87,7 @@ sub createAndAddSequence
   return $seq;
 }
 
-=item $builder->createAndAddExtendedSequence( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand )
+=item $builder->createAndAddExtendedSequence( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand, $class )
 
 B<Description:> Add a new sequence to the document with extended attributes
 
@@ -106,13 +110,14 @@ B<Returns:>
 sub createAndAddExtendedSequence
   {
     my $self = shift;
-    my ( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand ) = @_;
+    my ( $id, $title, $length, $molecule, $locus, $dbsource, $icAcckey, $topology, $strand, $class ) = @_;
 
     my $seq = $self->createAndAddSequence( $id, $title, $length, $molecule );
 
     if( $locus    ){ $seq->setattr('locus', $locus);}
     if( $dbsource ){ $seq->setattr('dbsource', $dbsource);}
     if( $icAcckey ){ $seq->setattr('ic-acckey', $icAcckey);}
+    if( defined($class)  && !($class eq '') ){ $seq->setattr( 'class', $class ); }
 
     if( $topology ){ 
       if( $topology eq 'top-not-set' || $topology eq 'linear' || $topology eq 'circular' || $topology eq 'tandem' || $topology eq 'top-other' ){
@@ -154,7 +159,7 @@ sub createAndAddExtendedSequenceN
     my $self = shift;
     my %args = @_;
 
-    return $self->createAndAddExtendedSequence( $args{'id'}, $args{'title'}, $args{'length'}, $args{'molecule'}, $args{'locus'}, $args{'dbsource'}, $args{'icAcckey'}, $args{'topology'}, $args{'strand'});
+    return $self->createAndAddExtendedSequence( $args{'id'}, $args{'title'}, $args{'length'}, $args{'molecule'}, $args{'locus'}, $args{'dbsource'}, $args{'icAcckey'}, $args{'topology'}, $args{'strand'}, $args{'class'});
 
   }
 
@@ -170,8 +175,7 @@ sub createAndAddFeatureTable
 
     if( !($id) )
       {
-	$id = "Bsml"."$elem_id";
-	$elem_id++;
+	  $id = $self->getUID();
       }
 
     if( ref($seq) eq 'BSML::BsmlSequence' )
@@ -291,13 +295,13 @@ sub createAndAddFeature
 
      if( !($id) )
       {
-	$id = "Bsml"."$elem_id";
-	$elem_id++;
+	  $id = $self->getUID();
       }
 
       if( ref($FTable) eq 'BSML::BsmlFeatureTable' )
       {
 	my $fref = $FTable->returnBsmlFeatureR( $FTable->addBsmlFeature() );
+
 	$fref->setattr( 'id', $id );
 
 	if( defined($title) && !($title eq '') ){ $fref->setattr( 'title', $title ); }
@@ -322,6 +326,8 @@ sub createAndAddFeature
 		if( $FeatureTable->returnattr( 'id' ) eq $FTable )
 		  {
 		    my $fref = $FeatureTable->returnBsmlFeatureR( $FeatureTable->addBsmlFeature() );
+
+		    
 		    $fref->setattr( 'id', $id );
 
 		    if( defined($title) && !($title eq '') ){ $fref->setattr( 'title', $title ); }
@@ -354,8 +360,15 @@ sub createAndAddFeatureWithLoc
     my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement ) = @_;
 
     my $feature = $self->createAndAddFeature( $FTable, $id, $title, $class, $comment, $displayAuto );
+    
 
-    if( ($start ne "") && ($end ne "") )
+#     if (($start == 0) or ($end == 0)){
+# 	$logger->fatal("id '$id' start '$start' end '$end'");
+#     }
+    
+    
+
+    if( (defined($start)) && (defined($end)) && ($start ne "") && ($end ne "") )
       {
 	if( $start == $end )
 	  {
@@ -505,6 +518,16 @@ sub createAndAddBsmlAttribute
     $elem->addBsmlAttr( $key, $value );
   }
 
+sub createAndAddBsmlAttributes
+  {
+    my $self = shift;
+    my ($elem, %atts ) = @_;
+
+    for my $key (keys %atts) {
+        $elem->addBsmlAttr( $key, $atts{$key} );
+    }
+  }
+
 sub createAndAddBsmlAttributeN
   {
     my $self = shift;
@@ -586,17 +609,16 @@ sub createAndAddSeqDataN
 sub createAndAddSeqDataImport
   {
     my $self = shift;
-    my ( $seq, $format, $source, $id ) = @_;
+    my ( $seq, $format, $source, $id, $identifier ) = @_;
 
     if( !($id) )
     {
-	$id = "Bsml"."$elem_id";
-	$elem_id++;
+	$id = $self->getUID();
     }
     
     if( ref($seq) eq 'BSML::BsmlSequence' )
       {
-	$seq->addBsmlSeqDataImport( $format, $source, $id  );	
+	$seq->addBsmlSeqDataImport( $format, $source, $id, $identifier );	
 	return $seq;
       }
     else
@@ -607,7 +629,7 @@ sub createAndAddSeqDataImport
 	  {
 	    if( $seqR->returnattr('id') eq $seq )
 	      {
-		$seqR->addBsmlSeqDataImport( $format, $source, $id );
+		$seqR->addBsmlSeqDataImport( $format, $source, $id, $identifier );
 		
 		return $seqR;
 	      }
@@ -620,7 +642,7 @@ sub createAndAddSeqDataImportN
     my $self = shift;
     my %args = @_;
     
-    return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'}, $args{'id'} );
+    return $self->createAndAddSeqDataImport( $args{'seq'}, $args{'format'}, $args{'source'}, $args{'id'}, $args{'identifier'} );
   }
 
 
@@ -853,8 +875,7 @@ sub createAndAddFeatureGroup
 
     if( !($id) )
       {
-	$id = "Bsml"."$elem_id";
-	$elem_id++;
+	$id = $self->getUID();
       }
     
     my $FeatureGroup = $seq->returnBsmlFeatureGroupR( $seq->addBsmlFeatureGroup() );
@@ -1105,6 +1126,9 @@ sub createAndAddStrain
     $strain->addBsmlAttr( 'name', $strain_name );
     $strain->addBsmlAttr( 'database', $database );
     $strain->addBsmlAttr( 'source_database', $source_database );
+
+    return $strain;
+
 }
 
 sub createAndAddSegmentSet
@@ -1183,7 +1207,24 @@ sub createAndAddCrossReference
 
   my $xref = $parent->returnBsmlCrossReferenceR( $parent->addBsmlCrossReference );
 
-  $xref->addattr( 'id', $args{'id'} );		 
+
+   if (defined($args{'id'})){
+      
+       my $id = $args{'id'};
+       my $idfinal;
+       if ($id =~ /^\d+/){
+	   $idfinal = '_' . $id;
+       }
+       $xref->addattr( 'id', $idfinal) 
+   }
+  elsif( !($args{'id'}) ) {
+      $args{'id'} = "_$elem_id";
+      $elem_id++;
+      $xref->addattr( 'id', $args{'id'} );		 
+  }
+
+
+
   $xref->addattr( 'context', $args{'context'} );
   $xref->addattr( 'database', $args{'database'} );
   $xref->addattr( 'identifier', $args{'identifier'} );
@@ -1196,6 +1237,77 @@ sub createAndAddCrossReference
   return $xref;
 
 }
+
+sub createAndAddCrossReferencesByParse {
+    ## this looks for recognized header formats and creates appropriate
+    ##  Cross-Reference elements within the passed Sequence.
+    my $self = shift;
+    my %args = @_;
+    
+    my $seq = $args{'sequence'};
+    my $str = $args{'string'} || '';
+    
+    ## PANDA OMNI lines like: OMNI|NTL01TW0001|AAO44098.1|28476008|
+    if ($str =~ /^OMNI\|(.+)\|(.+)\|(.+)\|$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'OMNI', 'identifier-type' => 'version', identifier => $2 );
+        $self->createAndAddCrossReference( parent => $seq, database => 'OMNI', 'identifier-type' => 'gi', identifier => $3 );
+    ## PANDA Swiss-Prot lines like: SP|Q88BK3|DNAA_PSESM
+    } elsif ($str =~ /^SP\|(.+)\|(.+)$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'SP', 'identifier-type' => 'accession', identifier => $1 );
+        $self->createAndAddCrossReference( parent => $seq, database => 'SP', 'identifier-type' => 'entry_name', identifier => $2 );
+    ## PANDA GenBank lines like: GB|AAN14420.1|23193191|AF319579
+    } elsif ($str =~ /^GB\|(.+)\|(.+)\|(.+)$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'GB', 'identifier-type' => 'version', identifier => $1 );
+        $self->createAndAddCrossReference( parent => $seq, database => 'GB', 'identifier-type' => 'gi', identifier => $2 );
+    ## PANDA Protein Research Foundation lines like: PRF|2203412A|1586345|2203412A
+    } elsif ($str =~ /^PRF\|(.+)\|.+\|.+$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'PRF', 'identifier-type' => 'name', identifier => $1 );
+    ## PANDA Brookhaven Protein Data Bank lines like: >PDB|1I3Q_A|14278324|1I3Q_A
+    } elsif ($str =~ /^PDB\|(.+)\|(.+)\|.+$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'PDB', 'identifier-type' => 'version', identifier => $1 );
+        $self->createAndAddCrossReference( parent => $seq, database => 'PDB', 'identifier-type' => 'gi', identifier => $2 );
+    ## PANDA NBRF PIR lines like: PIR|T30335|T30335
+    } elsif ($str =~ /^PIR\|(.+)\|.+$/) {
+        $self->createAndAddCrossReference( parent => $seq, database => 'PIR', 'identifier-type' => 'entry', identifier => $1 );
+    }
+}
+
+#
+# Added 2004-11-02 Bugzilla case 1808
+#
+
+sub createAndAddAttributeListMember {
+    
+    my $self = shift;
+    my ($AttributeList, $name, $content) = @_;
+    
+    $AttributeList->addBsmlAttributeListMember( $name, $content );
+    
+    return $AttributeList;
+}
+
+sub createAndAddAttributeListMemberN {
+
+
+    my $self = shift;
+    my %args = @_;
+    
+    return $self->createAndAddAttributeListMember( $args{'name'}, $args{'content'} );
+}
+
+sub createAndAddBsmlAttributeList {
+
+    my $self = shift;
+    my ( $elem, $id ) = @_;
+
+    if (!defined($id)){
+	$id = "Bsml"."$elem_id";
+	$elem_id++;
+    }
+
+    $elem->addBsmlAttrlist();
+}
+
 
 
 

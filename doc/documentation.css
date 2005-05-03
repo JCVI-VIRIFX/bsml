@@ -1,0 +1,84 @@
+body, td {
+    background-color: #FFFFFF;
+    margin: 1.0em;
+    margin-bottom: 10em;
+    font-family: courier,sans-serif;
+    font-size: small;
+    text-align: left;
+    vertical-align: top;
+}
+
+incomplete {
+    text-decoration: blink;
+}
+
+li {
+    list-style-type: none;
+}
+
+li.primary {
+    font-weight: bold;
+}
+
+li.secondary {
+    list-style-type: circle;
+}
+
+li.striked {
+    text-decoration: line-through;
+}
+
+li.table_name {
+    font-weight: bold;
+}
+
+p.code {
+    background-color: #EEEEEE;
+    padding: 0.5em;
+    border-style: none;
+    white-space: pre;
+    margin: 1.5em;
+}
+
+p.doc_header {
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.5em;
+}
+
+figure_legend {
+    font-weight: bold;
+}
+
+p.section_header {
+    font-weight: bold;
+    background-color: #7B9CAE;
+    padding: 0.5em;
+    margin-top: 5em;
+}
+
+p.subsection_header {
+    font-weight: bold;
+    background-color: #D6FFD6;
+    padding: 0.25em;
+}
+
+p.xpath {
+    font-style: italic;
+    white-space: pre;
+}
+
+td.xpath {
+    padding-right: 2.5em;
+    font-style: italic;
+}
+
+xpath {
+    font-style: italic;
+}
+
+td.element {
+    font-weight: bold;
+    padding-right: 2.5em;
+}
+

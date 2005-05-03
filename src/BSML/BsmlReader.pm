@@ -8,8 +8,14 @@ use BSML::Indexer::Fasta;
 use Data::Dumper;
 use Log::Log4perl qw(get_logger);
 
+my $logger = get_logger("Logger::BSML");
+
+
 sub readSequence
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($seq) = @_;
 
@@ -55,6 +61,7 @@ sub readSequence
 
 sub returnAllSequences
   {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
 
     return $self->returnBsmlSequenceListR();
@@ -62,6 +69,7 @@ sub returnAllSequences
 
 sub readSequenceDat
   {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ($seq) = @_;
 
@@ -73,6 +81,7 @@ sub readSequenceDat
 
 sub readSequenceDatImport
   {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ($seq) = @_;
 
@@ -91,6 +100,7 @@ sub readSequenceDatImport
 
 sub readNumbering
 {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ($seq) = @_;
 
@@ -101,6 +111,7 @@ sub readNumbering
 
 sub readCrossReference
 {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ($ref) = @_;
 
@@ -132,12 +143,61 @@ sub readCrossReference
 }
 
 
+# #--------------------------------------------------------------------
+# # detectFeatureTables()
+# #
+# # This will allow clients to determine whether or not particular
+# # <Sequence> elements contain nested <Feature-tables> elements.
+# #
+# #--------------------------------------------------------------------
+# sub detectFeatureTables {  
+
+#     $logger->debug("") if $logger->is_debug;
+#     my $self = shift;
+#     my ($input) = @_;
+
+#     if( ref($input) eq 'BSML::BsmlSequence' ){
+
+# 	#loop over all feature tables
+# 	#add a feature record to return for each feature 
+
+# 	my $number_of_feature_tables_elements = scalar(@{$input->returnBsmlFeatureTableListR()});
+
+
+
+# 	die "$number_of_feature_tables_elements" . Dumper $input;
+
+# 	foreach my $FTable (@{$input->returnBsmlFeatureTableListR()}) {
+	    
+# 	    if (defined($FTable)){
+# 		#
+# 		# This <Sequence> does contain nested <Feature-tables>
+# 		#
+# 		return 'true';
+# 	    }
+# 	}
+# 	#
+# 	# Did not detect any nested <Feature-tables> for this <Sequence>
+# 	#
+# 	return 'false';
+
+#     }
+#     else{
+# 	my $reftype = ref($input);
+# 	$logger->logdie("$reftype was not expected.");
+#     }
+# }
+
+
 sub readFeatures
   {
+
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ($input) = @_;
 
     my $feat_list = [];
+
 
     if( ref($input) eq 'BSML::BsmlSequence' )
       {
@@ -195,32 +255,25 @@ sub readFeatures
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
 
+
+		#
+		# Attribute-list support
+		#
+
+		my $bsmlAttributeListHash = $Feature->returnBsmlAttributeListHashR();
+		
+		$record->{'bsmlattrlist'} = $bsmlAttributeListHash;
+
 		#
 		# Multiple Cross-reference support
 		#
-
 		
-		my $xref = [];
-
-		foreach my $xrefhash (@{$Feature->returnBsmlCrossReferenceListR()}){
-
-		    my $tmphash = {};
-
-		    foreach my $qual (keys(%{$xrefhash->{'attr'}})){
-			$tmphash->{$qual} = $xrefhash->{'attr'}->{$qual};
-		    }
-
-		    push (@{$xref}, $tmphash);
-		}
+		my $xref = $self->readCrossReference( $Feature );
 		$record->{'cross-reference'} = $xref;
-
-
-
 
 		#
 		# Bsmllink
 		#
-
 
 
 		my $bsmllink = [];
@@ -229,6 +282,11 @@ sub readFeatures
 		    push( @{$bsmllink}, {rel => $link->{'rel'}, href => $link->{'href'}} );
 		}
 		$record->{'bsmllinks'} = $bsmllink;
+
+
+		# Attribute Lists
+		
+		$record->{'attribute_lists'} = $self->readBsmlAttributeList( $Feature );
 
 		push( @{$feat_list}, $record );
 	      }
@@ -295,6 +353,13 @@ sub readFeatures
 		}
 		$record->{'bsmllinks'} = $bsmllink;
 		
+		my $xref = $self->readCrossReference( $Feature );
+		$record->{'cross-reference'} = $xref;
+
+		# Attribute Lists
+		
+		$record->{'attribute_lists'} = $self->readBsmlAttributeList( $Feature );
+
 		push( @{$feat_list}, $record );
 	      }
 	 return $feat_list;
@@ -330,6 +395,14 @@ sub readFeatures
 
 		$record->{'locations'} = $locations;
 
+		my $bsmllink = [];
+		foreach my $link (@{$Feature->returnBsmlLinkListR()})
+		{
+		    push( @{$bsmllink}, {rel => $link->{'rel'}, href => $link->{'href'}} );
+		}
+		$record->{'bsmllinks'} = $bsmllink;
+
+
 		my $qualifiers = [];
 
 		my $qualhash = $Feature->returnBsmlQualifierHashR();
@@ -351,25 +424,30 @@ sub readFeatures
 		
 		$record->{'bsmlattrs'} = $bsmlattr;
 		
-		my $xref = [];
-
-		my $xrefhash = $Feature->returnBsmlCrossReferenceR();
-		
-		foreach my $qual (keys(%{$xrefhash->{'attr'}}))
-		{
-		    push( @{$xref}, { key => $qual, value => $xrefhash->{'attr'}->{$qual} } );
-		}
+		my $xref = $self->readCrossReference( $Feature );
 		$record->{'cross-reference'} = $xref;
+
+		# Attribute Lists
+		
+		$record->{'attribute_lists'} = $self->readBsmlAttributeList( $Feature );
 
 		push( @{$feat_list}, $record );
 		return $feat_list;
 	      }
     
+
+
+
+
+
    
   }
 
 sub readReferences
   {
+
+      $logger->debug("") if $logger->is_debug;
+      
     my $self = shift;
     my ($input) = @_;
 
@@ -457,6 +535,10 @@ sub readReferences
 
 sub readBsmlAttributes
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ($elem) = @_;
 
@@ -480,6 +562,10 @@ sub readBsmlAttributes
 
 sub returnAllFeatureTables
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ($input) = @_;
 
@@ -503,6 +589,8 @@ sub returnAllFeatureTables
 
 sub returnAllSeqPairAlignmentsListR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->returnBsmlSeqPairAlignmentListR();
   }
@@ -511,6 +599,8 @@ sub returnAllSeqPairAlignmentsListR
 
 sub readSeqPairAlignment
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($SeqPairAln, $filter, $filter_count) = @_;
     my $rhash = {};
@@ -635,6 +725,9 @@ sub readSeqPairAlignment
 
 sub readLinks
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($elem) = @_;
 
@@ -648,6 +741,9 @@ sub readLinks
   }
 
 sub readFeatureGroup {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($FeatureGroup) = @_;
     my $returnhash = {};
@@ -703,12 +799,16 @@ sub readFeatureGroup {
 
 sub returnAllAnalysis
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->returnBsmlAnalysisListR();
 }
 
 sub readAnalysis
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     my ($analysis) = @_;
@@ -759,6 +859,8 @@ sub readAnalysis
 
 sub returnAllFeatureGroupSetIds
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     #this returns a list of strings, probably should be made to return a reference
@@ -774,6 +876,8 @@ sub returnAllFeatureGroupSetIds
 
 sub returnAllGeneIDs
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     #this returns a list of strings, probably should be made to return a reference
@@ -799,6 +903,8 @@ sub returnAllGeneIDs
 
 sub returnAllIdentifiers
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my %args = @_;
 
@@ -898,6 +1004,8 @@ sub returnAllIdentifiers
 
 sub seqIdtoAssemblyId
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($sequenceId) = @_;
 
@@ -926,6 +1034,8 @@ sub seqIdtoAssemblyId
 
 sub assemblyIdtoSeqList
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($assemblyId) = @_;
 
@@ -952,6 +1062,8 @@ sub assemblyIdtoSeqList
 
 sub assemblyIdtoGeneList
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($assemblyId) = @_;
 
@@ -979,6 +1091,8 @@ sub assemblyIdtoGeneList
 
 sub fetch_all_alignmentPairs
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($querySeqId, $matchSeqId ) = @_;
 
@@ -1021,6 +1135,8 @@ sub fetch_all_alignmentPairs
 
 sub geneIdtoAssemblyId
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($geneId) = @_;
     my $fgrouplist = BSML::BsmlDoc::BsmlReturnFeatureGroupLookup($geneId);
@@ -1086,6 +1202,23 @@ sub cdsIdtoProteinSeqId
 		      }
 		  }
 }
+
+
+## returns raw sequence
+
+sub extractSequence {
+    my $self = shift;
+    my ($seqref, $start, $stop, $complement) = @_;
+    
+    my $seq = substr($$seqref, $start, $stop - $start + 1);
+    
+    if ($complement) {
+        $seq = reverse_complement($seq);
+    }
+    
+    return $seq;
+}
+
 
 # Returns the list of feature groups (transcripts) associated with a 
 # gene identifier.
@@ -1871,7 +2004,7 @@ sub subSequence
 
 	if( $seqimpt->{'format'} eq 'fasta' )
 	{
-	    $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'id'} );
+	    $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'identifier'} );
 	}
 	
 	# Both interal and external lookups for sequence data failed. 
@@ -1881,7 +2014,7 @@ sub subSequence
 	{
 #	    print STDERR "BsmlReader::subSequence - Error: Unable to retrieve sequence data. Source: $seqimpt->{'source'} Id: $seqimpt->{'id'}\n"; 
 #	    return '';
-	    $logger->warn("No sequence to retrieve for ource: $seqimpt->{'source'} Id: $seqimpt->{'id'}");
+	    $logger->warn("No sequence to retrieve for ource: $seqimpt->{'source'} Id: $seqimpt->{'identifier'}");
 	    return undef;
 	}
 	
@@ -1932,6 +2065,10 @@ sub subSequence
 
 sub parse_multi_fasta {
 
+
+    my ($package, $filename, $linee) = caller();
+
+    
   my $fasta_file = shift;
   my $specified_header = shift;
 
@@ -1962,11 +2099,15 @@ sub parse_multi_fasta {
   my $header_index = $indexer->header_index;
   my $entry_index = $indexer->entry_index;
  
+
+
+
   my (%h, %e);
   my $c = tie %h, 'CDB_File', $header_index or die "tie failed: $!\n";
   $c = tie %e, 'CDB_File', $entry_index or die "tie failed: $!\n";
 
   my $entry = $h{$specified_header};
+
   my ($offset, $length) = split( ',', $e{$entry} );
 
   # if the sequence could not be loaded with an index, perform a grep operation on the
@@ -2519,5 +2660,29 @@ sub readElement
 
     return $rhash;
 }
+
+
+sub readBsmlAttributeList  {
+
+    my $self = shift;
+    my ($elem) = @_;
+
+    if( $elem ){
+
+	my $listref = $elem->returnBsmlAttributeListHashR();
+	return $listref;
+    }
+}
+
+sub detectFeatureTables {
+
+    $logger->debug("") if $logger->is_debug;
+    my $self = shift;
+    my ($input) = @_;
+
+    return $input->detectBsmlFeatureTables();
+
+}
+
 
 1

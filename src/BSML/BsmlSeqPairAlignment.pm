@@ -79,7 +79,7 @@ sub write
 
     $writer->startTag( "Seq-pair-alignment", %{$self->{'attr'}} );
 
-    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}}))
+    foreach my $bsmlattr (sort (keys( %{$self->{ 'BsmlAttr'}})))
       {
 	$writer->startTag( "Attribute", 'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
 	$writer->endTag( "Attribute" );
@@ -98,12 +98,12 @@ sub write
 	$xref->write( $writer );
     }
 
-
     foreach my $link (@{$self->{'BsmlLink'}})
-      {
-        $writer->startTag( "Link", %{$link} );
-        $writer->endTag( "Link" );
-      }
+       {
+	   $writer->startTag( "Link", %{$link} );
+	   $writer->endTag( "Link" );
+       }
+    
 
     $writer->endTag( "Seq-pair-alignment" );
   }

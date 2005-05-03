@@ -101,6 +101,8 @@ sub init
     $self->{ 'BsmlAnalyses' } = [];
     $self->{ 'BsmlGenomes' } = [];
 
+    $self->{'UID_COUNTER'} = 0;
+
     # initialize a namespace table
     $self->{ 'BsmlTableId' } = $BsmlTableIdCount;
     @{$BsmlIdLookups}[$BsmlTableIdCount] = {};
@@ -127,6 +129,14 @@ sub DESTROY
     $bsml_logger->info( "Destructor Called - BsmlDocID: $self->{'BsmlTableId'}" );
     $bsml_logger->level($DEBUG);
   }
+
+# return a unique, document level id. Counter is maintained as a 
+# member variable of BsmlDoc
+
+sub getUID
+{
+    return "Bsml".$self->{'UID_COUNTER'}++;
+}
 
 sub BsmlSetDocumentLookup
   {

@@ -2,7 +2,11 @@ package BSML::BsmlElement;
 
 use warnings;
 use strict;
+use Log::Log4perl qw(get_logger);
 use Data::Dumper;
+
+my $logger = get_logger("Logger::BSML");
+
 
 =head1 NAME
 
@@ -50,6 +54,10 @@ B<Returns:> None
 
 sub addattr
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ( $key, $value ) = @_;
     if( defined( $value ) ){
@@ -68,6 +76,7 @@ B<Returns:> None
 
 sub setattr
   {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
     my ( $key, $value ) = @_;
 
@@ -86,6 +95,7 @@ B<Returns:> None
 
 sub setattrh
   {
+      $logger->debug("") if $logger->is_debug;
     my $self = shift;
 
     my ($href) = @_;
@@ -107,7 +117,9 @@ B<Returns:> None
 =cut
 
 sub dropattr
-  {
+{
+      $logger->debug("") if $logger->is_debug;
+ 
     my $self = shift;
     my ( $key, $value ) = @_;
 
@@ -126,7 +138,9 @@ B<Returns:> hash reference
 
 sub returnattrHashR
   {    
-    my $self = shift;
+       $logger->debug("") if $logger->is_debug;
+
+   my $self = shift;
     return $self->{'attr'};
   }
 
@@ -142,6 +156,8 @@ B<Returns:> an attribute value
 
 sub returnattr
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($key) = @_;
 
@@ -160,6 +176,8 @@ B<Returns:> None
 
 sub addBsmlAttr
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $key, $value ) = @_;
     if( defined( $value ) ){
@@ -179,6 +197,8 @@ B<Returns:> None
 
 sub setBsmlAttr
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $key, $value ) = @_;
     
@@ -195,6 +215,8 @@ B<Returns:> None
 
 sub setBsmlAttrh
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     my ($href) = @_;
@@ -218,6 +240,8 @@ B<Returns:> None
 
 sub dropBsmlAttr
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $key, $value ) = @_;
 
@@ -236,6 +260,9 @@ B<Returns:> hash reference
 
 sub returnBsmlAttrHashR
   {
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     return $self->{ 'BsmlAttr' };
   }
@@ -252,6 +279,8 @@ B<Returns:> attribute value
 
 sub returnBsmlAttr
 {
+      $logger->debug("") if $logger->is_debug;
+
   my $self = shift;
   my ($key) = @_;
   return $self->{'BsmlAttr'}->{$key};
@@ -259,6 +288,8 @@ sub returnBsmlAttr
 
 sub addBsmlLink
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($rel, $href) = @_;
 
@@ -271,6 +302,8 @@ sub addBsmlLink
 
 sub setBsmlLink
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($rel, $href) = @_;
     
@@ -279,6 +312,9 @@ sub setBsmlLink
 
 sub dropBsmlLink
   {
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ($index) = @_;
 
@@ -297,12 +333,16 @@ sub dropBsmlLink
 
 sub returnBsmlLinkListR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->{'BsmlLink'};
   }
 
 sub returnBsmlLinkR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($index) = @_;
 
@@ -316,6 +356,9 @@ sub returnBsmlLinkR
 
 sub addBsmlCrossReference
 {
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
 
     push (@{$self->{'BsmlCrossReference'}}, new BSML::BsmlCrossReference);
@@ -328,23 +371,17 @@ sub addBsmlCrossReference
 
 sub returnBsmlCrossReferenceR
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ($index) = @_;
 
-
-#    print Dumper $self;
-#    die "index " . $index;
-
     return $self->{'BsmlCrossReference'}[$index];
-    #print $index;
-
-    #die;
-
-    #my $val=  $self->{'BsmlCrossReference'}[$index];
-    #return $val;
 }
 
 sub returnBsmlCrossReferenceListR {
+
+      $logger->debug("") if $logger->is_debug;
 
     my $self = shift;
     return $self->{'BsmlCrossReference'};
@@ -353,6 +390,8 @@ sub returnBsmlCrossReferenceListR {
 
 sub dropBsmlCrossReference
 {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my $index = shift;
 
@@ -361,8 +400,48 @@ sub dropBsmlCrossReference
 
 sub write()
   {
+      $logger->debug("") if $logger->is_debug;
     
   }
+
+
+#
+# 2004-11-04 Support to add, drop, return BsmlAttributeList 
+# 
+
+sub addBsmlAttributeList {
+
+
+    $logger->debug("") if $logger->is_debug;
+
+    my $self = shift;
+    my ( $listref ) = @_;
+
+    push (@{$self->{'BsmlAttributeList'}}, $listref);
+    
+}
+
+sub dropBsmlAttributeList  {
+
+      $logger->debug("") if $logger->is_debug;
+
+    my $self = shift;
+
+    $self->{ 'BsmlAttributeList' } = undef;
+  }
+
+
+sub returnBsmlAttributeListHashR {
+
+    $logger->debug("") if $logger->is_debug;
+    
+    my $self = shift;
+    
+#    $logger->fatal(Dumper $self);
+
+    return $self->{ 'BsmlAttributeList' };
+
+}
 
 
 

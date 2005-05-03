@@ -6,6 +6,11 @@ use BSML::BsmlElement;
 use BSML::BsmlCrossReference;
 use strict;
 use warnings;
+use Log::Log4perl qw(get_logger);
+use Data::Dumper;
+
+my $logger = get_logger("Logger::BSML");
+
 
 =head1 NAME
 
@@ -45,6 +50,9 @@ This document refers to version 1.0 of the BSML Object Layer
 
 sub new
   {
+
+      $logger->debug("Instantiating BSML::BsmlFeature") if $logger->is_debug;
+
     my $class = shift;
     my $self = {};
     bless $self, $class;
@@ -55,10 +63,14 @@ sub new
 
 sub init
   {
+
+      $logger->debug("Init'ing BSML::BsmlFeature") if $logger->is_debug;
+
     my $self = shift;
 
     $self->{ 'attr' } = {};
     $self->{ 'BsmlAttr' } = {};
+    $self->{ 'BsmlAttributeList' } = undef;
     $self->{ 'BsmlSite-Loc' } = [];
     $self->{ 'BsmlInterval-Loc' } = [];
     $self->{ 'BsmlQual' } = {};
@@ -78,6 +90,9 @@ B<Returns:> None
 
 sub addBsmlQualifier
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $valuetype, $value ) = @_;
 
@@ -96,6 +111,9 @@ B<Returns:> None
 
 sub setBsmlQualifier
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $valuetype, $value ) = @_;
 
@@ -112,6 +130,9 @@ B<Returns:> None
 
 sub setBsmlQualifiersHash
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     my ($href) = @_;
@@ -134,6 +155,10 @@ B<Returns:> None
 
 sub dropBsmlQualifier
   {
+
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $valuetype ) = @_;
 
@@ -152,6 +177,9 @@ B<Returns:> hash reference
 
 sub returnBsmlQualifierHashR
   {
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->{'BsmlQual'};
   }
@@ -168,6 +196,9 @@ B<Returns:> scaler
 
 sub returnBsmlQualifier
 {
+
+      $logger->debug("") if $logger->is_debug;
+
   my $self = shift;
   my ($key) = @_;
 
@@ -186,6 +217,10 @@ B<Returns:> None
 
 sub addBsmlSiteLoc
   {
+
+
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $sitepos, $comp, $class ) = @_;
 
@@ -210,6 +245,10 @@ B<Returns:> None
 
 sub setBsmlSiteLoc
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ( $sitepos, $comp, $class ) = @_;
 
@@ -240,6 +279,10 @@ B<Returns:> None
 
 sub dropBsmlSiteLoc
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ( $sitepos, $comp ) = @_;
 
@@ -268,6 +311,8 @@ B<Returns:> list reference
 
 sub returnBsmlSiteLocListR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
 
     return $self->{'BsmlSite-Loc'};
@@ -285,6 +330,10 @@ B<Returns:> None
 
 sub addBsmlIntervalLoc
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ( $startpos, $endpos, $comp ) = @_;
 
@@ -305,6 +354,10 @@ B<Returns:> None
 
 sub setBsmlIntervalLoc
   {
+
+      $logger->debug("") if $logger->is_debug;
+
+
     my $self = shift;
     my ( $startpos, $endpos, $comp ) = @_;
 
@@ -335,6 +388,8 @@ B<Returns:> None
 
 sub dropBsmlIntervalLoc
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my ( $startpos, $endpos, $comp ) = @_;
 
@@ -363,6 +418,8 @@ B<Returns:> reference to a list of hash references
 
 sub returnBsmlIntervalLocListR
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     return $self->{'BsmlInterval-Loc'};
   }
@@ -377,10 +434,57 @@ sub returnBsmlIntervalLocListR
 
 =cut 
 
+# #
+# # Added 2004-11-02 Bugzilla case 1808
+# #
+# sub addBsmlAttributeList {
+
+#     my $self = shift;
+#     push ( @{$self->{'BsmlAttributeList'}}, new BSML::BsmlAttributeList );
+    
+#     my $index = @{$self->{'BsmlAttributeList'}} - 1;
+#     return $index;
+# }
+
+# sub dropBsmlAttributeList {
+
+#     my $self = shift;
+#     my ($index) = @_;
+
+#     my $newlist = [];
+
+#     for(  my $i=0;  $i< @{$self->{'BsmlAttributeList'}}; $i++ ) {
+# 	if( $i != $index ){
+# 	    push( @{$newlist}, $self->{'BsmlAttributeList'}[$i] );
+# 	}
+#     }
+
+#     $self->{'BsmlAttributeList'} = $newlist;
+# }
+
+# sub returnBsmlAttributeListoListR {
+
+#     my $self = shift;
+#     return $self->{'BsmlAttributeList'};
+
+# }
+
+# sub returnBsmlAttributeListR {
+
+#     my $self = shift;
+#     my ($index) = @_;
+
+#     return $self->{'BsmlAttributeList'}[$index];
+# }
+
+
+
 
 
 sub write
   {
+      $logger->debug("") if $logger->is_debug;
+
     my $self = shift;
     my $writer = shift;
 
@@ -423,7 +527,21 @@ sub write
         $writer->endTag( "Link" );
       }
 
+#    use Data::Dumper;
+
+#    print Dumper $self->{'BsmlAttributeList'};
+   
+  foreach my $listref (@{$self->{'BsmlAttributeList'}}){
+	  $writer->startTag( "Attribute-list");
+	    foreach my $hash ( sort {$a->{'name'} cmp $b->{'name'}} @{$listref} ){ 
+		    $writer->startTag( "Attribute",  'name' => $hash->{'name'}, 'content' => $hash->{'content'} );
+		    $writer->endTag( "Attribute" );
+		}
+	   $writer->endTag( "Attribute-list" );
+      }
+        
+    
     $writer->endTag( "Feature" );
-  }
+}
 
 1

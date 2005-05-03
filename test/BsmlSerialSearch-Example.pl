@@ -4,7 +4,14 @@ use lib '../src/';
 use BSML::BsmlParserSerialSearch;
 use BSML::BsmlSeqPairAlignment;
 use BSML::BsmlReader;
+use BSML::Logger;
 use Data::Dumper;
+
+my $mylogger = new BSML::Logger('LOG_FILE'=>'/tmp/BsmlSerialSearch-Example.pl.log',
+                                 'LOG_LEVEL'=>1);
+
+my $logger = BSML::Logger::get_logger(__PACKAGE__);
+
 
 # A reader object can be used to "package" the data contained in BsmlSequence, BsmlSeqPairAlignment, and BsmlAnalysis objects
 # into structured hashes. 
@@ -14,7 +21,10 @@ my $reader = new BSML::BsmlReader;
 # The constructor for the serial parser accepts three optional arguments. Each of these arguments defines a reference to a callback function.
 # The parser will call these functions with an object reference at parse time as element is encoutered. 
 
-my $parser = new BSML::BsmlParserSerialSearch( AlignmentCallBack => \&alignmentPrint, AnalysisCallBack => \&analysisPrint, SequenceCallBack => \&sequencePrint );
+my $parser = new BSML::BsmlParserSerialSearch( SeqFeatureCallBack => \&featureParseLite,  SequenceCallBack => \&sequenceParseLite );
+# my $parser = new BSML::BsmlParserSerialSearch( SequenceCallBack => \&sequenceParseLite, ReadFeatureTables => 0, FeatureCallBack => \&featureParseLite );
+# my $parser = new BSML::BsmlParserSerialSearch( SequenceCallBack => \&sequencePrint );
+# my $parser = new BSML::BsmlParserSerialSearch( AlignmentCallBack => \&alignmentPrint, AnalysisCallBack => \&analysisPrint, SequenceCallBack => \&sequencePrint );
 # my $parser = new BSML::BsmlParserSerialSearch( GenomeCallBack => \&genomePrint );
 
 # Begin BSML parse. If no filename is provided the parser defaults to STDIN. 
@@ -70,11 +80,28 @@ sub analysisPrint
 
 sub sequencePrint
 {
-    return;
     my $seqref = shift;
     print "SEQ: ";
     print $seqref->returnattr( 'id' );
     print "\n";
+
+    
+}
+
+sub sequenceParseLite
+{
+    my $seqref = shift;
+    print "Seq -> SEQ: ".$seqref->returnattr( 'id' )."\n";
+}
+
+sub featureParseLite
+{
+    my $listref = shift;
+    my $seqref = $listref->[1];
+    my $featref = $listref->[0];
+
+
+    print "SeqFeat -> SEQ: ".$seqref->returnattr( 'id' )." -> FEAT: ".$featref->returnattr('id')."\n";
 }
 
 # A callback for Genome Objects

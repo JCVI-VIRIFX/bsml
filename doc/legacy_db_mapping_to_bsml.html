@@ -1,0 +1,1667 @@
+<html>
+
+<head>
+    <title>Legacy prok annotation database mapping to BSML</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+
+<body>
+
+<p class="doc_header">
+    Legacy prok annotation database mapping to BSML<br>
+</p>
+
+<p class="section_header">
+    Sequences
+</p>
+
+<p class="subsection_header">
+    Naming convention
+</p>
+<p>
+    The identifier for the sequence is generated using the field assembly.asmbl_id.
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name+assembly.asmbl_id+"_assembly"
+</p>
+<p>
+    Example:<br>
+    gba_1599_assembly
+</p>
+<p>
+    Note: All subfeatures of the sequence will use a similar naming convention to generate 
+    <xpath>//Feature/@id</xpath>. The naming convention for <xpath>//Sequence/@id</xpath> and 
+    <xpath>//Feature/@id</xpath> will likely change.  Software should not make any assumptions 
+    about the naming conventions.
+</p>
+<p class="subsection_header">
+    Assembly sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name + "_" 
+        +assembly.asmbl_id
+        +"_assembly"
+    //Sequence/@class = `assembly'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(assembly.sequence) 
+    //Sequence/@topology = asmbl_data.topology 
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id
+
+    //Sequence/Attribute[@name='molecule_name'] = asmbl_data.name
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id
+
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `supercontig' 
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id 
+        and asmbl_data.name like `%pseudomolecule%'
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `plasmid' 
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id 
+        and asmbl_data.name like `%plasmid%'
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `chromosome' 
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id 
+        and asmbl_data.name like `%chromosome%'
+
+    //Sequence/Seq-data->text() = assembly.sequence
+</p>
+<p class="subsection_header">
+    Protein sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `ORF'
+        + "_protein_seq"
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+    //Sequence/@length = datalength(asm_feature.protein) 
+        where asm_feature.feat_type = `ORF'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `ORF'
+</p>
+<p class="subsection_header">
+    CDS sequence
+</p>
+<p>
+    The ORF sequence is stored as the CDS sequence.  This encoding is consistent with the 
+    Chado gene encoding.
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `ORF'
+        + "_CDS_seq"
+    //Sequence/@class = `CDS'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `ORF'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `ORF'
+</p>
+<p class="subsection_header">
+    tRNA sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `tRNA'
+        + "_tRNA_seq"
+    //Sequence/@class = `tRNA'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `tRNA'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `tRNA'
+</p>
+<p class="subsection_header">
+    rRNA sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `rRNA'
+        + "_tRNA_seq"
+    //Sequence/@class = `rRNA'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `rRNA'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `rRNA'
+</p>
+<p class="subsection_header">
+    snRNA sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `sRNA'
+        + "_snRNA_seq"
+    //Sequence/@class = `snRNA'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `snRNA'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `snRNA'
+</p>
+<p class="subsection_header">
+    Terminator sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `TERM'
+        + "_terminator_seq"
+    //Sequence/@class = `terminator'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `TERM'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `TERM'
+</p>
+<p class="subsection_header">
+    RBS sequence
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `RBS'
+        + "_ribosome_entry_site_seq"
+    //Sequence/@class = `ribosome_entry_site'
+    //Sequence/@molecule = `dna'
+    //Sequence/@length = datalength(asm_feature.sequence) 
+        where asm_feature.feat_type = `RBS'
+    //Sequence/Seq-data->text() = asm_feature.sequence 
+        where feat_type = `RBS'
+</p>
+<p>
+    The following sections describe <Feature> elements which are nested below the assembly 
+    sequence described above.
+</p>
+
+<p class="section_header">
+    Gene encoding
+</p>
+<p>
+    The ORF(or NTORF) from the annotation database is used to fill the required features 
+    for the standard Chado gene encoding.  The Chado gene encoding requires 5 &lt;Feature&gt; 
+    elements: gene, transcript, CDS, exon, and protein.
+
+    Note: &lt;Interval-loc&gt; and &lt;Cross-reference&gt; elements for each of the Gene, Transcript, CDS, 
+    and Exon &lt;Feature&gt; elements are identical.
+</p>
+<p class="subsection_header">
+    Gene Feature
+</p>
+<p class="xpath">
+    //Feature[@class=`gene`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_gene"
+    //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`gene`]/Interval-loc/complement = 0
+    //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3 
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`gene`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    Gene Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`gene`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
+        where ident.feat_name = asm_feature.feat_name
+    //Cross-reference/@identifier-type='locus'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='gene'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_gene"
+</p>
+<p class="subsection_header">
+    Transcript Feature
+</p>
+<p class="xpath">
+    //Feature[@class=`transcript`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_transcript"
+    //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1 
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3 
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript`]/Interval-loc/complement = 0
+    //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1 
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3 
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    Transcript Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`transcript`]/Cross-reference/@database='...'
+    //Feature[@class=`transcript`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`transcript`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature[@class=`transcript`]/Cross-reference/@database='...'
+    //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.locus
+        where ident.feat_name = asm_feature.feat_name
+
+    //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type=transcript'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_transcript"
+</p>
+<p class="subsection_header">
+    CDS Feature
+</p>
+<p class="xpath">
+    //Feature[@class='CDS`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_CDS"
+    //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`CDS`]/Interval-loc/complement = 0
+    //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`CDS`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    CDS Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`CDS`]/Cross-reference/@database='...'
+    //Feature[@class=`CDS`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`CDS`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature[@class=`CDS`]/Cross-reference/@database='...'
+    //Feature[@class=`CDS`]/Cross-reference/@identifier=ident.locus
+        where ident.feat_name = asm_feature.feat_name
+
+    //Feature[@class=`CDS`]/Cross-reference/@identifier-type='locus'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='CDS'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_CDS"
+</p>
+<p class="subsection_header">
+    CDS Sequence residues
+</p>
+<p class="xpath">
+    //Feature[@class=`CDS']/Link[@rel='sequence']/@href = database_name
+    +assembly.asmbl_id
+    +"_"+asm_feature.feat_name where feat_type = `ORF'
+    + "_CDS_seq"
+
+    Example:
+    
+    <incomplete>[XML snippet here]<incomplete>
+</p>
+<p class="subsection_header">
+    Exon Feature
+</p>
+<p class="xpath">
+    //Feature[@class='exon`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_exon"
+    //Feature[@class=`exon`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`exon`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`exon`]/Interval-loc/complement = 0
+    //Feature[@class=`exon`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`exon`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`exon`]/Interval-loc/complement = 1
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='exon'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_exon"
+</p>
+<p class="subsection_header">
+    Exon Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class='exon`]/Cross-reference/@database='...'
+    //Feature[@class=`exon`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`exon`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature[@class=`exon`]/Cross-reference/@database='...'
+    //Feature[@class=exon`]/Cross-reference/@identifier=ident.locus
+        where ident.feat_name = asm_feature.feat_name
+
+    //Feature[@class=`exon`]/Cross-reference/@identifier-type='locus'
+
+    Example:
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    Protein Features
+</p>
+<p class="xpath">
+    //Feature[@class='protein`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_protein"
+    //Feature[@class=`protein`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`protein`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`protein`]/Interval-loc/complement = 0
+    //Feature[@class=`protein`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`protein`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`protein`]/Interval-loc/complement = 1
+
+    //Feature[@class=`protein']/Link[@rel='sequence']/@href = database_name
+        +assembly.asmbl_id
+        +"_"+asm_feature.feat_name where feat_type = `ORF'
+        + "_protein_seq"
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='protein'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_protein"
+
+    Example:
+    <incomplete>[XML snippet here]<incomplete>
+</p>
+
+<p class="section_header">
+    Feature relationships
+</p>
+<p>
+    <incomplete>add description here</incomplete>
+</p>
+
+<p class="section_header">
+    RNA Features
+</p>
+<p class="subsection_header">
+    tRNA Features
+</p>
+<p class="xpath">
+    //Feature[@class='tRNA`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_tRNA"
+    //Feature[@class=`tRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `tRNA'
+    //Feature[@class=`tRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `tRNA'
+    //Feature[@class=`tRNA`]/Interval-loc/complement = 0
+    //Feature[@class=`tRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `tRNA'
+    //Feature[@class=`tRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `tRNA'
+    //Feature[@class=`tRNA`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    tRNA Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`tRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`tRNA`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`tRNA`]/Cross-reference/@identifier-type='feat_name'
+</p>
+<p class="subsection_header">
+    tRNA Sequence residues
+</p>
+<p class="xpath">
+    //Feature[@class=`tRNA']/Link[@rel='sequence']/@href = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_tRNA_seq"
+</p>
+<p class="subsection_header">
+    tRNA Annotation attributes
+</p>
+<p class="xpath">
+    //Feature[@class='tRNA']/Attribute[@name='name'] = ident.com_name 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `tRNA'
+    //Feature[@class='tRNA']/Attribute[@name='tRNA_anti-codon'] = feat_score.score
+        where ORF_attribute.att_type = `tRNA' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common.score_type.input_type = `tRNA' 
+        and common.score_type.score_type = `anti-codon'
+
+    Example:
+    <incomplete>[XML snippet here]<incomplete>
+</p>
+<p class="subsection_header">
+    rRNA Encoding
+</p>
+<p class="xpath">
+    //Feature[@class='rRNA`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_rRNA"
+    //Feature[@class=`rRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `rRNA'
+    //Feature[@class=`rRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `rRNA'
+    //Feature[@class=`rRNA`]/Interval-loc/complement = 0
+    //Feature[@class=`rRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `rRNA'
+    //Feature[@class=`rRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `rRNA'
+    //Feature[@class=`rRNA`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    rRNA Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`rRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`rRNA`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`rRNA`]/Cross-reference/@identifier-type='feat_name'
+</p>
+<p class="subsection_header">
+    rRNA Sequence residues
+</p>
+<p class="xpath">
+    //Feature[@class=`rRNA']/Link[@rel='sequence']/@href = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_rRNA_seq"
+</p>
+<p class="subsection_header">
+    rRNA Annotation attributes
+</p>
+<p class="xpath">
+    //Feature[@class='rRNA']/Attribute[@name='name'] = ident.com_name 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `rRNA'
+
+    Example:
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    snRNA Encoding
+</p>
+</p>
+    The SO identifier to describe this feat_type is `ncRNA'.
+</p>
+<p class="xpath">
+    //Feature[@class='snRNA`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_snRNA"
+    //Feature[@class=`snRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `sRNA'
+    //Feature[@class=`snRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `sRNA'
+    //Feature[@class=`snRNA`]/Interval-loc/complement = 0
+    //Feature[@class=`snRNA`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `sRNA'
+    //Feature[@class=`snRNA`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `sRNA'
+    //Feature[@class=`snRNA`]/Interval-loc/complement = 1
+</p>
+<p class="subsection_header">
+    snRNA Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`snRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier-type='feat_name'
+</p>
+<p class="subsection_header">
+    snRNA Sequence residues
+</p>
+<p class="xpath">
+    //Feature[@class=`snRNA']/Link[@rel='sequence']/@href = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_snRNA_seq"
+</p>
+<p class="subsection_header">
+    snRNA Annotation attributes
+</p>
+<p class="xpath">
+    //Feature[@class='ncRNA']/Attribute[@name='name'] = ident.com_name
+    where ident.feat_name = asm_feature.feat_name 
+    and asm_feature.feat_type = `sRNA'
+
+    Example:
+    <incomplete>[XML snippet here]</imcomplete>
+</p>
+
+<p class="section_header">
+    Other features
+</p>
+
+<p class="subsection_header">
+    Signal peptide encoding
+</p>
+<p>
+    Signal peptide features localize to protein features.  The following &lt;Feature&gt; 
+    elements are nested below the &lt;Sequence&gt; element for protein sequences. The 
+    following &lt;Feature&gt; elements are nested below //Sequence[@class='protein'].
+</p>
+<p class="xpath">
+    //Feature[@class='signal_peptide`]/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_signal_peptide"
+
+    //Feature[@class=`signal_peptide`]/Attribute[@name='HMM_cleavage_site'] = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and common..score_type.score_type = `HMM cleavage site'
+
+    //Feature[@class=`signal_peptide`]/Attribute[@name='NN_cleavage_site']  = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and  common..score_type.score_type = `site'
+
+    //Feature[@class='signal_peptide']/Attribute[@name='max_cleavage_site_probability'] = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and common..score_type.score_type = `cleavage site prob'
+
+    //Feature[@class='signal_peptide']/Attribute[@name='signal_probability'] = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and common..score_type.score_type = `signal pep prob'
+
+    //Feature[@class='signal_peptide']/Attribute[@name='y-score'] = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and common..score_type.score_type = `y-score'
+
+    //Feature[@class='signal_peptide']/Attribute[@name='s-mean'] = feat_score.score 
+        where ORF_attribute.att_type = `SP' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `SP' 
+        and common..score_type.score_type = `s-mean'
+
+    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@feature-type='signal_peptide'
+    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_signal_peptide"
+    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@featref= database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_protein"
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    Ribosomal binding site encoding
+</p>
+<p>
+    Ribosomal binding site features localize to assembly features.  
+</p>
+<p class="xpath">
+    //Feature[@class='ribosome_entry_site']/@id = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_ribosome_entry_site"
+
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `RBS'
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `ribosome_entry_site'
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/complement = 0
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `RBS'
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `RBS'
+    //Feature[@class=`ribosome_entry_site`]/Interval-loc/complement = 1
+    //Feature[@class=`ribosome_entry_site']/Link[@rel='sequence']/@href = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_ribosome_entry_site_seq"
+
+    //Feature/[@class='ribosome_entry_site']/Link[@rel='analysis'] = `RBS_analysis'
+
+    //Analysis/@id='RBS_analysis'
+    //Analysis/[@id='RBS_analysis']/@method = `RBS'
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    Terminator encoding
+</p>
+<p>
+    Ribosomal binding site features localize to assembly features.  
+</p>
+<p class="xpath">
+    //Feature[@class='terminator']/@id = = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_terminator"
+
+    //Feature[@class=`terminator`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `'
+    //Feature[@class=`terminator`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `terminator'
+    //Feature[@class=`terminator`]/Interval-loc/complement = 0
+    //Feature[@class=`terminator`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `terminator'
+    //Feature[@class=`terminator`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3 
+        and asm_feature.feat_type = `terminator'
+    //Feature[@class=`terminator`]/Interval-loc/complement = 1
+
+    //Feature[@class=terminator']/Link[@rel='sequence']/@href = database
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +asm_feature.feat_name
+        +"_terminator_seq"
+
+    //Feature/[@class='terminator']/Link[@rel='analysis'] = `TERM_analysis'
+
+    //Feature[@class=`terminator`]/Attribute[@name='term_direction']/@content = asm_feature.comment 
+    where asm_feature.feat_type = `TERM'
+
+    //Analysis/@id='TERM_analysis'
+    //Analysis/[@id='TERM_analysis']/@method = `TERM'
+    //Analysis/[@id='TERM_analysis']/Attribute[@name='method']/@content = `TERM'
+</p>
+<p class="subsection_header">
+    Terminator Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`terminator`]/Cross-reference/@database='...'
+    //Feature[@class=`terminator`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`terminator`]/Cross-reference/@identifier-type='feat_name'
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="section_header">
+    Gene annotation Attributes
+</p>
+<p>
+    The following data types are all associated with the transcript feature.
+</p>
+<p class="subsection_header">
+    Ident information
+</p>
+<p class="xpath">
+    //Feature[@class=`transcript']/Attribute[name='gene_product_name']/@content = ident.com_name 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='assignby']/@content = ident.assignby 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='date']/@content = ident.date 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='comment']/@content = ident.comment 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='auto_comment']/@content = ident.auto_comment 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='gene_symbol']/@content = ident.gene_sym 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='start_site_editor']/@content = ident.start_edit 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='completed_by']/@content = ident.complete 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute[name='auto_annotate_toggle']/@content = ident.auto_annotate 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+    //Feature[@class=`transcript']/Attribute-list/Attribute[@name='EC']/@content = ident.ec# 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `ORF'
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+
+<p class="subsection_header">
+    TIGR Roles
+</p>
+<p>
+    The elements described in this section are assumed to contain the following 
+    XPath prefix: <xpath>//Feature[@class=`transcript']</xpath>.  It has been replaced with `?' 
+    for brevity.
+</p>
+<p class="xpath">
+    ?/Attribute-list/Attribute[@name='TIGR_role']/@content = role_link.role_id
+        where role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute[@name='assignby']/@content = role_link.assignby
+        where role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute[@name='date']/@content = role_link.date 
+        where role_link.feat_name = asm_feature.feat_name
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    GO
+</p>
+<p>
+    The elements described in this section are assumed to contain the following 
+    XPath prefix: //Feature[@class=`transcript'].  It has been replaced with `?' 
+    for brevity.
+</p>
+<p class="xpath">
+    ?/Attribute-list/Attribute/[@name='GO']/@content = go_role_link.go_id 
+        where go_role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute[@name='assignby']/@content = go_role_link.assign_by 
+        where role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute[@name='date']/@content = go_role_link.date 
+        where role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute/[@qualifier='qualifier']/@content= go_role_link.qualifier 
+        where go_role_link.feat_name = asm_feature.feat_name
+
+    ?/Attribute-list/Attribute/@name = go_evidence.ev_code 
+        where go_evidence.role_link_id = go_role_link.id
+
+    ?/Attribute-list/Attribute/@content = go_evidence.evidence 
+</p>
+<p>
+    If go_evidence.with_ev is NOT NULL, an additional string is concatenated to the 
+    <xpath>//Attribute/@content</xpath> attribute defined above.
+</p>
+<p class="xpath">
+    ?/Attribute-list/Attribute/@content += " WITH "+go_evidence.with_ev where go_evidence.role_link_id = go_role_link_id
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+<p class="subsection_header">
+    ORF_attribute
+</p>
+<p>
+    A subset of information stored in the ORF_attribute table is encoded in 
+    <xpath>//Feature[@class=`transcript']/Attribute</xpath>.
+</p>
+<p class="xpath">
+    //Feature[@class=`transcript']/Attribute/@name = `MW'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where ORF_attribute.att_type = `MW' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = MW' 
+        and common..score_type.score_type = `MW'
+
+    //Feature[@class=`transcript']/Attribute/@name = `pI'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where ORF_attribute.att_type = `PI' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `PI' 
+        and common..score_type.score_type = `PI'
+
+    //Feature[@class=`transcript']/Attribute/@name = `GC'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where ORF_attribute.att_type = `GC' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `GC' 
+        and common..score_type.score_type = `GC'
+
+    //Feature[@class=`transcript']/Attribute/@name = `transmembrane_coords'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where ORF_attribute.att_type = `GES' 
+        and ORF_attribute.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and common..score_type.input_type = `GES' 
+        and common..score_type.score_type = `coords'
+
+    //Feature[@class=`transcript']/Attribute/@name = `transmembrane_regions
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where feat_score.input_id = ORF_attribute.id 
+        and ORF_attribute.att_type = `GES' 
+        and common..score_type.id = feat_score.score_id 
+        and common..score_type = `regions'
+
+    //Feature[@class=`transcript']/Attribute/@name = `lipo_membrane_protein'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where feat_score.input_id = ORF_attribute.id 
+        and ORF_attribute.att_type = `LP'
+
+    //Feature[@class=`transcript']/Attribute/@name = `outer_membrane_protein'
+    //Feature[@class=`transcript']/Attribute/@content = feat_score.score 
+        where feat_score.input_id = ORF_attribute.id 
+        and ORF_attribute.att_type = `OMP'
+</p>
+<p>
+    Example:<br>
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+
+<p class="subsection_header">
+    Pseudomolecule mapping
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="section_header">
+    Evidence
+</p>
+<p>
+    Search evidence is encoded using &lt;Seq-pair-alignment&gt; and &lt;Seq-pair-run&gt; elements 
+    in BSML.  &lt;Sequence&gt; elements are required for all referenced sequence identifiers.  
+    These sparsely populated &lt;Sequence&gt; elements are referred to as sequence stubs in 
+    this document.
+</p>
+<p class="subsection_header">
+    BER/AUTO-BER Evidence Encoding
+</p>
+<p>
+    The following encoding applies to both `BER' and `AUTO-BER' ev_type.  For both 
+    these ev_types, the method will be encoded as `BER'.
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/@refseq = database_name
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_CDS"
+    //Seq-pair-alignment/@compseq = evidence.accession 
+
+    //Seq-pair-alignment/@class = `match'
+    //Seq-pair-alignment/Link/@href = `#BER_analysis'
+    //Seq-pair-alignment/Link/@rel = `analysis'
+
+    //Seq-pair-run/@runscore = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `BER'
+        and common..score_type.score_type = `score' 
+    //Seq-pair-run/@runprob = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `BER'
+        and common..score_type.score_type = `Pvalue' 
+    //Seq-pair-run/@refpos = min(evidence.end5,evidence.end3) - 1 
+        where evidence.ev_type = `BER'
+    //Seq-pair-run/@runlength = max(evidence.end5,evidence.end3) - min(evidence.end5,evidence.end3) + 1 
+        where evidence.ev_type = `BER
+
+    If evidence.end5 < evidence.end3
+    //Seq-pair-run/@refcomplement = 1
+
+    If evidence.end5 > evidence.end3
+    //Seq-pair-run/@refcomplement = 0
+
+    //Seq-pair-run/@comppos = evidence.m_lend - 1
+    //Seq-pair-run/@comprunlength = evidence.m_rend - evidence.m_lend + 1
+    //Seq-pair-run/@compcomplement = 0
+
+    If evidence.ev_type = `BER' 
+    //Seq-pair-run/Attribute[@name='auto_annotate_toggle']/@content = 1
+</p>
+
+<p class="subsection_header">
+    Sequence stubs
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"+evidence.feat_name 
+        where ev_type = `BER'
+        + "_CDS"
+    //Sequence/@class = `CDS'
+    //Sequence/@molecule = `dna'
+
+    //Sequence/@id = evidence.accession where ev_type = `BER'
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+</p>
+
+<p class="subsection_header">
+    Analysis element
+</p>
+<p class="xpath">
+    //Analysis/@id = 'BER_analysis'
+    //Analysis/@Attribute/[@name='program']/@content = 'BER'
+    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
+    //Analysis/@Attribute/[@name='algorithm']/@content='BER'
+    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
+    //Analysis/@Attribute/[@name = 'name']/@content='BER_analysis'
+</p>
+
+<p class="subsection_header">
+    HMM2 Evidence Encoding
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/@refseq = database_name
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Seq-pair-alignment/@compseq = evidence.accession 
+
+    //Seq-pair-alignment/@class = `match'
+    //Seq-pair-alignment/Link/@href = `#HMM2_analysis'
+    //Seq-pair-alignment/Link/@rel = `analysis'
+
+    //Seq-pair-run/@runscore = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `HMM2'
+        and common..score_type.score_type = `score' 
+    //Seq-pair-run/@runprob = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `HMM2'
+        and common..score_type.score_type = `e-value' 
+
+    //Seq-pair-run/@refpos = evidence.rel_end5 -1
+        where evidence.ev_type = `HMM'
+    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
+        where evidence.ev_type = `HMM'
+    //Seq-pair-run/@complement=0
+
+    //Seq-pair-run/@comppos = evidence.m_lend - 1 
+        where evidence.ev_type = `HMM'
+    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
+        where evidence.ev_type = `HMM'
+    //Seq-pair-run/@compcomplement = 0
+</p>
+
+<p class="subsection_header">
+    Sequence stubs
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+    //Sequence/@id = evidence.accession 
+        where evidence.ev_type = 'HMM'
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+
+    //Sequence/Cross-reference/@identifier-type = 'current'
+    //Sequence/Cross-reference/@identifier = evidence.feat_name
+
+    if (evidence.accession =~ /^TIGR/)
+    //Sequence/Cross-reference/@database = 'TIGR_TIGRFAMS'
+    if (evidence.accession =~ /^PF/)
+    //Sequence/Cross-reference/@database = 'PFam'
+
+
+
+</p>
+<p>
+    Note: HMM accessions are currently stored as a protein records since there is no 
+    SO term to represent a HMM.
+</p>
+
+<p class="subsection_header">
+    Analysis element
+</p>
+<p class="xpath">
+    //Analysis/@id = 'HMM2_analysis'
+    //Analysis/@Attribute/[@name='program']/@content = 'HMM2'
+    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
+    //Analysis/@Attribute/[@name='algorithm']/@content='HMM2'
+    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
+    //Analysis/@Attribute/[@name = 'name']/@content='HMM2_analysis'
+</p>
+
+<p class="subsection_header">
+    BLASTN Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p class="subsection_header">
+    PROSITE Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p class="subsection_header">
+    NCBI COG Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p class="subsection_header">
+    FPrintScan Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p class="subsection_header">
+    BlastProDom Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+<p class="subsection_header">
+    COG Accession Evidence Encoding
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="section_header">
+    Table Usage Summary
+</p>
+
+<p class="subsection_header">
+    Migrated tables
+</p>
+<p>
+    This information was parsed from the Sybase sysobjects table for a Prok database.
+</p>
+<p>
+    <sql>select name from sysobjects where type = `U'</sql>
+</p>
+<p>
+    The following tables where considered during the migration.  Fields that are currently 
+    used in the migration to BSML are listed and categorized into (3) categories. 
+    <ul>
+        <li>
+            Fields that are not required for the BSML migration are striked.   These fields are 
+            ignored by the migration script and have been deemed unimportant for purposes of 
+            the migration.
+        </li>
+        <li>
+            Fields that are a primary source of data that is migrated to BSML are in bold.  All 
+            of these fields should have a documented mapping to a field in BSML in the previous 
+            sections of this document.
+        </li>
+        <li>
+            Fields that are not migrated as part of the current implementation are marked with 
+            a circle.  These fields are may be considered as part of future migration 
+            development 
+        </li>
+        <li>
+            All other fields (non-boldface, non-striked, no asterisk) are either required for 
+            querying or used to derive information required for the migration.
+        </li>
+    </ul>
+</p>
+<p>
+
+<li class="table_name">ident</li>
+    <ul>
+        <li>ident.feat_name</li>
+        <li class="primary">ident.locus</li>
+        <li class="primary">ident.com_name</li>
+        <li class="primary">ident.comment</li>
+        <li class="primary">ident.assignby</li>
+        <li class="primary">ident.date</li>
+        <li class="primary">ident.ec#</li>
+        <li class="primary">ident.pub_comment</li>
+        <li class="striked">ident.nt_comment</li>
+        <li class="primary">ident.auto_comment</li>
+        <li class="primary">ident.gene_sym</li>
+        <li class="striked">ident.species</li>
+        <li class="striked">ident.save_history</li>
+        <li class="secondary">ident.auto_annotate</li>
+        <li class="secondary">ident.start_edit</li>
+        <li class="secondary">ident.complete</li>
+    </ul>
+
+<li class="table_name">nt_ident</li>
+    <ul>
+        <li class="primary">nt_ident.feat_name</li>
+        <li class="primary">nt_ident.locus</li>
+        <li class="primary">nt_ident.com_name</li>
+        <li class="primary">nt_ident.comment</li>
+        <li class="primary">nt_ident.assignby</li>
+        <li class="primary">nt_ident.date</li>
+        <li class="primary">nt_ident.ec#</li>
+        <li class="primary">nt_ident.pub_comment</li>
+        <li class="primary">nt_ident.auto_comment</li>
+        <li class="primary">nt_ident.gene_sym</li>
+        <li class="striked">nt_ident.species</li>
+        <li class="striked">nt_ident.save_history</li>
+        <li class="primary">nt_ident.nt_locus</li>
+    </ul>
+
+<li class="table_name">ORF_attribute</li>
+    <ul>
+        <li class="striked">ORF_attribute.id</li>
+        <li>ORF_attribute.feat_name</li>
+        <li>ORF_attribute.att_type</li>
+        <li class="primary">ORF_attribute.curated</li>
+        <li class="striked">ORF_attribute.method</li>
+        <li class="primary">ORF_attribute.date</li>
+        <li class="primary">ORF_attribute.assignby</li>
+    </ul>
+
+<li class="table_name">accession</li>
+    <ul>
+        <li class="striked">accession.id</li>
+        <li class="secondary">accession.feat_name</li>
+        <li class="secondary">accession.accession_db</li>
+        <li class="secondary">accession.accession_id</li>
+        <li class="secondary">accession.accession_pid</li>
+    </ul>
+
+<li class="table_name">asm_feature</li>
+    <ul>
+        <li>asm_feature.feat_id</li>
+        <li>asm_feature.feat_type</li>
+        <li class="striked">asm_feature.feat_class</li>
+        <li class="striked">asm_feature.feat_method</li>
+        <li class="primary">asm_feature.end5</li>
+        <li class="primary">asm_feature.end3</li>
+        <li class="primary">asm_feature.comment</li>
+        <li class="primary">asm_feature.assignby</li>
+        <li class="primary">asm_feature.date</li>
+        <li class="primary">asm_feature.sequence</li>
+        <li class="primary">asm_feature.protein</li>
+        <li class="primary">asm_feature.feat_name</li>
+        <li>asm_feature.asmbl_id</li>
+        <li class="striked">asm_feature.parent_id</li>
+        <li class="striked">asm_feature.change_log</li>
+        <li class="striked">asm_feature.save_history</li>
+        <li class="secondary">asm_feature.sec_struct</li>
+    </ul>
+
+<li class="table_name">role_link</li>
+    <ul>
+        <li>role_link.id</li>
+        <li>role_link.feat_name</li>
+        <li class="primary">role_link.role_id</li>
+        <li class="primary">role_link.assignby</li>
+        <li class="primary">role_link.datestamp</li>
+    </ul>
+
+<li class="table_name">score_text</li>
+    <ul>
+        <li class="striked">score_text.id</li>
+        <li class="striked">score_text.feat_name</li>
+        <li class="striked">score_text.identifier</li>
+        <li class="striked">score_text.alignment</li>
+    </ul>
+
+<li class="table_name">stan</li>
+    <ul>
+        <li class="striked">stan.id</li>
+        <li>stan.asmbl_id</li>
+        <li class="striked">stan.asmbl_data_id</li>
+        <li class="striked">stan.prev_asmbl</li>
+        <li class="striked">stan.original_asmbl_id</li>
+        <li>stan.iscurrent</li>
+        <li class="striked">stan.change_log</li>
+    </ul>
+
+<li class="table_name">sub_to_final</li>
+    <ul>  
+        <li>sub_to_final.asmbl_id</li>
+        <li>sub_to_final.asm_lend</li>
+        <li>sub_to_final.asm_rend</li>
+        <li>sub_to_final.sub_asmbl_id</li>
+        <li>sub_to_final.sub_asm_lend</li>
+        <li>sub_to_final.sub_asm_rend</li>
+    </ul>
+
+<li class="table_name">evidence</li>
+    <ul>  
+        <li class="striked">evidence.id</li>
+        <li>evidence.feat_name</li>
+        <li>evidence.ev_type</li>
+        <li class="primary">evidence.accession</li>
+        <li class="primary">evidence.end5</li>
+        <li class="primary">evidence.end3</li>
+        <li class="primary">evidence.rel_end3</li>
+        <li class="primary">evidence.rel_end5</li>
+        <li class="primary">evidence.m_lend</li>
+        <li class="primary">evidence.m_rend</li>
+        <li class="secondary">evidence.curated</li>
+        <li class="secondary">evidence.date</li>
+        <li class="secondary">evidence.assignby</li>
+        <li class="striked">evidence.change_log</li>
+        <li class="striked">evidence.save_history</li>
+        <li class="secondary">evidence.method</li>
+    </ul>
+
+<li class="table_name">feat_score</li>
+    <ul>  
+        <li class="striked">feat_score.id</li>
+        <li>feat_score.input_id</li>
+        <li>feat_score.score_id</li>
+        <li>feat_score.score</li>
+    </ul>
+
+<li class="table_name">assembly</li>
+    <ul>  
+        <li class="primary">assembly.asmbl_id</li>
+        <li class="striked">assembly.seq_id</li>
+        <li class="striked">assembly.bac_id</li>
+        <li class="striked">assembly.com_name</li>
+        <li class="striked">assembly.type</li>
+        <li class="striked">assembly.method</li>
+        <li class="striked">assembly.ed_status</li>
+        <li class="striked">assembly.redundancy</li>
+        <li class="striked">assembly.perc_N</li>
+        <li class="striked">assembly.seq#</li>
+        <li class="striked">assembly.full_CDS</li>
+        <li class="striked">assembly.CDS_start</li>
+        <li class="striked">assembly.CDS_end</li>
+        <li class="striked">assembly.ed_pn</li>
+        <li class="striked">assembly.ed_date</li>
+        <li class="striked">assembly.comment</li>
+        <li class="primary">assembly.sequence</li>
+        <li class="striked">assembly.frameshift</li>
+        <li class="striked">assembly.release_date</li>
+        <li class="striked">assembly.lock_id</li>
+        <li class="striked">assembly.lsequence</li>
+        <li class="striked">assembly.quality</li>
+        <li class="striked">assembly.ca_contig_id</li>
+        <li class="striked">assembly.mod_date</li>
+        <li class="striked">assembly.is_circular</li>
+    </ul>
+
+<li class="table_name">go_role_link</li>
+    <ul> 
+        <li>go_role_link.id</li>
+        <li>go_role_link.feat_name</li>
+        <li class="primary">go_role_link.go_id</li>
+        <li class="primary">go_role_link.assigned_by</li>
+        <li class="primary">go_role_link.date</li>
+        <li class="primary">go_role_link.qualifier</li>
+    </ul>
+
+<li class="table_name">go_evidence</li>
+    <ul> 
+        <li>go_evidence.role_link_id</li>
+        <li class="primary">go_evidence.ev_code</li>
+        <li class="primary">go_evidence.evidence</li>
+        <li class="primary">go_evidence.with_ev</li>
+    </ul>
+
+<li class="table_name">asmbl_data</li>
+    <ul> 
+        <li class="striked">asmbl_data.id</li>
+        <li class="primary">asmbl_data.name</li>
+        <li class="primary">asmbl_data.type</li>
+        <li class="primary">asmbl_data.topology</li>
+        <li class="striked">asmbl_data.search_dirs</li>
+        <li class="striked">asmbl_data.pfam_dir</li>
+        <li class="striked">asmbl_data.pdb_dir</li>
+        <li class="striked">asmbl_data.firewall_toggle</li>
+        <li class="striked">asmbl_data.accession_toggle</li>
+        <li class="striked">asmbl_data.skew_table</li>
+        <li class="striked">asmbl_data.license</li>
+        <li class="striked">asmbl_data.is_public</li>
+    </ul>
+</p>
+
+<p class="section_header">
+    Ignored tables
+</p>
+<p>
+    This section lists tables that have been ignored during in the BSML migration.  This 
+    information was parsed from the Sybase sysobjects table for a Prok database.
+</p>
+<p>
+    <sql>select name from sysobjects where type = `U'</sql>
+</p>
+    Some of these tables are being ignored because it is not necessary to migrate the data 
+    into BSML.  A large number of tables are being ignored because they are not used in 
+    the annotation process.   Many of these ignored tables are used by the Sequencing/Closure 
+    groups.
+</p>
+<p class="subsection_header">
+    Ignored but used in annotation
+</p>
+<p>
+    ident_history<br>
+    new_project<br>
+    asm_feature_history<br>
+    role_link_history<br>
+    asmbl_group<br>
+    role_notes<br>
+    asmbl_link<br>
+    asmbl_data (move to handled list)<br>
+    coverage<br>
+    evidence_history<br>
+    frameshift<br>
+    edit_report<br>
+    gb_authors<br>
+    gb_citations<br>
+    gb_feature<br>
+    gb_release<br>
+    glimmer_connect (find out about this)<br>
+    glimmer_output (find out about this)<br>
+    Iso_link (paralogous families)<br>
+    Alignment (paralogous families)<br>
+    change_log
+</p>
+<p class="subsection_header">
+    Ignored and not used in annotation
+</p>
+<p>
+    feat_link<br>
+    Extent_libray<br>
+    extent_type<br>
+    minclone_clone<br>
+    Library<br>
+    minclone_region<br>
+    Library_Experiment<br>
+    minclone_region_clone_link<br>
+    library_Policy<br>
+    names<br>
+    grasta_pairs<br>
+    hits<br>
+    Experiment<br>
+    hmm_hit<br>
+    hydro_plot<br>
+    Extent<br>
+    Library_stats<br>
+    olaprole_link<br>
+    Library_Stats_Template<br>
+    peaks<br>
+    primer_dir<br>
+    SequenceRead<br>
+    Primer_dir_ref<br>
+    SequenceReadType<br>
+    primer_table<br>
+    SequenceVendorMap<br>
+    pull_worktable<br>
+    Stats_Type_Template<br>
+    putative<br>
+    qualities<br>
+    aliases<br>
+    region_evaluation<br>
+    remapped_asmbl_link<br>
+    repeats<br>
+    asmblpairs<br>
+    searchlog<br>
+    bases<br>
+    seq_file_location<br>
+    seq_history<br>
+    closure_status<br>
+    sequence<br>
+    collection<br>
+    snapshot<br>
+    contained<br>
+    contig_collection<br>
+    status_vocabulary<br>
+    contig_snapshot<br>
+    subst_table<br>
+    current_snapshot<br>
+    trans_alignment<br>
+    edit_evaluation<br>
+    tree_link<br>
+    edit_report<br>
+    trim_info<br>
+    editor_asmbl_link_lock<br>
+    editor_assembly_lock<br>
+    editor_assembly_range_lock<br>
+    editor_lock<br>
+    editor_sequence_lock<br>
+    exclude_seq<br>
+    expert_subst_table<br>
+    feature<br>
+    feature_link<br>
+    feature_syn<br>
+    gap<br>
+    gap_asmbl<br>
+    gap_link<br>
+    gap_link_seq<br>
+    gap_seq
+</p>
+
+<p class="section_header">
+    Data types summary
+</p>
+
+<p class="subsection_header">
+    Handled feature types
+</p>
+<p>
+    The following asm_feature.feat_type values are documented in this migration document.
+</p>
+<p>
+    ORF<br>
+    NTORF<br>
+    RBS<br>
+    TERM<br>
+    rRNA<br>
+    ncRNA<br>
+    tRNA
+</p>
+
+<p class="subsection_header">
+    Ignored feature types
+</p>
+<p>
+    The following asm_feature.feat_type values from the asm_feature table are not being 
+    handled during the BSML migration.
+</p>
+<p>
+    *PMARK (Can't find corresponding SO term)<br>
+    *PHAGE (Talk to Scott)<br>
+    INTRON<br>
+    CLN_CVG<br>
+    SEQ_CVG<br>
+    AUTO_RPT<br>
+    CLOSED_GAP<br>
+    CA_UNIQUE_UNITIG<br>
+    CA_NONUNIQUE_UNITIG<br>
+    EX_CA_NONUNIQUE_UNITIG
+</p>
+
+<p class="subsection_header">
+    Handled ORF_attribute types
+</p>
+<p>
+    The following ORF_attribute.att_type values were handled in the migration document.
+</p>
+<p>
+    GC<br>
+    GES<br>
+    LP<br>
+    MW<br>
+    PI<br>
+    SP<br>
+    TERM<br>
+    OMP<br>
+    tRNA
+</p>
+
+<p class="subsection_header">
+    Ignored ORF_attribute types
+</p>
+<p>
+    The following ORF_attribute.att_type values from the ORF_attribute table are not being 
+    handled during the BSML migration.
+</p>
+<p>
+    AFS<br>
+    DEG<br>
+    FIXED<br>
+    APM<br>
+    FS<br>
+    PCF<br>
+    PM<br>
+    PROGRAMMED_FS<br>
+    *START_CONF
+</p>
+
+<p class="subsection_header">
+    Handled evidence types
+</p>
+<p>
+    BER<br>
+    HMM2<br>
+    *BLASTN<br>
+    *PROSITE<br>
+    *AUTO_BER<br>
+    *FPrintScan<br>
+    *BlastProDom<br>
+    *COG accession
+</p>
+
+<p class="subsection_header">
+    Ignored evidence types
+</p>
+
+</body>
+
+</html>
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+

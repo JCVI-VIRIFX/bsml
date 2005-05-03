@@ -1,0 +1,661 @@
+<html>
+
+<head>
+    <title>Mapping of BSML to Chado</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+
+<body>
+
+<p class="doc_header">
+    Mapping of BSML to Chado
+    <br><br>
+    The generation of primary keys is not discussed in this document.  Primary keys are generated 
+    when necessary.  
+</p>
+
+<p class="section_header">
+    BSML Loader Summary
+</p>
+<p>
+    The BSML loader operates in 3 modes.  These modes generally follow the rules outlined below 
+    although exceptions to these rules are expected.
+</p>
+<p class="subsection_header">
+    Insert mode
+</p>
+<p>
+    For Insert mode, if a feature record exists in the database, XML elements corresponding to the 
+    feature record will be skipped.  &lt;Sequence&gt; and &lt;Feature&gt; elements that do not exist 
+    in the database will inserted along with associated XML elements (eg. &lt;Attribute&gt;,
+    &lt;Cross-reference&gt;,&lt;Interval-loc&gt;,etc..).  New sub-features will be inserted even 
+    if the parent &lt;Sequence&gt; record already exists in the database. For example, if a 
+    &lt;Sequence&gt; element corresponds to an existing "assembly" feature record, all nested 
+    &lt;Feature&gt; elements will be inserted if they don't already exist in the database.  
+    The "id" attribute, which maps to feature.uniquename, is used to determine if a BSML 
+    &lt;Sequence&gt; or &lt;Feature&gt; element exists in the database.
+    For search data (&lt;Seq-pair-alignment&gt;,&lt;Seq-pair-run&gt;,&lt;Analysis&gt;,etc..), 
+    if the &lt;Analysis&gt; element maps to an existing database record, all associated XML 
+    elements will be skipped. New analysis will be loaded.
+</p>
+<p class="subsection_header">
+    *Append mode (Implementation details TBD)
+</p>
+<p>
+    Append mode operates similar to Insert mode, except the loader attempts to detect and insert 
+    new data. XML elements associated with existing features (&lt;Attribute&gt;,&lt;Cross-reference&gt;,
+    &lt;Interval-loc&gt;,etc..) will be inserted if they do not already exist in the database.  
+    Search data is handled the same as in Insert mode.  It is expected that Append mode will run 
+    slower and consume more memory than Insert mode.
+</p>
+<p class="subsection_header">
+    *Update mode (Implementation details TBD)
+</p>
+<p>
+    Update mode operates similar to Append mode, except the loader attempts to resolve differences 
+    between data in the database and data in the XML document. XML elements associated with existing 
+    features (&lt;Attribute&gt;,&lt;Cross-reference&gt;,&lt;Interval-loc&gt;,etc..) will overwrite 
+    existing records in the database of the same type/class.   Search data is handled the same as in 
+    Insert mode.  It is expected that Update mode will run slower and consume more memory than Append 
+    mode.
+
+</p>
+
+<p class="section_header">
+    BSML Element Summary
+</p>
+
+<p class="subsection_header">
+    &lt;Organism&gt;
+</p>
+<p class="xpath">
+    //Genome/Organism/@genus = organism.genus
+    //Genome/Organism/@species = organism.species
+    //Genome/Organism/Attribute/@name='abbreviation'/@value = organism.abbreviation
+    //Genome/Organism/Attribute/@name='common_name']/@value = organism.common_name
+    //Genome/Organism/Attribute/[@name='comment']/@value = organism.comment
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence&gt;
+</p>
+<p>
+    Two groups of sequences are found in BSML documents.
+</p>
+<p>
+    1) &lt;Sequence&gt; elements that map directly to records in the Chado feature table.  The class 
+    attribute defines the primary SO term for the sequence feature in Chado.
+</p>
+<p class="xpath">
+    //Sequence/@id = feature.uniquename
+    //Sequence/@class = cvterm.name 
+        where cvterm_id = feature.type_id and cvterm.cv_id = cv.cv_id and cv.name = `SO'
+    //Sequence/@length = feature.seqlen
+</p>
+<p>
+    Secondary SO terms for the sequence are stored using an &lt;Attribute&gt; element.  See the 
+    &lt;Attribute-list&gt; encoding section in this document for more information.  The SO term may 
+    be described by name (eg. assembly) or by accession (eg. SO:000053)
+</p>
+<p>
+    Using term name:
+</p>
+<p class="xpath">
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = cvterm.name 
+        where cvterm.cvterm_id = feature_cvterm.cvterm_id 
+    and cvterm.cv_id = cv.cv_id and cv.name = `SO'
+</p>
+<p>
+    Using term value:
+</p>
+<p class="xpath">
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value=dbxref.accession
+        where dbxref.dbxref_id =  cvterm.dbxref_id
+        and cvterm.cvterm_id = feature_cvterm.cvterm_id
+        and cvterm.cv_id = cv.cv_id 
+        and cv.name = `SO'
+</p>
+<p>
+    2) &lt;Sequence&gt; elements that store residue information for &lt;Feature&gt; elements.  These 
+    &lt;Sequence&gt; elements do not define new records in the Chado feature table.  Instead, these 
+    &lt;Sequence&gt; elements store the residue information for a &lt;Feature&gt; element that exists 
+    elsewhere in the document.  
+</p>
+<p class="xpath">
+    //Sequence/@length = feature.seqlen
+    //Sequence/Seq-data-&gt;text() = feature.residues
+</p>
+<p>
+    The following relationships can be used to distinguish &lt;Sequence&gt; elements that are associated 
+    with &lt;Feature&gt; elements.
+</p>
+<p class="xpath">
+    //Sequence/@id = //Feature/Link[@rel='sequence']/@href 
+    //Sequence/@class = //Feature/@class
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-data&gt;
+</p>
+<p class="xpath">
+    //Seq-data/text() = feature.residues
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-data-import&gt;
+</p>
+<p>
+    The &lt;Seq-data-import&gt; tag references sequence residues stored in a FASTA file.  This element is 
+    used in place of the &lt;Seq-data&gt; element. The absolute path to the FASTA file is specified by 
+    <xpath>//Seq-data-import/@source</xpath>.  This FASTA header is specified by <xpath>//Seq-data-import/@identifier</xpath>.  
+    The extracted residues are stored in feature.residues.
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-data&gt;
+</p>
+<p>
+    &lt;Feature&gt; elements map to records in the Chado feature table.  A set of &lt;Attribute&gt; elements 
+    with predefined names are a
+</p>
+<p class="xpath">
+    //Feature/@class = cvterm.name where cvterm.id = feature.type_id
+    //Feature/@id = feature.uniquename
+    //Feature/Attribute/[@name='name']/@name = feature.name
+    //Feature/Attribute/@name='timeaccessioned']/@name = feature.timeaccessioned
+    //Feature/Attribute/@name = `timelastmodified']/@name = feature.timelastmodified
+</p>
+<p>
+    The sequence residues associated with the &lt;Feature&gt; element may be stored as a &lt;Sequence&gt; 
+    element.  This &lt;Sequence&gt; element is associated with the &lt;Feature&gt; record with a &lt;Link&gt; 
+    element.
+</p>
+<p class="xpath">
+    *//Feature/Link[@rel='SEQ']/@href = //Sequence/@id
+    *//Sequence/Seq-data-&gt;text() = feature.residues
+</p>
+
+<p class="subsection_header">
+    &lt;Feature-group&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Feature-group-member&gt;
+</p>
+<p>
+    The &lt;Feature-group&gt; and &lt;Feature-group-member&gt; elements map to records in the Chado 
+    feature_relationship table.  &lt;Feature-group&gt; is a grouping element for &lt;Feature-group-member&gt; 
+    elements which defines a set of &lt;Features&gt; that have a relationship.  The type of relationship must 
+    be pre-defined by software and may be derived from information in the controlled vocabulary tables.  The 
+    relationship definition must allow the BSML loader to determine the subject and object features and the 
+    type of relationship in order to load the feature_relationship table.  For example, if the first 
+    &lt;Feature-group-member&gt; is determined to be the subject feature and the second 
+    &lt;Feature-group-member&gt; is determined to be the object feature, the mapping is as follows:
+</p>
+<p class="xpath">
+    //Feature-group-member[@featref][1] = feature.uniquename 
+        where feature.feature_id = feature_relationship.subject_id
+    //Feature-group-member[@featref][2] = feature.uniquename 
+        where feature.feature_id = feature_relationship.object_id
+</p>
+
+<p class="subsection_header">
+    &lt;Interval-loc&gt;
+</p>
+<p>
+    &lt;Interval-loc&gt; elements map to records in the Chado featureloc table.  The startpos and 
+    endpos attributes are assumed to be interbase coordinates, which start from zero.
+</p>
+<p class="xpath">
+    //Interval-loc/@complement = featureloc.strand
+    //Interval-loc/@startpos=featureloc.fmin
+    //Interval-loc/@endpos=featureloc.fmax
+    *//Interval-loc/@fuzzystart=featureloc.is_fmin_partial
+    *//Interval-loc/@fuzzyend=featureloc.is_fmax_partial
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute&gt;
+</p>
+<p>
+    &lt;Attribute&gt; elements map to records in the Chado featureprop table
+</p>
+<p class="xpath">
+    //Attribute[@name] = cvterm.name where cvterm.id = featureprop.type_id
+    //Attribute[@value] = featureprop.value
+</p>
+
+<p class="subsection_header">
+    &lt;Attribute-list&gt;
+</p>
+<p>
+    &lt;Attribute-list&gt; elements and sub-elements map to records in the Chado feature_cvterm and 
+    feature_cvtermprop tables. GO annotation is an example of data that is stored via &lt;Attribute-list&gt;
+</p>
+<p>
+    The first &lt;Attribute&gt; element of the &lt;Attribute-list&gt; maps to a record in the Chado 
+    feature_cvterm table.  The content attribute can be either the term accession (eg. GO/SO term) or 
+    the term name.
+</p>
+<p>
+    Using term accession:
+</p>
+<p class="xpath">
+    //Attribute-list/Attribute/@name/[0] = cv.name
+    //Attribute-list/Attribute/@value/[0] = dbxref.accession 
+        where dbxref.dbxref_id =  cvterm.dbxref_id 
+        and cvterm.cvterm_id = feature_cvterm.cvterm_id
+</p>
+<p>
+    Using term name:
+</p>
+<p class="xpath">
+    //Attribute-list/Attribute/@name/[0] = cv.name
+    //Attribute-list/Attribute/@value/[0] = cvterm.name 
+        where cvterm.cvterm_id = feature_cvterm.cvterm_id
+</p>
+<p>
+    Subsequent &lt;Attribute&gt; elements map to records in the Chado feature_cvtermprop table.  Each 
+    feature_cvtermprop record is linked to the feature_cvterm record described above.
+</p>
+<p class="xpath">
+    //Attribute-list/Attribute/@name = cvterm.name 
+        where cvterm.cvterm_id = feature_cvtermprop.type_id
+    //Attribute-list/Attribute/@value = feature_cvtermprop.value
+</p>
+<p>
+    There is a special handler for GO evidence data.  This handler is triggered when the 
+    <xpath>//Attribute/@name</xpath> equals the name of a GO evidence code.  The GO evidence codes are stored in 
+    the cvterm module in a cv named `Evidence codes'.
+</p>
+<p class="xpath">
+    //Attribute-list/Attribute/@name = cvterm.name 
+        where feature_cvtermprop.type_id = cvterm.cvterm_id 
+        and cvterm.cv_id = cv.cv_id 
+        and cv.name = `Evidence codes'
+    //Attribute-list/Attribute/@value =feature_cvtermprop.value 
+</p>
+
+<p class="subsection_header">
+    &lt;Cross-reference&gt;
+</p>
+<p>
+    &lt;Cross-reference&gt; elements map to records in the Chado dbxref table
+</p>
+<p class="xpath">
+    //Cross-reference/@database = db.name where db.id = dbxref.db_id
+    //Cross-reference/@identifier = dxref.accession
+    //Cross-reference/@identifier-type = dbxref.version
+    *//Cross-reference/@role = dbxref.description
+</p>
+<p>
+    These dbxref records are associated with records in the feature table.  In Chado, a feature may 
+    have zero or more associated dbxrefs.  The bsml2chado loader handles &lt;Cross-reference&gt; elements 
+    are sub-elements of &lt;Feature&gt; elements or &lt;Sequence&gt; elements (<xpath>//Feature/Cross-reference</xpath>
+    and <xpath>//Sequence/Cross-reference</xpath>).  If feature.dbxref_id is NULL, <xpath>//Feature/Cross-reference[0]</xpath> defines 
+    a single dbxref record that is stored in feature.dbxref
+</p>
+<p class="xpath">
+    //Feature/@id = feature.uniquename 
+        where feature.dbxref_id = dbxref.dbxref_id
+</p>
+<p>
+    If feature.dbxref is not NULL, <xpath>//Feature/Cross-reference</xpath> defines a set of dbxref records that are 
+    linked to a feature via feature_dbxref.
+</p>
+<p class="xpath">
+    //Feature/@id = feature.uniquename 
+        where feature.id= feature_dbxref.feature_id 
+        and feature_dbxref.dbxref_id = dbxref.dbxref_id
+</p>
+
+<p class="subsection_header">
+    &lt;Link&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-pair-alignment&gt;
+</p>
+<p>
+    &lt;Seq-pair-alignments&gt; maps to "match" features in the Chado feature table.  The feature.type_id 
+    for the match is defined by the class attribute of Seq-pair-alignment.  Currently the only values 
+    used are "match", "snp".  This "match" feature record is localized to (2) feature records (designated 
+    featureloc1 and featureloc2).  The "match" feature and featureloc records are further described by 
+    the &lt;Seq-pair-run&gt; element.
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/@class = cvterm.name where feature.type_id = cvterm.cvterm_id
+    //Seq-pair-alignment/@refseq = feature.uniquename where feature.id = featureloc1.feature_id 
+    //Seq-pair-alignment/@compseq = feature.uniquename where feature_id = featureloc2.srcfeature_id 
+</p>
+<p>
+    In Chado, the "match" record is associated with an analysis record in the analysis table.  The analysis 
+    record is described by the element &lt;Analysis&gt;.  Currently, all &lt;Seq-pair-alignment&gt; elements 
+    in a document are associated with the first &lt;Analysis&gt; element.  A future implementation will 
+    contain an explicit link between a &lt;Seq-pair-alignment&gt; and the associated &lt;Analysis&gt; 
+    element.
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/Link/@href = //Analysis/@id 
+</p>
+
+<p class="subsection_header">
+    &lt;Seq-pair-run&gt;
+</p>
+<p>
+    &lt;Seq-pair-run&gt; describes the score and localization information for the "match" records in the 
+    Chado feature table.  This "match" feature record is localized to (2) feature records.  The 
+    &lt;Seq-pair-alignment&gt; element indicates the (2) feature records that are localized to the 
+    "match" feature.  See the Chado documentation for more information about the encoding of matches.
+</p>
+<p class="xpath">
+    //Seq-pair-run/@runprob = analysisfeature.significance where analysisfeature.feature_id = feature.feature_id 
+    //Seq-pair-run/@runscore = analysisfeature.rawscore where analysisfeature.feature_id = feature.feature_id
+
+    //Seq-pair-run/Attribute/[@name='normscore']/@content = analysisfeature.normscore
+    //Seq-pair-run/Attribute/[@name='pidentity']/@content = analysisfeature.pidentity
+</p>
+<p>
+    All other attributes of Seq-pair-run are stored as featureprop
+</p>
+<p class="xpath">
+    //Seq-pair-run/Attribute/@name = cvterm.name 
+        where cvterm.cvterm_id = featureprop.type_id
+    //Seq-pair-run/Attribute/@content = featureprop.value
+
+    //Seq-pair-run/@refpos = featureloc1.fmin 
+    //Seq-pair-run/@refpos + //Seq-pair-run/@runlength = featureloc1.fmax
+    //Seq-pair-run/@refcomplement = featureloc1.strand
+
+    //Seq-pair-run/@comppos = featureloc2.fmin
+    //Seq-pair-run/@comppos + //Seq-pair-run/@runlength = = featureloc2.fmax
+    //Seq-pair-run/@compcomplement = featureloc2.strand
+</p>
+
+<p class="subsection_header">
+    &lt;Multiple-alignment-table&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Alignment-summary&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Aligned-sequence&gt;
+</p>
+<p class="xpath">
+    //Aligned-sequence/@seqref = feature.uniquename 
+        where feature.id = featureloc1.feature_id 
+        and feature.type_id = cvterm.cvterm_id and cvterm.name='match'
+    //Aligned-sequence/@start = featureloc.fmin
+    //Aligned-sequence/@start+//Aligned-sequence/@length = featureloc.fmax
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence-alignment&gt;
+</p>
+<p>
+    <incomplete>INCOMPLETE</incomplete>
+</p>
+
+<p class="subsection_header">
+    &lt;Sequence-data&gt;
+</p>
+<p class="xpath">
+    //Sequence-data/@seq-name = feature.residues
+</p>
+
+<p class="subsection_header">
+    &lt;Analysis&gt;
+</p>
+<p>
+    Any attribute name that matches a field name in the analysis table is stored in the analysis 
+    table field. Eg.
+</p>
+<p class="xpath">
+    //Analysis/@Attribute/[@name='program']/@content = analysis.program
+    //Analysis/@Attribute/[@name='algorithm']/@content=analysis.algorithm
+    //Analysis/@Attribute/[@name='sourcename']/@content = analysis.sourcename
+    //Analysis/@Attribute/[@name = 'name']/@content=analysis.name
+</p>
+<p>
+    All other attributes are stored in the analysisprop table
+</p>
+<p class="xpath">
+    //Analysis/Attribute/@name =cvterm.name where cvterm.cvterm_id = analysisprop.type_id 
+    //Analysis/Attribute/@content=analysisprop.value
+</p>
+
+<p class="section_header">
+    Table usage summary
+</p>
+
+<p class="subsection_header">
+    Migrated tables
+</p>
+<p>
+    This information was parsed from the Sybase sysobjects table for a Chado database.
+</p>
+<p class="sql">
+    select name from sysobjects where type = `U'
+</p>
+<p>
+    The following tables where considered for the mapping between BSML and Chado.  Fields are categorized 
+    into (2) categories.
+</p>
+<p>
+    -Fields that are a primary source of data that is migrated directly from BSML are in bold.  All of 
+    these fields should have a documented mapping to an element in BSML in the previous sections of 
+    this document.
+</p>
+<p>
+    -Fields that are not migrated as part of the current implementation are marked with a circle.  
+    These fields are candidates for future development of BSML2chado
+</p>
+<p>
+    -All other fields (non-boldface, no asterisk) are either autogenerated by the BSML2chado script or
+    are derived for other information.  The first field listed for each table is the primary key and all 
+    primary keys are autogenerated by the BSML2chado script.  Many of the derived values are described in 
+    previous sections of this document.  A brief explanation is provided where the derived value is not 
+    described previously.
+</p>
+
+<p class="subsection_header">
+    Table definitions definitions
+</p>
+<p>
+<li class="table_name">analysis</li>
+    <ul>
+	    <li>analysis_id</li>
+	    <li class="primary">name</li>
+	    <li class="primary">description</li>
+	    <li class="primary">program</li>
+	    <li class="primary">programversion</li>
+	    <li class="primary">algorithm</li>
+	    <li class="primary">sourcename</li>
+	    <li class="primary">sourceversion</li>
+	    <li class="primary">sourceuri</li>
+	    <li class="primary">timeexecuted</li>
+    </ul>
+<li class="table_name">analysisfeature</li>
+    <ul>
+	    <li>analysisfeature_id</li>
+	    <li>feature_id</li>
+	    <li>analysis_id</li>
+	    <li class="primary">rawscore</li>
+	    <li class="primary">normscore</li>
+	    <li class="primary">significance</li>
+	    <li class="primary">pidentity</li>
+    </ul>
+<li class="table_name">analysisprop</li>
+    <ul>
+	    <li>analysisprop_id</li>
+        <li>analysisid</li>
+        <li class="primary">type_id</li>
+        <li class="primary">value</li>
+    </ul>    
+<li class="table_name">db</li>
+    <ul>
+	    <li>db_id</li>
+        <li class="primary">name</li>
+        <li class="secondary">contact_id</li>
+        <li class="secondary">description</li>
+        <li class="secondary">urlprefix</li>
+        <li class="secondary">url</li>
+    </ul>
+<li class="table_name">dbxref</li>
+    <ul>
+	    <li>dbxref_id</li>
+        <li>db_id</li>
+        <li class="primary">accession</li>
+        <li class="primary">version</li>
+        <li class="secondary">description</li>
+    </ul>
+<li class="table_name">feature</li>
+    <ul>
+	    <li>feature_id</li>
+        <li>dbxref_id</li>
+        <li>organism_id</li>
+        <li class="primary">name</li>
+        <li class="primary">uniquename</li>
+        <li class="primary">residues</li>
+        <li>seqlen</li>
+        <li>md5checksum</li>
+        <li>type_id</li>
+        <li>is_analysis</li>
+        <li class="primary">timeaccessioned</li>
+        <li class="primary">timelastmodified</li>
+    </ul>
+<li class="table_name">feature_cvterm</li>
+    <ul>
+        <li>feature_cvterm_id</li>
+        <li>feature_id</li>
+        <li>cvterm_id</li>
+        <li class="secondary">pub_id</li>
+    </ul>
+<li class="table_name">feature_dbxref</li>
+    <ul>
+        <li>feature_dbxref_id</li>
+        <li>feature_id</li>
+        <li>dbxref_id</li>
+        <li class="secondary">is_current</li>
+    </ul>
+<li class="table_name">feature_relationship</li>
+    <ul>
+        <li>feature_relationship_id</li>
+        <li>subject_id</li>
+        <li>object_id</li>
+        <li class="secondary">type_id</li>
+        <li class="secondary">rank</li>
+    </ul>
+<li class="table_name">feature_synonym</li>
+    <ul>
+        <li class="secondary">feature_synonym_id</li>
+        <li class="secondary">synonym_id</li>
+        <li class="secondary">feature_id</li>
+        <li class="secondary">pub_id</li>
+        <li class="secondary">is_current</li>
+        <li class="secondary">is_internal</li>
+    </ul>
+<li class="table_name">featureloc</li>
+    <ul>
+        <li>featureloc_id</li>
+        <li>feature_id</li>
+        <li>srcfeature_id</li>
+        <li class="primary">fmin</li>
+        <li class="primary">is_fmin_partial</li>
+        <li class="primary">fmax</li>
+        <li class="primary">is_fmax_partial</li>
+        <li class="primary">strand</li>
+        <li class="secondary">phase</li>
+        <li class="secondary">residue_info</li>
+        <li class="secondary">locgroup</li>
+        <li class="secondary">rank</li>
+    </ul>
+<li class="table_name">featureprop</li>
+    <ul>
+        <li>featureprop_id</li>
+        <li>feature_id</li>
+        <li>type_id</li>
+        <li class="primary">value</li>
+        <li>rank</li>
+    </ul>
+<li class="table_name">organism</li>
+    <ul>
+        <li>organism_id</li>
+        <li class="primary">abbreviation</li>
+        <li class="primary">genus</li>
+        <li class="primary">species</li>
+        <li class="primary">common_name</li>
+        <li class="primary">comment</li>
+    </ul>
+<li class="table_name">organism_dbxref</li>
+    <ul>
+        <li>organism_dbxref_id </li>
+        <li>organism_id </li>
+        <li>dbxref_id</li>
+    </ul>
+<li class="table_name">organismprop</li>
+    <ul>
+        <li>organismprop_id</li>
+        <li>organism_id</li>
+        <li>type_id</li>
+        <li class="primary">value</li>
+        <li>rank</li>
+    </ul>
+<li class="table_name">pub tables</li>
+    <ul>
+	    <li>
+            The tables in the "pub" module (<strong>pub, pub_author, pub_dbxref, pub_relationship, pub_prop, 
+            feature_pub, featureprop_pub</strong>) are required to satisfy foreign key constraints.  These tables 
+            are currently populated with dummy values to satisfy these constraints.  BSML does provide tags 
+            for storing publication information and a future version of the BSML2chado loader will load 
+            data into the "pub" module.
+        </li>
+    </ul>
+<li class="table_name">cv/cvterm tables</li>
+    <ul>
+	    <li>
+            The tables in the "cvterm" module (<strong>cv, cvterm, cvterm_dbxref, cvterm_relationship, cvtermpath, 
+            cvtermsynonym</strong>), and the associated dbxref entries for these tables, are loaded via OBO format 
+            using the OBO2chado loader.  These tables are fully populated with the necessary ontologies 
+            when a database is instantiated.
+        </li>
+    </ul>
+</p>
+<p>
+    The <strong>project, synonym, tableinfo</strong> tables are ignored by the BSML2chado loader.
+</p>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
