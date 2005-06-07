@@ -12,6 +12,28 @@
 </p>
 
 <p class="section_header">
+    Genomes
+</p>
+
+<p class="subsection_header">
+    Organism and Cross-reference
+</p>
+
+<p class="xpath">
+    //Genome/Organism/@genus = the first word in common..genomes.name
+    //Genome/Organism/@species = everything after the first word in common..genomes.name
+
+    //Genome/Organism/Attribute/[@name='abbreviation'] = common..genomes.file_moniker
+    //Genome/Organism/Attribute/[@name='gram_strain'] = new_project.gram_stain
+    //Genome/Organism/Attribute/[@name='genetic_code'] = new_project.genetic_code
+
+    //Genome/Cross-reference/@database = 'TIGR_prok:' + legacy database name
+    //Genome/Cross-reference/@identifier = common..genomes.file_moniker
+    //Genome/Cross-reference/@identifier_type = 'current'
+</p>
+
+
+<p class="section_header">
     Sequences
 </p>
 
@@ -51,6 +73,12 @@
     //Sequence/Attribute[@name='molecule_name'] = asmbl_data.name
         where assembly.asmbl_id = stan.asmbl_id 
         and stan.asmbl_data_id = asmbl_data.id
+
+    //Sequence/Attribute[@name='molecule_type'] = asmbl_data.type
+        where assembly.asmbl_id = stan.asmbl_id 
+        and stan.asmbl_data_id = asmbl_data.id
+
+
 
     //Sequence/Attribute-list/Attribute[@name='SO']/@value = `supercontig' 
         where assembly.asmbl_id = stan.asmbl_id 
@@ -225,10 +253,50 @@
     //Feature[@class=`gene`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`gene`]/Cross-reference/@identifier-type='feat_name'
 
+    if (legacy annotation database is prok schema) {
+
+        //Feature[@class=`gene`]/Cross-reference/@database='...'
+	//Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
+	   where ident.feat_name = asm_feature.feat_name
+        //Cross-reference/@identifier-type='locus'
+	//Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
+	   where ident.feat_name = asm_feature.feat_name
+        //Cross-reference/@identifier-type='display_locus'
+    }
+    else if (legacy annotation database is ntprok schema){
+
+        //Feature[@class=`gene`]/Cross-reference/@database='...'
+	//Feature[@class=`gene`]/Cross-reference/@identifier=nt_ident.locus
+	   where nt_ident.feat_name = asm_feature.feat_name
+        //Cross-reference/@identifier-type='locus'
+        //Feature[@class=`gene`]/Cross-reference/@identifier=nt_ident.nt_locus
+           where nt_ident.feat_name = asm_feature.feat_name
+        //Cross-reference/@identifier-type='display_locus'
+    }
+
     //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
-        where ident.feat_name = asm_feature.feat_name
-    //Cross-reference/@identifier-type='locus'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'PID'
+    //Cross-reference/@identifier-type='genbank_pid'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'protein_id'
+    //Cross-reference/@identifier-type='genbank_protein_id'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'SP'
+    //Cross-reference/@identifier-type='swiss_prot'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'ECOCYC'
+    //Cross-reference/@identifier-type='ecocyc'
 
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='gene'
     //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
@@ -271,11 +339,54 @@
     //Feature[@class=`transcript`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`transcript`]/Cross-reference/@identifier-type='feat_name'
 
-    //Feature[@class=`transcript`]/Cross-reference/@database='...'
-    //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.locus
-        where ident.feat_name = asm_feature.feat_name
 
-    //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
+
+    if (legacy annotation database is prok schema){
+
+        //Feature[@class=`transcript`]/Cross-reference/@database='...'
+        //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.locus
+           where ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
+
+        //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.locus
+           where ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`transcript`]/Cross-reference/@identifier-type='display_locus'
+    }
+    else if (legacy annotation database is ntprok schema) {
+    
+        //Feature[@class=`transcript`]/Cross-reference/@database='...'
+        //Feature[@class=`transcript`]/Cross-reference/@identifier=nt_ident.locus
+           where nt_ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
+
+        //Feature[@class=`transcript`]/Cross-reference/@identifier=nt_ident.nt_locus
+           where nt_ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`transcript`]/Cross-reference/@identifier-type='display_locus'
+     }
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'PID'
+    //Cross-reference/@identifier-type='genbank_pid'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'protein_id'
+    //Cross-reference/@identifier-type='genbank_protein_id'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'SP'
+    //Cross-reference/@identifier-type='swiss_prot'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'ECOCYC'
+    //Cross-reference/@identifier-type='ecocyc'
 
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type=transcript'
     //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
@@ -318,11 +429,48 @@
     //Feature[@class=`CDS`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`CDS`]/Cross-reference/@identifier-type='feat_name'
 
-    //Feature[@class=`CDS`]/Cross-reference/@database='...'
-    //Feature[@class=`CDS`]/Cross-reference/@identifier=ident.locus
-        where ident.feat_name = asm_feature.feat_name
 
-    //Feature[@class=`CDS`]/Cross-reference/@identifier-type='locus'
+
+    if (legacy annotation database is prok schema){
+
+        //Feature[@class=`CDS`]/Cross-reference/@database='...'
+	//Feature[@class=`CDS`]/Cross-reference/@identifier=ident.locus
+           where ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`CDS`]/Cross-reference/@identifier-type='locus'
+
+    }
+    else if (legacy annotation database is ntprok schema){
+
+        //Feature[@class=`CDS`]/Cross-reference/@database='...'
+        //Feature[@class=`CDS`]/Cross-reference/@identifier=nt_ident.locus
+           where nt_ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`CDS`]/Cross-reference/@identifier-type='display_locus'
+    }
+ 
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'PID'
+    //Cross-reference/@identifier-type='genbank_pid'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'protein_id'
+    //Cross-reference/@identifier-type='genbank_protein_id'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'SP'
+    //Cross-reference/@identifier-type='swiss_prot'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'ECOCYC'
+    //Cross-reference/@identifier-type='ecocyc'
+
 
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='CDS'
     //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
@@ -386,11 +534,48 @@
     //Feature[@class=`exon`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`exon`]/Cross-reference/@identifier-type='feat_name'
 
-    //Feature[@class=`exon`]/Cross-reference/@database='...'
-    //Feature[@class=exon`]/Cross-reference/@identifier=ident.locus
-        where ident.feat_name = asm_feature.feat_name
 
-    //Feature[@class=`exon`]/Cross-reference/@identifier-type='locus'
+
+    if (legacy annotation database is prok schema){
+
+        //Feature[@class=`exon`]/Cross-reference/@database='...'
+        //Feature[@class=exon`]/Cross-reference/@identifier=ident.locus
+           where ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`exon`]/Cross-reference/@identifier-type='locus'
+
+    }
+    else if (legacy annotation database is ntprok schema){
+
+        //Feature[@class=`exon`]/Cross-reference/@database='...'
+        //Feature[@class=exon`]/Cross-reference/@identifier=nt_ident.nt_locus
+           where nt_ident.feat_name = asm_feature.feat_name
+        //Feature[@class=`exon`]/Cross-reference/@identifier-type='display_locus'
+    }
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'PID'
+    //Cross-reference/@identifier-type='genbank_pid'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'protein_id'
+    //Cross-reference/@identifier-type='genbank_protein_id'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'SP'
+    //Cross-reference/@identifier-type='swiss_prot'
+
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
+        where accession.feat_name = asm_feature.feat_name
+	and accession.accession_db = 'ECOCYC'
+    //Cross-reference/@identifier-type='ecocyc'
+
 
     Example:
     <incomplete>[XML snippet here]</incomplete>
@@ -480,6 +665,12 @@
     //Feature[@class=`tRNA`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`tRNA`]/Cross-reference/@identifier-type='feat_name'
 </p>
+<p class="xpath">
+    //Feature[@class=`tRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`tRNA`]/Cross-reference/@identifier=uppercase(legacy
+    annotation database name) + ' ' + asm_feature.feat_name
+    //Feature[@class=`tRNA`]/Cross-reference/@identifier-type='database_feat_name'
+</p>
 <p class="subsection_header">
     tRNA Sequence residues
 </p>
@@ -498,12 +689,23 @@
     //Feature[@class='tRNA']/Attribute[@name='name'] = ident.com_name 
         where ident.feat_name = asm_feature.feat_name 
         and asm_feature.feat_type = `tRNA'
-    //Feature[@class='tRNA']/Attribute[@name='tRNA_anti-codon'] = feat_score.score
-        where ORF_attribute.att_type = `tRNA' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common.score_type.input_type = `tRNA' 
-        and common.score_type.score_type = `anti-codon'
+
+    //Feature[@class='tRNA']/Attribute[@name='gene_sym'] = ident.gene_sym
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `tRNA'
+
+    //Feature[@class='tRNA']/Attribute[@name='pub_comment'] = ident.pub_comment 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `tRNA'
+
+    //Feature[@class='tRNA']/Attribute[@name='anti-codon'] = feat_score.score
+        where asm_feature.feat_type = `tRNA'
+	and asm_feature.feat_name = ORF_attribute.feat_name
+	and ORF_attribute.att_type = 'tRNA'
+	and ORF_attribute.id = feat_score.input_id
+	and feat_score.score_id = score_type.id
+	and score_type.input_type = 'tRNA'
+	and score_type.score_type = 'anti-codon'
 
     Example:
     <incomplete>[XML snippet here]<incomplete>
@@ -541,6 +743,12 @@
     //Feature[@class=`rRNA`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`rRNA`]/Cross-reference/@identifier-type='feat_name'
 </p>
+<p class="xpath">
+    //Feature[@class=`rRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`rRNA`]/Cross-reference/@identifier= uppercase(legacy annotation
+    database name) + ' ' + asm_feature.feat_name
+    //Feature[@class=`rRNA`]/Cross-reference/@identifier-type='database_feat_name'
+</p>
 <p class="subsection_header">
     rRNA Sequence residues
 </p>
@@ -557,6 +765,14 @@
 </p>
 <p class="xpath">
     //Feature[@class='rRNA']/Attribute[@name='name'] = ident.com_name 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `rRNA'
+
+    //Feature[@class='rRNA']/Attribute[@name='gene_sym'] = ident.gene_sym
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `rRNA'
+
+    //Feature[@class='rRNA']/Attribute[@name='pub_comment'] = ident.pub_comment 
         where ident.feat_name = asm_feature.feat_name 
         and asm_feature.feat_type = `rRNA'
 
@@ -599,6 +815,18 @@
     //Feature[@class=`snRNA`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`snRNA`]/Cross-reference/@identifier-type='feat_name'
 </p>
+<p class="xpath">
+    //Feature[@class=`snRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier=uppercase(legacy
+    annotation database name) + ' ' + asm_feature.feat_name
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier-type='database_feat_name'
+</p>
+<p class="xpath">
+    //Feature[@class=`snRNA`]/Cross-reference/@database='...'
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier=uppercase(legacy
+    annotation database name) + ' ' + asm_feature.feat_name
+    //Feature[@class=`snRNA`]/Cross-reference/@identifier-type='database_feat_name'
+</p>
 <p class="subsection_header">
     snRNA Sequence residues
 </p>
@@ -617,6 +845,14 @@
     //Feature[@class='ncRNA']/Attribute[@name='name'] = ident.com_name
     where ident.feat_name = asm_feature.feat_name 
     and asm_feature.feat_type = `sRNA'
+
+    //Feature[@class='sRNA']/Attribute[@name='gene_sym'] = ident.gene_sym
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `sRNA'
+
+    //Feature[@class='sRNA']/Attribute[@name='pub_comment'] = ident.pub_comment 
+        where ident.feat_name = asm_feature.feat_name 
+        and asm_feature.feat_type = `sRNA'
 
     Example:
     <incomplete>[XML snippet here]</imcomplete>
