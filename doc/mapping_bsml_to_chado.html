@@ -1,4 +1,4 @@
-<html>
+x	<html>
 
 <head>
     <title>Mapping of BSML to Chado</title>
@@ -71,9 +71,28 @@
 <p class="xpath">
     //Genome/Organism/@genus = organism.genus
     //Genome/Organism/@species = organism.species
-    //Genome/Organism/Attribute/@name='abbreviation'/@value = organism.abbreviation
-    //Genome/Organism/Attribute/@name='common_name']/@value = organism.common_name
+    //Genome/Organism/Attribute/[@name='abbreviation']/@value = organism.abbreviation
+    //Genome/Organism/@genus + ' ' + //Genome/Organism/@species = organism.common_name
     //Genome/Organism/Attribute/[@name='comment']/@value = organism.comment
+    //Genome/Organism/Attribute/[@name='gram_stain']/@value =
+    organismprop.value
+       where organismprop.organism_id = organism.organism_id
+       and organismprop.type_id = cvterm.cvterm_id
+       and cvterm.name = 'gram_stain'
+    //Genome/Organism/Attribute/[@name='genetic_code']/@value =
+    organismprop.value
+       where organismprop.organism_id = organism.organism_id
+       and organismprop.type_id = cvterm.cvterm_id
+       and cvterm.name = 'genetic_code'
+
+
+    //Genome/Cross-reference/@database = db.name
+   
+    //Genome/Cross-reference/@database = dbxref.acccession
+       where dbxref.db_id = db.db_id
+
+
+
 </p>
 
 <p class="subsection_header">
@@ -91,6 +110,7 @@
     //Sequence/@class = cvterm.name 
         where cvterm_id = feature.type_id and cvterm.cv_id = cv.cv_id and cv.name = `SO'
     //Sequence/@length = feature.seqlen
+    //Sequence/Attribute/[@name='
 </p>
 <p>
     Secondary SO terms for the sequence are stored using an &lt;Attribute&gt; element.  See the 
