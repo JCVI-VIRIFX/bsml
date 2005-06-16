@@ -1370,6 +1370,81 @@
 </p>
 
 <p class="subsection_header">
+    PROSITE Evidence Encoding
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/@refseq = database_name
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Seq-pair-alignment/@compseq = evidence.accession 
+
+    //Seq-pair-alignment/@class = `match'
+    //Seq-pair-alignment/Link/@href = `#PROSITE'
+    //Seq-pair-alignment/Link/@rel = `analysis'
+
+    //Seq-pair-run/@runscore = 0
+    //Seq-pair-run/@runprob = 0
+
+    //Seq-pair-run/@refpos = evidence.rel_end5 -1
+        where evidence.ev_type = `PROSITE'
+    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
+        where evidence.ev_type = `PROSITE'
+    //Seq-pair-run/@complement=0
+
+    //Seq-pair-run/@comppos = evidence.m_lend - 1 
+        where evidence.ev_type = `PROSITE'
+    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
+        where evidence.ev_type = `PROSITE'
+    //Seq-pair-run/@compcomplement = 0
+
+    //Seq-pair-run/@Attribute/@name = 'residues'
+    //Seq-pair-run/@Attribute/@content = evidence.hit
+        where evidence.ev_type = 'PROSITE'
+    
+
+</p>
+
+<p class="subsection_header">
+    Sequence stubs
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+    //Sequence/@id = evidence.accession 
+        where evidence.ev_type = 'PROSITE'
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+
+    //Sequence/Cross-reference/@identifier-type = 'current'
+    //Sequence/Cross-reference/@identifier = evidence.feat_name
+
+    //Sequence/Cross-reference/@database = 'PROSITE'
+
+</p>
+
+<p class="subsection_header">
+    Analysis element
+</p>
+<p class="xpath">
+    //Analysis/@id = 'PROSITE'
+    //Analysis/@Attribute/[@name='program']/@content = 'PROSITE'
+    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
+    //Analysis/@Attribute/[@name='algorithm']/@content='PROSITE'
+    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
+    //Analysis/@Attribute/[@name = 'name']/@content='PROSITE'
+</p>
+
+<p class="subsection_header">
     HMM2 Evidence Encoding
 </p>
 <p class="xpath">
