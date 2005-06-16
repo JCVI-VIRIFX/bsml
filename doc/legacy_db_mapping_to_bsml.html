@@ -1301,6 +1301,75 @@
 </p>
 
 <p class="subsection_header">
+    COG Evidence Encoding
+</p>
+<p class="xpath">
+    //Seq-pair-alignment/@refseq = database_name
+        +"_"
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Seq-pair-alignment/@compseq = evidence.accession 
+
+    //Seq-pair-alignment/@class = `match'
+    //Seq-pair-alignment/Link/@href = `#NCBI_COG'
+    //Seq-pair-alignment/Link/@rel = `analysis'
+
+    //Seq-pair-run/@runscore = 0
+    //Seq-pair-run/@runprob = 0
+
+    //Seq-pair-run/@refpos = evidence.rel_end5 -1
+        where evidence.ev_type = `COG accession'
+    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
+        where evidence.ev_type = `COG accession'
+    //Seq-pair-run/@complement=0
+
+    //Seq-pair-run/@comppos = evidence.m_lend - 1 
+        where evidence.ev_type = `COG accession'
+    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
+        where evidence.ev_type = `COG accession'
+    //Seq-pair-run/@compcomplement = 0
+</p>
+
+<p class="subsection_header">
+    Sequence stubs
+</p>
+<p class="xpath">
+    //Sequence/@id = database_name
+        +assembly.asmbl_id
+        +"_"
+        +evidence.feat_name 
+        + "_protein"
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+    //Sequence/@id = evidence.accession 
+        where evidence.ev_type = 'COG accession'
+    //Sequence/@class = `protein'
+    //Sequence/@molecule = `aa'
+
+
+    //Sequence/Cross-reference/@identifier-type = 'current'
+    //Sequence/Cross-reference/@identifier = evidence.feat_name
+
+    //Sequence/Cross-reference/@database = 'NCBI_COG'
+
+</p>
+
+<p class="subsection_header">
+    Analysis element
+</p>
+<p class="xpath">
+    //Analysis/@id = 'NCBI_COG'
+    //Analysis/@Attribute/[@name='program']/@content = 'NCBI_COG'
+    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
+    //Analysis/@Attribute/[@name='algorithm']/@content='NCBI_COG'
+    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
+    //Analysis/@Attribute/[@name = 'name']/@content='NCBI_COG'
+</p>
+
+<p class="subsection_header">
     HMM2 Evidence Encoding
 </p>
 <p class="xpath">
@@ -1328,15 +1397,15 @@
         and common..score_type.score_type = `e-value' 
 
     //Seq-pair-run/@refpos = evidence.rel_end5 -1
-        where evidence.ev_type = `HMM'
+        where evidence.ev_type = `HMM2'
     //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
-        where evidence.ev_type = `HMM'
+        where evidence.ev_type = `HMM2'
     //Seq-pair-run/@complement=0
 
     //Seq-pair-run/@comppos = evidence.m_lend - 1 
-        where evidence.ev_type = `HMM'
+        where evidence.ev_type = `HMM2'
     //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
-        where evidence.ev_type = `HMM'
+        where evidence.ev_type = `HMM2'
     //Seq-pair-run/@compcomplement = 0
 </p>
 
@@ -1353,7 +1422,7 @@
     //Sequence/@molecule = `aa'
 
     //Sequence/@id = evidence.accession 
-        where evidence.ev_type = 'HMM'
+        where evidence.ev_type = 'HMM2'
     //Sequence/@class = `protein'
     //Sequence/@molecule = `aa'
 
