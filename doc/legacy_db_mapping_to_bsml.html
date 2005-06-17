@@ -1401,8 +1401,12 @@
     //Seq-pair-run/@compcomplement = 0
 
     //Seq-pair-run/@Attribute/@name = 'residues'
-    //Seq-pair-run/@Attribute/@content = evidence.hit
-        where evidence.ev_type = 'PROSITE'
+    //Seq-pair-run/@Attribute/@content =  feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `PROSITE'
+        and common..score_type.score_type = `hit' 
+
     
 
 </p>
