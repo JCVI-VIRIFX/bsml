@@ -1094,14 +1094,18 @@
     for brevity.
 </p>
 <p class="xpath">
-    ?/Attribute-list/Attribute[@name='TIGR_role']/@content = role_link.role_id
+    //Attribute-list/Attribute[@name='TIGR_role']/@content = role_link.role_id
         where role_link.feat_name = asm_feature.feat_name
 
-    ?/Attribute-list/Attribute[@name='assignby']/@content = role_link.assignby
+    //Attribute-list/Attribute[@name='assignby']/@content = role_link.assignby
+        where role_link.feat_name = asm_feature.feat_name
+ 
+    //Attribute-list/Attribute[@name='date']/@content = role_link.date 
         where role_link.feat_name = asm_feature.feat_name
 
-    ?/Attribute-list/Attribute[@name='date']/@content = role_link.date 
+    //Attribute-list/Attribute[@name='comment']/@content = notes.role_note
         where role_link.feat_name = asm_feature.feat_name
+	and role_line.role_id = note.role_id
 </p>
 <p>
     Example:<br>
@@ -1252,6 +1256,18 @@
         and feat_score.score_id = common..score_type.id 
         and feat_score.input_type = `BER'
         and common..score_type.score_type = `Pvalue' 
+    //Seq-pair-run/Attribute/[@name='percent_similarity']/@content = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `BER'
+        and common..score_type.score_type = `per_sim' 
+    //Seq-pair-run/Attribute/[@name=`percent_identity']/@content = feat_score.score 
+        where evidence.id = feat_score.input_id 
+        and feat_score.score_id = common..score_type.id 
+        and feat_score.input_type = `BER'
+        and common..score_type.score_type = `per_id'
+    //Seq-pair-run/Attribute/[@name='date']/@content = evidence.date
+        where evidence.ev_type = `BER'
     //Seq-pair-run/@refpos = min(evidence.end5,evidence.end3) - 1 
         where evidence.ev_type = `BER'
     //Seq-pair-run/@runlength = max(evidence.end5,evidence.end3) - min(evidence.end5,evidence.end3) + 1 
