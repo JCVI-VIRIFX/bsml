@@ -988,15 +988,19 @@ The order of the attributes determines the relative rank of the attributes.  Att
     //Feature[@class=`transcript']/Attribute-list/Attribute[@name='EC']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'ec number'
+        and asm.feature.feat_type = 'TU'
     //Feature[@class=`transcript']/Attribute[name='gene_product_name']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'product name'
+        and asm.feature.feat_type = 'TU'
     //Feature[@class=`transcript']/Attribute[name='gene_name']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'gene name'
+        and asm.feature.feat_type = 'TU'
     //Feature[@class=`transcript']/Attribute[name='gene_symbol']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'gene symbol'
+        and asm.feature.feat_type = 'TU'
 
     //Feature[@class=`transcript`]/Cross-reference/@database='genbank'
     //Feature[@class=`transcript`]/Cross-reference/@identifier=ident_xref.ident_val
