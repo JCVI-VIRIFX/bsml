@@ -983,27 +983,26 @@
 	and asm_feature.feat_type = 'TU'
 	and ident.is_pseudogene = 1
 
-	<p>The order of the attributes determines the relative rank of the
-	attributes.  Attributes pulled from ident_xref should be stored in BSML ordered by ident_xref.relrank<p>
+The order of the attributes determines the relative rank of the attributes.  Attributes pulled from ident_xref should be stored in BSML ordered by ident_xref.relrank
 
-       //Feature[@class=`transcript']/Attribute-list/Attribute[@name='EC']/@content = ident_xref.ident_val
+    //Feature[@class=`transcript']/Attribute-list/Attribute[@name='EC']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'ec number'
-      //Feature[@class=`transcript']/Attribute[name='gene_product_name']/@content = ident_xref.ident_val
+    //Feature[@class=`transcript']/Attribute[name='gene_product_name']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'product name'
-      //Feature[@class=`transcript']/Attribute[name='gene_name']/@content = ident_xref.ident_val
+    //Feature[@class=`transcript']/Attribute[name='gene_name']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'gene name'
-      //Feature[@class=`transcript']/Attribute[name='gene_symbol']/@content = ident_xref.ident_val
+    //Feature[@class=`transcript']/Attribute[name='gene_symbol']/@content = ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'gene symbol'
 
-      //Feature[@class=`transcript`]/Cross-reference/@database='genbank'
-      //Feature[@class=`transcript`]/Cross-reference/@identifier=ident_xref.ident_val
+    //Feature[@class=`transcript`]/Cross-reference/@database='genbank'
+    //Feature[@class=`transcript`]/Cross-reference/@identifier=ident_xref.ident_val
         where ident_xref.feat_name = asm_feature.feat_name
 	and ident_xref.xref_type = 'genbank accession'
-      //Cross-reference/@identifier-type='genbank_pid'
+    //Cross-reference/@identifier-type='genbank_pid'
 </p>
 <p>
     Example:<br>
