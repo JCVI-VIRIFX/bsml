@@ -180,7 +180,7 @@ sub parse  {
 	} 
 	else {
 
-	    $logger->debug("twig->parsefile") if($logger->is_debug());
+	    $logger->debug("twig->parsefile $fileOrHandle") if($logger->is_debug());
 	    $twig->parsefile( $fileOrHandle );
 	}
     } 
@@ -790,20 +790,6 @@ sub featureHandler
     my ($twig, $BsmlFeature) = @_;
 
     # print "executing featurHandler\n";
-
-    my $twigSequence = (($BsmlFeature->parent())->parent())->parent();
-   
-
-    my $bsmlseq = new BSML::BsmlSequence;
-
-    # add the sequence element's attributes
-
-    my $attr = $twigSequence->atts();
-
-    foreach my $key ( keys( %{$attr} ) )
-      {
-	$bsmlseq->addattr( $key, $attr->{$key} );
-    }
 
     my $feat = new BSML::BsmlFeature;
     $attr = $BsmlFeature->atts();
