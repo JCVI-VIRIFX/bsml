@@ -791,8 +791,9 @@ sub featureHandler
 
     # print "executing featurHandler\n";
 
+    my $bsmlseq = new BSML::BsmlSequence;
     my $feat = new BSML::BsmlFeature;
-    $attr = $BsmlFeature->atts();
+    my $attr = $BsmlFeature->atts();
 
     foreach my $key ( keys( %{$attr} ) )
     {
