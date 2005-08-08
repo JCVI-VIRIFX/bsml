@@ -793,6 +793,7 @@ sub featureHandler
 
     my $bsmlseq = new BSML::BsmlSequence;
     my $feat = new BSML::BsmlFeature;
+
     my $attr = $BsmlFeature->atts();
 
     foreach my $key ( keys( %{$attr} ) )
@@ -865,8 +866,7 @@ sub featureHandler
    
     $twig->purge;
 
-    my $listref = [$feat, $bsmlseq];
-    return $listref;
+    return $feat;
 }
 
 # [$bsml_feature_ref, $bsml_sequence_ref] SeqFeatureHandler( $twig, $BsmlFeature )
