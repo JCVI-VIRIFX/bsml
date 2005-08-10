@@ -1,15 +1,21 @@
 <html>
 
 <head>
-    <title>Legacy prok annotation database mapping to BSML</title>
+    <title>Legacy euk annotation database mapping to BSML</title>
     <link rel="stylesheet" href="documentation.css">
 </head>
 
 <body>
 
 <p class="doc_header">
-    Legacy prok annotation database mapping to BSML<br>
+    Legacy euk annotation database mapping to BSML<br>
 </p>
+
+This document provides a mapping between fields in a legacy eukaryotic
+annotation database and XML elements in BSML.  The usage conventions in BSML
+have been tailored to match usage/encoding conventions in Chado.  For example,
+the gene encoding in BSML mirrors the standard Chado gene encoding.  Additional
+information about Chado usage conventions can be found <a href=''>here</a>.
 
 <p class="section_header">
     Genomes element
@@ -27,7 +33,7 @@
     //Genome/Organism/Attribute/[@name='gram_strain'] = new_project.gram_stain
     //Genome/Organism/Attribute/[@name='genetic_code'] = new_project.genetic_code
 
-    //Genome/Cross-reference/@database = 'TIGR_prok:' + legacy database name
+    //Genome/Cross-reference/@database = 'TIGR_euk:' + legacy database name
     //Genome/Cross-reference/@identifier = common..genomes.file_moniker
     //Genome/Cross-reference/@identifier_type = 'current'
 </p>
@@ -41,14 +47,15 @@
     Naming convention
 </p>
 <p>
-    The identifier for the sequence is generated using the field assembly.asmbl_id.
+    The identifier for the sequence is generated according to the <a
+    href='http://tools/viewcvs/viewcvs.cgi/*checkout*/ANNOTATION/chado/doc/naming_conventions_for_features.html?rev=HEAD'>naming conventions document </a>.  The placeholder '_id_' will be used in place of an actual id.
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name+assembly.asmbl_id+"_assembly"
+    //Sequence/@id = lma1.gene.1
 </p>
 <p>
     Example:<br>
-    gba_1599_assembly
+    lma1.gene.1
 </p>
 <p>
     Note: All subfeatures of the sequence will use a similar naming convention to generate 
@@ -60,38 +67,22 @@
     Assembly sequence
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name + "_" 
-        +assembly.asmbl_id
-        +"_assembly"
+    //Sequence/@id = _id_
     //Sequence/@class = `assembly'
     //Sequence/@molecule = `dna'
     //Sequence/@length = datalength(assembly.sequence) 
-    //Sequence/@topology = asmbl_data.topology 
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id
+    //Sequence/@topology = 'linear'
 
-    //Sequence/Attribute[@name='molecule_name'] = asmbl_data.name
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id
+    //Sequence/Attribute[@name='molecule_name'] = clone_info.clone_name
 
-    //Sequence/Attribute[@name='molecule_type'] = asmbl_data.type
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id
+    //Sequence/Attribute[@name='molecule_type'] = 
 
 
 
     //Sequence/Attribute-list/Attribute[@name='SO']/@value = `supercontig' 
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id 
-        and asmbl_data.name like `%pseudomolecule%'
-    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `plasmid' 
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id 
-        and asmbl_data.name like `%plasmid%'
+    ??
     //Sequence/Attribute-list/Attribute[@name='SO']/@value = `chromosome' 
-        where assembly.asmbl_id = stan.asmbl_id 
-        and stan.asmbl_data_id = asmbl_data.id 
-        and asmbl_data.name like `%chromosome%'
+    ??
 
     //Sequence/Seq-data->text() = assembly.sequence
 </p>
@@ -99,16 +90,18 @@
     Protein sequence
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `ORF'
-        + "_protein_seq"
+    //Sequence/@id = _id_."_seq"
     //Sequence/@class = `protein'
     //Sequence/@molecule = `aa'
     //Sequence/@length = datalength(asm_feature.protein) 
-        where asm_feature.feat_type = `ORF'
+        where asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
+    //Sequence/Seq-data/@identifier = _id_
     //Sequence/Seq-data->text() = asm_feature.sequence 
-        where feat_type = `ORF'
+        where asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
 </p>
 <p class="subsection_header">
     CDS sequence
@@ -118,25 +111,23 @@
     Chado gene encoding.
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `ORF'
-        + "_CDS_seq"
+    //Sequence/@id = _id_."_seq"
     //Sequence/@class = `CDS'
     //Sequence/@molecule = `dna'
     //Sequence/@length = datalength(asm_feature.sequence) 
-        where asm_feature.feat_type = `ORF'
+        where asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
     //Sequence/Seq-data->text() = asm_feature.sequence 
-        where feat_type = `ORF'
+        where asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
 </p>
 <p class="subsection_header">
     tRNA sequence
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `tRNA'
-        + "_tRNA_seq"
+    //Sequence/@id = _id_
     //Sequence/@class = `tRNA'
     //Sequence/@molecule = `dna'
     //Sequence/@length = datalength(asm_feature.sequence) 
@@ -148,10 +139,7 @@
     rRNA sequence
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `rRNA'
-        + "_tRNA_seq"
+    //Sequence/@id = _id_
     //Sequence/@class = `rRNA'
     //Sequence/@molecule = `dna'
     //Sequence/@length = datalength(asm_feature.sequence) 
@@ -163,46 +151,7 @@
     snRNA sequence
 </p>
 <p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `sRNA'
-        + "_snRNA_seq"
-    //Sequence/@class = `snRNA'
-    //Sequence/@molecule = `dna'
-    //Sequence/@length = datalength(asm_feature.sequence) 
-        where asm_feature.feat_type = `snRNA'
-    //Sequence/Seq-data->text() = asm_feature.sequence 
-        where feat_type = `snRNA'
-</p>
-<p class="subsection_header">
-    Terminator sequence
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `TERM'
-        + "_terminator_seq"
-    //Sequence/@class = `terminator'
-    //Sequence/@molecule = `dna'
-    //Sequence/@length = datalength(asm_feature.sequence) 
-        where asm_feature.feat_type = `TERM'
-    //Sequence/Seq-data->text() = asm_feature.sequence 
-        where feat_type = `TERM'
-</p>
-<p class="subsection_header">
-    RBS sequence
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+asm_feature.feat_name where feat_type = `RBS'
-        + "_ribosome_entry_site_seq"
-    //Sequence/@class = `ribosome_entry_site'
-    //Sequence/@molecule = `dna'
-    //Sequence/@length = datalength(asm_feature.sequence) 
-        where asm_feature.feat_type = `RBS'
-    //Sequence/Seq-data->text() = asm_feature.sequence 
-        where feat_type = `RBS'
+??
 </p>
 <p>
     The following sections describe <Feature> elements which are nested below the assembly 
@@ -213,36 +162,36 @@
     Feature element
 </p>
 <p>
-    The ORF(or NTORF) from the annotation database is used to fill the required features 
-    for the standard Chado gene encoding.  The Chado gene encoding requires 5 &lt;Feature&gt; 
+    The TU, model, and exon features from the legacy annotation database are
+    used to fill features in BSML that correspond to the standard Chado gene
+    encoding.  The Chado gene encoding requires 5 &lt;Feature&gt; 
     elements: gene, transcript, CDS, exon, and protein.
 
-    Note: &lt;Interval-loc&gt; and &lt;Cross-reference&gt; elements for each of the Gene, Transcript, CDS, 
-    and Exon &lt;Feature&gt; elements are identical.
+    Alternative splicing is handled by associating the features of each isoform
+    with a single gene feature.  Additional information about the Chado
+    encoding for alternative splicing can be found in this <a
+    href=''>powerpoint presentation</a>.
+
+    This mapping only pertains to TU, which have at least one model of type "working".
 </p>
 <p class="subsection_header">
     Gene Feature
 </p>
 <p class="xpath">
-    //Feature[@class=`gene`]/@id = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_gene"
+    //Feature[@class=`gene`]/@id = _id_
     //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
         where asm_feature.end5 < asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3
         where asm_feature.end5 < asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`gene`]/Interval-loc/complement = 0
     //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
         where asm_feature.end5 > asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3 
         where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`gene`]/Interval-loc/complement = 1
 </p>
 <p class="subsection_header">
@@ -253,82 +202,36 @@
     //Feature[@class=`gene`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`gene`]/Cross-reference/@identifier-type='feat_name'
 
-    if (legacy annotation database is prok schema) {
-
-        //Feature[@class=`gene`]/Cross-reference/@database='...'
-	//Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
 	   where ident.feat_name = asm_feature.feat_name
-        //Cross-reference/@identifier-type='locus'
-	//Feature[@class=`gene`]/Cross-reference/@identifier=ident.locus
+    //Cross-reference/@identifier-type='locus'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=ident.pub_locus
 	   where ident.feat_name = asm_feature.feat_name
-        //Cross-reference/@identifier-type='display_locus'
-    }
-    else if (legacy annotation database is ntprok schema){
-
-        //Feature[@class=`gene`]/Cross-reference/@database='...'
-	//Feature[@class=`gene`]/Cross-reference/@identifier=nt_ident.locus
-	   where nt_ident.feat_name = asm_feature.feat_name
-        //Cross-reference/@identifier-type='locus'
-        //Feature[@class=`gene`]/Cross-reference/@identifier=nt_ident.nt_locus
-           where nt_ident.feat_name = asm_feature.feat_name
-        //Cross-reference/@identifier-type='display_locus'
-    }
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'PID'
-    //Cross-reference/@identifier-type='genbank_pid'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'protein_id'
-    //Cross-reference/@identifier-type='genbank_protein_id'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'SP'
-    //Cross-reference/@identifier-type='swiss_prot'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'ECOCYC'
-    //Cross-reference/@identifier-type='ecocyc'
-
+    //Cross-reference/@identifier-type='display_locus'
+    
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='gene'
-    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_gene"
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
+
 </p>
 <p class="subsection_header">
     Transcript Feature
 </p>
 <p class="xpath">
-    //Feature[@class=`transcript`]/@id = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_transcript"
+    //Feature[@class=`transcript`]/@id = _id_
     //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1 
         where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3 
         where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = 'TU'
     //Feature[@class=`transcript`]/Interval-loc/complement = 0
     //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1 
         where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3 
         where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `TU'
     //Feature[@class=`transcript`]/Interval-loc/complement = 1
 </p>
 <p class="subsection_header">
@@ -344,43 +247,48 @@
         where ident.feat_name = asm_feature.feat_name
 	and asm_feature.feat_type = 'TU'
     //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
+
     //Feature[@class=`transcript`]/Cross-reference/@database='...'
     //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.alt_locus
         where ident.feat_name = asm_feature.feat_name
 	and asm_feature.feat_type = 'TU'
     //Feature[@class=`transcript`]/Cross-reference/@identifier-type='alt_locus'
 
+    //Feature[@class=`transcript`]/Cross-reference/@database='...'
+    //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.pub_locus
+        where ident.feat_name = asm_feature.feat_name
+	and asm_feature.feat_type = 'TU'
+    //Feature[@class=`transcript`]/Cross-reference/@identifier-type='pub_locus'
+
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type=transcript'
-    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_transcript"
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
 </p>
 <p class="subsection_header">
     CDS Feature
 </p>
 <p class="xpath">
-    //Feature[@class='CDS`]/@id = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_CDS"
+    //Feature[@class='CDS`]/@id = _id_
     //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
         where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
     //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
         where asm_feature.end5 < asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
     //Feature[@class=`CDS`]/Interval-loc/complement = 0
     //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
         where asm_feature.end5 > asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
     //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
         where asm_feature.end5 > asm_feature.end3
-        and asm_feature.feat_type = `ORF'
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type = 'working'
     //Feature[@class=`CDS`]/Interval-loc/complement = 1
 </p>
 <p class="subsection_header">
@@ -395,49 +303,15 @@
     //Feature[@class=`transcript`]/Cross-reference/@identifier=ident.locus
         where ident.feat_name = asm_feature.feat_name
 	and asm_feature.feat_type = 'TU'
-    //Feature[@class=`transcript`]/Cross-reference/@identifier-type='locus'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'PID'
-    //Cross-reference/@identifier-type='genbank_pid'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'protein_id'
-    //Cross-reference/@identifier-type='genbank_protein_id'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'SP'
-    //Cross-reference/@identifier-type='swiss_prot'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'ECOCYC'
-    //Cross-reference/@identifier-type='ecocyc'
-
 
     //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='CDS'
-    //Feature-group[@group-set='gene']/Feature-group-member/@featref= database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_CDS"
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
 </p>
 <p class="subsection_header">
     CDS Sequence residues
 </p>
 <p class="xpath">
-    //Feature[@class=`CDS']/Link[@rel='sequence']/@href = database_name
-    +assembly.asmbl_id
-    +"_"+asm_feature.feat_name where feat_type = `ORF'
-    + "_CDS_seq"
+    //Feature[@class=`CDS']/Link[@rel='sequence']/@href = _id_+"_seq"
 
     Example:
     
@@ -771,189 +645,6 @@
 </p>
 
 <p class="subsection_header">
-    Signal peptide encoding
-</p>
-<p>
-    Signal peptide features localize to protein features.  The following &lt;Feature&gt; 
-    elements are nested below the &lt;Sequence&gt; element for protein sequences. The 
-    following &lt;Feature&gt; elements are nested below //Sequence[@class='protein'].
-</p>
-<p class="xpath">
-    //Feature[@class='signal_peptide`]/@id = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_signal_peptide"
-
-    //Feature[@class=`signal_peptide`]/Attribute[@name='HMM_cleavage_site'] = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and common..score_type.score_type = `HMM cleavage site'
-
-    //Feature[@class=`signal_peptide`]/Attribute[@name='NN_cleavage_site']  = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and  common..score_type.score_type = `site'
-
-    //Feature[@class='signal_peptide']/Attribute[@name='max_cleavage_site_probability'] = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and common..score_type.score_type = `cleavage site prob'
-
-    //Feature[@class='signal_peptide']/Attribute[@name='signal_probability'] = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and common..score_type.score_type = `signal pep prob'
-
-    //Feature[@class='signal_peptide']/Attribute[@name='y-score'] = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and common..score_type.score_type = `y-score'
-
-    //Feature[@class='signal_peptide']/Attribute[@name='s-mean'] = feat_score.score 
-        where ORF_attribute.att_type = `SP' 
-        and ORF_attribute.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and common..score_type.input_type = `SP' 
-        and common..score_type.score_type = `s-mean'
-
-    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@feature-type='signal_peptide'
-    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@featref= database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_signal_peptide"
-    //Feature-group[@group-set='signal_peptide']/Feature-group-member/@featref= database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_protein"
-</p>
-<p>
-    Example:<br>
-    <incomplete>[XML snippet here]</incomplete>
-</p>
-<p class="subsection_header">
-    Ribosomal binding site encoding
-</p>
-<p>
-    Ribosomal binding site features localize to assembly features.  
-</p>
-<p class="xpath">
-    //Feature[@class='ribosome_entry_site']/@id = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_ribosome_entry_site"
-
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/startpos = asm_feature.end5 - 1
-        where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `RBS'
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/endpos = asm_feature.end3
-        where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `ribosome_entry_site'
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/complement = 0
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/startpos = asm_feature.end5 - 1
-        where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `RBS'
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/endpos = asm_feature.end3
-        where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `RBS'
-    //Feature[@class=`ribosome_entry_site`]/Interval-loc/complement = 1
-    //Feature[@class=`ribosome_entry_site']/Link[@rel='sequence']/@href = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_ribosome_entry_site_seq"
-
-    //Feature/[@class='ribosome_entry_site']/Link[@rel='analysis'] = `RBS_analysis'
-
-    //Analysis/@id='RBS_analysis'
-    //Analysis/[@id='RBS_analysis']/@method = `RBS'
-</p>
-<p>
-    Example:<br>
-    <incomplete>[XML snippet here]</incomplete>
-</p>
-<p class="subsection_header">
-    Terminator encoding
-</p>
-<p>
-    Ribosomal binding site features localize to assembly features.  
-</p>
-<p class="xpath">
-    //Feature[@class='terminator']/@id = = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_terminator"
-
-    //Feature[@class=`terminator`]/Interval-loc/startpos = asm_feature.end5 - 1
-        where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `'
-    //Feature[@class=`terminator`]/Interval-loc/endpos = asm_feature.end3
-        where asm_feature.end5 < asm_feature.end3 
-        and asm_feature.feat_type = `terminator'
-    //Feature[@class=`terminator`]/Interval-loc/complement = 0
-    //Feature[@class=`terminator`]/Interval-loc/startpos = asm_feature.end5 - 1
-        where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `terminator'
-    //Feature[@class=`terminator`]/Interval-loc/endpos = asm_feature.end3
-        where asm_feature.end5 > asm_feature.end3 
-        and asm_feature.feat_type = `terminator'
-    //Feature[@class=`terminator`]/Interval-loc/complement = 1
-
-    //Feature[@class=terminator']/Link[@rel='sequence']/@href = database
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +asm_feature.feat_name
-        +"_terminator_seq"
-
-    //Feature/[@class='terminator']/Link[@rel='analysis'] = `TERM_analysis'
-
-    //Feature[@class=`terminator`]/Attribute[@name='term_direction']/@content = asm_feature.comment 
-    where asm_feature.feat_type = `TERM'
-
-    //Analysis/@id='TERM_analysis'
-    //Analysis/[@id='TERM_analysis']/@method = `TERM'
-    //Analysis/[@id='TERM_analysis']/Attribute[@name='method']/@content = `TERM'
-</p>
-<p class="subsection_header">
-    Terminator Database xrefs
-</p>
-<p class="xpath">
-    //Feature[@class=`terminator`]/Cross-reference/@database='...'
-    //Feature[@class=`terminator`]/Cross-reference/@identifier=asm_feature.feat_name
-    //Feature[@class=`terminator`]/Cross-reference/@identifier-type='feat_name'
-</p>
-<p>
-    Example:<br>
-    <incomplete>[XML snippet here]</incomplete>
-</p>
-<p class="section_header">
-    Gene annotation Attributes
-</p>
-<p>
-    The following data types are all associated with the transcript feature.
-</p>
-<p class="subsection_header">
     Ident information
 </p>
 <p class="xpath">
@@ -1154,366 +845,6 @@ The order of the attributes determines the relative rank of the attributes.  Att
     These sparsely populated &lt;Sequence&gt; elements are referred to as sequence stubs in 
     this document.
 </p>
-<p class="subsection_header">
-    BER/AUTO-BER Evidence Encoding
-</p>
-<p>
-    The following encoding applies to both `BER' and `AUTO-BER' ev_type.  For both 
-    these ev_types, the method will be encoded as `BER'.
-</p>
-<p class="xpath">
-    //Seq-pair-alignment/@refseq = database_name
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_CDS"
-    //Seq-pair-alignment/@compseq = evidence.accession 
-
-    //Seq-pair-alignment/@class = `match'
-    //Seq-pair-alignment/Link/@href = `#BER_analysis'
-    //Seq-pair-alignment/Link/@rel = `analysis'
-
-    //Seq-pair-run/@runscore = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `BER'
-        and common..score_type.score_type = `score' 
-    //Seq-pair-run/@runprob = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `BER'
-        and common..score_type.score_type = `Pvalue' 
-    //Seq-pair-run/Attribute/[@name='percent_similarity']/@content = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `BER'
-        and common..score_type.score_type = `per_sim' 
-    //Seq-pair-run/Attribute/[@name=`percent_identity']/@content = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `BER'
-        and common..score_type.score_type = `per_id'
-    //Seq-pair-run/Attribute/[@name='date']/@content = evidence.date
-        where evidence.ev_type = `BER'
-    //Seq-pair-run/@refpos = min(evidence.end5,evidence.end3) - 1 
-        where evidence.ev_type = `BER'
-    //Seq-pair-run/@runlength = max(evidence.end5,evidence.end3) - min(evidence.end5,evidence.end3) + 1 
-        where evidence.ev_type = `BER
-
-    If evidence.end5 < evidence.end3
-    //Seq-pair-run/@refcomplement = 1
-
-    If evidence.end5 > evidence.end3
-    //Seq-pair-run/@refcomplement = 0
-
-    //Seq-pair-run/@comppos = evidence.m_lend - 1
-    //Seq-pair-run/@comprunlength = evidence.m_rend - evidence.m_lend + 1
-    //Seq-pair-run/@compcomplement = 0
-
-    If evidence.ev_type = `BER' 
-    //Seq-pair-run/Attribute[@name='auto_annotate_toggle']/@content = 1
-</p>
-
-<p class="subsection_header">
-    Sequence stubs
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"+evidence.feat_name 
-        where ev_type = `BER'
-        + "_CDS"
-    //Sequence/@class = `CDS'
-    //Sequence/@molecule = `dna'
-
-    //Sequence/@id = evidence.accession where ev_type = `BER'
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-</p>
-
-<p class="subsection_header">
-    Analysis element
-</p>
-<p class="xpath">
-    //Analysis/@id = 'BER_analysis'
-    //Analysis/@Attribute/[@name='program']/@content = 'BER'
-    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
-    //Analysis/@Attribute/[@name='algorithm']/@content='BER'
-    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
-    //Analysis/@Attribute/[@name = 'name']/@content='BER_analysis'
-</p>
-
-<p class="subsection_header">
-    COG Evidence Encoding
-</p>
-<p class="xpath">
-    //Seq-pair-alignment/@refseq = database_name
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Seq-pair-alignment/@compseq = evidence.accession 
-
-    //Seq-pair-alignment/@class = `match'
-    //Seq-pair-alignment/Link/@href = `#NCBI_COG'
-    //Seq-pair-alignment/Link/@rel = `analysis'
-
-    //Seq-pair-run/@runscore = 0
-    //Seq-pair-run/@runprob = 0
-
-    //Seq-pair-run/@refpos = evidence.rel_end5 -1
-        where evidence.ev_type = `COG accession'
-    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
-        where evidence.ev_type = `COG accession'
-    //Seq-pair-run/@complement=0
-
-    //Seq-pair-run/@comppos = evidence.m_lend - 1 
-        where evidence.ev_type = `COG accession'
-    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
-        where evidence.ev_type = `COG accession'
-    //Seq-pair-run/@compcomplement = 0
-</p>
-
-<p class="subsection_header">
-    Sequence stubs
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-    //Sequence/@id = evidence.accession 
-        where evidence.ev_type = 'COG accession'
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-
-    //Sequence/Cross-reference/@identifier-type = 'current'
-    //Sequence/Cross-reference/@identifier = evidence.feat_name
-
-    //Sequence/Cross-reference/@database = 'NCBI_COG'
-
-</p>
-
-<p class="subsection_header">
-    Analysis element
-</p>
-<p class="xpath">
-    //Analysis/@id = 'NCBI_COG'
-    //Analysis/@Attribute/[@name='program']/@content = 'NCBI_COG'
-    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
-    //Analysis/@Attribute/[@name='algorithm']/@content='NCBI_COG'
-    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
-    //Analysis/@Attribute/[@name = 'name']/@content='NCBI_COG'
-</p>
-
-<p class="subsection_header">
-    PROSITE Evidence Encoding
-</p>
-<p class="xpath">
-    //Seq-pair-alignment/@refseq = database_name
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Seq-pair-alignment/@compseq = evidence.accession 
-
-    //Seq-pair-alignment/@class = `match'
-    //Seq-pair-alignment/Link/@href = `#PROSITE'
-    //Seq-pair-alignment/Link/@rel = `analysis'
-
-    //Seq-pair-run/@runscore = 0
-    //Seq-pair-run/@runprob = 0
-
-    //Seq-pair-run/@refpos = evidence.rel_end5 -1
-        where evidence.ev_type = `PROSITE'
-    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
-        where evidence.ev_type = `PROSITE'
-    //Seq-pair-run/@complement=0
-
-    //Seq-pair-run/@comppos = evidence.m_lend - 1 
-        where evidence.ev_type = `PROSITE'
-    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
-        where evidence.ev_type = `PROSITE'
-    //Seq-pair-run/@compcomplement = 0
-
-    //Seq-pair-run/@Attribute/@name = 'residues'
-    //Seq-pair-run/@Attribute/@content =  feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `PROSITE'
-        and common..score_type.score_type = `hit' 
-
-    
-
-</p>
-
-<p class="subsection_header">
-    Sequence stubs
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-    //Sequence/@id = evidence.accession 
-        where evidence.ev_type = 'PROSITE'
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-
-    //Sequence/Cross-reference/@identifier-type = 'current'
-    //Sequence/Cross-reference/@identifier = evidence.feat_name
-
-    //Sequence/Cross-reference/@database = 'PROSITE'
-
-</p>
-
-<p class="subsection_header">
-    Analysis element
-</p>
-<p class="xpath">
-    //Analysis/@id = 'PROSITE'
-    //Analysis/@Attribute/[@name='program']/@content = 'PROSITE'
-    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
-    //Analysis/@Attribute/[@name='algorithm']/@content='PROSITE'
-    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
-    //Analysis/@Attribute/[@name = 'name']/@content='PROSITE'
-</p>
-
-<p class="subsection_header">
-    HMM2 Evidence Encoding
-</p>
-<p class="xpath">
-    //Seq-pair-alignment/@refseq = database_name
-        +"_"
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Seq-pair-alignment/@compseq = evidence.accession 
-
-    //Seq-pair-alignment/@class = `match'
-    //Seq-pair-alignment/Link/@href = `#HMM2_analysis'
-    //Seq-pair-alignment/Link/@rel = `analysis'
-
-    //Seq-pair-run/@runscore = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `HMM2'
-        and common..score_type.score_type = `score' 
-    //Seq-pair-run/@runprob = feat_score.score 
-        where evidence.id = feat_score.input_id 
-        and feat_score.score_id = common..score_type.id 
-        and feat_score.input_type = `HMM2'
-        and common..score_type.score_type = `e-value' 
-
-    //Seq-pair-run/@refpos = evidence.rel_end5 -1
-        where evidence.ev_type = `HMM2'
-    //Seq-pair-run/@runlength = (evidence.rel_end3 - evidence.rel_end5 +1) 
-        where evidence.ev_type = `HMM2'
-    //Seq-pair-run/@complement=0
-
-    //Seq-pair-run/@comppos = evidence.m_lend - 1 
-        where evidence.ev_type = `HMM2'
-    //Seq-pair-run/@comprunlength = (evidence.m_rend - evidence.m_lend +1) 
-        where evidence.ev_type = `HMM2'
-    //Seq-pair-run/@compcomplement = 0
-</p>
-
-<p class="subsection_header">
-    Sequence stubs
-</p>
-<p class="xpath">
-    //Sequence/@id = database_name
-        +assembly.asmbl_id
-        +"_"
-        +evidence.feat_name 
-        + "_protein"
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-    //Sequence/@id = evidence.accession 
-        where evidence.ev_type = 'HMM2'
-    //Sequence/@class = `protein'
-    //Sequence/@molecule = `aa'
-
-
-    //Sequence/Cross-reference/@identifier-type = 'current'
-    //Sequence/Cross-reference/@identifier = evidence.feat_name
-
-    if (evidence.accession =~ /^TIGR/)
-    //Sequence/Cross-reference/@database = 'TIGR_TIGRFAMS'
-    if (evidence.accession =~ /^PF/)
-    //Sequence/Cross-reference/@database = 'PFam'
-
-
-
-</p>
-<p>
-    Note: HMM accessions are currently stored as a protein records since there is no 
-    SO term to represent a HMM.
-</p>
-
-<p class="subsection_header">
-    Analysis element
-</p>
-<p class="xpath">
-    //Analysis/@id = 'HMM2_analysis'
-    //Analysis/@Attribute/[@name='program']/@content = 'HMM2'
-    //Analysis/@Attribute/[@name='programversion']/@content = 'legacy'
-    //Analysis/@Attribute/[@name='algorithm']/@content='HMM2'
-    //Analysis/@Attribute/[@name='sourcename']/@content = $document_name
-    //Analysis/@Attribute/[@name = 'name']/@content='HMM2_analysis'
-</p>
-
-<p class="subsection_header">
-    BLASTN Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
-<p class="subsection_header">
-    PROSITE Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
-<p class="subsection_header">
-    NCBI COG Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
-<p class="subsection_header">
-    FPrintScan Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
-<p class="subsection_header">
-    BlastProDom Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
-<p class="subsection_header">
-    COG Accession Evidence Encoding
-</p>
-<p>
-    <incomplete>INCOMPLETE</incomplete>
-</p>
 
 <p class="section_header">
     Table Usage Summary
@@ -1579,7 +910,7 @@ The order of the attributes determines the relative rank of the attributes.  Att
 <li class="table_name">ident_xref</li>
     <ul>
         <li class="striked">ident_xref.id</li>
-        <li class="primary">ident_xref.feat_name</li>
+        <li>ident_xref.feat_name</li>
         <li class="striked">ident_xref.xref_id</li>
         <li class="primary">ident_xref.ident_val</li>
         <li class="primary">ident_xref.xref_type</li>
@@ -1587,23 +918,6 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="striked">ident_xref.mod_date</li>
         <li class="striked">ident_xref.assignby</li>
         <li class="primary">ident_xref.relrank</li>
-    </ul>
-
-<li class="table_name">nt_ident</li>
-    <ul>
-        <li class="primary">nt_ident.feat_name</li>
-        <li class="primary">nt_ident.locus</li>
-        <li class="primary">nt_ident.com_name</li>
-        <li class="primary">nt_ident.comment</li>
-        <li class="primary">nt_ident.assignby</li>
-        <li class="primary">nt_ident.date</li>
-        <li class="primary">nt_ident.ec#</li>
-        <li class="primary">nt_ident.pub_comment</li>
-        <li class="primary">nt_ident.auto_comment</li>
-        <li class="primary">nt_ident.gene_sym</li>
-        <li class="striked">nt_ident.species</li>
-        <li class="striked">nt_ident.save_history</li>
-        <li class="primary">nt_ident.nt_locus</li>
     </ul>
 
 <li class="table_name">ORF_attribute</li>
@@ -1615,15 +929,15 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="striked">ORF_attribute.method</li>
         <li class="primary">ORF_attribute.date</li>
         <li class="primary">ORF_attribute.assignby</li>
-    </ul>
-
-<li class="table_name">accession</li>
-    <ul>
-        <li class="striked">accession.id</li>
-        <li class="striked">accession.feat_name</li>
-        <li class="striked">accession.accession_db</li>
-        <li class="striked">accession.accession_id</li>
-        <li class="striked">accession.accession_pid</li>
+	<li class="primary">score</li>
+	<li class="primary">score2</li>
+	<li class="primary">score_desc</li>
+	<li class="primary">score3</li>
+	<li class="primary">score_desc</li>
+	<li class="primary">score4</li>
+	<li class="primary">score4_desc</li>
+	<li class="primary">score5</li>
+	<li class="primary">score5_desc</li>
     </ul>
 
 <li class="table_name">asm_feature</li>
@@ -1640,49 +954,24 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="primary">asm_feature.sequence</li>
         <li class="primary">asm_feature.protein</li>
         <li class="primary">asm_feature.feat_name</li>
+        <li class="striked">asm_feature.lock_id</li>
         <li>asm_feature.asmbl_id</li>
         <li class="striked">asm_feature.parent_id</li>
         <li class="striked">asm_feature.change_log</li>
+        <li class="striked">asm_feature.is_gb</li>
+        <li class="primary">asm_feature.pub_comment</li>
         <li class="striked">asm_feature.save_history</li>
-        <li class="secondary">asm_feature.sec_struct</li>
-    </ul>
-
-<li class="table_name">role_link</li>
-    <ul>
-        <li>role_link.id</li>
-        <li>role_link.feat_name</li>
-        <li class="primary">role_link.role_id</li>
-        <li class="primary">role_link.assignby</li>
-        <li class="primary">role_link.datestamp</li>
-    </ul>
-
-<li class="table_name">score_text</li>
-    <ul>
-        <li class="striked">score_text.id</li>
-        <li class="striked">score_text.feat_name</li>
-        <li class="striked">score_text.identifier</li>
-        <li class="striked">score_text.alignment</li>
-    </ul>
-
-<li class="table_name">stan</li>
-    <ul>
-        <li class="striked">stan.id</li>
-        <li>stan.asmbl_id</li>
-        <li class="striked">stan.asmbl_data_id</li>
-        <li class="striked">stan.prev_asmbl</li>
-        <li class="striked">stan.original_asmbl_id</li>
-        <li>stan.iscurrent</li>
-        <li class="striked">stan.change_log</li>
+        <li class="primary">asm_feature.curated</li>
     </ul>
 
 <li class="table_name">sub_to_final</li>
     <ul>  
         <li>sub_to_final.asmbl_id</li>
-        <li>sub_to_final.asm_lend</li>
-        <li>sub_to_final.asm_rend</li>
+        <li class="primary">sub_to_final.asm_lend</li>
+        <li class="primary">sub_to_final.asm_rend</li>
         <li>sub_to_final.sub_asmbl_id</li>
-        <li>sub_to_final.sub_asm_lend</li>
-        <li>sub_to_final.sub_asm_rend</li>
+        <li class="primary">sub_to_final.sub_asm_lend</li>
+        <li class="primary">sub_to_final.sub_asm_rend</li>
     </ul>
 
 <li class="table_name">evidence</li>
@@ -1702,16 +991,59 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="secondary">evidence.assignby</li>
         <li class="striked">evidence.change_log</li>
         <li class="striked">evidence.save_history</li>
-        <li class="secondary">evidence.method</li>
+        <li class="primary">evidence.method</li>
+        <li class="primary">evidence.per_sim</li>
+        <li class="primary">evidence.score</li>
+        <li class="primary">evidence.db</li>
+        <li class="primary">evidence.pvalue</li>
+        <li class="primary">evidence.domain_score</li>
+        <li class="primary">evidence.expect_domain</li>
+        <li class="primary">evidence.total_score</li>
+        <li class="primary">evidence.expect_whole</li>
+        <li class="primary">evidence.chainID</li>
     </ul>
 
-<li class="table_name">feat_score</li>
-    <ul>  
-        <li class="striked">feat_score.id</li>
-        <li>feat_score.input_id</li>
-        <li>feat_score.score_id</li>
-        <li>feat_score.score</li>
-    </ul>
+<li class="table_name">phys_ev</li>
+<ul>
+        <li>id</li>
+	<li>feat_name</li>
+	<li>ev_type</li>
+	<li>assignby</li>
+	<li>datestamp</li>
+	<li>type</li>
+	<li>score</li>
+</ul>	
+
+<li class="table_name">new_project</li>
+<ul>
+<li>id</li>
+<li>notify</li>
+<li>organism_name</li>
+<li>1team_leader</li>
+<li>project_leader</li>
+<li>funded_by</li>
+<li>grant#</li>
+<li>genome_URL</li>
+<li>taxon_id</li>
+<li>genetic_code</li>
+<li>lib_construct_date</li>
+<li>seq_date</li>
+<li>closure_date</li>
+<li>annotation_date</li>
+<li>lit_submit_date</li>
+<li>publish_date</li>
+<li>accession_submit_date</li>
+<li>gram_stain</li>
+<li>project_page</li>
+<li>grant_deadline</li>
+<li>asmbl_len</li>
+<li>CMR_email</li>
+<li>funding_URL</li>
+<li>lineage</li>
+<li>seq_db</li>
+</ul>
+
+
 
 <li class="table_name">assembly</li>
     <ul>  
@@ -1725,9 +1057,9 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="striked">assembly.redundancy</li>
         <li class="striked">assembly.perc_N</li>
         <li class="striked">assembly.seq#</li>
-        <li class="striked">assembly.full_CDS</li>
-        <li class="striked">assembly.CDS_start</li>
-        <li class="striked">assembly.CDS_end</li>
+        <li class="striked">assembly.full_cds</li>
+        <li class="striked">assembly.cds_start</li>
+        <li class="striked">assembly.cds_end</li>
         <li class="striked">assembly.ed_pn</li>
         <li class="striked">assembly.ed_date</li>
         <li class="striked">assembly.comment</li>
@@ -1750,6 +1082,7 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="primary">go_role_link.assigned_by</li>
         <li class="primary">go_role_link.date</li>
         <li class="primary">go_role_link.qualifier</li>
+        <li class="primary">go_role_link.nt_source</li>
     </ul>
 
 <li class="table_name">go_evidence</li>
@@ -1760,22 +1093,66 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="primary">go_evidence.with_ev</li>
     </ul>
 
-<li class="table_name">asmbl_data</li>
-    <ul> 
-        <li class="striked">asmbl_data.id</li>
-        <li class="primary">asmbl_data.name</li>
-        <li class="primary">asmbl_data.type</li>
-        <li class="primary">asmbl_data.topology</li>
-        <li class="striked">asmbl_data.search_dirs</li>
-        <li class="striked">asmbl_data.pfam_dir</li>
-        <li class="striked">asmbl_data.pdb_dir</li>
-        <li class="striked">asmbl_data.firewall_toggle</li>
-        <li class="striked">asmbl_data.accession_toggle</li>
-        <li class="striked">asmbl_data.skew_table</li>
-        <li class="striked">asmbl_data.license</li>
-        <li class="striked">asmbl_data.is_public</li>
+<li class="table_name">gene_synonym</li>
+    <ul>
+      feat_name
+      syn_feat_name
+      assignby
+      date
+      synType
     </ul>
-</p>
+
+<li class="table_name">role_link</li>
+    <ul>
+      id
+      parent_feat
+      child_feat
+      assignby
+      datestamp
+    </ul>
+
+
+<li class="table_name">clone_info</li>
+    <ul>
+        clone_info.asmbl_id
+	<li class="striked">clone_info.clone_id
+	clone_info.clone_name
+	clone_info.seq_group
+	<li class="striked">clone_info.orig_annotation
+	<li class="striked">clone_info.tigr_annotation
+	clone_info.status
+	clone_info.length
+	clone_info.final_asmbl
+	clone_info.fa_left
+	clone_info.fa_right
+	clone_info.fa_orient
+	clone_info.gb_acc
+	<li class="striked">clone_info.gb_desc
+	<li class="striked">clone_info.gb_comment
+	<li class="striked">clone_info.gb_date
+	clone_info.comment
+	clone_info.assignby
+	clone_info.date
+	clone_info.lib_id
+	clone_info.seq_asmbl_id
+	clone_info.chromo
+	<li class="striked">clone_info.date_for_release
+	<li class="striked">clone_info.date_released
+	<li class="striked">clone_info.authors1
+	<li class="striked">clone_info.authors2
+	clone_info.seq_db
+	clone_info.is_public
+	<li class="striked">clone_info.gb_keywords
+	clone_info.sequencing_type
+	clone_info.prelim
+	clone_info.license
+	<li class="striked">clone_info.gb_gi
+	<li class="striked">clone_info.gb_phase
+   </ul>
+
+
+	
+
 
 <p class="section_header">
     Ignored tables
@@ -1795,102 +1172,44 @@ The order of the attributes determines the relative rank of the attributes.  Att
 <p class="subsection_header">
     Ignored but used in annotation
 </p>
+     alignment<br>
+     asm_feature_history<br>
+     asmbl_link<br>
+     asmbl_map<br>
+     change_log<br>
+     chromo_syn_link<br>
+     evidence_history<br>
+     ident_history<br>
 <p>
-    ident_history<br>
-    new_project<br>
-    asm_feature_history<br>
-    role_link_history<br>
-    asmbl_group<br>
-    role_notes<br>
-    asmbl_link<br>
-    asmbl_data (move to handled list)<br>
-    coverage<br>
-    evidence_history<br>
-    frameshift<br>
-    edit_report<br>
-    gb_authors<br>
-    gb_citations<br>
-    gb_feature<br>
-    gb_release<br>
-    glimmer_connect (find out about this)<br>
-    glimmer_output (find out about this)<br>
-    Iso_link (paralogous families)<br>
-    Alignment (paralogous families)<br>
-    change_log
 </p>
 <p class="subsection_header">
     Ignored and not used in annotation
 </p>
 <p>
-    feat_link<br>
-    Extent_libray<br>
-    extent_type<br>
-    minclone_clone<br>
-    Library<br>
-    minclone_region<br>
-    Library_Experiment<br>
-    minclone_region_clone_link<br>
-    library_Policy<br>
-    names<br>
-    grasta_pairs<br>
-    hits<br>
-    Experiment<br>
-    hmm_hit<br>
-    hydro_plot<br>
-    Extent<br>
-    Library_stats<br>
-    olaprole_link<br>
-    Library_Stats_Template<br>
-    peaks<br>
-    primer_dir<br>
-    SequenceRead<br>
-    Primer_dir_ref<br>
-    SequenceReadType<br>
-    primer_table<br>
-    SequenceVendorMap<br>
-    pull_worktable<br>
-    Stats_Type_Template<br>
-    putative<br>
-    qualities<br>
-    aliases<br>
-    region_evaluation<br>
-    remapped_asmbl_link<br>
-    repeats<br>
-    asmblpairs<br>
-    searchlog<br>
-    bases<br>
-    seq_file_location<br>
-    seq_history<br>
+    nt_ident<br>
+    accession<br>
+    annotator_lock<br>
+    asmbl_tracker<br>
+    bac_release<br>
     closure_status<br>
-    sequence<br>
-    collection<br>
-    snapshot<br>
-    contained<br>
-    contig_collection<br>
-    status_vocabulary<br>
-    contig_snapshot<br>
-    subst_table<br>
-    current_snapshot<br>
-    trans_alignment<br>
     edit_evaluation<br>
-    tree_link<br>
     edit_report<br>
-    trim_info<br>
-    editor_asmbl_link_lock<br>
-    editor_assembly_lock<br>
-    editor_assembly_range_lock<br>
-    editor_lock<br>
     editor_sequence_lock<br>
-    exclude_seq<br>
     expert_subst_table<br>
-    feature<br>
-    feature_link<br>
-    feature_syn<br>
-    gap<br>
-    gap_asmbl<br>
-    gap_link<br>
-    gap_link_seq<br>
-    gap_seq
+    feature_history<br>
+    frameshift<br>
+    gb_authors<br>
+    gb_citations<br>
+    gb_feature<br>
+    gb_release<br>
+    marker<br>
+    pull_worktable<br>
+    region_evaluation<br>
+    role_link<br>
+    save_ed_lock<br>
+    seq_contact<br>
+    stan<br>
+    subst_table<br>
 </p>
 
 <p class="section_header">
@@ -1904,13 +1223,24 @@ The order of the attributes determines the relative rank of the attributes.  Att
     The following asm_feature.feat_type values are documented in this migration document.
 </p>
 <p>
-    ORF<br>
-    NTORF<br>
-    RBS<br>
-    TERM<br>
+    CDS<br>
+    TE<br>
+    TU<br>
+    acceptor<br>
+    donor<br>
+    exon<br>
+    model<br>
+    intergenic<br>
+    pre-tRNA<br>
     rRNA<br>
-    ncRNA<br>
-    tRNA
+    repeat<br>
+    rna-exon<br>
+    sRNA<br>
+    slRNA<br>
+    snRNA<br>
+    snoRNA<br>
+    tRNA<br>
+
 </p>
 
 <p class="subsection_header">
@@ -1921,16 +1251,12 @@ The order of the attributes determines the relative rank of the attributes.  Att
     handled during the BSML migration.
 </p>
 <p>
-    *PMARK (Can't find corresponding SO term)<br>
-    *PHAGE (Talk to Scott)<br>
-    INTRON<br>
-    CLN_CVG<br>
-    SEQ_CVG<br>
-    AUTO_RPT<br>
-    CLOSED_GAP<br>
-    CA_UNIQUE_UNITIG<br>
-    CA_NONUNIQUE_UNITIG<br>
-    EX_CA_NONUNIQUE_UNITIG
+    6fseq
+    misc_feature
+    sfseq
+    trf
+    rscout
+    subpiler
 </p>
 
 <p class="subsection_header">
@@ -1959,15 +1285,26 @@ The order of the attributes determines the relative rank of the attributes.  Att
     handled during the BSML migration.
 </p>
 <p>
-    AFS<br>
-    DEG<br>
-    FIXED<br>
-    APM<br>
-    FS<br>
-    PCF<br>
-    PM<br>
-    PROGRAMMED_FS<br>
-    *START_CONF
+     MW
+ PI
+ GES
+ OMP
+ trf
+ rRNA
+ tRNA
+ 6fseg
+ SP-NN
+ sfseg
+ slRNA
+ snRNA
+ SP-HMM
+ psort2
+ repeat
+ snoRNA
+ TEMPFAM
+ targetP
+ is_partial
+ COG_curation
 </p>
 
 <p class="subsection_header">
@@ -1975,13 +1312,26 @@ The order of the attributes determines the relative rank of the attributes.  Att
 </p>
 <p>
     BER<br>
+    dds<br>
+    nap<br>
     HMM2<br>
-    *BLASTN<br>
-    *PROSITE<br>
-    *AUTO_BER<br>
-    *FPrintScan<br>
-    *BlastProDom<br>
-    *COG accession
+    gap2<br>
+    para<br>
+    BLASTP<br>
+    NUCMER<br>
+    autoGO<br>
+    PROSITE<br>
+    TBLASTN<br>
+    Interpro<br>
+    SEG_ngpd<br>
+    FPrintScan<br>
+    AUTO_BLASTP<br>
+    BlastProDom<br>
+    ProfileScan<br>
+    ScanPrositeC<br>
+    COG accession<br>
+    alignAssembly<br>
+
 </p>
 
 <p class="subsection_header">

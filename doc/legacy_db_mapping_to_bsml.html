@@ -534,49 +534,6 @@
     //Feature[@class=`exon`]/Cross-reference/@identifier=asm_feature.feat_name
     //Feature[@class=`exon`]/Cross-reference/@identifier-type='feat_name'
 
-
-
-    if (legacy annotation database is prok schema){
-
-        //Feature[@class=`exon`]/Cross-reference/@database='...'
-        //Feature[@class=exon`]/Cross-reference/@identifier=ident.locus
-           where ident.feat_name = asm_feature.feat_name
-        //Feature[@class=`exon`]/Cross-reference/@identifier-type='locus'
-
-    }
-    else if (legacy annotation database is ntprok schema){
-
-        //Feature[@class=`exon`]/Cross-reference/@database='...'
-        //Feature[@class=exon`]/Cross-reference/@identifier=nt_ident.nt_locus
-           where nt_ident.feat_name = asm_feature.feat_name
-        //Feature[@class=`exon`]/Cross-reference/@identifier-type='display_locus'
-    }
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'PID'
-    //Cross-reference/@identifier-type='genbank_pid'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'protein_id'
-    //Cross-reference/@identifier-type='genbank_protein_id'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'SP'
-    //Cross-reference/@identifier-type='swiss_prot'
-
-    //Feature[@class=`gene`]/Cross-reference/@database='...'
-    //Feature[@class=`gene`]/Cross-reference/@identifier=accession.accession_id
-        where accession.feat_name = asm_feature.feat_name
-	and accession.accession_db = 'ECOCYC'
-    //Cross-reference/@identifier-type='ecocyc'
-
-
     Example:
     <incomplete>[XML snippet here]</incomplete>
 </p>
