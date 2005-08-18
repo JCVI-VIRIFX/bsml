@@ -348,8 +348,21 @@ sub sequenceHandler
 
     foreach my $BsmlLink ( $seq->children( 'Link' ) )
       {
+
 	my $attr = $BsmlLink->atts();
+
 	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+
+	#
+	# editor:   sundaram@tigr.org
+	# date:     2005-08-18
+	# bgzcase:  2053
+	# URL:      http://serval.tigr.org:8080/bugzilla/show_bug.cgi?id=2053
+	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
+	#           only interested in the following attributes: //Link/@rel and //Link/@href
+	#
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+
       }
 
     # add raw sequence data if found 
@@ -658,6 +671,7 @@ sub sequenceHandler
 
 sub minsequenceHandler
   {
+
     my ($twig, $seq, $detect) = @_;
 
     # add a new Sequence object to the bsmlDoc
@@ -697,8 +711,23 @@ sub minsequenceHandler
 
     foreach my $BsmlLink ( $seq->children( 'Link' ) )
       {
+
 	my $attr = $BsmlLink->atts();
+
 	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+
+	#
+	# editor:   sundaram@tigr.org
+	# date:     2005-08-18
+	# bgzcase:  2053
+	# URL:      http://serval.tigr.org:8080/bugzilla/show_bug.cgi?id=2053
+	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
+	#           only interested in the following attributes: //Link/@rel and //Link/@href
+	#
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	
+
+
       }
 
     # add raw sequence data if found 
@@ -917,8 +946,21 @@ sub SeqFeatureHandler
     
     foreach my $BsmlLink ( $twigSequence->children( 'Link' ) )
     {
+
 	my $attr = $BsmlLink->atts();
 	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+
+
+	#
+	# editor:   sundaram@tigr.org
+	# date:     2005-08-18
+	# bgzcase:  2053
+	# URL:      http://serval.tigr.org:8080/bugzilla/show_bug.cgi?id=2053
+	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
+	#           only interested in the following attributes: //Link/@rel and //Link/@href
+	#
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+
     }
 
     # add raw sequence data if found 
