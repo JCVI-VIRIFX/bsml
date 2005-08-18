@@ -1081,7 +1081,33 @@ sub createAndAddGenome
 
     my $genome = $self->returnBsmlGenomeR( $self->addBsmlGenome() );
 
-    $genome->addattr( 'id', $args{'id'} );
+       
+    #
+    # editor:    sundaram@tigr.org
+    # date:      2005-08-17
+    # bgzcase:   2051
+    # URL:       http://serval.tigr.org:8080/bugzilla/show_bug.cgi?id=2051
+    # comment:   The <Sequence> will now be explicitly linked with the <Genome>.
+    #	         This hack matches what we did for the Cross-reference id assignment.
+
+    if (defined($args{'id'})){
+	
+	my $id = $args{'id'};
+	my $idfinal;
+
+	if ($id =~ /^\d+/){
+	    $idfinal = '_' . $id;
+	}
+
+	$genome->addattr( 'id', $idfinal) 
+    }
+
+    elsif( !($args{'id'}) ) {
+	$args{'id'} = "_$elem_id";
+	$elem_id++;
+	$genome->addattr( 'id', $args{'id'} );		 
+    }
+
 
     $genome->addattr( 'autosomal-chromosome-count', $args{'autosomal-chromosome-count'} );
     $genome->addattr( 'sex-chromosome-count', $args{'sex-chromosome-count'} );
