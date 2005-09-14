@@ -1,0 +1,158 @@
+<html><head><title>euk data types chart</title>
+    
+    <link rel="stylesheet" href="egc.components_files/documentation.css">
+    <style type="text/css">
+        table.grid {
+            border-collapse: collapse;
+        }
+        
+        table.grid td {
+            border: 1px solid #000000;
+            padding: 2px 5px 2px 5px;
+            text-align: center;
+        }
+        
+        table.grid td.component {
+            text-align: left;
+        }
+        
+        table.grid td.header {
+            background-color: #EEEEEE;
+        }
+        
+        table.grid td.done {
+            background-color: #82FF6E;
+        }
+        
+        table.grid td.notdone {
+            background-color: #FFFFFF;
+        }
+
+        table.grid td.na {
+            background-color: #EEEEEE;
+        }
+    </style></head>
+
+<body>
+
+<p class="doc_header">
+    egc component information<br>
+    <br>
+    date created : 2004-12-07<br>
+    last modified: 2005-07-14<br>
+    <br>
+    jorvis@tigr.org<br>
+    <br>
+    This document lists the current migration status of euk data types to
+    Chado.  The full documentation and mapping used in the migration is here:
+    <a href='http://tools/viewcvs/viewcvs.cgi/*checkout*/ANNOTATION/bsml/doc/legacy_eukdb_mapping_to_bsml.html?rev=HEAD&content-type=text/html'>[mapping_doc]</a>
+
+</p>
+
+<p class="section_header">
+    component development status
+</p>
+<p>
+    <table class="grid">
+        <tbody><tr>
+            <td class="header">data class</td>
+	    <td class="header">euk tables</td>
+            <td class="header">mapping document</td>
+            <td class="header">legacy2bsml</td>
+            <td class="header">bsml2chado</td>
+            <td class="header">validation script</td>
+            <td class="header">test database</td>
+            <td class="header">manual QC</td>
+        </tr>
+        <tr>
+            <td class="component">genome info</td>
+            <td class="">new_project, common</td>
+            <td class="notdone"></td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">assembly sequence</td>
+            <td class="">assembly, clone_info</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">protein coding genes</td>
+            <td class="">asm_feature, phys_ev, feat_link</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">RNAs</td>
+            <td class="">asm_feature, phys_ev, feat_link</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">Functional annotation</td>
+            <td class="">ident, go_role_link</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">Physcial attributes</td>
+            <td class="">ORF_attribute</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">Scaffold mappings</td>
+            <td class="">sub_to_final</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">Gene finders</td>
+            <td class="">asm_feature, phys_ev</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+            <td class="notdone">&nbsp;</td>
+        </tr>
+	<tr>
+            <td class="component">Evidence</td>
+            <td class="">evidence</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+            <td class="na">n/a</td>
+        </tr>
+
+</body></html>
