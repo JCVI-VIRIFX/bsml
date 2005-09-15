@@ -73,19 +73,67 @@ information about Chado usage conventions can be found <a href=''>here</a>.
     //Sequence/@length = datalength(assembly.sequence) 
     //Sequence/@topology = 'linear'
 
-    //Sequence/Attribute[@name='molecule_name'] = clone_info.clone_name
+    //Sequence/Attribute[@name='molecule_name']      = clone_info.clone_name
+    //Sequence/Attribute[@name='seq_group']          = clone_info.seq_group
+    //Sequence/Attribute[@name='assembly_status']    = clone_info.status
+    //Sequence/Attribute[@name='sequencing_type']    = clone_info.sequencing_type
 
-    //Sequence/Attribute[@name='molecule_type'] = 
+    //Sequence/Attribute[@name='is_orig_annotation'] = clone_info.orig_annotation
+    //Sequence/Attribute[@name='is_tigr_annotation'] = clone_info.tigr_annotation
+    //Sequence/Attribute[@name='is_final']           
+                = (clone_info.final_asmbl != (O || NULL)) ? 1 : 0
+    //Sequence/Attribute[@name='is_public']          = clone_info.is_public
+    //Sequence/Attribute[@name='is_licensed']        = clone_info.is_licensed
+    //Sequence/Attribute[@name='is_prelim']          = clone_info.is_prelim
+
+    //Sequence/Cross-reference/@database  ='genbank'
+    //Sequence/Cross-reference/@identifier=clone_info.gb_acc
+
+    //Sequence/Attribute[@name='gb_description']     = clone_info.description
+    //Sequence/Attribute[@name='gb_comment']         = clone_info.gb_comment
+    //Sequence/Attribute[@name='gb_date']            = clone_info.gb_date
+    //Sequence/Attribute[@name='gb_authors1']        = clone_info.gb_authors1
+    //Sequence/Attribute[@name='gb_authors2']        = clone_info.gb_authors2
+    //Sequence/Attribute[@name='gb_gi']              = clone_info.gb_gi
+    //Sequence/Attribute[@name='gb_phase']           = clone_info.gb_phase
+    //Sequence/Attribute[@name='gb_keywords']        = clone_info.gb_keywords
+    //Sequence/Attribute[@name='gb_date_for_release']     = clone_info.date_for_release
+    //Sequence/Attribute[@name='gb_date_released']        = clone_info.date_released
 
 
+    //Sequence/Attribute[@name='comment']            = clone_info.comment
+    //Sequence/Attribute[@name='assignby']           = clone_info.assignby
+    //Sequence/Attribute[@name='date']               = clone_info.date
+    //Sequence/Attribute[@name='seq_asmbl_id']       = clone_info.seq_asmbl_id
+    //Sequence/Attribute[@name='chromosome']         = clone_info.chromosome
 
-    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `supercontig' 
-    ??
-    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `chromosome' 
-    ??
+    //Sequence/Cross-reference/@database  = clone_info.seq_db
+    //Sequence/Cross-reference/@identifier= clone_info.seq_asmbl_id
+    //Sequence/Cross-reference/version = 'seq_id'
+
+    //Sequence/Cross-reference/@database  = clone_info.seq_db
+    //Sequence/Cross-reference/@identifier= clone_info.lib_id
+    //Sequence/Cross-reference/version = 'lib_id'
+
+    //Sequence/Cross-reference/@database  = clone_info.seq_db
+    //Sequence/Cross-reference/@identifier= clone_info.clone_id
+    //Sequence/Cross-reference/version = 'clone_id'
+
+    These will be removed when mapping documents are in place
+    //Sequence/Attribute[@name='final_asmbl']     = clone_info.final_asmbl
+    //Sequence/Attribute[@name='fa_left']         = clone_info.fa_left
+    //Sequence/Attribute[@name='fa_right']         = clone_info.fa_right
 
     //Sequence/Seq-data->text() = assembly.sequence
 </p>
+
+<p>User must define a SO type for each sequence.  Acceptable values are listed below<p>
+<p class="xpath">
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `supercontig' 
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `contig' 
+    //Sequence/Attribute-list/Attribute[@name='SO']/@value = `chromosome' 
+<p>
+
 <p class="subsection_header">
     Protein sequence
 </p>
@@ -105,10 +153,6 @@ information about Chado usage conventions can be found <a href=''>here</a>.
 </p>
 <p class="subsection_header">
     CDS sequence
-</p>
-<p>
-    The ORF sequence is stored as the CDS sequence.  This encoding is consistent with the 
-    Chado gene encoding.
 </p>
 <p class="xpath">
     //Sequence/@id = _id_."_seq"
@@ -641,8 +685,206 @@ information about Chado usage conventions can be found <a href=''>here</a>.
 </p>
 
 <p class="section_header">
-    Other features
+   pre-tRNA    
 </p>
+
+<p class="section_header">
+   rna-exon
+</p>
+
+<p class="section_header">
+   snoRNA
+</p>
+
+<p class="section_header">
+    Transposable elements
+</p>
+
+<p class="section_header">
+    Gene finders
+</p>
+
+<p class="subsection_header">
+    Analysis element for gene finders
+</p>
+
+<p class="xpath">
+   //Analysis/@id =  phys_ev.ev_type where
+        asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+
+  //Analysis/@method = phys_ev.ev_type where
+        asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+
+</p>
+
+<p class="subsection_header">
+    Gene features for gene finders
+</p>
+<p class="xpath">
+    //Feature[@class='gene`]/@id = _id_
+    //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`gene`]/Interval-loc/complement = 0
+    //Feature[@class=`gene`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`gene`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`gene`]/Interval-loc/complement = 1
+
+    //Feature[@class='gene']/Link[@rel='analysis']/@href = _analysis_id_
+
+</p>
+<p class="subsection_header">
+    Gene Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`gene`]/Cross-reference/@database='...'
+    //Feature[@class=`gene`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`gene`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='gene'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
+
+</p>
+<p class="subsection_header">
+    Transcript features for gene finders
+</p>
+<p class="xpath">
+    //Feature[@class='transcript`]/@id = _id_
+    //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`transcript`]/Interval-loc/complement = 0
+    //Feature[@class=`transcript`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`transcript`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`transcript`]/Interval-loc/complement = 1
+
+    //Feature[@class='gene']/Link[@rel='analysis']/@href = _analysis_id_
+</p>
+<p class="subsection_header">
+    transcript database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`CDS`]/Cross-reference/@database='...'
+    //Feature[@class=`CDS`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`CDS`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='transcript'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
+</p>
+
+<p class="subsection_header">
+    CDS Feature
+</p>
+<p class="xpath">
+    //Feature[@class='CDS`]/@id = _id_
+    //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3 
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`CDS`]/Interval-loc/complement = 0
+    //Feature[@class=`CDS`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`CDS`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `model'
+	and asm_feature.feat_name = phys_ev.feat_name
+	and phys_ev.ev_type != 'working'
+    //Feature[@class=`CDS`]/Interval-loc/complement = 1
+
+    //Feature[@class='gene']/Link[@rel='analysis']/@href = _analysis_id_
+</p>
+<p class="subsection_header">
+    CDS Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class=`CDS`]/Cross-reference/@database='...'
+    //Feature[@class=`CDS`]/Cross-reference/@identifier=asm_feature.feat_name
+    //Feature[@class=`CDS`]/Cross-reference/@identifier-type='feat_name'
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='CDS'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
+</p>
+<p class="subsection_header">
+    Exon Feature
+</p>
+<p class="xpath">
+    //Feature[@class='exon`]/@id = _id_
+    //Feature[@class=`exon`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `exon'
+    //Feature[@class=`exon`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 < asm_feature.end3
+        and asm_feature.feat_type = `exon'
+    //Feature[@class=`exon`]/Interval-loc/complement = 0
+    //Feature[@class=`exon`]/Interval-loc/startpos = asm_feature.end5 - 1
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `exon'
+    //Feature[@class=`exon`]/Interval-loc/endpos = asm_feature.end3
+        where asm_feature.end5 > asm_feature.end3
+        and asm_feature.feat_type = `exon'
+    //Feature[@class=`exon`]/Interval-loc/complement = 1
+
+    //Feature-group[@group-set='gene']/Feature-group-member/@feature-type='exon'
+    //Feature-group[@group-set='gene']/Feature-group-member/@featref= _id_
+
+    //Feature[@class='gene']/Link[@rel='analysis']/@href = _analysis_id_
+</p>
+<p class="subsection_header">
+    Exon Database xrefs
+</p>
+<p class="xpath">
+    //Feature[@class='exon`]/Cross-reference/@database='...'
+    //Feature[@class=`exon`]/Cross-reference/@identifier=asm_feature.feat_name
+    where feat_type = 'exon'
+    //Feature[@class=`exon`]/Cross-reference/@identifier-type='feat_name'
+
+    Example:
+    <incomplete>[XML snippet here]</incomplete>
+</p>
+
 
 <p class="subsection_header">
     Ident information
@@ -833,7 +1075,14 @@ The order of the attributes determines the relative rank of the attributes.  Att
     Pseudomolecule mapping
 </p>
 <p>
-    <incomplete>INCOMPLETE</incomplete>
+    
+    //Sequence/@id = _id_ where clone_info.asmbl_id = clone_info.final_asmbl
+
+    //Sequence[@id=_id_]/Numbering/@seqref = clone_info.final_asmbl
+    //Sequence[@id=_id_]/Numbering/@refnum = clone_info.fa_left
+    //Sequence[@id=_id_]/@length = abs(clone_info.fa_right - clone_info.fa_left)
+    //Sequence[@id=_id_]/@ascending = 
+                (clone_info.fa_left < clone_info.fa_right) ? 1 : 0
 </p>
 
 <p class="section_header">
@@ -914,9 +1163,9 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li class="striked">ident_xref.xref_id</li>
         <li class="primary">ident_xref.ident_val</li>
         <li class="primary">ident_xref.xref_type</li>
-        <li class="striked">ident_xref.method</li>
-        <li class="striked">ident_xref.mod_date</li>
-        <li class="striked">ident_xref.assignby</li>
+        <li class="pending">ident_xref.method</li>
+        <li class="pending">ident_xref.mod_date</li>
+        <li class="pending">ident_xref.assignby</li>
         <li class="primary">ident_xref.relrank</li>
     </ul>
 
@@ -926,7 +1175,7 @@ The order of the attributes determines the relative rank of the attributes.  Att
         <li>ORF_attribute.feat_name</li>
         <li>ORF_attribute.att_type</li>
         <li class="primary">ORF_attribute.curated</li>
-        <li class="striked">ORF_attribute.method</li>
+        <li class="pending">ORF_attribute.method</li>
         <li class="primary">ORF_attribute.date</li>
         <li class="primary">ORF_attribute.assignby</li>
 	<li class="primary">score</li>
@@ -1114,43 +1363,45 @@ The order of the attributes determines the relative rank of the attributes.  Att
 
 <li class="table_name">clone_info</li>
     <ul>
-        clone_info.asmbl_id
-	<li class="striked">clone_info.clone_id
-	clone_info.clone_name
-	clone_info.seq_group
-	<li class="striked">clone_info.orig_annotation
-	<li class="striked">clone_info.tigr_annotation
-	clone_info.status
-	clone_info.length
-	clone_info.final_asmbl
-	clone_info.fa_left
-	clone_info.fa_right
-	clone_info.fa_orient
-	clone_info.gb_acc
-	<li class="striked">clone_info.gb_desc
-	<li class="striked">clone_info.gb_comment
-	<li class="striked">clone_info.gb_date
-	clone_info.comment
-	clone_info.assignby
-	clone_info.date
-	clone_info.lib_id
-	clone_info.seq_asmbl_id
-	clone_info.chromo
-	<li class="striked">clone_info.date_for_release
-	<li class="striked">clone_info.date_released
-	<li class="striked">clone_info.authors1
-	<li class="striked">clone_info.authors2
-	clone_info.seq_db
-	clone_info.is_public
-	<li class="striked">clone_info.gb_keywords
-	clone_info.sequencing_type
-	clone_info.prelim
-	clone_info.license
-	<li class="striked">clone_info.gb_gi
-	<li class="striked">clone_info.gb_phase
+        <li class="primary">clone_info.asmbl_id
+	<li class="primary">clone_info.clone_id
+	<li class="primary">clone_info.clone_name
+	<li class="primary">clone_info.seq_group
+	<li class="primary">clone_info.orig_annotation
+	<li class="primary">clone_info.tigr_annotation
+	<li class="primary">clone_info.status
+	<li class="primary">clone_info.length
+	<li class="primary">clone_info.final_asmbl
+	<li class="primary">clone_info.fa_left
+	<li class="primary">clone_info.fa_right
+	<li class="primary">clone_info.fa_orient
+	<li class="primary">clone_info.gb_acc
+	<li class="primary">clone_info.gb_desc
+	<li class="primary">clone_info.gb_comment
+	<li class="primary">clone_info.gb_date
+	<li class="primary">clone_info.comment
+	<li class="primary">clone_info.assignby
+	<li class="primary">clone_info.date
+	<li class="primary">clone_info.lib_id
+	<li class="primary">clone_info.seq_asmbl_id
+	<li class="primary">clone_info.chromo
+	<li class="primary">clone_info.date_for_release
+	<li class="primary">clone_info.date_released
+	<li class="primary">clone_info.authors1
+	<li class="primary">clone_info.authors2
+	<li class="primary">clone_info.seq_db
+	<li class="primary">clone_info.is_public
+	<li class="primary">clone_info.gb_keywords
+	<li class="primary">clone_info.sequencing_type
+	<li class="primary">clone_info.prelim
+	<li class="primary">clone_info.license
+	<li class="primary">clone_info.gb_gi
+	<li class="primary">clone_info.gb_phase
    </ul>
 
+<li class="table_name">chromo_syn_link</li>
 
+<li class="table_name">alignment</li>
 	
 
 
@@ -1172,12 +1423,10 @@ The order of the attributes determines the relative rank of the attributes.  Att
 <p class="subsection_header">
     Ignored but used in annotation
 </p>
-     alignment<br>
      asm_feature_history<br>
      asmbl_link<br>
      asmbl_map<br>
      change_log<br>
-     chromo_syn_link<br>
      evidence_history<br>
      ident_history<br>
 <p>
