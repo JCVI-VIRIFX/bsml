@@ -28,6 +28,10 @@ li.striked {
     text-decoration: line-through;
 }
 
+li.pending {
+    text-decoration: italic;
+}
+
 li.table_name {
     font-weight: bold;
 }
