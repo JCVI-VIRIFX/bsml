@@ -1,0 +1,118 @@
+<html>
+
+<head>
+    <title>BSML usage conventions</title>
+    <link rel="stylesheet" href="documentation.css">
+</head>
+
+<body>
+
+<p class="doc_header">
+    Conventions for updating gene structure<br>
+</p>
+
+<p class="section_header">
+<a name="overview">
+    Overview
+</p>
+
+<p>This document provides a proposal for handling updates to features,
+particularly feature coordinates, in the Chado database.  The feature updates discussed
+in this document specifically pertain to feature updates that occur during the
+process of gene structure annotation, although this proposal may apply to other
+feature updates. </p>
+
+<p>The underlying principal behind this proposal is that the underlying sequence
+(dna,polypeptide,etc.) is an inherit trait of the feature.  Modifications to
+the feature that would change the sequence are not allowed. Instead, a new
+feature is created and the previous feature is deprecated.  Relationships are
+stored between the new feature and the deprecated feature.</p>
+
+<p>Note:Feature changes discussed in this document refer only to changes that affect the underlying
+sequence of the feature</p>
+
+<p class="subsection_header">
+<a name="update"
+Copy-by-update procedure
+</p>
+
+The basic Chado canonical gene structure involves SO types: gene, transcript,
+exon, CDS, protein.  The transcript, exon, CDS, and protein features each
+have corresponding sequence residues that are either stored explicitly in
+feature.residues or implicity based on mapping to a coordinate span on genomic sequence
+
+Deprecated features can be given the type_id = [deprecated].  The orginal SO
+type can be moved to feature_cvterm. This prevents inadvertent queries of
+deprecated features, while allowing for retrieval of the original SO type.  
+
+
+
+DBxrefs would not be copied over to the new features.  One reason to keep deprecated features around for tracking of old sequences.  For example, this setup would allow for one to track "what happened to feature X?" when, for example, proteins from a project are dumped to PANDA and later updated with new versions.
+
+Deprecated features that are no longer needed can be harvested manually/automatically and deleted.  Similarly, entire analysis sets that point to deprecated features can be deleted.  I'd recommend against deleting parts of an analysis, but for space reasons, such deletes may be unavoidable.
+
+
+
+<p class="subsection_header">
+<a name="Naming">
+Naming
+</p>
+<p>The document briefly describes naming conventions for features with respect
+to updates.  The naming conventions are further specified in the <a
+href=''>naming conventions</a> document.  Note, the name discussed here is a
+tracking name, which is stored in chado feature.uniquename and was previously
+called a feat_name in TIGR legacy databases.  In dealing with feature changes, two
+conflicting requirements for feature names are 1)uniqueness 2) persistance.
+Uniqueness is important for attaching search results to a feature and tracking that any
+analysis points to the correct entity .  Persistance of names is critical for practical reasons since
+names are used in analysis, data sharing, and correspondence.  As such, the
+feature name must neither disappear or become difficult to track once people
+have begun using the name.</p>
+
+<p>To meet the requirements of uniqueness and persistance, feature names
+include a version number that is incremented during the feature update/copy procedure.  </p>
+
+Before update
+<pre>
+feature_id: 100001
+uniquename: afum.protein.1010.1
+type_id   : [protein]
+</pre>
+
+After an update which changes the residues of afum.protein.1010.1
+
+<pre>
+feature_id: 100002
+uniquename: afum.protein.1010.2
+type_id   : [protein]
+
+feature_id: 100002
+uniquename: afum.protein.1010.1
+type_id   : [deprecated]
+</pre>
+
+<p class="subsection_header">
+<a name="analysis features">
+Analysis features
+</p>
+
+<p>One advantage of this proposal involve accurately reporting and
+tracking search results.  By creating a new feature, search results are run
+against a previous feature are not immediately invalidated.  This setup also
+facilitates determining which features are new and awaiting searches.  New
+features can be harvested for searching based on missing analysis links.  Note,
+this (re)-introduces the possibility of multiple analysis composing a
+"complete" set of searches.  For example, the analysis representing all
+proteins searched against NR may initially be a single analysis.  After gene
+structure changes, the newly defined proteins will be searched against NR and
+loaded into a separate analysis. </p>
+
+Deprecated features can be given the type_id = [deprecated].  The orginal SO type can be moved to feature_cvterm. This prevents inadvertent queries of deprecated features, while allowing for retrieval of the original SO type.  The uniquename of the original feature is kept unaltered.
+
+DBxrefs would not be copied over to the new features.  One reason to keep deprecated features around for tracking of old sequences.  For example, this setup would allow for one to track "what happened to feature X?" when, for example, proteins from a project are dumped to PANDA and later updated with new versions.
+
+Deprecated features that are no longer needed can be harvested manually/automatically and deleted.  Similarly, entire analysis sets that point to deprecated features can be deleted.  I'd recommend against deleting parts of an analysis, but for space reasons, such deletes may be unavoidable.
+
+
+
+
