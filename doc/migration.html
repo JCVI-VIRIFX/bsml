@@ -77,7 +77,7 @@
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
-            <td class="component">assembly sequence</td>
+            <td class="component">assembly seq/info</td>
             <td class="">assembly, clone_info</td>
 	    <td class="">feature</td>
             <td class="notdone">&nbsp;</td>
@@ -88,7 +88,7 @@
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
-            <td class="component">protein coding genes</td>
+            <td class="component">genes</td>
             <td class="">asm_feature, phys_ev, feat_link</td>
             <td class="">feature, feature_relationship, featureloc</td>
             <td class="notdone">&nbsp;</td>
@@ -121,7 +121,7 @@
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
-            <td class="component">Physical attributes</td>
+            <td class="component">ORF_attributes</td>
             <td class="">ORF_attribute</td>
             <td class="">featureprop, feature_cvterm</td>
             <td class="notdone">&nbsp;</td>
@@ -178,9 +178,10 @@ Assembly seq/info
 <ul>
 <li>Sequence feature</li>
 <li>clone_info attributes</li>
+<li>SO type: contig, supercontig, ...</li>
 </ul>
 <p class="section_header">
-Assembly seq/info
+Genes
 <ul>
 <li>Features
 <ul>
@@ -189,10 +190,57 @@ Assembly seq/info
 <li>CDS
 <li>exons
 </ul>
-<li>CDS residues, protein translation
+<li>Sequences
+<ul>
+<li>CDS sequence
+<li>protein translation
 </ul>
-
+</ul>
 </p>
+<p class="section_header">
+RNAs
+<ul>
+<li>Features
+<ul>
+<li>ncRNA
+<li>pre-tRNA
+<li>rna-exon
+<li>tRNA
+</ul>
+</ul>
+</p>
+<p class="section_header">
+Functional annotation
+<ul>
+<li>"Ident" info
+<ul>
+<li>gene_product_name
+<li>gene_name
+<li>ec_number
+<li>gene_symbol
+<li>assignby,date
+<li>comment
+</ul>
+<li>GO annotation + evidence
+</ul>
+<p class="section_header">
+"ORF_attributes"
+<ul>
+<li>MW
+<li>PI
+</ul>
+</p>
+
+<p class="section_header">
+Gene finders
+<ul>
+<li>Any model != 'working' is migrated
+<li>Support for user specified list 
+</ul>
+</p>
+
+
+
 
 
 </body></html>
