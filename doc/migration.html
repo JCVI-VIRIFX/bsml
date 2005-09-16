@@ -57,6 +57,7 @@
         <tbody><tr>
             <td class="header">data class</td>
 	    <td class="header">euk tables</td>
+	    <td class="header">chado tables</td>
             <td class="header">mapping document</td>
             <td class="header">legacy2bsml</td>
             <td class="header">bsml2chado</td>
@@ -67,6 +68,7 @@
         <tr>
             <td class="component">genome info</td>
             <td class="">new_project, common</td>
+            <td class="">organism, organism_prop</td>
             <td class="notdone"></td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -77,6 +79,7 @@
 	<tr>
             <td class="component">assembly sequence</td>
             <td class="">assembly, clone_info</td>
+	    <td class="">feature</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -87,6 +90,7 @@
 	<tr>
             <td class="component">protein coding genes</td>
             <td class="">asm_feature, phys_ev, feat_link</td>
+            <td class="">feature, feature_relationship, featureloc</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -97,6 +101,7 @@
 	<tr>
             <td class="component">RNAs</td>
             <td class="">asm_feature, phys_ev, feat_link</td>
+            <td class="">feature, feature_relationship, featureloc</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -107,6 +112,7 @@
 	<tr>
             <td class="component">Functional annotation</td>
             <td class="">ident, go_role_link</td>
+	    <td class="">featureprop, feature_cvterm</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -115,8 +121,9 @@
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
-            <td class="component">Physcial attributes</td>
+            <td class="component">Physical attributes</td>
             <td class="">ORF_attribute</td>
+            <td class="">featureprop, feature_cvterm</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -126,7 +133,8 @@
         </tr>
 	<tr>
             <td class="component">Scaffold mappings</td>
-            <td class="">sub_to_final</td>
+            <td class="">sub_to_final, clone_info</td>
+            <td class="">featureloc</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -137,6 +145,7 @@
 	<tr>
             <td class="component">Gene finders</td>
             <td class="">asm_feature, phys_ev</td>
+            <td class="">feature, featureloc</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
@@ -147,6 +156,7 @@
 	<tr>
             <td class="component">Evidence</td>
             <td class="">evidence</td>
+            <td class="na">n/a</td>
             <td class="na">n/a</td>
             <td class="na">n/a</td>
             <td class="na">n/a</td>
