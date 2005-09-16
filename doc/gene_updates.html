@@ -36,22 +36,22 @@ sequence of the feature</p>
 Copy-by-update procedure
 </p>
 
-The basic Chado canonical gene structure involves SO types: gene, transcript,
+<p>The basic Chado canonical gene structure involves SO types: gene, transcript,
 exon, CDS, protein.  The transcript, exon, CDS, and protein features each
 have corresponding sequence residues that are either stored explicitly in
-feature.residues or implicity based on mapping to a coordinate span on genomic sequence
+feature.residues or implicity based on mapping to a coordinate span on genomic sequence</p>
 
-Deprecated features can be given the type_id = [deprecated].  The orginal SO
+<p>Deprecated features can be given the type_id = [deprecated].  The orginal SO
 type can be moved to feature_cvterm. This prevents inadvertent queries of
-deprecated features, while allowing for retrieval of the original SO type.  
+deprecated features, while allowing for retrieval of the original SO type.  </p>
 
+<p>feature_prop and feature_cvterm records would be copied over to the new feature
+by default.  DBxrefs would not be copied over to the new features.  </p>
 
-
-DBxrefs would not be copied over to the new features.  One reason to keep deprecated features around for tracking of old sequences.  For example, this setup would allow for one to track "what happened to feature X?" when, for example, proteins from a project are dumped to PANDA and later updated with new versions.
-
-Deprecated features that are no longer needed can be harvested manually/automatically and deleted.  Similarly, entire analysis sets that point to deprecated features can be deleted.  I'd recommend against deleting parts of an analysis, but for space reasons, such deletes may be unavoidable.
-
-
+<p>Deprecated features that are no longer needed can be harvested
+manually/automatically and deleted.  Similarly, entire analysis sets that point
+to deprecated features can be deleted.  I'd recommend against deleting parts of
+an analysis, but for space reasons, such deletes may be unavoidable.</p>
 
 <p class="subsection_header">
 <a name="Naming">
