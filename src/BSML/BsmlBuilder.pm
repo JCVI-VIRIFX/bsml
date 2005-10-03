@@ -653,33 +653,37 @@ sub createAndAddSequencePairAlignment
     my $self = shift;
     my %args = @_;
 
-    #determine if a sequence pair alignment for the query and dbmatch already exists in the document
+    ## the lines below commented out to prevent this method from checking to see if an alignment
+    ##  object already exists for this refseq->compseq combination. Tools such as AAT can have multiple
+    ##  separate alignment chains between the same two sequences.
 
-    my $alignment_pair_list = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}" );
-
-    if( $alignment_pair_list && !( $args{'force'} )){
-
-	# if coordinates specifying the search window for the reference sequence are provided, the object layer will
-	# search for an alignment object having the same coordinates and return it if found. Otherwise a new alignment
-	# object will be created. This functionality is intended to facilitate Doug's blast use case.
-
-	if( ($args{'refstart'} ne "") && ($args{'refend'} ne "") )
-	{
-	    foreach my $aln ( @{$alignment_pair_list} )
-	    {
-		if( $args{'refstart'} eq $aln->returnattr( 'refstart' ) && $args{'refend'} eq $aln->returnattr( 'refend' ) )
-		{
-		    return $aln;
-		}   
-	    }
-	}
-	else
-	{
-	    # Else return the first alignment pair to retain legacy compatitibility
-
-	    return $alignment_pair_list->[0];
-	}
-    }
+#    #determine if a sequence pair alignment for the query and dbmatch already exists in the document
+#
+#    my $alignment_pair_list = BSML::BsmlDoc::BsmlReturnAlignmentLookup( "$args{'refseq'}", "$args{'compseq'}" );
+#
+#    if( $alignment_pair_list && !( $args{'force'} )){
+#
+#	# if coordinates specifying the search window for the reference sequence are provided, the object layer will
+#	# search for an alignment object having the same coordinates and return it if found. Otherwise a new alignment
+#	# object will be created. This functionality is intended to facilitate Doug's blast use case.
+#
+#	if( ($args{'refstart'} ne "") && ($args{'refend'} ne "") )
+#	{
+#	    foreach my $aln ( @{$alignment_pair_list} )
+#	    {
+#		if( $args{'refstart'} eq $aln->returnattr( 'refstart' ) && $args{'refend'} eq $aln->returnattr( 'refend' ) )
+#		{
+#		    return $aln;
+#		}   
+#	    }
+#	}
+#	else
+#	{
+#	    # Else return the first alignment pair to retain legacy compatitibility
+#
+#	    return $alignment_pair_list->[0];
+#	}
+#    }
 
     #no alignment pair matches, add a new alignment pair
     
