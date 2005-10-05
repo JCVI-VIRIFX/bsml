@@ -293,6 +293,7 @@ sub createAndAddFeature
     my $self = shift;
     my ( $FTable, $id, $title, $class, $comment, $displayAuto ) = @_;
 
+
      if( !($id) )
       {
 	  $id = $self->getUID();
@@ -365,8 +366,7 @@ sub createAndAddFeatureWithLoc
 #     if (($start == 0) or ($end == 0)){
 # 	$logger->fatal("id '$id' start '$start' end '$end'");
 #     }
-    
-    
+
 
     if( (defined($start)) && (defined($end)) && ($start ne "") && ($end ne "") )
       {
@@ -1148,14 +1148,21 @@ sub createAndAddStrain
 
     my $organism = $args{'organism'};
     my $strain_name = $args{'name'};
-    my $database = $args{'database'};
-    my $source_database = $args{'source_database'};
+
+    #-------------------------------------------------------------------------
+    # editor:  sundaram@tigr.org
+    # date:    2005-10-04
+    # comment: The database and source_database information should each be 
+    #          stored separately in a <Cross-reference> element.
+    #
+    #my $database = $args{'database'};
+    #my $source_database = $args{'source_database'};
 
     my $strain = $organism->returnBsmlStrainR( $organism->addBsmlStrain() );
 
     $strain->addBsmlAttr( 'name', $strain_name );
-    $strain->addBsmlAttr( 'database', $database );
-    $strain->addBsmlAttr( 'source_database', $source_database );
+    #$strain->addBsmlAttr( 'database', $database );
+    #$strain->addBsmlAttr( 'source_database', $source_database );
 
     return $strain;
 
