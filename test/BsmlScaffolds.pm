@@ -42,7 +42,7 @@ for( my $i=0; $i<$NUM_GAP_CHARS; $i++ ) { $GAP_CHARS .= 'N'; }
 #
 # $annotDb - annotation database from which the scaffolds and/or assembly sequences were loaded
 # $chadoDb - target chado database
-# $bsmlRepository - BSML repository that correspnods to $chadoDb
+# $bsmlRepository - BSML repository that corresponds to $chadoDb
 # $species - species of the organism to which the scaffolded sequences belong
 # $genus - genus of the organism to which the scaffolded sequences belong
 # $printSummary - whether to print a summary of the files created/skipped to STDOUT
@@ -62,17 +62,17 @@ sub writeBsmlScaffoldFiles {
 	
 	# check that we have an assembly BSML document for each assembly
 	my $numMissing = 0;
+	my $numContigs = scalar(@$data);
 	foreach my $datum (@$data) {
 	    my $asmblId = $datum->{'asmbl_id'};
-	    my $asmblBsml = "${bsmlRepository}/${annotDb}_${asmblId}_assembly.bsml";
-	    if (!-e $asmblBsml || !-r $asmblBsml) {
-		++$numMissing;
-		die "unable to read $asmblBsml" if (-e $asmblBsml);
-	    }
+	    my $asmblBsmlFile = &findAssemblyBsmlFile($bsmlRepository, $annotDb, $asmblId);
+	    ++$numMissing if (!defined($asmblBsmlFile));
+	    $datum->{'assembly_bsml_file'} = $asmblBsmlFile;
 	}
 	
 	if ($numMissing > 0) {
 	    ++$scaffoldsSkipped;
+	    print STDERR "WARNING - skipping scaffold with $numMissing/$numContigs contigs/assemblies missing\n";
 	} else {
 	    my $scaffoldSeq = '';
 	    my $scaffoldSeqLen = 0;
@@ -95,7 +95,9 @@ sub writeBsmlScaffoldFiles {
 		my $contigStart = $datum->{'contig_start'};
 		my $contigEnd = $datum->{'contig_end'};
 		my $asmblBsmlId = "${annotDb}_${asmblId}_assembly";
-		my $asmblBsmlFile = "${bsmlRepository}/${annotDb}_${asmblId}_assembly.bsml";
+		my $asmblBsmlFile = $datum->{'assembly_bsml_file'};
+
+		print STDERR "contig: $contigStart - $contigEnd\n";
 
 		if ($datum->{'scaff_order'} != ($contigNum+1)) {
 		    print STDERR "WARNING - gap in contig sequence number for $asmblId in $scaffoldId\n";
@@ -171,6 +173,32 @@ sub writeBsmlScaffoldFiles {
     }
 
     return 1;
+}
+
+# Locate the BSML file for a named asmbl_id, returning undef if the file cannot
+# be found or it is not readable.
+#
+# $bsmlRepository - BSML repository that corresponds to $chadoDb
+# $annotDb        - annotation database from which the scaffolds and/or assembly sequences were loaded
+# $asmblId        - annotation database asmbl_id of the desired assembly
+#
+sub findAssemblyBsmlFile {
+    my($bsmlRepository, $annotDb, $asmblId) = @_;
+    my $bsmlFile = undef;
+
+    # check legacy2bsml/ subdir first; this is used in more recent projects
+    my $asmblBsml1 = "${bsmlRepository}/legacy2bsml/${annotDb}_${asmblId}_assembly.bsml";
+    # older projects store the assembly BSML files in the root of the BSML repository:
+    my $asmblBsml2 = "${bsmlRepository}/${annotDb}_${asmblId}_assembly.bsml";
+    
+    if ((-e $asmblBsml1) && (-e $asmblBsml2)) {
+	print STDERR "WARNING - multiple BSML files exist for asmbl_id=$asmblId in $bsmlRepository\n";
+    }
+
+    return $asmblBsml1 if ((-e $asmblBsml1) && (-r $asmblBsml1));
+    return $asmblBsml2 if ((-e $asmblBsml2) && (-r $asmblBsml2));
+    print STDERR "WARNING - could not find assembly BSML file for $annotDb.$asmblId in $bsmlRepository\n";
+    return undef;
 }
 
 # reverse complement a sequence
