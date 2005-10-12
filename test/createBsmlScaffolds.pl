@@ -144,7 +144,7 @@ sub readScaffoldsFromFlatFile {
 	# skip whitespace
 	next if ($line =~ /^\s*$/);
 	# could just split on /\s+/, but this adds some error-checking
-	if ($line =~ /^SCF\s+(\d+)\s+(\d+)\s+(\d+)\s+(F|R)\s+(-?\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)$/) {
+	if ($line =~ /^SCF\s+(\d+)\s+(\S+)\s+(\d+)\s+(F|R)\s+(-?\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)$/) {
 	    my $data = {
 		'contig_id' => $1,
 		'scaff_id' => $2,
