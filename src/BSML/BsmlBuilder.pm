@@ -712,6 +712,11 @@ sub createAndAddSequencePairAlignment
     $alignment_pair->setattr( 'complength', $args{'complength'} );
     $alignment_pair->setattr( 'method', $args{'method'} );
 
+    ## add a class if the user passed it
+    if ($args{class}) {
+        $alignment_pair->setattr( 'class', $args{class} );
+    }
+
     return $alignment_pair;
 }
 
