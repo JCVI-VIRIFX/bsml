@@ -557,9 +557,9 @@ sub createAndAddAttributeN
 sub createAndAddLink
   {
     my $self = shift;
-    my ($elem, $rel, $href) = @_;
+    my ($elem, $rel, $href, $role) = @_;
 
-    $elem->addBsmlLink( $rel, $href );
+    $elem->addBsmlLink( $rel, $href, $role );
   }
 
 sub createAndAddLinkN

@@ -291,15 +291,19 @@ sub addBsmlLink
       $logger->debug("") if $logger->is_debug;
 
     my $self = shift;
-    my ($rel, $href) = @_;
+    my ($rel, $href, $role) = @_;
 
     if( defined($rel) && defined($href) )
     {
-	push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href});
+        if (defined $role) {
+	        push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href, role=>$role});
+        } else {
+            push(@{$self->{'BsmlLink'}}, {rel=>$rel, href=>$href});
+        }
 	return @{$self->{'BsmlLink'}} - 1;
     }
   }
-
+  
 sub setBsmlLink
   {
       $logger->debug("") if $logger->is_debug;
