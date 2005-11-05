@@ -1,0 +1,316 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html>
+<head>
+<title>analysisfeature.type_id</title>
+<!--
+     Jay Sundaram
+     sundaram@tigr.org
+     2005.11.04
+     bsml/docs/analysisfeature_type_id.html
+ 
+-->
+<style type="text/css">
+
+   a {
+            text-decoration: none;
+            color: rgb(50,50,150);
+            cursor: pointer;
+            cursor: hand;
+        }
+   td {
+            text-align: center;
+      }
+</style>
+
+
+<body>
+
+<div align="center">
+
+
+
+Within a single BSML document, can a Sequence element be "computed_by" and/or an
+"input_of" exactly 0, 1, many times?<br>
+
+Can the following scenarios exist within a single BSML document?<br>
+
+
+<table border="1" width="100%">
+<tr>
+<th>Example #</th>
+<th>BSML element type</th>
+<th>Number of computed_by</th>
+<th>Number of input_of</th>
+<th>Yes/No</th>
+<th>Example/Explanation</th>
+</tr>
+
+
+<tr>
+<td>1</td>
+<td>Sequence</td>
+<td>0</td>
+<td>0</td>
+<td>Yes</td>
+<td> gene model document</td>
+</tr>
+
+
+<tr>
+<td>2</td>
+<td>Sequence</td>
+<td>0</td>
+<td>1</td>
+<td>Yes</td>
+<td>wu-blastp, new gene model</td>
+</tr>
+
+
+<tr>
+<td>3</td>
+<td>Sequence</td>
+<td>1</td>
+<td>0</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+
+<tr>
+<td>4</td>
+<td>Sequence</td>
+<td>1</td>
+<td>1</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>Sequence</td>
+<td>1</td>
+<td>many</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>Sequence</td>
+<td>many</td>
+<td>1</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+
+
+<tr>
+<td>7</td>
+<td>Sequence</td>
+<td>many</td>
+<td>many</td>
+<td>No?</td>
+<td>?</td>
+</tr>
+
+
+
+<tr>
+<td>8</td>
+<td>Sequence</td>
+<td>many</td>
+<td>0</td>
+<td>No?</td>
+<td>?</td>
+</tr>
+
+
+<tr>
+<td>9</td>
+<td>Sequence</td>
+<td>0</td>
+<td>many</td>
+<td>Yes</td>
+<td>e.g.? </td>
+</tr>
+
+</table>
+
+
+
+
+
+<br><br><br>
+Within a single BSML document, can a Feature element be "computed_by" and/or an
+"input_of" exactly 0, 1, many times?<br>
+Can the following scenarios exist within a single BSML document?<br>
+
+
+<table border="1" width="100%">
+<tr>
+<th>Example #</th>
+<th>BSML element type</th>
+<th>Number of computed_by</th>
+<th>Number of input_of</th>
+<th>Yes/No</th>
+<th>Example/Explanation</th>
+</tr>
+
+
+<tr>
+<td>10</td>
+<td>Feature</td>
+<td>0</td>
+<td>0</td>
+<td>Yes</td>
+<td>legacy2bsml gene model document</td>
+</tr>
+
+
+<tr>
+<td>11</td>
+<td>Feature</td>
+<td>0</td>
+<td>1</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+
+<tr>
+<td>12</td>
+<td>Feature</td>
+<td>1</td>
+<td>0</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+
+<tr>
+<td>13</td>
+<td>Feature</td>
+<td>1</td>
+<td>1</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+<tr>
+<td>14</td>
+<td>Feature</td>
+<td>1</td>
+<td>many</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+<tr>
+<td>15</td>
+<td>Feature</td>
+<td>many</td>
+<td>1</td>
+<td>Yes</td>
+<td>e.g.?</td>
+</tr>
+
+
+
+<tr>
+<td>16</td>
+<td>Feature</td>
+<td>many</td>
+<td>many</td>
+<td>No?</td>
+<td>?</td>
+</tr>
+
+
+
+<tr>
+<td>17</td>
+<td>Feature</td>
+<td>many</td>
+<td>0</td>
+<td>No?</td>
+<td>?</td>
+</tr>
+
+
+<tr>
+<td>18</td>
+<td>Feature</td>
+<td>0</td>
+<td>many</td>
+<td>Yes</td>
+<td>e.g.? </td>
+</tr>
+
+</table>
+</div>
+
+
+<pre>
+Example 1:
+
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+&lt;/Sequence>
+
+
+Example 2:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="input_of" rel="analysis" href="#HMM2">
+&lt;/Sequence>
+
+Example 3:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+&lt;/Sequence>
+
+Example 4:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="input_of" rel="analysis" href="#HMM2">
+&lt;/Sequence>
+
+Example 5:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="input_of" rel="analysis" href="#HMM2">
+    &lt;Link role="input_of" rel="analysis" href="#HMM">
+&lt;/Sequence>
+
+Example 6:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="input_of" rel="analysis" href="#HMM">
+&lt;/Sequence>
+
+Example 7:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="input_of" rel="analysis" href="#HMM2">
+    &lt;Link role="input_of" rel="analysis" href="#HMM">
+&lt;/Sequence>
+
+Example 8:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="computed_by" rel="analysis" href="">
+    &lt;Link role="computed_by" rel="analysis" href="">
+&lt;/Sequence>
+
+Example 9:
+&lt;Sequence id="gba_6615_ORF00001_polypeptide">
+    &lt;Link role="input_of" rel="analysis" href="#HMM2">
+    &lt;Link role="input_of" rel="analysis" href="#HMM">
+&lt;/Sequence>
+
+
+
+
+
+
+</body>
+</html>
