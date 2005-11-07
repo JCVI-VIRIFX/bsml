@@ -221,7 +221,7 @@ sub seqPairAlignmentHandler
      foreach my $BsmlLink ( $seq_aln->children( 'Link' ) )
        {
 	 my $attr = $BsmlLink->atts();
-	 $bsmlaln->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	 $bsmlaln->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
        }
      
      foreach my $seq_run ( $seq_aln->children('Seq-pair-run') )
@@ -241,7 +241,7 @@ sub seqPairAlignmentHandler
 	 foreach my $BsmlLink ( $seq_run->children( 'Link' ) )
 	   {
 	     my $attr = $BsmlLink->atts();
-	     $bsmlseqrun->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	     $bsmlseqrun->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
 	   }
        }     
      
@@ -286,7 +286,7 @@ sub analysisHandler
     foreach my $BsmlLink ( $analysis->children( 'Link' ) )
       {
 	my $attr = $BsmlLink->atts();
-	$bsml_analysis->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$bsml_analysis->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
       }
 
 
@@ -351,8 +351,6 @@ sub sequenceHandler
 
 	my $attr = $BsmlLink->atts();
 
-	$bsmlseq->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
-
 	#
 	# editor:   sundaram@tigr.org
 	# date:     2005-08-18
@@ -361,7 +359,7 @@ sub sequenceHandler
 	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
 	#           only interested in the following attributes: //Link/@rel and //Link/@href
 	#
-	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
 
       }
 
@@ -463,7 +461,7 @@ sub sequenceHandler
 
 	    foreach my $BsmlLink ( $BsmlFTable->children( 'Link' ) ) {
 		my $attr = $BsmlLink->atts();
-		$table->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+		$table->addBsmlLink( $attr->{'title'}, $attr->{'href'}, $attr->{'role'} );
 	    }
 
 
@@ -492,7 +490,7 @@ sub sequenceHandler
 
 		foreach my $BsmlLink ( $BsmlRef->children( 'Link' ) ) {
 		    my $attr = $BsmlLink->atts();
-		    $ref->addBsmlLink( $attr->{'title'}, $attr->{'href'} );
+		    $ref->addBsmlLink( $attr->{'title'}, $attr->{'href'}, $attr->{'role'} );
 		}
 	    }
 	    
@@ -570,7 +568,7 @@ sub sequenceHandler
 
 		foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) ) {
 		    my $attr = $BsmlLink->atts();
-		    $feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+		    $feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
 		}
 
 
@@ -724,7 +722,7 @@ sub minsequenceHandler
 	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
 	#           only interested in the following attributes: //Link/@rel and //Link/@href
 	#
-	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'});
 	
 
 
@@ -863,7 +861,7 @@ sub featureHandler
     foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
     {
 	my $attr = $BsmlLink->atts();
-	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
     }
 
 
@@ -959,7 +957,7 @@ sub SeqFeatureHandler
 	# comment:  The bsml2chado.pl script retrieves BSML <Link> info, however pls note that it is
 	#           only interested in the following attributes: //Link/@rel and //Link/@href
 	#
-	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$bsmlseq->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
 
     }
 
@@ -1055,7 +1053,7 @@ sub SeqFeatureHandler
     foreach my $BsmlLink ( $BsmlFeature->children( 'Link' ) )
     {
 	my $attr = $BsmlLink->atts();
-	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$feat->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
     }
 
 
@@ -1205,7 +1203,7 @@ sub addBsmlAttrLinks
     foreach my $BsmlLink ( $elem->children( 'Link' ) )
     {
 	my $attr = $BsmlLink->atts();
-	$bsmlObj->addBsmlLink( $attr->{'rel'}, $attr->{'href'} );
+	$bsmlObj->addBsmlLink( $attr->{'rel'}, $attr->{'href'}, $attr->{'role'} );
     }    
 }
 
@@ -1317,7 +1315,7 @@ sub multipleAlignmentHandler {
 	#
 	foreach my $BsmlLink ($alignment_summary->children('Link')){
 	    my $attr = $BsmlLink->atts();
-	    $bsml_alignment_summary->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	    $bsml_alignment_summary->addBsmlLink($attr->{'ref'}, $attr->{'href'}, $attr->{'role'});
 	}
 
 
@@ -1356,7 +1354,7 @@ sub multipleAlignmentHandler {
 	    #	    
 	    foreach my $BsmlLink ($aligned_sequence->children('Link')){
 		my $attr = $BsmlLink->atts();
-		$bsml_aligned_sequence->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+		$bsml_aligned_sequence->addBsmlLink($attr->{'ref'}, $attr->{'href'}, $attr->{'role'});
 	    }
 	}
     }
@@ -1416,7 +1414,7 @@ sub multipleAlignmentHandler {
 	#
 	foreach my $BsmlLink ($sequence_alignment->children('Link')){
 	    my $attr = $BsmlLink->atts();
-	    $bsml_sequence_alignment->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+	    $bsml_sequence_alignment->addBsmlLink($attr->{'ref'}, $attr->{'href'}, $attr->{'role'});
 	}
 	
 
@@ -1466,7 +1464,7 @@ sub multipleAlignmentHandler {
 	    #
 	    foreach my $BsmlLink ($sequence_data->children('Link')){
 		my $attr = $BsmlLink->atts();
-		$bsml_sequence_data->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+		$bsml_sequence_data->addBsmlLink($attr->{'ref'}, $attr->{'href'}, $attr->{'role'});
 	    }
 
 #	    my $sequence_data_pcdata = $bsml_sequence_data->returnSequenceAlignmentData($bsml_sequence_data->addSequenceAlignmentData());
@@ -1518,7 +1516,7 @@ sub multipleAlignmentHandler {
 		#
 		foreach my $BsmlLink ($alignment_consensus->children('Link')){
 		    my $attr = $BsmlLink->atts();
-		    $bsml_alignment_consensus->addBsmlLink($attr->{'ref'}, $attr->{'href'});
+		    $bsml_alignment_consensus->addBsmlLink($attr->{'ref'}, $attr->{'href'}, $attr->{'role'});
 		}
 	    }
 	}
