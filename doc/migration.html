@@ -106,10 +106,10 @@
             <td class="na">asm_feature, phys_ev, feat_link</td>
             <td class="na">feature, feature_relationship, featureloc</td>
             <td class="done">&nbsp;</td>
-            <td class="notdone">&nbsp;</td>
+            <td class="na"><superscript>1</superscript></td>
             <td class="done">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
-            <td class="notdone">&nbsp;</td>
+            <td class="done">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
@@ -128,10 +128,10 @@
             <td class="na">ORF_attribute</td>
             <td class="na">featureprop, feature_cvterm</td>
             <td class="done">&nbsp;</td>
-            <td class="notdone">&nbsp;</td>
+            <td class="done">&nbsp;</td>
             <td class="done">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
-            <td class="notdone">&nbsp;</td>
+            <td class="done">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
         </tr>
 	<tr>
@@ -139,7 +139,7 @@
             <td class="na">sub_to_final, clone_info</td>
             <td class="na">featureloc</td>
             <td class="done">&nbsp;</td>
-            <td class="notdone">&nbsp;</td>
+            <td class="na"><superscript>2</superscript></td>
             <td class="done">&nbsp;</td>
             <td class="notdone">&nbsp;</td>
             <td class="done">&nbsp;</td>
@@ -168,6 +168,11 @@
             <td class="na">n/a</td>
         </tr>
 </table>
+<br>
+<superscript>1</superscript> RNA features will not be migrated via
+legacy2bsml- will be generated de novo.<br>
+<superscript>2</superscript> Scaffold mappings and features will not be migrated via legacy2bsml.<br>
+
 </p>
 
 <p class="section_header">
@@ -201,7 +206,6 @@ Genes
 </ul>
 </p>
 <p class="section_header">
-RNAs
 <ul>
 <li>Features
 <ul>
@@ -211,6 +215,7 @@ RNAs
 <li>tRNA
 </ul>
 </ul>
+These features will not be migrated via legacy2bsml- will be generated de novo.
 </p>
 <p class="section_header">
 Functional annotation
@@ -233,6 +238,7 @@ Functional annotation
 <li>PI
 </ul>
 </p>
+
 
 <p class="section_header">
 Gene finders
