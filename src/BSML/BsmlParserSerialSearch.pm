@@ -163,6 +163,7 @@ sub parse  {
 
     my $self = shift;
     my ( $fileOrHandle ) = @_;
+
     my $bsml_logger = get_logger( "Bsml" );
 
     # Set "rooted" twig handlers on Sequence, SeqPairAlignment, and Analysis elements. 
@@ -173,19 +174,40 @@ sub parse  {
     # there is an io problem
 
     if( $fileOrHandle ) {
-	if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
+		if (ref($fileOrHandle) && ($fileOrHandle->isa("IO::Handle") || $fileOrHandle->isa("GLOB"))) {
 
-	    $logger->debug("twig->parse") if($logger->is_debug());
-	    $twig->parse( $fileOrHandle );
-	} 
-	else {
+			$logger->debug("twig->parse") if($logger->is_debug());
+			$twig->parse( $fileOrHandle );
+		} 
+		else {
 
-	    $logger->debug("twig->parsefile $fileOrHandle") if($logger->is_debug());
-	    $twig->parsefile( $fileOrHandle );
-	}
+			# This is not a file handle- is an actual file.
+
+			if ($fileOrHandle =~ /\.bsml\.(gz|gzip)$/) {
+
+				# This file has been zipped
+
+				my ($fh);
+				
+				open ($fh, "<:gzip", $fileOrHandle) || $logger->logdie("Could not open zipped file '$fileOrHandle': $!");
+
+				$logger->debug("twig->parsefile $fileOrHandle") if($logger->is_debug());
+
+				$twig->parse( $fh );
+
+			} 
+			else {
+
+				# Regular unzipped file
+
+				$twig->parsefile( $fileOrHandle );
+
+			}
+
+		}
     } 
     else {
-	$twig->parse( \*STDIN );
+		$twig->parse( \*STDIN );
     }
     $logger->debug("twig->dispose") if($logger->is_debug());
     $twig->dispose();  
