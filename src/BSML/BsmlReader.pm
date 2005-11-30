@@ -3,8 +3,12 @@ package BSML::BsmlReader;
 
 use strict;
 use warnings;
-use BSML::BsmlDoc;
-use BSML::Indexer::Fasta;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
+    import BSML::Indexer::Fasta;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    import BSML::BsmlDoc;
+}
 use Data::Dumper;
 use Log::Log4perl qw(get_logger);
 

@@ -4,7 +4,10 @@ use strict;
 use warnings;
 use XML::Twig;
 use Log::Log4perl qw(get_logger :easy);
-use BSML::BsmlDoc;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    import BSML::BsmlDoc;
+}
 
 my $bsmlDoc;
 my $SeqConfig = { 'parse_method' => 'yes',

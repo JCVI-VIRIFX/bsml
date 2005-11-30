@@ -30,11 +30,18 @@ package BSML::BsmlSequence;
 
 =cut
 
-use BSML::BsmlElement;
-use BSML::BsmlFeatureTable;
-use BSML::BsmlFeatureGroup;
-use BSML::BsmlNumbering;
-use BSML::BsmlCrossReference;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
+    import BSML::BsmlCrossReference;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlNumbering.pm';
+    import BSML::BsmlNumbering;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    import BSML::BsmlElement;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlFeatureGroup.pm';
+    import BSML::BsmlFeatureGroup;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlFeatureTable.pm';
+    import BSML::BsmlFeatureTable;
+}
 use XML::Writer;
 use strict;
 use warnings;

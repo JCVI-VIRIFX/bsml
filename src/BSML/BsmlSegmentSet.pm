@@ -6,8 +6,12 @@ use strict;
 use warnings;
 use Log::Log4perl qw(get_logger :easy);
 
-use BSML::BsmlElement;
-use BSML::BsmlSegment;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlSegment.pm';
+    import BSML::BsmlSegment;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    import BSML::BsmlElement;
+}
 
 sub new
 {

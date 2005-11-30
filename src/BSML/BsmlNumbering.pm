@@ -6,7 +6,10 @@ use strict;
 use warnings;
 use Log::Log4perl qw(get_logger :easy);
 
-use BSML::BsmlElement;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    import BSML::BsmlElement;
+}
 
 sub new
 {

@@ -1,8 +1,12 @@
 package BSML::BsmlPairwiseAlignments;
 @ISA = qw( BSML::BsmlElement );
 
-use BSML::BsmlElement;
-use BSML::BsmlAlignedPair;
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    import BSML::BsmlElement;
+    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlAlignedPair.pm';
+    import BSML::BsmlAlignedPair;
+}
 use XML::Writer;
 
 use strict;
