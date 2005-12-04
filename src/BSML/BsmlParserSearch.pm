@@ -5,7 +5,7 @@ use warnings;
 use XML::Twig;
 use Log::Log4perl qw(get_logger :easy);
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
     import BSML::BsmlDoc;
 }
 

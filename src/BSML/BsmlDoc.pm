@@ -53,19 +53,19 @@ use warnings;
 use Log::Log4perl qw(get_logger :easy);
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
     import BSML::BsmlAnalysis;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
     import BSML::BsmlSequence;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
     import BSML::BsmlMultipleAlignmentTable;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlSegmentSet.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSegmentSet.pm';
     import BSML::BsmlSegmentSet;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
     import BSML::BsmlGenome;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
     import BSML::BsmlSeqPairAlignment;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
 }
 use IO::File;

@@ -2,9 +2,9 @@ package BSML::BsmlAlignmentSummary;
 @ISA = qw( BSML::BsmlElement );
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlAlignedSequence.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlAlignedSequence.pm';
     import BSML::BsmlAlignedSequence;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
 }
 use XML::Writer;

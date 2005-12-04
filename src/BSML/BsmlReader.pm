@@ -4,9 +4,9 @@ package BSML::BsmlReader;
 use strict;
 use warnings;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
     import BSML::Indexer::Fasta;
-    require '/usr/local/devel/ANNOTATION/cas/loadtest/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
     import BSML::BsmlDoc;
 }
 use Data::Dumper;
