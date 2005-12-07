@@ -35,7 +35,7 @@ use BSML::BsmlParserTwig;
 # ------------------------------------------------------------------
 
 my($bsmlRepository, $workflowId, $scaffoldFile, $usingContigIds, $chadoDb, $annotDb, 
-   $annotServer, $orgName, $username, $password, $parseOnly, $help, $man);
+   $annotServer, $orgName, $parseGaps, $username, $password, $parseOnly, $help, $man);
 
 &GetOptions("chado_db=s" => \$chadoDb, 
 	    "bsml_repository=s" => \$bsmlRepository,
@@ -45,6 +45,7 @@ my($bsmlRepository, $workflowId, $scaffoldFile, $usingContigIds, $chadoDb, $anno
 	    "annot_db=s" => \$annotDb,
 	    "annot_server=s" => \$annotServer,
 	    "organism_name=s" => \$orgName,
+	    "parse_gaps!" => \$parseGaps,
 	    "username=s" => \$username,
 	    "password=s" => \$password,
 	    "parse_only!" => \$parseOnly,
@@ -121,7 +122,7 @@ else {
 }
 
 # write BSML files
-&BsmlScaffolds::writeBsmlScaffoldFiles($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, 1, $parseOnly);
+&BsmlScaffolds::writeBsmlScaffoldFiles($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, 1, $parseGaps, $parseOnly);
 
 # all done
 exit(0);

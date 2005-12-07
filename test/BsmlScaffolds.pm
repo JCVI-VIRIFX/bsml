@@ -47,10 +47,11 @@ for( my $i=0; $i<$NUM_GAP_CHARS; $i++ ) { $GAP_CHARS .= 'N'; }
 # $genus - genus of the organism to which the scaffolded sequences belong
 # $species - species of the organism to which the scaffolded sequences belong
 # $printSummary - whether to print a summary of the files created/skipped to STDOUT
+# $parseGaps - whether to parse gap sizes from input file; default is to use fixed 100 BP gap size
 # $parseOnly - parse input files and run error checks but don't create any target BSML scaffold files
 #
 sub writeBsmlScaffoldFiles {
-    my($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, $printSummary, $parseOnly) = @_;
+    my($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, $printSummary, $parseGaps, $parseOnly) = @_;
     
     my $scaffoldsSkipped = 0;
     my $scaffoldsCreated = 0;
@@ -146,9 +147,22 @@ sub writeBsmlScaffoldFiles {
 								 );
 		
 		# only add gap between adjacent sequences, not at the end (or beginning) of the scaffold
+		my $contigFmax = ($contigStart >= $contigEnd) ? $contigStart : $contigEnd;
+			    
 		if ($contigNum < ($numContigs-1)) {
-		    $ss .= $GAP_CHARS;
-		    $scaffoldSeqLen += $NUM_GAP_CHARS;
+		    my $nc = $data->[$contigNum+1];
+		    my $ncStart = $nc->{'contig_start'};
+		    my $ncEnd = $nc->{'contig_end'};
+		    my $ncFmin = ($ncStart <= $ncEnd) ? $ncStart : $ncEnd;
+
+		    if ($parseGaps) {
+			my $nGapChars = $ncFmin - $contigFmax;
+			$ss .= &_makeGap($nGapChars);
+			$scaffoldSeqLen += $nGapChars;
+		    } else {
+			$ss .= $GAP_CHARS;
+			$scaffoldSeqLen += $NUM_GAP_CHARS;
+		    }
 		}
 
 		$scaffoldSeq .= $ss;
@@ -223,6 +237,14 @@ sub _revcomp {
 	$revseq .= $char;
     }
     return $revseq;
+}
+
+sub _makeGap {
+    my($num_ns) = @_;
+    my $gap_string = '';
+    # not very efficient, but fine for small-medium sized gaps:
+    for( my $i=0; $i<$num_ns; $i++ ) { $gap_string .= 'N'; }
+    return $gap_string;
 }
 
 1;
