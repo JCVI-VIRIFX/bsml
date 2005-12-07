@@ -34,11 +34,12 @@ use BSML::BsmlParserTwig;
 # Input
 # ------------------------------------------------------------------
 
-my($bsmlRepository, $scaffoldFile, $usingContigIds, $chadoDb, $annotDb, 
+my($bsmlRepository, $workflowId, $scaffoldFile, $usingContigIds, $chadoDb, $annotDb, 
    $annotServer, $orgName, $username, $password, $parseOnly, $help, $man);
 
 &GetOptions("chado_db=s" => \$chadoDb, 
 	    "bsml_repository=s" => \$bsmlRepository,
+	    "workflow_id=s" => \$workflowId,
 	    "scaffold_file=s" => \$scaffoldFile,
 	    "using_contig_ids!" => \$usingContigIds,
 	    "annot_db=s" => \$annotDb,
@@ -120,7 +121,7 @@ else {
 }
 
 # write BSML files
-&BsmlScaffolds::writeBsmlScaffoldFiles($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $genus, $species, 1, $parseOnly);
+&BsmlScaffolds::writeBsmlScaffoldFiles($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, 1, $parseOnly);
 
 # all done
 exit(0);

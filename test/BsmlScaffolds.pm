@@ -43,13 +43,14 @@ for( my $i=0; $i<$NUM_GAP_CHARS; $i++ ) { $GAP_CHARS .= 'N'; }
 # $annotDb - annotation database from which the scaffolds and/or assembly sequences were loaded
 # $chadoDb - target chado database
 # $bsmlRepository - BSML repository that corresponds to $chadoDb
-# $species - species of the organism to which the scaffolded sequences belong
+# $workflowId - workflow id of the legacy2bsml task used to migrate assemblies into db
 # $genus - genus of the organism to which the scaffolded sequences belong
+# $species - species of the organism to which the scaffolded sequences belong
 # $printSummary - whether to print a summary of the files created/skipped to STDOUT
 # $parseOnly - parse input files and run error checks but don't create any target BSML scaffold files
 #
 sub writeBsmlScaffoldFiles {
-    my($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $genus, $species, $printSummary, $parseOnly) = @_;
+    my($scaffolds, $annotDb, $chadoDb, $bsmlRepository, $workflowId, $genus, $species, $printSummary, $parseOnly) = @_;
     
     my $scaffoldsSkipped = 0;
     my $scaffoldsCreated = 0;
@@ -65,7 +66,7 @@ sub writeBsmlScaffoldFiles {
 	my $numContigs = scalar(@$data);
 	foreach my $datum (@$data) {
 	    my $asmblId = $datum->{'asmbl_id'};
-	    my $asmblBsmlFile = &findAssemblyBsmlFile($bsmlRepository, $annotDb, $asmblId);
+	    my $asmblBsmlFile = &findAssemblyBsmlFile($bsmlRepository, $workflowId, $annotDb, $asmblId);
 	    ++$numMissing if (!defined($asmblBsmlFile));
 	    $datum->{'assembly_bsml_file'} = $asmblBsmlFile;
 	}
@@ -179,12 +180,19 @@ sub writeBsmlScaffoldFiles {
 # be found or it is not readable.
 #
 # $bsmlRepository - BSML repository that corresponds to $chadoDb
+# $workflowId     - workflow id of the legacy2bsml task used to migrate assemblies into db
 # $annotDb        - annotation database from which the scaffolds and/or assembly sequences were loaded
 # $asmblId        - annotation database asmbl_id of the desired assembly
 #
 sub findAssemblyBsmlFile {
-    my($bsmlRepository, $annotDb, $asmblId) = @_;
+    my($bsmlRepository, $workflowId, $annotDb, $asmblId) = @_;
     my $bsmlFile = undef;
+
+    if (defined($workflowId)) {
+	my $asmblBsml = "${bsmlRepository}/legacy2bsml/${workflowId}/${annotDb}_${asmblId}_assembly.bsml";
+#	print STDERR "checking for $asmblBsml\n";
+	return $asmblBsml if ((-e $asmblBsml) && (-r $asmblBsml));
+    }
 
     # check legacy2bsml/ subdir first; this is used in more recent projects
     my $asmblBsml1 = "${bsmlRepository}/legacy2bsml/${annotDb}_${asmblId}_assembly.bsml";
