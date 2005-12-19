@@ -30,7 +30,7 @@ WriteMakefile(
 
 package MY;
 
-sub MY::postamble_old { 
+sub MY::postamble { 
     if($schemadocsdir eq ""){
 	return;
     }
@@ -48,7 +48,7 @@ LINK = g++
 CXXFLAGS = -O2
 LIBRARIES = -lxerces-c
 
-validation: Xerces-xsdValid validation_install
+validation: validation_install
 
 Xerces-xsdValid:  $(VALIDATOR_SRC_DIR)/SAX2Print.cpp $(VALIDATOR_SRC_DIR)/SAX2Print.hpp SAX2PrintHandlers.o
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o $(VALIDATOR_SRC_DIR)/Xerces-xsdValid $(VALIDATOR_SRC_DIR)/SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
@@ -56,10 +56,9 @@ Xerces-xsdValid:  $(VALIDATOR_SRC_DIR)/SAX2Print.cpp $(VALIDATOR_SRC_DIR)/SAX2Pr
 SAX2PrintHandlers.o: $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.hpp
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp
 
-validation_install : Xerces-xsdValid
+validation_install : 
 	@mkdir -p $(SCHEMA_DIR)
 	@mkdir -p $(VALIDATOR_BIN_DIR)
-	@install $(VALIDATOR_SRC_DIR)/Xerces-xsdValid $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/xsdValid.pl $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/dtdValid.pl $(VALIDATOR_BIN_DIR)
 	@install $(SCHEMA_SRC_DIR)/*.xsd $(SCHEMA_DIR)
@@ -74,8 +73,6 @@ sub install {
     my $self = shift;
     if($schemadocsdir ne ""){
 	my $installstr = $self->MM::install(@_);
-	return $installstr;
-	#shortcircuit sub temporarily here
 	my $addltarget = 'validation';
 	$installstr =~ s/(pure_install\s+::\s+)(.*)/$1 $2 $addltarget/;
 	return $installstr;
