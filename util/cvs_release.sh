@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $Id: cvs_release.sh,v 1.2 2005/12/19 15:15:04 angiuoli Exp $
+# $Id: cvs_release.sh,v 1.3 2005/12/21 18:29:39 angiuoli Exp $
 
 # Copyright (c) 2002 The Institute for Genomic Research. All Rights Reserved.
 
@@ -47,3 +47,11 @@ cd bug_release
 cvs -Q co bsml_all
 cvs -Q $TEST tag $RELEASE_TAG
 echo "Added tag $RELEASE_TAG in bsml_all"
+
+echo
+echo
+echo "IMPORTANT: Edit and commit a CHANGELOG entry for $RELEASE_TAG"
+echo "Opening file $DIRECTORY/bug_release/prism/doc/CHANGELOG in $CVSEDITOR"
+echo "$RELEASE_TAG" >> $DIRECTORY/bug_release/bsml/doc/CHANGELOG
+echo "------------" >> $DIRECTORY/bug_release/bsml/doc/CHANGELOG
+$CVSEDITOR $DIRECTORY/bug_release/bsml/doc/CHANGELOG
