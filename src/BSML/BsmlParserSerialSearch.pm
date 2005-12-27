@@ -172,7 +172,7 @@ sub parse  {
     my $self = shift;
     my ( $fileOrHandle ) = @_;
 
-    my $bsml_logger = get_logger( "Bsml" );
+    my $bsml_logger = BSML::Logger::get_logger( "Bsml" );
 
     # Set "rooted" twig handlers on Sequence, SeqPairAlignment, and Analysis elements. 
     my $twig = new XML::Twig( TwigRoots => $self->{'Roots'},

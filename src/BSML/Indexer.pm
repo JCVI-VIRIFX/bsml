@@ -6,7 +6,7 @@ BSML::Indexer;
 
 =head1 VERSION
 
-This document refers to $Revision: 1.3 $ of TIGR::Yank::Indexer.pm.
+This document refers to $Revision: 1.4 $ of TIGR::Yank::Indexer.pm.
 
 =head1 SYNOPSIS
 
@@ -63,7 +63,9 @@ my $logger = BSML::Logger::get_logger(__PACKAGE__);
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.3 $)[1];
+our $VERSION = (qw$Revision: 1.4 $)[1];
+our @DEPEND = qw(Data::Dumper CDB_File Cwd File::Basename 	 
+                  File::Path Log::Log4perl);
 
 # Eliminate annoying warnings
 if ($^W) {  # Boolean for the global warnings flag.
