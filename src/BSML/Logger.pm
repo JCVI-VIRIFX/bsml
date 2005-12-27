@@ -1,6 +1,6 @@
 package BSML::Logger;
 
-# $Id: Logger.pm,v 1.2 2005/12/27 20:07:18 angiuoli Exp $
+# $Id: Logger.pm,v 1.3 2005/12/27 20:35:16 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -174,6 +174,11 @@ sub get_default_logfilename{
 sub AUTOLOAD {
     my ($self, @args) = @_;
     return 0;
+}
+
+sub logdie{
+    my $arg = shift;
+    die $arg;
 }
 
 1;
