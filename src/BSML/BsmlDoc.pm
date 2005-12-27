@@ -50,25 +50,27 @@ logging will be over-ridden.
 
 use XML::Writer;
 use warnings;
-use Log::Log4perl qw(get_logger :easy);
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
     import BSML::BsmlAnalysis;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
     import BSML::BsmlSequence;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
     import BSML::BsmlMultipleAlignmentTable;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSegmentSet.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSegmentSet.pm';
     import BSML::BsmlSegmentSet;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
     import BSML::BsmlGenome;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
     import BSML::BsmlSeqPairAlignment;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
 }
 use IO::File;
+
+my $bsml_logger = BSML::Logger::get_logger( "Bsml" );
+
 
 # The default links to the BSML dtd maintained by Labbook
 
@@ -119,7 +121,6 @@ sub init
     @{$BsmlFeatureGroupLookups}[$BsmlTableIdCount] = {};
     $BsmlTableIdCount++;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Created new BsmlDoc - BsmlDocID: $self->{'BsmlTableId'}" );
     $bsml_logger->level($DEBUG);
   }
@@ -134,7 +135,6 @@ sub DESTROY
     @{$BsmlSeqAlignmentLookups}[$self->{'BsmlTableId'}] = undef;
     @{$BsmlFeatureGroupLookups}[$self->{'BsmlTableId'}] = undef;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Destructor Called - BsmlDocID: $self->{'BsmlTableId'}" );
     $bsml_logger->level($DEBUG);
   }
@@ -243,7 +243,6 @@ sub addBsmlSequence
 
     my $index = @{$self->{'BsmlSequences'}} - 1;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Added BsmlSequence: $index" );
 
     return $index;    
@@ -257,7 +256,6 @@ sub addBsmlSegmentSet
 
     my $index = @{$self->{'BsmlSegmentSets'}} - 1;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Added BsmlSegmentSet: $index" );
 
     return $index;
@@ -291,7 +289,6 @@ sub dropBsmlSequence
 
     $self->{'BsmlSequences'} = $newlist;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Dropped BsmlSequence: $index" );
   }
 
@@ -313,7 +310,6 @@ sub dropBsmlSegmentSet
 
     $self->{'BsmlSegmentSets'} = $newlist;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Dropped BsmlSegmentSet: $index" );
   }
 
@@ -382,7 +378,6 @@ sub addBsmlSeqPairAlignment
 
     my $index = @{$self->{'BsmlSeqPairAlignments'}} - 1;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Added BsmlSeqPairAlignment: $index" );
 
     return $index;    
@@ -404,7 +399,6 @@ sub dropBsmlSeqPairAlignment
 
     $self->{'BsmlSeqPairAlignements'} = $newlist;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Dropped BsmlSeqPairAlignment: $index" );
 }
 
@@ -472,7 +466,6 @@ sub addBsmlAnalysis
 
     my $index = @{$self->{'BsmlAnalyses'}} - 1;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Added BsmlAnalysis: $index" );
 
     return $index;    
@@ -494,7 +487,6 @@ sub dropBsmlAnalysis
 
     $self->{'BsmlAnalyses'} = $newlist;
 
-    my $bsml_logger = get_logger( "Bsml" );
     $bsml_logger->info( "Dropped BsmlAnalyses: $index" );
 }
 
@@ -569,8 +561,6 @@ sub write
   {
     my $self = shift;
     my ($fileOrHandle, $dtd) = @_;
-
-    my $bsml_logger = get_logger( "Bsml" );
 
     $bsml_logger->debug( "Attempting to write BsmlDoc" );
     my $output;

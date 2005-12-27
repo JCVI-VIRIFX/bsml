@@ -39,10 +39,11 @@ This document refers to version 1.0 of the BSML Object Layer
 use strict;
 use warnings;
 use XML::Twig;
-use Log::Log4perl qw(get_logger :levels);
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
     import BSML::BsmlDoc;
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
 }
 use Data::Dumper;
 
@@ -71,7 +72,7 @@ sub parse
   {
     my $self = shift;
     my ( $bsml_doc, $fileOrHandle ) = @_;
-    my $bsml_logger = get_logger( "Bsml" );
+    my $bsml_logger = BSML::Logger::get_logger( "Bsml" );
 
     $bsmlDoc = ${$bsml_doc}; 
 
@@ -128,7 +129,7 @@ sub parse
 
 sub sequenceHandler
   {
-    my $bsml_logger = get_logger( "Bsml" );
+    my $bsml_logger = BSML::Logger::get_logger( "Bsml" );
     $bsml_logger->info( "Parsing Sequence Twig" );
 
     my ($twig, $seq) = @_;

@@ -3,17 +3,18 @@ package BSML::BsmlFeature;
 
 use XML::Writer;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
     import BSML::BsmlCrossReference;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
 }
 use strict;
 use warnings;
-use Log::Log4perl qw(get_logger);
 use Data::Dumper;
 
-my $logger = get_logger("Logger::BSML");
+my $logger = BSML::Logger::get_logger("Logger::BSML");
 
 
 =head1 NAME

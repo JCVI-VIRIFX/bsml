@@ -36,11 +36,11 @@ This document refers to version 1.0 of the BSML Object Layer
 =cut
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlReference.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlReference.pm';
     import BSML::BsmlReference;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlFeature.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlFeature.pm';
     import BSML::BsmlFeature;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
 }
 use XML::Writer;

@@ -26,13 +26,14 @@ $doc->write( 'output_file.xml' );
 use strict;
 use warnings;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
     import BSML::BsmlDoc;
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
 }
-use Log::Log4perl qw(get_logger);
 use Data::Dumper;
 
-my $logger = get_logger("Logger::BSML");
+my $logger = BSML::Logger::get_logger("Logger::BSML");
 
 
 # class variable used to create unique element identifiers

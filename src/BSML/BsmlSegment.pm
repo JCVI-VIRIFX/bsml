@@ -4,10 +4,9 @@ package BSML::BsmlSegment;
 use XML::Writer;
 use strict;
 use warnings;
-use Log::Log4perl qw(get_logger :easy);
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
     import BSML::BsmlElement;
 }
 

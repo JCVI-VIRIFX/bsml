@@ -4,15 +4,17 @@ package BSML::BsmlReader;
 use strict;
 use warnings;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
     import BSML::Indexer::Fasta;
-    require '/usr/local/devel/ANNOTATION/cas/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
     import BSML::BsmlDoc;
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
 }
 use Data::Dumper;
-use Log::Log4perl qw(get_logger);
 
-my $logger = get_logger("Logger::BSML");
+
+my $logger = BSML::Logger::get_logger("Logger::BSML");
 
 
 sub readSequence
@@ -1958,7 +1960,7 @@ sub subSequence
       my $self = shift; 
       my ($seqInput, $start, $stop, $complement) = @_;
       
-      my $logger = get_logger();
+      my $logger = BSML::Logger::get_logger();
 
     $logger->debug("Entered subSequence") if $logger->is_debug;
 
@@ -2346,7 +2348,7 @@ sub get_all_alignment_references
 
 sub returnMultipleAlignmentTables
 {
-    my $logger = get_logger("bsml");
+    my $logger = BSML::Logger::get_logger("bsml");
     $logger->info("Entered returnMultipleAlignmentTables");
 
     my $self = shift;
@@ -2392,7 +2394,7 @@ sub returnSequenceAlignments
 sub readMultipleAlignmentTable
 {
 
-    my $logger = get_logger("bsml");
+    my $logger = BSML::Logger::get_logger("bsml");
     $logger->info("Entered readMultipleAlignmentTable");
 
     my $self = shift;

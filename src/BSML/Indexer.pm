@@ -6,7 +6,7 @@ BSML::Indexer;
 
 =head1 VERSION
 
-This document refers to $Revision: 1.2 $ of TIGR::Yank::Indexer.pm.
+This document refers to $Revision: 1.3 $ of TIGR::Yank::Indexer.pm.
 
 =head1 SYNOPSIS
 
@@ -48,21 +48,22 @@ use Cwd 'abs_path';
 use Data::Dumper;
 use File::Basename;
 use File::Path;
-use Log::Log4perl qw(get_logger);
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
+}
 
 my @valid_sources = qw(GB GP PANDA PIR SP);
 
 # Logger instance used by this class
-my $logger = get_logger(__PACKAGE__);
+my $logger = BSML::Logger::get_logger(__PACKAGE__);
 
 
 # Permissions for the index files.
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.2 $)[1];
-our @DEPEND = qw(Data::Dumper CDB_File Cwd File::Basename
-                 File::Path Log::Log4perl);
+our $VERSION = (qw$Revision: 1.3 $)[1];
 
 # Eliminate annoying warnings
 if ($^W) {  # Boolean for the global warnings flag.
