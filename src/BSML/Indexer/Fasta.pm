@@ -49,19 +49,22 @@ use base qw(BSML::Indexer);
 use Data::Dumper;
 use File::Basename;
 use File::Path;
-use Log::Log4perl qw(get_logger);
+BEGIN {
+    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
+    import BSML::Logger;
+}
 
 my @valid_sources = qw(GB GP PANDA PIR SP);
 
 # Logger instance used by this class
-my $logger = get_logger(__PACKAGE__);
+my $logger = BSML::Logger::get_logger(__PACKAGE__);
 
 
 # Permissions for the index files.
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.1 $)[1];
+our $VERSION = (qw$Revision: 1.2 $)[1];
 our @DEPEND = qw(Data::Dumper Fcntl File::Basename
                  File::Path Log::Log4perl TIGR::Yank::Indexer);
 
