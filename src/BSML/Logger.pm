@@ -1,6 +1,6 @@
 package BSML::Logger;
 
-# $Id: Logger.pm,v 1.1 2004/01/19 15:41:18 angiuoli Exp $
+# $Id: Logger.pm,v 1.2 2005/12/27 20:07:18 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -34,8 +34,8 @@ based upon a "debug" level will be provided.
 use strict;
 use File::Basename;
 use Data::Dumper;
-use base qw(Log::Log4perl);
-use Log::Log4perl::Level;
+#use base qw(Log::Log4perl);
+#use Log::Log4perl::Level;
 
 
 my $_DEFAULT_LOG_CATEGORY = "Logger";
@@ -83,7 +83,7 @@ B<Returns:> None.
 
 sub _init {
     my $self = shift;
-    $self->{_DEFAULT_LOG_LEVEL} = $WARN;
+#    $self->{_DEFAULT_LOG_LEVEL} = $WARN;
     $self->{_LOGGER_CONF} = $ENV{LOG4PERL_CONF};
     $self->{_LOG_LEVEL} = 0; #use this parameter to inc/dec log level from default
     $self->{_MODE} = "clobber"; #set to 'append' to append to file
@@ -93,7 +93,7 @@ sub _init {
     foreach my $key (keys %arg) {
         $self->{"_$key"} = $arg{$key}
     }
-    $self->_init_class_loggers();
+#    $self->_init_class_loggers();
 }
 
 =item $obj->_init_class_loggers($loglevel)
@@ -154,14 +154,27 @@ sub _init_class_loggers {
 
 sub get_logger {
     my $name = shift;
-    if(defined $name){
-	return Log::Log4perl->get_logger($_DEFAULT_LOG_CATEGORY."::".$name);
-    }
-    else{
-	return Log::Log4perl->get_logger($_DEFAULT_LOG_CATEGORY);
-    }
+#   if(defined $name){
+#	return Log::Log4perl->get_logger($_DEFAULT_LOG_CATEGORY."::".$name);
+#   }
+#   else{
+#	return Log::Log4perl->get_logger($_DEFAULT_LOG_CATEGORY);
+#   }
+
+#    return $name;
+    return new BSML::Logger();
 }
 
+sub get_default_logfilename{
+    #return "/tmp/".basename($0).".$$.log";
+    return '/dev/null';
+}
+
+
+sub AUTOLOAD {
+    my ($self, @args) = @_;
+    return 0;
+}
 
 1;
 
