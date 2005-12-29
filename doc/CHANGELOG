@@ -1,2 +1,8 @@
 bsml-v2r3b1
 ------------
+
+bsml-v2r4b1
+------------
+-added BSML::Logger and eliminated all direct calls to Log4perl
+-temporarily disabled all logging in BSML::Logger due to performance issues with Log4perl
+-fixed hard coded lib paths to point to the correct install location
