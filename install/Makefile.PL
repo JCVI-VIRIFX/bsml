@@ -41,22 +41,8 @@ sub MY::postamble {
 SCHEMA_SRC_DIR=schema
 VALIDATOR_SRC_DIR=schema/xsdValid-Xerces
 VALIDATOR_BIN_DIR=$(PREFIX)/bin
-INCLUDE = -I/usr/local/packages/xerces-c++/include
-LIBDIR = -L/usr/local/packages/xerces-c++/lib
-CXX = g++
-LINK = g++
-CXXFLAGS = -O2
-LIBRARIES = -lxerces-c
 
-validation: validation_install
-
-Xerces-xsdValid:  $(VALIDATOR_SRC_DIR)/SAX2Print.cpp $(VALIDATOR_SRC_DIR)/SAX2Print.hpp SAX2PrintHandlers.o
-	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LIBDIR) -o $(VALIDATOR_SRC_DIR)/Xerces-xsdValid $(VALIDATOR_SRC_DIR)/SAX2Print.cpp SAX2PrintHandlers.o $(LIBRARIES)
-
-SAX2PrintHandlers.o: $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.hpp
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $(VALIDATOR_SRC_DIR)/SAX2PrintHandlers.cpp
-
-validation_install : 
+validation : 
 	@mkdir -p $(SCHEMA_DIR)
 	@mkdir -p $(VALIDATOR_BIN_DIR)
 	@install $(VALIDATOR_SRC_DIR)/xsdValid.pl $(VALIDATOR_BIN_DIR)
