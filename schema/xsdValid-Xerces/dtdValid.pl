@@ -24,8 +24,17 @@ my $file = $ARGV[0];
 my $dtd = $options{'dtd'};
 
 my ($dir) = ($0 =~ /(.*)\/.*/);
+	 
+ if( $dtd ) 	 
+ { 	 
+     $dtd =~ s/\//\\\//g; 	 
+     $status = system "perl -pi -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">/<\\!DOCTYPE Bsml SYSTEM \"$dtd\">/\' $file"; 	 
+ }
+else{
+    die "No dtd specified";
+}
 
-my $status = system "xmllint --noout --valid --dtdvalid $dtd $file";
+my $status = system "xmllint --noout --valid --nonet --dtdvalid $dtd $file";
 
 my $exit_value = $status >> 8;
 my $signal_num = $status & 127;
