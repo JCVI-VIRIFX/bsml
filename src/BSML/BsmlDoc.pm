@@ -52,20 +52,13 @@ use XML::Writer;
 use warnings;
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
-    import BSML::BsmlAnalysis;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
-    import BSML::BsmlSequence;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
-    import BSML::BsmlMultipleAlignmentTable;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSegmentSet.pm';
-    import BSML::BsmlSegmentSet;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
-    import BSML::BsmlGenome;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
-    import BSML::BsmlSeqPairAlignment;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
+use BSML::BsmlAnalysis;
+use BSML::BsmlSequence;
+use BSML::BsmlMultipleAlignmentTable;
+use BSML::BsmlSegmentSet;
+use BSML::BsmlGenome;
+use BSML::BsmlSeqPairAlignment;
+use BSML::BsmlElement;
 }
 use IO::File;
 

@@ -6,7 +6,7 @@ BSML::Indexer;
 
 =head1 VERSION
 
-This document refers to $Revision: 1.4 $ of TIGR::Yank::Indexer.pm.
+This document refers to $Revision: 1.5 $ of TIGR::Yank::Indexer.pm.
 
 =head1 SYNOPSIS
 
@@ -49,8 +49,7 @@ use Data::Dumper;
 use File::Basename;
 use File::Path;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::Logger;
 }
 
 my @valid_sources = qw(GB GP PANDA PIR SP);
@@ -63,7 +62,7 @@ my $logger = BSML::Logger::get_logger(__PACKAGE__);
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.4 $)[1];
+our $VERSION = (qw$Revision: 1.5 $)[1];
 our @DEPEND = qw(Data::Dumper CDB_File Cwd File::Basename 	 
                   File::Path Log::Log4perl);
 
@@ -119,7 +118,6 @@ object attributes.
 
 B<Parameters:> Both the $file, and $indexdir parameters described for the
 constructor "new" are required.
-
 B<Returns:> None.
 
 =cut
@@ -127,8 +125,7 @@ B<Returns:> None.
 sub _init {
     my ($self, $file, $indexdir) = @_;
     $logger->info("In _init.");
-    $logger->logdie("\$file and \$indexdir parameters are required.")
-        unless ((defined $file) && defined($indexdir));
+    $logger->logdie("\$file and \$indexdir parameters are required.")        unless ((defined $file) && defined($indexdir));
 
     my $filename = basename($file);
 

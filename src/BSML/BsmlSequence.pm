@@ -31,18 +31,12 @@ package BSML::BsmlSequence;
 =cut
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
-    import BSML::BsmlCrossReference;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlNumbering.pm';
-    import BSML::BsmlNumbering;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlFeatureGroup.pm';
-    import BSML::BsmlFeatureGroup;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlFeatureTable.pm';
-    import BSML::BsmlFeatureTable;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::BsmlCrossReference;
+use BSML::BsmlNumbering;
+use BSML::BsmlElement;
+use BSML::BsmlFeatureGroup;
+use BSML::BsmlFeatureTable;
+use BSML::Logger;
 }
 use XML::Writer;
 use strict;

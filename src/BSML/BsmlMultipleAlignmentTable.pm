@@ -2,16 +2,11 @@ package BSML::BsmlMultipleAlignmentTable;
 @ISA = qw( BSML::BsmlElement );
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSequenceAlignment.pm';
-    import BSML::BsmlSequenceAlignment;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlPairwiseAlignments.pm';
-    import BSML::BsmlPairwiseAlignments;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlAlignmentSummary.pm';
-    import BSML::BsmlAlignmentSummary;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
-    import BSML::BsmlCrossReference;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
+use BSML::BsmlSequenceAlignment;
+use BSML::BsmlPairwiseAlignments;
+use BSML::BsmlAlignmentSummary;
+use BSML::BsmlCrossReference;
+use BSML::BsmlElement;
 }
 use XML::Writer;
 

@@ -6,10 +6,8 @@ use strict;
 use warnings;
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSegment.pm';
-    import BSML::BsmlSegment;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
+use BSML::BsmlSegment;
+use BSML::BsmlElement;
 }
 
 sub new

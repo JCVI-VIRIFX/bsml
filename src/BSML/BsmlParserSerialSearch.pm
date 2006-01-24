@@ -6,20 +6,13 @@ use strict;
 use warnings;
 use XML::Twig;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlFeature.pm';
-    import BSML::BsmlFeature;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSequence.pm';
-    import BSML::BsmlSequence;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlAnalysis.pm';
-    import BSML::BsmlAnalysis;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlMultipleAlignmentTable.pm';
-    import BSML::BsmlMultipleAlignmentTable;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlGenome.pm';
-    import BSML::BsmlGenome;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSeqPairAlignment.pm';
-    import BSML::BsmlSeqPairAlignment;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::BsmlFeature;
+use BSML::BsmlSequence;
+use BSML::BsmlAnalysis;
+use BSML::BsmlMultipleAlignmentTable;
+use BSML::BsmlGenome;
+use BSML::BsmlSeqPairAlignment;
+use BSML::Logger;
 }
 
 use Data::Dumper;
@@ -1143,7 +1136,7 @@ sub SeqFeatureHandler
 
 ######################################################################
 ##
-#  Support for import of data associated with Genome elements and
+#  Support foruse of data associated with Genome elements and
 #  children.
 
 

@@ -4,12 +4,9 @@ package BSML::BsmlReader;
 use strict;
 use warnings;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Indexer/Fasta.pm';
-    import BSML::Indexer::Fasta;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
-    import BSML::BsmlDoc;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::Indexer::Fasta;
+use BSML::BsmlDoc;
+use BSML::Logger;
 }
 use Data::Dumper;
 
@@ -82,7 +79,7 @@ sub readSequenceDat
     if( ref($seq) eq 'BSML::BsmlSequence' ){
       return $seq->returnSeqData();}
   }
-# Given a sequence object reference return its sequence import child
+# Given a sequence object reference return its sequenceuse child
 # and the raw sequence it references...
 
 sub readSequenceDatImport
@@ -1278,7 +1275,7 @@ sub geneIdtoAASeqList
 			  push( @returnAASequenceList, $seqdat );}
 			else
 			  {
-			      # handle sequence data import tags
+			      # handle sequence datause tags
 			      # The current document implementations inline the AA sequences...
 			  }
 		      }
@@ -1331,7 +1328,7 @@ sub geneIdtoAASeqHash
 			    }
 			    else
 			    {
-				# handle sequence data import tags
+				# handle sequence datause tags
 				# The current document implementations inline the AA sequences...
 			    }
 			}

@@ -2,10 +2,8 @@ package BSML::BsmlSequenceAlignment;
 @ISA = qw( BSML::BsmlElement );
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlSequenceData.pm';
-    import BSML::BsmlSequenceData;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
+use BSML::BsmlSequenceData;
+use BSML::BsmlElement;
 }
 use XML::Writer;
 

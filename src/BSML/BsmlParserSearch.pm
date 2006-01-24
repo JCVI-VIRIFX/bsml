@@ -4,10 +4,8 @@ use strict;
 use warnings;
 use XML::Twig;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
-    import BSML::BsmlDoc;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::BsmlDoc;
+use BSML::Logger;
 }
 
 my $bsmlDoc;

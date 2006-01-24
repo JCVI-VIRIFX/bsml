@@ -5,8 +5,7 @@ use strict;
 use Data::Dumper;
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::Logger;
 }
 
 

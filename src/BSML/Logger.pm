@@ -1,6 +1,6 @@
 package BSML::Logger;
 
-# $Id: Logger.pm,v 1.4 2005/12/28 16:16:16 angiuoli Exp $
+# $Id: Logger.pm,v 1.5 2006/01/24 21:31:57 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -198,7 +198,6 @@ __END__
 
 This module does not use or set any environment variables. The standard
 module, File::Basename is required.
-
 =head1 DIAGNOSTICS
 
 =over 4

@@ -26,10 +26,8 @@ $doc->write( 'output_file.xml' );
 use strict;
 use warnings;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlDoc.pm';
-    import BSML::BsmlDoc;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::BsmlDoc;
+use BSML::Logger;
 }
 use Data::Dumper;
 
@@ -951,7 +949,6 @@ sub createAndAddAttr
 
 # First attempts at encoding search parameters in a Bsml Analysis element. Better use of the 
 # Bsml DTD may be required. 
-
 sub createAndAddAnalysis
 {
     my $self = shift;

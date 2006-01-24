@@ -50,8 +50,7 @@ use Data::Dumper;
 use File::Basename;
 use File::Path;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::Logger;
 }
 
 my @valid_sources = qw(GB GP PANDA PIR SP);
@@ -64,7 +63,7 @@ my $logger = BSML::Logger::get_logger(__PACKAGE__);
 my $mode = 0664;
 
 ## internal variables and identifiers
-our $VERSION = (qw$Revision: 1.2 $)[1];
+our $VERSION = (qw$Revision: 1.3 $)[1];
 our @DEPEND = qw(Data::Dumper Fcntl File::Basename
                  File::Path Log::Log4perl TIGR::Yank::Indexer);
 

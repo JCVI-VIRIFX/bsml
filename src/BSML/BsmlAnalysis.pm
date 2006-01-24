@@ -2,10 +2,8 @@ package BSML::BsmlAnalysis;
 @ISA = qw( BSML::BsmlElement );
 
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlCrossReference.pm';
-    import BSML::BsmlCrossReference;
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/BsmlElement.pm';
-    import BSML::BsmlElement;
+use BSML::BsmlCrossReference;
+use BSML::BsmlElement;
 }
 use XML::Writer;
 use strict;

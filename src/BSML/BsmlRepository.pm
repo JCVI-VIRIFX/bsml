@@ -1,6 +1,6 @@
 package BSML::BsmlRepository;
 
-# $Id: BsmlRepository.pm,v 1.23 2005/12/27 20:13:28 angiuoli Exp $
+# $Id: BsmlRepository.pm,v 1.24 2006/01/24 21:31:57 angiuoli Exp $
 
 # Copyright (c) 2002, The Institute for Genomic Research. All rights reserved.
 
@@ -10,8 +10,8 @@ BsmlRepository.pm - A module for managing a BSML repository
 
 =head1 VERSION
 
-This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.23 $. 
-Last modified on $Date: 2005/12/27 20:13:28 $
+This document refers to version $Name:  $ of frontend.cgi, $Revision: 1.24 $. 
+Last modified on $Date: 2006/01/24 21:31:57 $
 
 =head1 SYNOPSIS
 
@@ -27,8 +27,7 @@ my $bsmlrepository = new BSML::BsmlRepository('PATH'=>$repositorypath);
 use strict;
 use Data::Dumper;
 BEGIN {
-    require '/usr/local/devel/ANNOTATION/ard/chado-v1r5b1/lib/site_perl/5.8.5/BSML/Logger.pm';
-    import BSML::Logger;
+use BSML::Logger;
 }
 
 =item new
