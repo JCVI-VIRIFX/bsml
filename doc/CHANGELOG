@@ -7,6 +7,8 @@ bsml-v2r4b1
 -temporarily disabled all logging in BSML::Logger due to performance issues with Log4perl
 -fixed hard coded lib paths to point to the correct install location
 
-CURRENT
+bsml-v2r5b1
 ------------
+-removed hard coded lib module paths
 -fixed dtdValid.pl by replacing Xerces validator with 'xmllint'
+
