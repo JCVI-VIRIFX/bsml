@@ -83,16 +83,20 @@ sub write
 
     $writer->startTag( "Organism", %{$self->{'attr'}} );
 
+    # Bugzilla 2414
+    # Writing of Attributes moved to preceed writing of Strain
+    # (apparently order matters when validating against a dtd)
+    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}}))
+    {
+	$writer->startTag( "Attribute",  'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
+	$writer->endTag( "Attribute" );
+    }
+
     foreach my $strain (@{$self->{'BsmlStrain'}})
     {
 	$strain->write( $writer );
     }
 
-    foreach my $bsmlattr (keys( %{$self->{ 'BsmlAttr'}}))
-      {
-	$writer->startTag( "Attribute",  'name' => $bsmlattr, 'content' => $self->{'BsmlAttr'}->{$bsmlattr} );
-	$writer->endTag( "Attribute" );
-      }
 
 
     if ( my $xref = $self->{'BsmlCrossReference'})
