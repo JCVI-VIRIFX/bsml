@@ -357,10 +357,12 @@ sub createAndAddFeatureN
     return $self->createAndAddFeature( $args{'FTable'}, $args{'id'}, $args{'$title'}, $args{'class'}, $args{'comment'}, $args{'displayAuto'} );
   }
 
+# see bug 2307
+# Added $startopen and $endopen support
 sub createAndAddFeatureWithLoc
   {
     my $self = shift;
-    my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement ) = @_;
+    my ( $FTable, $id, $title, $class, $comment, $displayAuto, $start, $end, $complement, $startopen, $endopen ) = @_;
 
     my $feature = $self->createAndAddFeature( $FTable, $id, $title, $class, $comment, $displayAuto );
     
@@ -380,29 +382,33 @@ sub createAndAddFeatureWithLoc
 	else
 	  {
 	    #add an interval location to the feature
-	    $feature->addBsmlIntervalLoc( $start, $end, $complement );
+	    $feature->addBsmlIntervalLoc( $start, $end, $complement, $startopen, $endopen );
 	  }
       }
     
     return $feature;     
   }
 
+# see bug 2307
+# Added $startopen and $endopen support
 sub createAndAddFeatureWithLocN
   {
     my $self = shift;
     my %args = @_;
 
-    return $self->createAndAddFeatureWithLoc( $args{'FTable'}, $args{'id'}, $args{'title'}, $args{'class'}, $args{'comment'}, $args{'displayAuto'}, $args{'start'}, $args{'end'}, $args{'complement'} )
+    return $self->createAndAddFeatureWithLoc( $args{'FTable'}, $args{'id'}, $args{'title'}, $args{'class'}, $args{'comment'}, $args{'displayAuto'}, $args{'start'}, $args{'end'}, $args{'complement'}, $args{'startopen'}, $args{'endopen'} )
   }
 
+# see bug 2307
+# Added $startopen and $endopen support
 sub createAndAddIntervalLoc
   {
     my $self = shift;
-    my ( $feature, $start, $end, $complement ) = @_;
+    my ( $feature, $start, $end, $complement, $startopen, $endopen ) = @_;
 
     if( ref($feature) eq 'BSML::BsmlFeature' )
       {
-	$feature->addBsmlIntervalLoc( $start, $end, $complement );
+	$feature->addBsmlIntervalLoc( $start, $end, $complement, $startopen, $endopen );
       }
     else
       {
@@ -416,7 +422,7 @@ sub createAndAddIntervalLoc
 		  {
 		    if( $rFeature->returnattr( 'id' ) eq $feature )
 		      {
-			$rFeature->addBsmlIntervalLoc( $start, $end, $complement );
+			$rFeature->addBsmlIntervalLoc( $start, $end, $complement, $startopen, $endopen );
 		      }
 		  }
 	      }
@@ -426,12 +432,14 @@ sub createAndAddIntervalLoc
     return $feature;
   }
 
+# see bug 2307
+# Added $startopen and $endopen support
 sub createAndAddIntervalLocN
   {
     my $self = shift;
     my %args = @_;
 
-    return $self->createAndAddIntervalLoc( $args{'feature'}, $args{'start'}, $args{'end'}, $args{'complement'});
+    return $self->createAndAddIntervalLoc( $args{'feature'}, $args{'start'}, $args{'end'}, $args{'complement'}, $args{'startopen'}, $args{'endopen'});
   }
 
 sub createAndAddSiteLoc
