@@ -320,11 +320,14 @@ sub returnBsmlSiteLocListR
     return $self->{'BsmlSite-Loc'};
   }
 
-=item $feature->addBsmlIntervalLoc( $startpos, $endpos, $complement )
+# see bug 2307
+# Added $startopen and $endopen
+
+=item $feature->addBsmlIntervalLoc( $startpos, $endpos, $complement, $startopen, $endopen )
 
 B<Description:> add a Interval-Loc tag to the feature
 
-B<Parameters:> ($startpos, $endpos, $complement) - sequence start position, sequence end position, optional 0 or 1 reflecting the strand containing the feature  
+B<Parameters:> ($startpos, $endpos, $complement, $startopen, $endopen) - sequence start position, sequence end position, optional 0 or 1 reflecting the strand containing the feature, 0 or 1 reflecting if the actual start position is unbounded lower than $startpos, 0 or 1 reflecting if the actual end position is unbounded higher than $endpos
 
 B<Returns:> None
 
@@ -334,21 +337,34 @@ sub addBsmlIntervalLoc
   {
 
       $logger->debug("") if $logger->is_debug;
-
-
+      
     my $self = shift;
-    my ( $startpos, $endpos, $comp ) = @_;
+    my ( $startpos, $endpos, $comp, $startopen, $endopen ) = @_;
 
     if( !( $comp ) ){ $comp = 0; }
 
     push( @{$self->{'BsmlInterval-Loc'}}, { 'startpos' => $startpos, 'endpos' => $endpos, 'complement' => $comp } );
+    # only add startopen or endopen if they're true to cut down on the size of the BSML
+    # they are added to the last hash added to @{$self->{'BsmlInterval-Loc'}}
+    if ($startopen) {
+	my $idx = $#{$self->{'BsmlInterval-Loc'}};
+	${$self->{'BsmlInterval-Loc'}}[$idx]->{'startopen'} = $startopen;
+    }
+    if ($endopen) {
+	my $idx = $#{$self->{'BsmlInterval-Loc'}};
+	${$self->{'BsmlInterval-Loc'}}[$idx]->{'endopen'} = $endopen;
+    }
   }
 
-=item $feature->setBsmlIntervalLoc( $startpos, $endpos, $complement )
+
+# see bug 2307
+# Added $startopen and $endopen
+
+=item $feature->setBsmlIntervalLoc( $startpos, $endpos, $complement, $startopen, $endopent )
 
 B<Description:> add a Interval-Loc tag to the feature
 
-B<Parameters:> ($startpos, $endpos, $complement) - sequence start position, sequence end position, optional 0 or 1 reflecting the strand containing the feature  
+B<Parameters:> ($startpos, $endpos, $complement, $startopen, $endopen) - sequence start position, sequence end position, optional 0 or 1 reflecting the strand containing the feature, 0 or 1 reflecting if the actual start position is unbounded lower than $startpos, 0 or 1 reflecting if the actual end position is unbounded higher than $endpos
 
 B<Returns:> None
 
@@ -361,7 +377,7 @@ sub setBsmlIntervalLoc
 
 
     my $self = shift;
-    my ( $startpos, $endpos, $comp ) = @_;
+    my ( $startpos, $endpos, $comp, $startopen, $endopen ) = @_;
 
     my @newlist;
     
@@ -375,8 +391,11 @@ sub setBsmlIntervalLoc
 
     $self->{'BsmlInterval-Loc'} = \@newlist;
 
-    $self->addBsmlIntervalLoc( $startpos, $endpos, $comp );
+    $self->addBsmlIntervalLoc( $startpos, $endpos, $comp, $startopen, $endopen );
   }
+
+
+
 
 =item $feature->dropBsmlIntervalLoc( $startpos, $endpos  )
 
