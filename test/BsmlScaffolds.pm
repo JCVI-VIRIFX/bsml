@@ -88,6 +88,9 @@ sub writeBsmlScaffoldFiles {
 	    $builder->makeCurrentDocument();
 	    my $bsmlScaffoldSeq = $builder->createAndAddExtendedSequenceN(id => $scaffBsmlId, molecule => "DNA", length => -1 );
 	    $bsmlScaffoldSeq->addattr("class", "supercontig");
+		## See bug 2692
+		$bsmlScaffoldSeq->addBsmlAttributeList([{name => 'SO', content=> 'supercontig'}]);
+		## ^^^^^^^^^^^^
 	    my $numContigs = scalar(@$data);
 
 	    for (my $contigNum = 0;$contigNum < $numContigs;++$contigNum) {
@@ -139,6 +142,9 @@ sub writeBsmlScaffoldFiles {
 		$builder->makeCurrentDocument();
 		my $asmblBsmlSeq = $builder->createAndAddExtendedSequenceN( id => $asmblBsmlId, length => $sl );
 		$asmblBsmlSeq->addattr("class", "contig");
+		## See bug 2692
+		$bsmlScaffoldSeq->addBsmlAttributeList([{name => 'SO', content=> 'contig'}]);
+		## ^^^^^^^^^^^^
 		
 		my $numbering = $builder->createAndAddNumbering( seq => $asmblBsmlSeq,
 								 seqref => $scaffBsmlId,
