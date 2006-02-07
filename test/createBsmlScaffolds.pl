@@ -73,11 +73,14 @@ if ($usingContigIds) {
     pod2usage({-message => "Error:\n     --password must be specified\n", -exitstatus => 0, -verbose => 0}) if (!$password);
 }
 
-my($genus, $species);
-if ($orgName =~ /^\s*(\S+) (\S+)\s*$/) {
-    $genus = $1;
-    $species = $2;
-} else {
+$orgName =~ s/^\s+|\s+$//g;
+my($genus, $species) = split(" ", $orgName, 2);
+
+#if ($orgName =~ /^\s*(\S+) (\S+)\s*$/) {
+#    $genus = $1;
+#    $species = $2;
+#} else {
+if ($genus eq '' || $species eq '') {
     pod2usage({-message => "Error:\n     --organism_name must be specified as 'Genus species'\n", -exitstatus => 0, -verbose => 0});
 }
 
