@@ -12,3 +12,8 @@ bsml-v2r5b1
 -removed hard coded lib module paths
 -fixed dtdValid.pl by replacing Xerces validator with 'xmllint'
 
+CURRENT
+-------------
+-added FASTA index build during initial build of Seq-Data in BsmlSequence.  Previously, index was not built until first parse.
+-migrated subSequence from BsmlReader to BsmlSequence. use of BsmlReader::subSequence is deprecated
+
