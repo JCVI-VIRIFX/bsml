@@ -24,8 +24,7 @@ my $logger = BSML::Logger::get_logger("Logger::BSML");
 #
 # Clients must define callback routines which are called during parsing. Callbacks may be defined
 # for Sequence, SeqPairAlignment, and Analysis objects. These functions are called with an object 
-# reference during the parse as each element is encountered. The objects may be used directly or
-# through the BsmlReader class. Twigs are rooted at Sequence, SeqPairAlignment, Feature, or Analysis elements
+# reference during the parse as each element is encountered. Twigs are rooted at Sequence, SeqPairAlignment, Feature, or Analysis elements
 # for maximum efficiency. 
 #
 # modification: Jay Sundaram 2003-12-07
@@ -87,19 +86,7 @@ sub new
 
     if( $args{'SequenceCallBack'} ){
 	$self->{'SequenceCallBack'} = $args{'SequenceCallBack'};
-
-	if ( defined ( $args{'DetectFeatureTables'} ) ){
-	    if ( $args{'DetectFeatureTables'} == 1 ){
-
-		$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
-						      $logger->debug("Starting sequence handler and reading feature tables") if($logger->is_debug());
-						      my $bsml_sequence = minsequenceHandler( $twig, $sequence, 'detect' );
-						      $self->{'SequenceCallBack'}( $bsml_sequence );
-						  };
-	    }
-		
-	}
-	elsif( defined( $args{'ReadFeatureTables'} ) ){
+	if( defined( $args{'ReadFeatureTables'} ) ){
 	    if( $args{'ReadFeatureTables'} == 1 ){
 		$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
 						      $logger->debug("Starting sequence handler and reading feature tables") if($logger->is_debug());
@@ -110,8 +97,13 @@ sub new
 	    else{
 			$self->{'Roots'}->{'Sequence'} = sub {my ($twig, $sequence) = @_;
 							      $logger->debug("Starting sequence handler and skipping reading feature tables") if($logger->is_debug());
-							      my $bsml_sequence = minsequenceHandler( $twig, $sequence );
-							      $self->{'SequenceCallBack'}( $bsml_sequence );
+							      if($args{'SequenceClassFilter'} ne "" && $args{'SequenceClassFilter'} ne $sequence->atts()->{'class'}){
+								  $logger->debug("Skipping parse of sequence with class ".$sequence->atts()->{'class'}) if($logger->is_debug());
+							      }
+							      else{
+								  my $bsml_sequence = minsequenceHandler( $twig, $sequence );
+								  $self->{'SequenceCallBack'}( $bsml_sequence );
+							      }
 					  }; 
 			$self->{'Ignore'}->{'Feature-tables'}=1;
 		    }
@@ -699,18 +691,6 @@ sub minsequenceHandler
 
     my $bsmlseq = new BSML::BsmlSequence;
     
-    #
-    # Code to detect presence of nested <Feature-tables> element
-    # underneath <Sequence> element
-    #
-    if (( defined($detect)) and ($detect eq 'detect')){
-	
-#	die;
-	my $BsmlFTables = $seq->first_child( 'Feature-tables' );
-    
-	print Dumper $BsmlFTables;die;
-    }
-
     # add the sequence element's attributes
 
     my $attr = $seq->atts();
