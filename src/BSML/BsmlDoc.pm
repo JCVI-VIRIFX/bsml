@@ -86,6 +86,8 @@ sub new
     my $class = shift;
     my ($logger_conf) = @_;
     my $self = {};
+    $self->{'GZIP'}=0; #toggle for default gzipped output
+    $self->{'EXT_DTD'}=0; #toggle for default use of external DTD at labbook
     bless $self, $class;    
     $self->init( $logger_conf );
     return $self;
@@ -553,7 +555,7 @@ B<Returns:> None
 sub write
   {
     my $self = shift;
-    my ($fileOrHandle, $dtd) = @_;
+    my ($fileOrHandle, $dtd, $gzip) = @_;
 
     $bsml_logger->debug( "Attempting to write BsmlDoc" );
     my $output;
@@ -571,7 +573,13 @@ sub write
     # otherwise assume $fileOrHandle is a filename
     else 
     {
-	$output = new IO::File( ">$fileOrHandle" ) or die "could not open output file - $fileOrHandle $!\n";;
+	if($gzip || $self->{'GZIP'}){
+	    $fileOrHandle .= ".gz" unless ($fileOrHandle =~ /\.gz$/);
+	    open $output,">:gzip","$fileOrHandle" or die "could not open gzip output stream for - $fileOrHandle $!\n";;
+	}
+	else{
+	    $output = new IO::File( ">$fileOrHandle" ) or die "could not open output file - $fileOrHandle $!\n";;
+	}
 
 	if( !( $output ) )
 	  {
@@ -591,10 +599,10 @@ sub write
     # The default points to the publicly available dtd at Labbook
 
     if( $dtd ){$writer->doctype( "Bsml", "", "file:$dtd" );}
-    else{
+    elsif($self->{'EXT_DTD'}){
       $writer->doctype( "Bsml", $default_dtd_pID, $default_dtd_sID );
       $bsml_logger->debug( "DTD not specified - using $default_dtd_sID" );
-      }
+    }
    
     # write the root node
 
