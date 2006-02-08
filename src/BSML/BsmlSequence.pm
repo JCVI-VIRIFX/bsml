@@ -1,4 +1,5 @@
 package BSML::BsmlSequence;
+
 @ISA = qw( BSML::BsmlElement );
 
 
@@ -30,18 +31,18 @@ package BSML::BsmlSequence;
 
 =cut
 
-BEGIN {
 use BSML::BsmlCrossReference;
 use BSML::BsmlNumbering;
 use BSML::BsmlElement;
 use BSML::BsmlFeatureGroup;
 use BSML::BsmlFeatureTable;
 use BSML::Logger;
-}
-use XML::Writer;
+use BSML::Indexer::Fasta;
 use strict;
 use warnings;
+use XML::Writer;
 use Data::Dumper;
+use File::Basename;
 
 my $logger = BSML::Logger::get_logger("Logger::BSML");
 
@@ -262,7 +263,17 @@ sub addBsmlSeqDataImport
 
     my $self = shift;
     my ($format, $source, $id, $identifier) = @_;
+      
+      my($fasta_file,$fasta_dir) = fileparse($source);
+      my $indexer = BSML::Indexer::Fasta->new($fasta_file, $fasta_dir);
 
+      # Check the health of the various indices for the data file.
+      my @check = $indexer->check_indices;
+      
+      # Create the indices if necessary...
+      if ($check[0] == 1) { $indexer->index_entries };
+      if ($check[1] == 1) { $indexer->index_headers };
+      
     $self->{'BsmlSeqDataImport'}->{'format'} = $format;
     $self->{'BsmlSeqDataImport'}->{'source'} = $source;
 
@@ -397,16 +408,6 @@ sub returnBsmlFeatureGroupR
   } 
 
 
-=item $seq->write()
-
-  B<Description:> writes the BSML elements encoded by the class to a file using XML::Writer. This method should only be called through the BsmlDoc->write() process.
-
-  B<Parameters:> None
-
-  B<Returns:> None
-
-=cut 
-
 sub addBsmlNumbering
 {
       $logger->debug("") if $logger->is_debug;
@@ -432,53 +433,6 @@ sub dropBsmlNumbering
     my $self = shift;
     $self->{'BsmlNumbering'} = undef;
 }
-
-
-#
-# Added 2004-11-02 Bugzilla case 1808
-#
-
-
-# sub addBsmlAttributeList {
-
-#     my $self = shift;
-#     push ( @{$self->{'BsmlAttributeList'}}, new BSML::BsmlAttributeList );
-    
-#     my $index = @{$self->{'BsmlAttributeList'}} - 1;
-#     return $index;
-# }
-
-# sub dropBsmlAttributeList {
-
-#     my $self = shift;
-#     my ($index) = @_;
-
-#     my $newlist = [];
-
-#     for(  my $i=0;  $i< @{$self->{'BsmlAttributeList'}}; $i++ ) {
-# 	if( $i != $index ){
-# 	    push( @{$newlist}, $self->{'BsmlAttributeList'}[$i] );
-# 	}
-#     }
-
-#     $self->{'BsmlAttributeList'} = $newlist;
-# }
-
-# sub returnBsmlAttributeListListR {
-
-#     my $self = shift;
-#     return $self->{'BsmlAttributeList'};
-
-# }
-
-# sub returnBsmlAttributeListR {
-
-#     my $self = shift;
-#     my ($index) = @_;
-
-#     return $self->{'BsmlAttributeList'}[$index];
-# }
-
 
 
 sub write  {
@@ -576,6 +530,186 @@ sub detectBsmlFeatureTables {
 }
 
 
+sub subSequence
+  {
+      my $seq = shift; 
+      my ($start, $stop, $complement) = @_;
+      
+      my $logger = BSML::Logger::get_logger();
 
-1
+    $logger->debug("Entered subSequence") if $logger->is_debug;
+
+    # Hack to check if the substring is on the reverse complement. 
+    # Note some of the clients are not setting
+    # the complement attributes correctly. 
+
+    if( ($start > $stop) )
+    {
+	($start, $stop) = ($stop, $start);
+	$complement = 1;
+    }
+
+    # get the sequence data if it is already in memory. (inline sequence objects)
+
+    my $seqdat = $seq->returnSeqData();
+
+    # otherwise pull in the data from an external file
+
+    if( !($seqdat) )
+    {
+	my $seqimpt = $seq->returnBsmlSeqDataImport();
+	
+	# no external file data either; this sequence has no sequence data
+
+	if ( (!($seqimpt->{'format'})) )
+	{
+	    $logger->warn("The specified sequence (ID=\", $seq->returnattr('id'), \") has no Seq-data or Seq-data-import");
+	    return undef;
+	}
+
+	if( $seqimpt->{'format'} eq 'fasta' )
+	{
+	    $seqdat = parse_multi_fasta( $seqimpt->{'source'}, $seqimpt->{'identifier'} );
+	}
+	
+	# Both interal and external lookups for sequence data failed. 
+	# Log and error and return the empty string.
+
+	if( !($seqdat) )
+	{
+	    $logger->warn("No sequence to retrieve for ource: $seqimpt->{'source'} Id: $seqimpt->{'identifier'}");
+	    return undef;
+	}
+	
+	#Store the imported sequence in the object layer so further file
+	#io is not necessary
+	$seqdat =~ s/\s//g;
+	$seq->addBsmlSeqData( $seqdat );
+
+      }
+
+    #return the whole sequence if '-1' is passed as the start coordinate
+
+    if( $start == -1 )
+      {
+	  if( $complement == '0' ){
+	      return $seqdat;}
+	  else{
+	      return reverse_complement( $seqdat );}
+      }
+
+    # pull out the substring of interest and return it
+
+    if( $seqdat )
+      {
+	  if( ($start) > length($seqdat) )
+	  {
+	      # Log error condition and return the empty string
+	      $logger->logdie("BsmlReader::subSequence() - Error: Out of Bounds Substring Access. SeqId($seq) Start($start) Stop($stop) Complement($complement)\n");
+	      return '';
+	  }
+	  
+	  # return 5' to 3' data
+	  if( $complement == 0 )
+	  {
+	      my $rseq = substr( $seqdat, $start, ($stop-$start+1));
+	      return $rseq;
+	  }
+	  # return 5' to 3' on rev complement
+	  else
+	  {
+	      return reverse_complement(substr( $seqdat, $start, ($stop-$start+1)));
+	  }
+      }
+}
+
+sub parse_multi_fasta {
+  my $fasta_file = shift;
+  my $specified_header = shift;
+
+  # extract the directory from the filepath
+  my $pos = -1;
+  my $posMax = -1;
+
+  while (($pos = index( $fasta_file, "\/", $pos)) > -1 )
+  {
+      $posMax = $pos;
+      $pos++;
+  }
+
+  my $fasta_dir = substr( $fasta_file, 0, $posMax ); 
+  
+  # try to load the sequence using a pregenerated index through. BSML::FastaIndex
+
+  my $indexer = BSML::Indexer::Fasta->new($fasta_file, $fasta_dir);
+  
+  # Check the health of the various indices for the data file.
+  my @check = $indexer->check_indices;
+
+  # Create the indices if necessary...
+  if ($check[0] == 1) { $indexer->index_entries };
+  if ($check[1] == 1) { $indexer->index_headers };
+
+  # Get the name of the header index file.
+  my $header_index = $indexer->header_index;
+  my $entry_index = $indexer->entry_index;
+ 
+
+
+
+  my (%h, %e);
+  my $c = tie %h, 'CDB_File', $header_index or die "tie failed: $!\n";
+  $c = tie %e, 'CDB_File', $entry_index or die "tie failed: $!\n";
+
+  my $entry = $h{$specified_header};
+
+  my ($offset, $length) = split( ',', $e{$entry} );
+
+  # if the sequence could not be loaded with an index, perform a grep operation on the
+  # FASTA file.
+
+  open (IN, $fasta_file) or die "Unable to open $fasta_file due to $!";
+
+  if( $offset )
+  {
+      seek( IN, $offset, 0 );
+  }
+
+  my $line = <IN>;
+  my $seq_ref = [];
+  while(defined($line)) {
+    unless($line =~ /^>([^\s]+)/) {
+      $line = <IN>;
+    } else {
+      my $header = $1;
+
+      if($specified_header eq $header) {
+	while(defined($line=<IN>) and $line !~ /^>/ ) {
+	  next if($line =~/^\s+$/);                   #skip blank lines
+	  chomp($line);
+	  push(@$seq_ref, $line);
+	}
+	last;   #seq found, terminating fasta_file parasing
+      } else { $line = <IN>; };  #wrong seq, keep looking
+    }
+    }
+  close IN;
+  
+  my $final_seq = join("", @$seq_ref);
+  
+  return $final_seq; 
+}
+
+sub reverse_complement {
+
+    my $seq = shift;
+
+    $seq =~ s/\s//g;
+    $seq =~ s/\n//g;
+    $seq =~ tr/ATGCatgc/TACGtacg/;
+    $seq = reverse($seq);
+    return $seq;
+}
+
+1;
 
