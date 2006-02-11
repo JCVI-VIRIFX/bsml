@@ -263,17 +263,18 @@ sub addBsmlSeqDataImport
 
     my $self = shift;
     my ($format, $source, $id, $identifier) = @_;
-      
-      my($fasta_file,$fasta_dir) = fileparse($source);
-      my $indexer = BSML::Indexer::Fasta->new($fasta_file, $fasta_dir);
-
-      # Check the health of the various indices for the data file.
-      my @check = $indexer->check_indices;
-      
-      # Create the indices if necessary...
-      if ($check[0] == 1) { $indexer->index_entries };
-      if ($check[1] == 1) { $indexer->index_headers };
-      
+    my($fasta_file,$fasta_dir) = fileparse($source);  
+      if(-e $fasta_file){
+	  #index fasta file if it exists
+	  my $indexer = BSML::Indexer::Fasta->new($fasta_file, $fasta_dir);
+	  
+	  # Check the health of the various indices for the data file.
+	  my @check = $indexer->check_indices;
+	  
+	  # Create the indices if necessary...
+	  if ($check[0] == 1) { $indexer->index_entries };
+	  if ($check[1] == 1) { $indexer->index_headers };
+    }  
     $self->{'BsmlSeqDataImport'}->{'format'} = $format;
     $self->{'BsmlSeqDataImport'}->{'source'} = $source;
 
