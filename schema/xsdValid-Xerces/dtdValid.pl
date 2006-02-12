@@ -25,16 +25,17 @@ my $dtd = $options{'dtd'};
 
 my ($dir) = ($0 =~ /(.*)\/.*/);
 	 
- if( $dtd ) 	 
- { 	 
-     $dtd =~ s/\//\\\//g; 	 
-     $status = system "perl -pi -e \'s/<\\!DOCTYPE Bsml PUBLIC \"-\\/\\/EBI\\/\\/Labbook, Inc. BSML DTD\\/\\/EN\" \"http:\\/\\/www.labbook.com\\/dtd\\/bsml3_1.dtd\">/<\\!DOCTYPE Bsml SYSTEM \"$dtd\">/\' $file"; 	 
- }
-else{
-    die "No dtd specified";
+die "No dtd specified" if(! -e $dtd);
+if(! -e $file){
+    if(-e $file.".gz"){
+	$file .= ".gz";
+    }
+    else{
+	die "BSML file $file or $file.gz not found\n";
+    }
 }
 
-my $status = system "xmllint --noout --valid --nonet --dtdvalid $dtd $file";
+my $status = system "zcat -f $file | xmllint --noout --nonet --dtdvalid $dtd -";
 
 my $exit_value = $status >> 8;
 my $signal_num = $status & 127;

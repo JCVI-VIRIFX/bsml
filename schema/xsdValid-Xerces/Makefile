@@ -1,5 +1,5 @@
-INCLUDE = -I/usr/local/packages/xerces-c++/include
-LIBDIR = -L/usr/local/packages/xerces-c++/lib
+INCLUDE = -I/usr/include
+LIBDIR = -L/usr/lib
 
 CXX = g++
 LINK = g++
