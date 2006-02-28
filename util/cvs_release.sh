@@ -1,17 +1,18 @@
 #!/bin/bash
 
-# $Id: cvs_release.sh,v 1.3 2005/12/21 18:29:39 angiuoli Exp $
+# $Id: cvs_release.sh,v 1.4 2006/02/28 19:32:29 angiuoli Exp $
 
 # Copyright (c) 2002 The Institute for Genomic Research. All Rights Reserved.
 
 # This script generates a release tag in cvs
-while getopts r:d:pt opt 2>/dev/null
+while getopts r:d:s:pt opt 2>/dev/null
 do case "$opt" in
     r)    RELEASE_TAG=$OPTARG;;
-    d)    DIRECTORY=$OPTARG;;
+    d)    DIRECTORY=$OPTARG;; 
+    s)    DATESTAMP=$OPTARG;;
     p)    PRINT="yes";;
     t)    TEST="-n";;
-    \?)   echo "Usage: `basename $0` -r(release tag) [-d(irectory for output)] [-t(est)] [-p(rint latest release]";
+    \?)   echo "Usage: `basename $0` -r(release tag) -s(datestamp) [-d(irectory for output)] [-t(est)] [-p(rint latest release]";
           echo;
           echo "eg. `basename $0` -r bsml-v1r8b1";
           exit 1;;
@@ -44,7 +45,7 @@ if [ "$?" -ne 0 ]; then
     exit 1
 fi
 cd bug_release
-cvs -Q co bsml_all
+cvs -Q co -D "$DATESTAMP" bsml_all
 cvs -Q $TEST tag $RELEASE_TAG
 echo "Added tag $RELEASE_TAG in bsml_all"
 
