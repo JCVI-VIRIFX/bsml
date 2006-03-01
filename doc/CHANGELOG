@@ -12,8 +12,11 @@ bsml-v2r5b1
 -removed hard coded lib module paths
 -fixed dtdValid.pl by replacing Xerces validator with 'xmllint'
 
-CURRENT
+bsml-v2r6b1
 -------------
--added FASTA index build during initial build of Seq-Data in BsmlSequence.  Previously, index was not built until first parse.
+-added support for creating/parsing/validating gzip-ed BSML files.  
+-added support for interval-loc startopen/endopen tags to specify ambiguous start/end coordinates
+-fixed validation bug that was sensitive to the order of Organism/Attribute and Organism/Strain
+-added FASTA index build during initial build of Seq-Data in BsmlSequence if FASTA sequence is available.  Previously, index was not built until first parse.
 -migrated subSequence from BsmlReader to BsmlSequence. use of BsmlReader::subSequence is deprecated
-
+-added SO type supercontig/contig to BSML scaffold documents
