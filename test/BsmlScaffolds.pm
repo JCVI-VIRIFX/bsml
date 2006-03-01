@@ -143,7 +143,7 @@ sub writeBsmlScaffoldFiles {
 		my $asmblBsmlSeq = $builder->createAndAddExtendedSequenceN( id => $asmblBsmlId, length => $sl );
 		$asmblBsmlSeq->addattr("class", "contig");
 		## See bug 2692
-		$bsmlScaffoldSeq->addBsmlAttributeList([{name => 'SO', content=> 'contig'}]);
+		$asmblBsmlSeq->addBsmlAttributeList([{name => 'SO', content=> 'contig'}]);
 		## ^^^^^^^^^^^^
 		
 		my $numbering = $builder->createAndAddNumbering( seq => $asmblBsmlSeq,
